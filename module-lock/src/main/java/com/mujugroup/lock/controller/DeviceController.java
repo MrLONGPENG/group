@@ -2,6 +2,7 @@ package com.mujugroup.lock.controller;
 
 import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.lock.service.DeviceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class DeviceController {
     private String remoteCall(int type, String did) {
         logger.debug("remoteCall:"+did);
         if(did == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
+        if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         if(did.length()>9 && did.length()!=19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         JsonObject object = null;
         switch (type){

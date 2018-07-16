@@ -100,6 +100,7 @@ public class DeviceServiceImpl implements DeviceService {
      */
     @Override
     public String didToBid(String did) {
+        if(did.length() == 19) return did;
         if(did.length() < 9 ) did = StringUtil.autoFillDid(did);
         LockDid lockDid = lockDidService.getLockDidByDid(did);
         if(lockDid != null) return StringUtil.autoFillDid(lockDid.getLockId(),19);
