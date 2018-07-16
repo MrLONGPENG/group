@@ -39,7 +39,7 @@ public class LockDidController {
         LockDid lockDid;
         if(did!=null){
             if(did.length()>9) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
-            lockDid = lockDidService.getLockDidByDid(did);
+            lockDid = lockDidService.getLockDidByDid(StringUtil.autoFillDid(did));
         }else {
             lockDid = lockDidService.getLockDidByBid(bid);
         }
@@ -50,8 +50,8 @@ public class LockDidController {
     @RequestMapping(value = "/status")
     public String getStatus(String did){
         logger.debug("getStatus");
-        if(did == null) return null;
-        LockDid lockDid = lockDidService.getLockDidByDid(did);
+        if(!StringUtil.isNumeric(did)) return null;
+        LockDid lockDid = lockDidService.getLockDidByDid(StringUtil.autoFillDid(did));
         if(lockDid == null) return null;
         LockInfo lockInfo = lockInfoService.getLockInfoByDid(String.valueOf(lockDid.getLockId()));
         if(lockInfo == null) return null;
