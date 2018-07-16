@@ -1,0 +1,24 @@
+group = 'com.lveqia.cloud.mybatis'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-freemarker')
+    compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2')
+    compile('mysql:mysql-connector-java:5.1.46')
+}
+
+ext {
+    springCloudVersion = 'Finchley.RC2'
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
