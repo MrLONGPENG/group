@@ -94,10 +94,13 @@ public class WxUserServiceImpl implements WxUserService {
         try {
             String data = AESUtil.wxDecrypt(encryptedDate, sessionService.getSessionKey(sessionThirdKey), iv);
             if(data!=null){
-                logger.info(data);
                 WxUser wxUser = wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
                 JsonObject json = new JsonParser().parse(data).getAsJsonObject();
-                if(json.has("phone")) wxUser.setPhone(json.get("phone").getAsString());
+                if(json.has("phoneNumber")  ){ // 国内手机无区号
+                    wxUser.setPhone(json.get("phoneNumber").getAsString());
+                }else if(json.has("purePhoneNumber")){
+                    wxUser.setPhone(json.get("purePhoneNumber").getAsString());
+                }
                 if(json.has("nickName")) wxUser.setNickName(json.get("nickName").getAsString());
                 if(json.has("gender")) wxUser.setGender(json.get("gender").getAsInt());
                 if(json.has("language")) wxUser.setLanguage(json.get("language").getAsString());
@@ -119,7 +122,7 @@ public class WxUserServiceImpl implements WxUserService {
      * 获取微信凭证拼接参数
      * @return 登录表单实体
      */
-    public HttpEntity<?> getTokenEntity(String appId, String secret, String code) {
+    private HttpEntity<?> getTokenEntity(String appId, String secret, String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> params= new LinkedMultiValueMap<>();

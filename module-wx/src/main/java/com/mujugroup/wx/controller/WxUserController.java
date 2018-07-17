@@ -52,10 +52,10 @@ public class WxUserController {
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public String onUpdate(String sessionThirdKey, String phone, String nickName, String gender
             , String language, String country, String province, String city, String avatarUrl
-            , String encryptedDate, String iv){
-        if(sessionThirdKey ==null) ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        if(encryptedDate!=null && iv!=null){
-            wxUserService.onUpdate(sessionThirdKey, encryptedDate, iv);
+            , String encryptedData, String iv){
+        if(sessionThirdKey ==null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if(encryptedData!=null && iv!=null){
+            wxUserService.onUpdate(sessionThirdKey, encryptedData, iv);
         }else{
             wxUserService.onUpdate(sessionThirdKey, phone, nickName, gender
                     , language, country, province, city, avatarUrl);
