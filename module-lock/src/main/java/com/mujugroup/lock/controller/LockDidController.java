@@ -9,8 +9,10 @@ import com.mujugroup.lock.service.LockInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/did")
@@ -68,6 +70,27 @@ public class LockDidController {
         return StringUtil.autoFillDid(lockDid.getDid());
     }
 
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    public String onImport(@RequestParam("file")MultipartFile file
+            , @RequestParam(name="brand", required=false, defaultValue="1")int brand
+            , @RequestParam(name="didCell", required=false, defaultValue="1")int didCell
+            , @RequestParam(name="bidCell", required=false, defaultValue="3")int bidCell) {
+        List<LockDid> list;
+        try {
+            list = lockDidService.readExcel(file, file.getOriginalFilename(), brand, didCell, bidCell);
+        } catch (Exception e) {
+            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "Excel文件格式错误");
+        }
+        try {
+            if(lockDidService.batchInsert(list)){
+                return ResultUtil.success();
+            }else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL, "数据为空");
+            }
+        } catch (Exception e) {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL, "事务回滚");
+        }
+    }
 
 
 }

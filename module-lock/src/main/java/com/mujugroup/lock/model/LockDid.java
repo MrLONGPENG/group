@@ -15,7 +15,16 @@ import java.util.Date;
 @Table(name = "t_lock_did")
 public class LockDid implements Serializable {
 
-    /**
+
+	public LockDid(long did, long bid, int brand) {
+		this.did = did;
+		this.lockId = bid;
+		this.lockHex = Long.toHexString(bid);
+		this.brand = brand;
+	}
+
+
+	/**
      * 主键
      * 
      * 表字段 : t_lock_did.id
@@ -60,9 +69,7 @@ public class LockDid implements Serializable {
     @Column(name = "update_time")
     private Date updateTime;
 
-
-
-    public Integer getId() {
+	public Integer getId() {
 		return id;
 	}
 
