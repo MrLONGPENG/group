@@ -8,5 +8,8 @@ public interface WxUserService {
 
     WxUser onQuery(String sessionThirdKey);
 
+    void onUpdate(String sessionThirdKey, String encryptedDate, String iv);
+
     void onUpdate(String sessionThirdKey, String phone, String nickName, String gender, String language, String country, String province, String city, String avatarUrl);
+
 }

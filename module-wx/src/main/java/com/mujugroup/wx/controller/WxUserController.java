@@ -1,6 +1,5 @@
 package com.mujugroup.wx.controller;
 
-
 import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.model.WxUser;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WxUserController {
     private final Logger logger = LoggerFactory.getLogger(WxUserController.class);
     private final MyConfig myConfig = new MyConfig();
-    private WxUserService wxUserService;
+    private final WxUserService wxUserService;
 
     @Autowired
     public WxUserController(WxUserService wxUserService) {
@@ -52,11 +51,15 @@ public class WxUserController {
 
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public String onUpdate(String sessionThirdKey, String phone, String nickName, String gender
-            , String language, String country, String province, String city, String avatarUrl){
-        logger.debug("onLogin：%s", sessionThirdKey);
+            , String language, String country, String province, String city, String avatarUrl
+            , String encryptedDate, String iv){
         if(sessionThirdKey ==null) ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        wxUserService.onUpdate(sessionThirdKey, phone, nickName, gender
-                , language, country, province, city, avatarUrl);
+        if(encryptedDate!=null && iv!=null){
+            wxUserService.onUpdate(sessionThirdKey, encryptedDate, iv);
+        }else{
+            wxUserService.onUpdate(sessionThirdKey, phone, nickName, gender
+                    , language, country, province, city, avatarUrl);
+        }
         return  ResultUtil.success();
     }
 

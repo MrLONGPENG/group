@@ -89,6 +89,7 @@ public class UsingApiServiceImpl implements UsingApiService {
                     }else { // 这里需要去获取医院信息
                         usingBean.setType(0);
                     }
+                    usingBean.setPay(wxUsing!=null);
                     usingBean.setCode(generateCode(openId, realDid, data.get("agentId").getAsString()
                             , data.get("hospitalId").getAsString(), data.get("departmentId").getAsString()));
                     usingBean.setHospitalBed(data.get("hospitalBed").getAsString());

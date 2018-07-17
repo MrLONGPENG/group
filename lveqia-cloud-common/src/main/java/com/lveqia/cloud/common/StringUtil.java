@@ -1,10 +1,30 @@
 package com.lveqia.cloud.common;
 
+
 import java.util.Random;
 
 public class StringUtil {
 
+    /**
+     * <p>Checks if a String is empty ("") or null.</p>
+     *
+     * <pre>
+     * StringUtils.isEmpty(null)      = true
+     * StringUtils.isEmpty("")        = true
+     * StringUtils.isEmpty(" ")       = false
+     * StringUtils.isEmpty("bob")     = false
+     * StringUtils.isEmpty("  bob  ") = false
+     * </pre>
+     *
+     * <p>NOTE: This method changed in Lang version 2.0.
+     * It no longer trims the String.
+     * That functionality is available in isBlank().</p>
+     *
+     * @param str  the String to check, may be null
+     * @return <code>true</code> if the String is empty or null
+     */
     public static boolean isEmpty(String str) {
+        //org.apache.commons.lang.StringUtils.isEmpty(str);
         return str == null || str.length() == 0;
     }
 
@@ -16,10 +36,10 @@ public class StringUtil {
      * An empty String (length()=0) will return <code>true</code>.</p>
      *
      * <pre>
-     * StringUtils.isNumeric(null)   = false
-     * StringUtils.isNumeric("")     = true
-     * StringUtils.isNumeric("  ")   = false
      * StringUtils.isNumeric("123")  = true
+     * StringUtils.isNumeric(null)   = false
+     * StringUtils.isNumeric("")     = false
+     * StringUtils.isNumeric("  ")   = false
      * StringUtils.isNumeric("12 3") = false
      * StringUtils.isNumeric("ab2c") = false
      * StringUtils.isNumeric("12-3") = false
@@ -30,9 +50,7 @@ public class StringUtil {
      * @return <code>true</code> if only contains digits, and is non-null
      */
     public static boolean isNumeric(String str) {
-        if (str == null) {
-            return false;
-        }
+        if (isEmpty(str)) return false;
         int sz = str.length();
         for (int i = 0; i < sz; i++) {
             if (!Character.isDigit(str.charAt(i))) {

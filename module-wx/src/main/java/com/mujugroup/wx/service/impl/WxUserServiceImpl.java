@@ -1,6 +1,9 @@
 package com.mujugroup.wx.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.AESUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.WeChatSession;
 import com.mujugroup.wx.mapper.WxUserMapper;
@@ -83,6 +86,31 @@ public class WxUserServiceImpl implements WxUserService {
             if(!StringUtil.isEmpty(avatarUrl)) wxUser.setAvatarUrl(avatarUrl);
             wxUser.setUpdateTime(new Date());
             wxUserMapper.update(wxUser);
+        }
+    }
+
+    @Override
+    public void onUpdate(String sessionThirdKey, String encryptedDate, String iv) {
+        try {
+            String data = AESUtil.wxDecrypt(encryptedDate, sessionService.getSessionKey(sessionThirdKey), iv);
+            if(data!=null){
+                logger.info(data);
+                WxUser wxUser = wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
+                JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+                if(json.has("phone")) wxUser.setPhone(json.get("phone").getAsString());
+                if(json.has("nickName")) wxUser.setNickName(json.get("nickName").getAsString());
+                if(json.has("gender")) wxUser.setGender(json.get("gender").getAsInt());
+                if(json.has("language")) wxUser.setLanguage(json.get("language").getAsString());
+                if(json.has("country")) wxUser.setCountry(json.get("country").getAsString());
+                if(json.has("province")) wxUser.setProvince(json.get("province").getAsString());
+                if(json.has("city")) wxUser.setCity(json.get("city").getAsString());
+                if(json.has("avatarUrl")) wxUser.setAvatarUrl(json.get("avatarUrl").getAsString());
+                if(json.has("unionId")) wxUser.setUnionId(json.get("unionId").getAsString());
+                wxUser.setUpdateTime(new Date());
+                wxUserMapper.update(wxUser);
+            }
+        } catch (Exception e) {
+            logger.warn("解码微信用户数据更新失败", e);
         }
     }
 

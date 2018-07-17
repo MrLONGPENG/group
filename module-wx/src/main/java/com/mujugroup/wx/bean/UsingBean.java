@@ -8,6 +8,7 @@ public class UsingBean implements Serializable {
 
 
     private int type; // 0：未支付，已扫描 1：扫描被他人占用 2：设备使用中 3：设备未激活 4: 未支付，未扫描 5.服务器异常
+    private boolean isPay;    // 是否支付
     private boolean mismatch; // 扫描DID与用户已支付的DID不匹配
     private String did;
 
@@ -42,6 +43,14 @@ public class UsingBean implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean isPay() {
+        return isPay;
+    }
+
+    public void setPay(boolean pay) {
+        isPay = pay;
     }
 
     public boolean isMismatch() {
