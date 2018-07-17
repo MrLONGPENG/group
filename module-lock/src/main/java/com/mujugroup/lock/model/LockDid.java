@@ -16,14 +16,6 @@ import java.util.Date;
 public class LockDid implements Serializable {
 
 
-	public LockDid(long did, long bid, int brand) {
-		this.did = did;
-		this.lockId = bid;
-		this.lockHex = Long.toHexString(bid);
-		this.brand = brand;
-	}
-
-
 	/**
      * 主键
      * 

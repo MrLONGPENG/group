@@ -88,9 +88,18 @@ public class LockDidServiceImpl implements LockDidService {
             did = getValue(row.getCell(didCell));
             bid = getValue(row.getCell(bidCell));
             if(!StringUtil.isNumeric(did) || !StringUtil.isNumeric(bid)) continue;
-            list.add(new LockDid(Long.parseLong(did), Long.parseLong(bid), brand));
+            list.add(createLockDid(Long.parseLong(did), Long.parseLong(bid), brand));
         }
         return list;
+    }
+
+    private LockDid createLockDid(long did, long bid, int brand) {
+        LockDid lockDid = new LockDid();
+        lockDid.setBrand(brand);
+        lockDid.setDid(did);
+        lockDid.setLockId(bid);
+        lockDid.setLockHex(Long.toHexString(bid));
+        return lockDid;
     }
 
 
