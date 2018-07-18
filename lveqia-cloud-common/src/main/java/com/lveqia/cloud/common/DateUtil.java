@@ -18,7 +18,7 @@ public class DateUtil {
     public static final int TYPE_DATETIME_14 = 5;
     public static final int TYPE_DAY_HOUR = 6;
 
-    public static final String[] FORMAT = {"yyyy-MM-dd","yyyyMMdd", "HH:mm:ss","HHmmss"
+    private static final String[] FORMAT = {"yyyy-MM-dd","yyyyMMdd", "HH:mm:ss","HHmmss"
             ,"yyyy-MM-dd HH:mm:ss","yyyyMMddHHmmss","ddHH"};
 
     public static Date stringToDate(String date, int type) {
@@ -59,35 +59,37 @@ public class DateUtil {
 
 
     /**
-     * 获取支付日期，当大于指定时间（不含日期，只包括时间），即当天；小于指定时间，日期减一
-     * @param time  不含日期，只包括时间
-     * @return 八位日期  yyyyMMdd
+     * 获取不含日期的时间戳
+     * @return 时+分+秒 （单位秒）
      */
-    public static  String getPayDate(long time){
+    public static int getTimesNoDate(){
         Calendar cal = Calendar.getInstance();
-        if((cal.get(Calendar.HOUR_OF_DAY) * 60*60 + cal.get(Calendar.MINUTE)* 60) *1000 > time ){ //
-            return  dateToString(cal.getTime(), TYPE_DATE_08);
-        }
-        cal.add(Calendar.DAY_OF_YEAR , -1);
-        return dateToString(cal.getTime(), TYPE_DATE_08);
+        return cal.get(Calendar.HOUR_OF_DAY)*60*60 + cal.get(Calendar.MINUTE)*60 + cal.get(Calendar.SECOND);
     }
 
 
-
+    /**
+     * 获得当天凌晨时间
+     * @return 时+分+秒 （单位秒）
+     */
     public static long getTimesMorning(){
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);//获取小时
-        cal.set(Calendar.SECOND, 0);//获取分钟
-        cal.set(Calendar.MINUTE, 0);//获取秒
+        cal.set(Calendar.MINUTE, 0);//获取分钟
+        cal.set(Calendar.SECOND, 0);//获取秒
         cal.set(Calendar.MILLISECOND, 0);//获取毫秒
         return cal.getTimeInMillis()/1000 ;//返回值去除后3位  00:00:00.000
     }
-    //获得当天24点时间
+
+    /**
+     * 获得当天24点时间
+     * @return 时+分+秒 （单位秒）
+     */
     public static long getTimesNight(){
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 24);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MINUTE, 0);//获取分钟
+        cal.set(Calendar.SECOND, 0);//获取秒
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTimeInMillis()/1000;
     }

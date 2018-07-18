@@ -8,6 +8,8 @@ public interface WxUsingService {
 
     WxUsing update(WxUsing wxUsing);
 
+    WxUsing updateUsingStatus(WxUsing wxUsing, String status);
+
     WxUsing findUsingByOpenId(String openId, long time);
 
     WxUsing findUsingByDid(String did, long time, boolean isSync);

@@ -3,6 +3,7 @@ package com.mujugroup.wx.service.impl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lveqia.cloud.common.AESUtil;
+import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UsingBean;
@@ -17,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
-
-import java.util.Date;
 
 @RefreshScope
 @Service("usingApiService")
@@ -115,8 +114,17 @@ public class UsingApiServiceImpl implements UsingApiService {
      */
     @Override
     public UnlockBean unlock(String did, String[] arr) {
-
         UnlockBean unlockBean = new UnlockBean();
+
+        WxUptime wxUptime = wxUptimeService.findListByHospital(Integer.valueOf(arr[3]));
+        if(wxUptime != null){
+           int currTime =  DateUtil.getTimesNoDate();
+           if(currTime > wxUptime.getStopTime() && currTime < wxUptime.getStartTime()){
+               unlockBean.setPayState(3);
+               unlockBean.setInfo(String.format("上午%s到下午%s无法开锁，如有任何问题可联系客服"
+                       , wxUptime.getStopDesc(), wxUptime.getStartDesc()));
+           }
+        }
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000, false);
         if(wxUsing==null) {
             unlockBean.setPayState(1);
@@ -191,17 +199,10 @@ public class UsingApiServiceImpl implements UsingApiService {
     @Override
     public void notify(String bid, Integer lockStatus) {
         WxUsing wxUsing = wxUsingService.findUsingByBid(bid, System.currentTimeMillis()/1000);
-        if(wxUsing!=null && !wxUsing.getUsing() && lockStatus ==2) {
-            logger.info("notify using 开锁");
-            wxUsing.setUsing(true);
-            wxUsing.setUnlockTime(new Date());
-            wxUsingService.update(wxUsing); // 更新开锁时间
-        }else if(wxUsing!=null && wxUsing.getUsing() && lockStatus ==1){
-            logger.info("notify using 关锁");
-            wxUsing.setUsing(false);
-            wxUsingService.update(wxUsing); // 更新使用状态
+        if(wxUsing!=null){
+            wxUsingService.updateUsingStatus(wxUsing, String.valueOf(lockStatus));
         }else{
-            logger.warn("无状态变化");
+            logger.info("notify 此设备未使用");
         }
     }
 }

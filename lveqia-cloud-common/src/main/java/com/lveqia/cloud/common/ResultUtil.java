@@ -4,11 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
 public class ResultUtil {
 
-    private final static String VERSION = "20180716";
+    private final static String VERSION = "20180718";
     private final static String SUCCESS = "Success";
 
     public final static int CODE_SUCCESS = 200;
@@ -98,8 +96,9 @@ public class ResultUtil {
 
     private static class Result<T>{
         private int code;
+        private long timestamp;
         private String info;
-        private String version = VERSION;
+        private String version;
         private T data;
 
         private Integer pageNum;        //当前页
@@ -110,12 +109,26 @@ public class ResultUtil {
         private Boolean isFirstPage;    //是否为第一页
         private Boolean isLastPage;     //是否为最后一页
 
+
+        public Result() {
+            this.version = VERSION;
+            this.timestamp = System.currentTimeMillis()/1000;
+        }
+
         public int getCode() {
             return code;
         }
 
         public void setCode(int code) {
             this.code = code;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
         }
 
         public String getInfo() {
@@ -146,7 +159,7 @@ public class ResultUtil {
             return pageNum;
         }
 
-        public void setPageNum(Integer pageNum) {
+        private void setPageNum(Integer pageNum) {
             this.pageNum = pageNum;
         }
 
@@ -154,7 +167,7 @@ public class ResultUtil {
             return pageSize;
         }
 
-        public void setPageSize(Integer pageSize) {
+        private void setPageSize(Integer pageSize) {
             this.pageSize = pageSize;
         }
 
@@ -162,7 +175,7 @@ public class ResultUtil {
             return size;
         }
 
-        public void setSize(Integer size) {
+        private void setSize(Integer size) {
             this.size = size;
         }
 
@@ -170,7 +183,7 @@ public class ResultUtil {
             return pages;
         }
 
-        public void setPages(Integer pages) {
+        private void setPages(Integer pages) {
             this.pages = pages;
         }
 
@@ -178,7 +191,7 @@ public class ResultUtil {
             return total;
         }
 
-        public void setTotal(Long total) {
+        private void setTotal(Long total) {
             this.total = total;
         }
 
@@ -186,7 +199,7 @@ public class ResultUtil {
             return isFirstPage;
         }
 
-        public void setFirstPage(Boolean firstPage) {
+        private void setFirstPage(Boolean firstPage) {
             isFirstPage = firstPage;
         }
 
@@ -194,7 +207,7 @@ public class ResultUtil {
             return isLastPage;
         }
 
-        public void setLastPage(Boolean lastPage) {
+        private void setLastPage(Boolean lastPage) {
             isLastPage = lastPage;
         }
     }

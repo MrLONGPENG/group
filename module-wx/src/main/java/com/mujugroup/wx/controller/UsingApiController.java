@@ -49,7 +49,7 @@ public class UsingApiController {
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
         if(arr == null ) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000
-                , getCount(sessionThirdKey)%5==4 || isSync);
+                , getCount(sessionThirdKey)%7==6 || isSync);
         if(wxUsing!=null) {
             wxUsing.setId(null); wxUsing.setOpenId(null);wxUsing.setDeleted(null);
             return ResultUtil.success(wxUsing);
