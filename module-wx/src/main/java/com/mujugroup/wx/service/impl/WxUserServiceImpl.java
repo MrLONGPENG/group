@@ -72,7 +72,7 @@ public class WxUserServiceImpl implements WxUserService {
 
 
     @Override
-    public void onUpdate(String sessionThirdKey, String phone, String nickName, String gender
+    public WxUser onUpdate(String sessionThirdKey, String phone, String nickName, String gender
             , String language, String country, String province, String city, String avatarUrl) {
         WxUser wxUser = wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
         if(wxUser!=null){
@@ -87,14 +87,16 @@ public class WxUserServiceImpl implements WxUserService {
             wxUser.setUpdateTime(new Date());
             wxUserMapper.update(wxUser);
         }
+        return wxUser;
     }
 
     @Override
-    public void onUpdate(String sessionThirdKey, String encryptedDate, String iv) {
+    public WxUser onUpdate(String sessionThirdKey, String encryptedDate, String iv) {
+        WxUser wxUser = null;
         try {
+            wxUser = wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
             String data = AESUtil.wxDecrypt(encryptedDate, sessionService.getSessionKey(sessionThirdKey), iv);
-            if(data!=null){
-                WxUser wxUser = wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
+            if(data!=null && wxUser!=null){
                 JsonObject json = new JsonParser().parse(data).getAsJsonObject();
                 if(json.has("phoneNumber")  ){ // 国内手机无区号
                     wxUser.setPhone(json.get("phoneNumber").getAsString());
@@ -115,6 +117,7 @@ public class WxUserServiceImpl implements WxUserService {
         } catch (Exception e) {
             logger.warn("解码微信用户数据更新失败", e);
         }
+        return wxUser;
     }
 
 

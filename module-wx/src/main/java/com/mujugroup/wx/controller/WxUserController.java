@@ -39,7 +39,7 @@ public class WxUserController {
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     public String onQuery(String sessionThirdKey){
         logger.debug("onQuery：%s", sessionThirdKey);
-        if(sessionThirdKey ==null) ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if(sessionThirdKey ==null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         WxUser wxUser = wxUserService.onQuery(sessionThirdKey);
         if(wxUser!=null) {
             wxUser.setId(null);wxUser.setOpenId(null);
@@ -54,13 +54,14 @@ public class WxUserController {
             , String language, String country, String province, String city, String avatarUrl
             , String encryptedData, String iv){
         if(sessionThirdKey ==null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        WxUser wxUser;
         if(encryptedData!=null && iv!=null){
-            wxUserService.onUpdate(sessionThirdKey, encryptedData, iv);
+            wxUser = wxUserService.onUpdate(sessionThirdKey, encryptedData, iv);
         }else{
-            wxUserService.onUpdate(sessionThirdKey, phone, nickName, gender
+            wxUser = wxUserService.onUpdate(sessionThirdKey, phone, nickName, gender
                     , language, country, province, city, avatarUrl);
         }
-        return  ResultUtil.success();
+        return  ResultUtil.success(wxUser);
     }
 
 

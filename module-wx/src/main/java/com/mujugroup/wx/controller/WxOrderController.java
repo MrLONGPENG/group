@@ -36,7 +36,7 @@ public class WxOrderController {
     public String list(@RequestParam(name="sessionThirdKey")String sessionThirdKey
             , @RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
             , @RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize){
-        logger.info("order-list:"+sessionThirdKey);
+        logger.debug("order-list:{}", sessionThirdKey);
         PageHelper.startPage(pageNum, pageSize);
         List<WxOrder> list = wxOrderService.listSelfOrder(sessionThirdKey);
 
@@ -53,7 +53,7 @@ public class WxOrderController {
 
     @RequestMapping(value = "/details")
     public String details(String sessionThirdKey, String tradeNo){
-        logger.info("order-details:"+tradeNo);
+        logger.debug("order-details:{}", tradeNo);
         OrderBean details = wxOrderService.details(sessionThirdKey, tradeNo);
         if(details!=null){
             return ResultUtil.success(details);

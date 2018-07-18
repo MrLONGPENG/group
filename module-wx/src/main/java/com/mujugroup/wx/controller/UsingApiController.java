@@ -33,13 +33,11 @@ public class UsingApiController {
 
     @RequestMapping(value = "/check")
     public String check(String sessionThirdKey, String did){
-        logger.info("wx-using-check");
         return ResultUtil.success(usingApiService.checkUsing(sessionThirdKey, did));
     }
 
     @RequestMapping(value = "/unlock")
     public String unlock(String sessionThirdKey, String did, String code){
-        logger.info("wx-using-unlock");
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
         if(arr == null ) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
         return ResultUtil.success(usingApiService.unlock(did, arr));
@@ -48,7 +46,6 @@ public class UsingApiController {
 
     @RequestMapping(value = "/query")
     public String query(String sessionThirdKey, String did, String code, boolean isSync){
-        logger.info("wx-using-query did:"+did);
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
         if(arr == null ) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000
@@ -69,7 +66,7 @@ public class UsingApiController {
 
     @RequestMapping(value = "/delete")
     public String delete(String password, String did){
-        logger.info("wx-using-delete did:"+did);
+        logger.info("wx-using-delete did:{}", did);
         if(!"leo".equals(password)) return ResultUtil.success("密码错误");
         return  ResultUtil.success(wxUsingService.deleteByDid(did
                 , System.currentTimeMillis()/1000)?"删除成功":"无数据删");
@@ -77,7 +74,7 @@ public class UsingApiController {
 
     @RequestMapping(value = "/notify")
     public String notify(String bid, Integer lockStatus){
-        logger.info("wx-using-notify bid"+bid +"  lockStatus"+lockStatus);
+        logger.info("wx-using-notify bid:{} lockStatus:{}", bid, lockStatus);
         usingApiService.notify(bid, lockStatus);
         return ResultUtil.success();
     }

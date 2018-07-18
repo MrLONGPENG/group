@@ -2,7 +2,7 @@ package com.mujugroup.wx.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.wx.model.WxUser;
+import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.service.WxOpinionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,9 @@ public class WxOpinionController {
 
     @RequestMapping(value = "/feedback",method = RequestMethod.POST)
     public String feedback(String sessionThirdKey, String content, String did){
-        logger.debug("feedback：%s", sessionThirdKey);
-        if(sessionThirdKey ==null) ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        if(content == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
+        logger.debug("feedback:{}", content);
+        if(StringUtil.isEmpty(content)) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
+        if(StringUtil.isEmpty(sessionThirdKey)) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         wxOpinionService.feedback(sessionThirdKey, content, did);
         return  ResultUtil.success();
     }

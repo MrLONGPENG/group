@@ -29,7 +29,7 @@ public class WxUptimeController {
 
     @RequestMapping(value = "/find")
     public String find(String sessionThirdKey, String hid){
-        logger.info("uptime-list:"+sessionThirdKey+"  hospitalId:"+hid);
+        logger.debug("uptime-list:{} hospitalId:{}", sessionThirdKey, hid);
         WxUptime wxUptime;
         if(StringUtil.isEmpty(hid)){
             wxUptime = wxUptimeService.getDefaultWxUptime();

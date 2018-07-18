@@ -26,7 +26,7 @@ public class WxGoodsController {
 
     @RequestMapping(value = "/list")
     public String list(String sessionThirdKey, String hid){
-        logger.info("goods-list:"+sessionThirdKey+"  hospitalId:"+hid);
+        logger.debug("goods-list:{} hospitalId:{}", sessionThirdKey, hid);
         List<WxGoods> list = wxGoodsService.findListByHospital(hid);
         if(list!=null){
             return ResultUtil.success(list);

@@ -100,11 +100,10 @@ public class PayApiServiceImpl implements PayApiService {
         params.put("spbill_create_ip", ip);//订单生成的机器 IP
         params.put("trade_type", "JSAPI");
         try {
-            System.out.println(WXPayUtil.mapToXml(params));
             Map<String, String> map = wxPay.unifiedOrder(params);
             map.put("out_trade_no",orderNo);
             WxOrder wxOrder =  wxOrderService.addOrder(did, arr[0], arr[2], arr[3], arr[4], orderNo, wxGoods);
-            if(wxOrder!=null) logger.debug("统一下单成功");
+            if(wxOrder!=null) logger.info("统一下单成功,NO:{}",orderNo);
             return map;
         } catch (Exception e) {
             e.printStackTrace();

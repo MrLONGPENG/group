@@ -142,6 +142,7 @@ public class UsingApiServiceImpl implements UsingApiService {
      * @param did 锁ID
      */
     public boolean thirdUnlock(String did) {
+        logger.info("调用开锁-->{}", did);
         String result = moduleLockService.deviceUnlock(did);
         if(result!=null){
             JsonObject json = new JsonParser().parse(result).getAsJsonObject();
