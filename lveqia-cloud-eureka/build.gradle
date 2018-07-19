@@ -1,6 +1,9 @@
 group = 'com.lveqia.cloud.eureka'
 version = '0.0.1-SNAPSHOT'
 
+dependencies{
+    compile('org.springframework.boot:spring-boot-starter-security')
+}
 
 ext {
     springCloudVersion = 'Finchley.RC2'

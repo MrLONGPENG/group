@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 
 public class ResultUtil {
 
-    private final static String VERSION = "20180718";
+    private final static String VERSION = "20180720";
     private final static String SUCCESS = "Success";
 
     public final static int CODE_SUCCESS = 200;
