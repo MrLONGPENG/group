@@ -32,7 +32,7 @@ public class SwaggerConfig {
             List<SwaggerResource> resources = new ArrayList<>();
             properties.getRoutes().values()
                     .forEach(route ->
-                            resources.add(createResource(route.getServiceId(), route.getServiceId())));
+                            resources.add(createResource(route.getServiceId(), route.getPath())));
             return resources;
         };
     }
@@ -41,8 +41,8 @@ public class SwaggerConfig {
         logger.info("name:{} location:{}", name, location);
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(name);
-        swaggerResource.setLocation("/" + location + "/v2/api-docs");
         swaggerResource.setSwaggerVersion("2.0");
+        swaggerResource.setLocation(location.replaceAll("\\*\\*","v2/api-docs"));
         return swaggerResource;
     }
 }
