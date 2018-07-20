@@ -4,12 +4,15 @@ import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.wx.model.WxUsing;
 import com.mujugroup.wx.service.UsingApiService;
 import com.mujugroup.wx.service.WxUsingService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
@@ -17,10 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/using")
+@Api(description="小程序业务接口")
 public class UsingApiController {
     private final Logger logger = LoggerFactory.getLogger(UsingApiController.class);
-    private final WxUsingService wxUsingService;
     private final UsingApiService usingApiService;
+    private final WxUsingService wxUsingService;
     private final RedisTemplate redisTemplate;
 
     @Autowired
@@ -31,12 +35,14 @@ public class UsingApiController {
         this.redisTemplate = redisTemplate;
     }
 
-    @RequestMapping(value = "/check")
+    @ApiOperation(value="设备状态检查接口", notes="查询锁设备状态")
+    @RequestMapping(value = "/check", method = {RequestMethod.GET, RequestMethod.POST })
     public String check(String sessionThirdKey, String did){
         return ResultUtil.success(usingApiService.checkUsing(sessionThirdKey, did));
     }
 
-    @RequestMapping(value = "/unlock")
+    @ApiOperation(value="开锁接口", notes="符合指定条件直接开锁")
+    @RequestMapping(value = "/unlock", method = {RequestMethod.GET, RequestMethod.POST })
     public String unlock(String sessionThirdKey, String did, String code){
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
         if(arr == null ) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
@@ -44,7 +50,8 @@ public class UsingApiController {
     }
 
 
-    @RequestMapping(value = "/query")
+    @ApiOperation(value="开锁状态查询接口", notes="查询锁设备是否开锁")
+    @RequestMapping(value = "/query", method = {RequestMethod.GET, RequestMethod.POST })
     public String query(String sessionThirdKey, String did, String code, boolean isSync){
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
         if(arr == null ) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);

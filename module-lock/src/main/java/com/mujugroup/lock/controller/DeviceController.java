@@ -4,14 +4,18 @@ import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.lock.service.DeviceService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/device")
+@Api(description="锁模块设备接口")
 public class DeviceController {
 
     private final DeviceService deviceService;
@@ -22,7 +26,8 @@ public class DeviceController {
     }
 
 
-    @RequestMapping(value = "/unlock")
+    @ApiOperation(value="锁模块开锁接口", notes="根据业务DID或设备BID开锁")
+    @RequestMapping(value = "/unlock", method = {RequestMethod.GET, RequestMethod.POST })
     public String unlock(String did){
         return remoteCall(0, did);
     }

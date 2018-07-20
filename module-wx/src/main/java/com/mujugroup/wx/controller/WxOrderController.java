@@ -7,11 +7,15 @@ import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.WxOrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
+@Api(description="微信订单信息接口")
 public class WxOrderController {
 
     private final Logger logger = LoggerFactory.getLogger(WxOrderController.class);
@@ -32,10 +37,11 @@ public class WxOrderController {
     }
 
 
-    @RequestMapping(value = "/list")
-    public String list(@RequestParam(name="sessionThirdKey")String sessionThirdKey
-            , @RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
-            , @RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize){
+    @ApiOperation(value="获取微信支付订单信息", notes="根据Token获取信息")
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST })
+    public String list(@ApiParam(value="访问Token") @RequestParam(name="sessionThirdKey")String sessionThirdKey
+            , @ApiParam(value="当前页")@RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
+            , @ApiParam(value="每页显示")@RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize){
         logger.debug("order-list:{}", sessionThirdKey);
         PageHelper.startPage(pageNum, pageSize);
         List<WxOrder> list = wxOrderService.listSelfOrder(sessionThirdKey);
@@ -51,7 +57,8 @@ public class WxOrderController {
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
-    @RequestMapping(value = "/details")
+    @ApiOperation(value="获取订单信息详细信息", notes="根据Token与订单号获取详细信息")
+    @RequestMapping(value = "/details", method = {RequestMethod.GET, RequestMethod.POST })
     public String details(String sessionThirdKey, String tradeNo){
         logger.debug("order-details:{}", tradeNo);
         OrderBean details = wxOrderService.details(sessionThirdKey, tradeNo);
