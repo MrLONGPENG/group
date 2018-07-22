@@ -1,7 +1,6 @@
 package com.mujugroup.lock.service.impl;
 
 
-import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.lock.mapper.LockDidMapper;
 import com.mujugroup.lock.model.LockDid;
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,11 +58,22 @@ public class LockDidServiceImpl implements LockDidService {
         return true;
     }
 
+    @Override
+    public List<LockDid> onBatch(String did, String bid, int brand, int count, boolean isHex) {
+        if(!StringUtil.isNumeric(did) || (!isHex && !StringUtil.isNumeric(bid))) return null;
+        List<LockDid> list = new ArrayList<>();
+        for (int i = 0; i < count; i++){
+            list.add(createLockDid(Long.parseLong(did) + i, getLockId(bid, isHex) + i, brand));
+        }
+        return list;
+    }
+
+
 
 
     @Override
     public List<LockDid> readExcel(MultipartFile file, String fileName, int brand
-            , int didCell, int bidCell) throws IOException {
+            , int didCell, int bidCell, boolean isHex) throws IOException {
         if(fileName==null) return null;
         if (!fileName.matches("^.+\\.(?i)(xls)$")
                 && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
@@ -87,12 +96,16 @@ public class LockDidServiceImpl implements LockDidService {
             if(row.getPhysicalNumberOfCells() < bidCell) continue;
             did = getValue(row.getCell(didCell));
             bid = getValue(row.getCell(bidCell));
-            if(!StringUtil.isNumeric(did) || !StringUtil.isNumeric(bid)) continue;
-            list.add(createLockDid(Long.parseLong(did), Long.parseLong(bid), brand));
+            if(!StringUtil.isNumeric(did) || (!isHex && !StringUtil.isNumeric(bid))) continue;
+            list.add(createLockDid(Long.parseLong(did), getLockId(bid, isHex), brand));
         }
         return list;
     }
 
+
+    /**
+     * 构建LockDid对象
+     */
     private LockDid createLockDid(long did, long bid, int brand) {
         LockDid lockDid = new LockDid();
         lockDid.setBrand(brand);
@@ -102,7 +115,17 @@ public class LockDidServiceImpl implements LockDidService {
         return lockDid;
     }
 
+    /**
+     * 根据16进制或10进制转化锁ID 10进制Long型
+     */
+    private long getLockId(String bid, boolean isHex) {
+        return isHex ? Long.parseLong(bid,16) : Long.parseLong(bid);
+    }
 
+
+    /**
+     * 取Cell里面的值，全部返回String
+     */
     private String getValue(Cell cell) {
         if(cell!=null) {
             if (cell.getCellTypeEnum() == CellType.STRING) {

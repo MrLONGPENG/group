@@ -1,7 +1,6 @@
 package com.mujugroup.lock.service;
 
 
-import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.lock.model.LockDid;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +13,12 @@ public interface LockDidService {
 
     LockDid getLockDidByBid(String bid);
 
-    List<LockDid> readExcel(MultipartFile file, String fileName, int brand, int didCell, int bidCell) throws IOException;
-
     boolean batchInsert(List<LockDid> list);
+
+    List<LockDid> onBatch(String did, String bid, int brand, int count, boolean isHex);
+
+    List<LockDid> readExcel(MultipartFile file, String fileName, int brand, int didCell, int bidCell
+            , boolean isHex) throws IOException;
+
+
 }

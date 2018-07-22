@@ -74,13 +74,28 @@ public class LockDidController {
     public String onImport(@RequestParam("file")MultipartFile file
             , @RequestParam(name="brand", required=false, defaultValue="1")int brand
             , @RequestParam(name="didCell", required=false, defaultValue="1")int didCell
-            , @RequestParam(name="bidCell", required=false, defaultValue="3")int bidCell) {
+            , @RequestParam(name="bidCell", required=false, defaultValue="3")int bidCell
+            , @RequestParam(name="isHex", required=false, defaultValue="false")boolean isHex) {
         List<LockDid> list;
         try {
-            list = lockDidService.readExcel(file, file.getOriginalFilename(), brand, didCell, bidCell);
+            list = lockDidService.readExcel(file, file.getOriginalFilename(), brand, didCell, bidCell, isHex);
         } catch (Exception e) {
             return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "Excel文件格式错误");
         }
+        return onBatchInsert(list);
+    }
+
+
+    @RequestMapping(value = "/batch", method = RequestMethod.POST)
+    public String onBatch(@RequestParam(name="did") String did, @RequestParam(name="bid") String bid
+            , @RequestParam(name="brand", required=false, defaultValue="1")int brand
+            , @RequestParam(name="count", required=false, defaultValue="1")int count
+            , @RequestParam(name="isHex", required=false, defaultValue="false")boolean isHex) {
+        return onBatchInsert(lockDidService.onBatch(did, bid, brand, count, isHex));
+    }
+
+
+    private String onBatchInsert(List<LockDid> list) {
         try {
             if(lockDidService.batchInsert(list)){
                 return ResultUtil.success();
