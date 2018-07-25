@@ -50,6 +50,14 @@ public class UsingApiController {
     }
 
 
+    @ApiOperation(value="开锁时间接口", notes="查询锁设备开关锁时间范围")
+    @RequestMapping(value = "/uptime", method = {RequestMethod.GET, RequestMethod.POST })
+    public String uptime(String sessionThirdKey, String code) {
+        String[] arr = usingApiService.parseCode(sessionThirdKey, code);
+        if (arr == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
+        return ResultUtil.success(usingApiService.uptime(arr));
+    }
+
     @ApiOperation(value="开锁状态查询接口", notes="查询锁设备是否开锁")
     @RequestMapping(value = "/query", method = {RequestMethod.GET, RequestMethod.POST })
     public String query(String sessionThirdKey, String did, String code, boolean isSync){

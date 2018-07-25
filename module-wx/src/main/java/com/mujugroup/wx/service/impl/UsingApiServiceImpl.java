@@ -6,6 +6,7 @@ import com.lveqia.cloud.common.AESUtil;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.UnlockBean;
+import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
 import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.model.WxUsing;
@@ -143,6 +144,10 @@ public class UsingApiServiceImpl implements UsingApiService {
         return unlockBean;
     }
 
+    @Override
+    public UptimeBean uptime(String[] arr) {
+        return new UptimeBean(wxUptimeService.findListByHospital(Integer.valueOf(arr[3])));
+    }
 
 
     /**
