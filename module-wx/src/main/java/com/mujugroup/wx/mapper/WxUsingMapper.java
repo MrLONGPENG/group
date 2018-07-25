@@ -27,7 +27,7 @@ public interface WxUsingMapper {
     @Delete("delete from t_wx_using where id= #{id}")
     boolean deleteById(int id);
 
-    @Select("SELECT * FROM t_wx_using WHERE id = #{id}")
+    @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 AND id = #{id}")
     @Results(id = "wxUsing", value = {
             @Result(id=true, column="id",property="id",javaType=Integer.class)
             ,@Result(column="did",property="did",javaType=Long.class)
@@ -41,21 +41,21 @@ public interface WxUsingMapper {
     })
     WxUsing findById(Integer id);
 
-    @Select("SELECT * FROM t_wx_using limit 1000")
+    @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 limit 1000")
     @ResultMap("wxUsing")
     List<WxUsing> findListAll();
 
 
-    @Select("SELECT * FROM t_wx_using where open_id = #{openId} and end_time > #{time}")
+    @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 AND open_id = #{openId} AND end_time > #{time}")
     @ResultMap("wxUsing")
     List<WxUsing> findUsingByOpenId(@Param("openId") String openId, @Param("time") long time);
 
 
-    @Select("SELECT * FROM t_wx_using where did = #{did} and end_time > #{time}")
+    @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 AND did = #{did} AND end_time > #{time}")
     @ResultMap("wxUsing")
     List<WxUsing> findUsingByDid(@Param("did") String did, @Param("time") long time);
 
 
-    @Delete("delete from t_wx_using where  did = #{did} and end_time > #{time}")
+    @Update("UPDATE t_wx_using SET `deleted`=1 WHERE did = #{did} and end_time > #{time}")
     boolean deleteByDid(@Param("did") String did, @Param("time") long time);
 }
