@@ -25,7 +25,7 @@ import java.util.List;
 public interface BeanMapper {
 
 
-    @Select("SELECT * FROM t_device WHERE mac = #{did}")
+    @Select("SELECT * FROM t_device WHERE `status`=14 AND mac = #{did}")
     @Results(value={@Result(column="mac",property="did",javaType=String.class)
             ,@Result(column="code",property="code",javaType=String.class)
             ,@Result(column="agentId",property="agentId",javaType=Integer.class)
