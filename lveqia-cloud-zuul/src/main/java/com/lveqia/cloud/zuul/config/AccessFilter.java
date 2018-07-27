@@ -29,7 +29,9 @@ public class AccessFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         logger.debug("shouldFilter");
-        return true; //是否执行该过滤器，true代表需要过滤
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+        return !request.getMethod().equals("OPTIONS"); // //是否执行该过滤器，true代表需要过滤
     }
 
     @Override
@@ -39,7 +41,7 @@ public class AccessFilter extends ZuulFilter {
         logger.debug("Method {} SessionId {} request url {}", request.getMethod()
                 , request.getSession().getId(), request.getRequestURL().toString());
         //获取传来的参数accessToken
-      /*  Object accessToken = request.getParameter("accessToken");
+       /* Object accessToken = request.getParameter("accessToken");
         if(accessToken == null) {
             logger.warn("access token is empty");
             //过滤该请求，不往下级服务去转发请求，到此结束

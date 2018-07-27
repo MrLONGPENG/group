@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 
 public class ResultUtil {
 
-    private final static String VERSION = "20180720";
+    private final static String VERSION = "20180725";
     private final static String SUCCESS = "Success";
 
     public final static int CODE_SUCCESS = 200;
@@ -17,8 +17,12 @@ public class ResultUtil {
     public final static int CODE_DB_STORAGE_FAIL = 205;
     public final static int CODE_THIRD_DATA_ERROR  = 210;
 
+    public final static int CODE_PASSWORD_ERROR  = 401;
+    public final static int CODE_ACCOUNT_DISABLE = 402;
     public final static int CODE_NOT_FIND_DATA = 403;
     public final static int CODE_NOT_FIND_PATH = 404;
+    public final static int CODE_NOT_AUTHORITY = 405;
+
 
     public final static int CODE_UNKNOWN_ERROR = 500;
 
@@ -76,9 +80,13 @@ public class ResultUtil {
             case CODE_DB_STORAGE_FAIL:  return error(code,"数据存储失败");
             case CODE_THIRD_DATA_ERROR: return error(code,"第三方数据格式错误");
             // 400+ 错误
-            case CODE_NOT_FIND_DATA:  return error(code,"没有找到数据或请求参数错误");
-            case CODE_NOT_FIND_PATH:  return error(code,"无此接口路径");
-            case CODE_UNKNOWN_ERROR:  return error(code,"未知错误");
+
+            case CODE_PASSWORD_ERROR:  return error(code,"用户名或密码输入错误，登录失败!");
+            case CODE_ACCOUNT_DISABLE: return error(code,"账户被禁用，登录失败，请联系管理员!");
+            case CODE_NOT_FIND_DATA:   return error(code,"没有找到数据或请求参数错误");
+            case CODE_NOT_FIND_PATH:   return error(code,"接口路径没有找到，请检查路由!");
+            case CODE_NOT_AUTHORITY:   return error(code,"没有登陆或权限不足，请联系管理员!");
+            case CODE_UNKNOWN_ERROR:   return error(code,"未知错误");
         }
         return error(code,"Unknown error");
     }

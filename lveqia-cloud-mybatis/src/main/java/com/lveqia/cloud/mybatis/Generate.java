@@ -18,8 +18,8 @@ public class Generate {
 	private static final char FS = File.separatorChar;
 	public static void main(String[] args) {
 		BaseInfo params = UtilProp.getParams();
-		params.setProjectName("module-wx");
-		params.setPackageName("com.mujugroup.wx");
+		params.setProjectName("lveqia-cloud-zuul");
+		params.setPackageName("com.lveqia.cloud.zuul");
 		List<String> tables = getTables();UtilDB.getTableNames();
 		String basePath = UtilString.packageToPath(params.getPackageName());
 		Map<Object, Object> map = new HashMap<>();
@@ -32,9 +32,11 @@ public class Generate {
 
 	private static List<String> getTables() {
 		List<String> tableNames = new LinkedList<>();
-		tableNames.add("t_wx_user");
-		tableNames.add("t_wx_opinion");
-//		tableNames.add("t_wx_relation");
+		tableNames.add("t_sys_user");
+		tableNames.add("t_sys_role");
+		tableNames.add("t_sys_menu");
+		tableNames.add("t_sys_user_role");
+		tableNames.add("t_sys_menu_role");
 		return tableNames.size()==0 ? UtilDB.getTableNames():tableNames;
 	}
 
