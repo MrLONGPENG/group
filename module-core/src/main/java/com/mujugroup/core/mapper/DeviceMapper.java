@@ -54,10 +54,13 @@ public interface DeviceMapper {
     })
     Device findById(Integer id);
 
-    @Select("SELECT * FROM t_device limit 1000")
+
     @ResultMap("device")
+    @Select("SELECT * FROM t_device")
     List<Device> findListAll();
+    
 
-
-
+    @ResultMap("device")
+    @Select("SELECT * FROM t_device WHERE status = #{status}")
+    List<Device> findListByStatus(int status);
 }

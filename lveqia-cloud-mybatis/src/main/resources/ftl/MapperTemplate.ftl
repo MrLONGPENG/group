@@ -34,7 +34,7 @@ public interface ${tables.className}Mapper {
     </#list>})
     ${tables.className} findById(Integer id);
 
-    @Select("SELECT * FROM ${tables.tableName} limit 1000")
+    @Select("SELECT * FROM ${tables.tableName}")
     @ResultMap("${tables.fieldName}")
     List<${tables.className}> findListAll();
 

@@ -1,21 +1,25 @@
 package com.mujugroup.core.service.impl;
 
-import com.lveqia.cloud.common.AESUtil;
-import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.core.bean.DeviceBean;
 import com.mujugroup.core.mapper.BeanMapper;
+import com.mujugroup.core.mapper.DeviceMapper;
+import com.mujugroup.core.model.Device;
 import com.mujugroup.core.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
 
     private final BeanMapper beanMapper;
+    private final DeviceMapper deviceMapper;
 
     @Autowired
-    public DeviceServiceImpl(BeanMapper beanMapper) {
+    public DeviceServiceImpl(DeviceMapper deviceMapper, BeanMapper beanMapper) {
+        this.deviceMapper = deviceMapper;
         this.beanMapper = beanMapper;
     }
 
@@ -23,5 +27,15 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceBean findDeviceBeanByDid(String did) {
         return beanMapper.findDeviceBeanByDid(did);
+    }
+
+    @Override
+    public List<Device> findListAll() {
+        return deviceMapper.findListAll();
+    }
+
+    @Override
+    public List<Device> findListByStatus(int status) {
+        return deviceMapper.findListByStatus(status);
     }
 }

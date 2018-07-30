@@ -46,7 +46,7 @@ public interface WxOrderMapper {
     })
     WxOrder findById(Integer id);
 
-    @Select("SELECT * FROM t_wx_order limit 1000")
+    @Select("SELECT * FROM t_wx_order")
     @ResultMap("wxOrder")
     List<WxOrder> findListAll();
 
