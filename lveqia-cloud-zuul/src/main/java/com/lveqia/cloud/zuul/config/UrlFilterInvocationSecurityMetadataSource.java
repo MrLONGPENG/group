@@ -32,21 +32,27 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
-        String requestUrl = ((FilterInvocation) o).getRequestUrl();        //获取请求地址
-        logger.debug("url filter ->{}", requestUrl);
-        List<SysMenu> allMenu = sysMenuService.getAllMenuByLength();
-        for (SysMenu menu : allMenu) {
-            if (antPathMatcher.match(menu.getUrl(), requestUrl) && menu.getRoles().size()>0) {
-                logger.debug("url:{} requestUrl:{}", menu.getUrl(), requestUrl);
-                List<SysRole> roles = menu.getRoles();
-                int size = roles.size();
-                String[] values = new String[size];
-                for (int i = 0; i < size; i++) {
-                    values[i] = roles.get(i).getName();
+        if(o instanceof  FilterInvocation){
+            FilterInvocation filterInvocation = (FilterInvocation) o;
+            String requestUrl = filterInvocation.getRequestUrl();        //获取请求地址
+            logger.debug("filter ->id {} url {}", filterInvocation.getHttpRequest().getSession().getId(), requestUrl);
+            List<SysMenu> allMenu = sysMenuService.getAllMenuByLength();
+            for (SysMenu menu : allMenu) {
+                if (antPathMatcher.match(menu.getUrl(), requestUrl) && menu.getRoles().size()>0) {
+                    logger.debug("url:{} requestUrl:{}", menu.getUrl(), requestUrl);
+                    List<SysRole> roles = menu.getRoles();
+                    int size = roles.size();
+                    String[] values = new String[size];
+                    for (int i = 0; i < size; i++) {
+                        values[i] = roles.get(i).getName();
+                    }
+                    return SecurityConfig.createList(values);
                 }
-                return SecurityConfig.createList(values);
             }
+        }else {
+            logger.warn("Url Filter Invocation instanceof error");
         }
+
 
         return null; //没有匹配上的资源，不做权限控制
     }
