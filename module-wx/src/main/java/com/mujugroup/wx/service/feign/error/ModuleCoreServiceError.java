@@ -13,7 +13,13 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
     @Override
     public String deviceQuery(String did) {
-        logger.warn("Remote call module-core failure");
+        logger.warn("Remote call module-core failure->deviceQuery");
+        return null;
+    }
+
+    @Override
+    public String deviceList(int pageNum, int pageSize, int status) {
+        logger.warn("Remote call module-core failure->deviceList");
         return null;
     }
 }
