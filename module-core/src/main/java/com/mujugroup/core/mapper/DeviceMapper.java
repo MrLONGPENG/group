@@ -78,7 +78,7 @@ public interface DeviceMapper {
     })
     List<StatusAidBean> findGroupByAid(@Param("aid")int aid);
 
-    @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
+    @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, hospitalBed, COUNT(DISTINCT mac) as act" +
             " FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} AND status = 14 GROUP BY depart")
     @Results(value = {@Result(column="oid",property="oid",javaType=Integer.class)
             ,@Result(column="hid",property="hid",javaType=Integer.class)
@@ -86,6 +86,7 @@ public interface DeviceMapper {
             ,@Result(column="act",property="actCount",javaType=Integer.class)
             ,@Result(column="oid",property="department",javaType=String.class)
             ,@Result(column="oid",property="payCount",javaType=String.class)
+            ,@Result(column="hospitalBed",property="hospitalBed",javaType=String.class)
 
     })
     List<StatusHidBean> findGroupByHid(@Param("aid")int aid, @Param("hid")int hid);

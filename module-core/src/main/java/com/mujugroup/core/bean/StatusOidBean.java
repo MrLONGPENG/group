@@ -13,6 +13,8 @@ public class StatusOidBean implements Serializable {
 
     private String bid;
 
+    private String hospitalBed;
+
     private int oid;
 
     private int hid;
@@ -40,6 +42,14 @@ public class StatusOidBean implements Serializable {
 
     public void setBid(String bid) {
         this.bid = bid;
+    }
+
+    public String getHospitalBed() {
+        return hospitalBed;
+    }
+
+    public void setHospitalBed(String hospitalBed) {
+        this.hospitalBed = hospitalBed;
     }
 
     public int getOid() {
