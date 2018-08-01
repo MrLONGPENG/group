@@ -26,8 +26,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     @Override
-    public Map<String, String> getDepartmentMapByHid(String param) {
-        logger.debug("getDepartmentMapByHid->{}", param);
+    public Map<String, String> getOidMapByHid(String param) {
+        logger.debug("getOidMapByHid->{}", param);
         Map<String,String> map = new HashMap<>();
         List<Department> list =  departmentMapper.findListByHid(param.split(",")[1]);
         for (Department department: list) {

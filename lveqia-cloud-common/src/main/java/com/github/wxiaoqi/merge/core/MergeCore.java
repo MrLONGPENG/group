@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MergeCore {
 
+    private static final String DEFAULT_KEY = "default_key";
     private Map<String, MergeField> mergeFieldMap;
     private ListeningExecutorService backgroundRefreshPools;
     private LoadingCache<String, Map<String, String>> caches;
@@ -173,17 +174,27 @@ public class MergeCore {
                     Map<String, String> value = caches.get(key);
                     if (value != null) {
                         if(value.size()==0) caches.refresh(key);
-                        invokes.put(field.getName(), value);
+                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
                         continue;
                     }
                 }
                 Object bean = BeanFactoryUtils.getBean(annotation.feign());
                 Method method = annotation.feign().getMethod(annotation.method(), String.class);
                 Map<String, String> value = (Map<String, String>) method.invoke(bean, args);
-                invokes.put(field.getName(), value);
+                invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
             }
         }
         result.forEach(obj -> mergeObjFieldValue(obj, mergeFields, invokes));
+    }
+
+    /**
+     * 判定是否存储默认值，存在则添加
+     * @param map
+     * @param value
+     */
+    private Map<String,String> addDefaultKey(Map<String,String> map, String value) {
+        if(!"".equals(value)) map.put(DEFAULT_KEY, value);
+        return map;
     }
 
     /**
@@ -227,14 +238,14 @@ public class MergeCore {
                     Map<String, String> value = caches.get(key);
                     if (value != null) {
                         if(value.size()==0) caches.refresh(key);
-                        invokes.put(field.getName(), value);
+                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
                         continue;
                     }
                 }
                 Object bean = BeanFactoryUtils.getBean(annotation.feign());
                 Method method = annotation.feign().getMethod(annotation.method(), String.class);
                 Map<String, String> value = (Map<String, String>) method.invoke(bean, args);
-                invokes.put(field.getName(), value);
+                invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
             }
         }
         mergeObjFieldValue(mergeObj, mergeFields, invokes);
@@ -247,13 +258,17 @@ public class MergeCore {
      * @param invokes
      */
     private void mergeObjFieldValue(Object mergeObj, List<Field> mergeFields, Map<String, Map<String, String>> invokes) {
+        Object o;
+        Map<String, String> m;
         for (Field field : mergeFields) {
             field.setAccessible(true);
-            Object o;
             try {
                 o = field.get(mergeObj);
-                if (o != null && invokes.get(field.getName()).containsKey(String.valueOf(o))) {
-                    field.set(mergeObj, invokes.get(field.getName()).get(o.toString()));
+                m = invokes.get(field.getName());
+                if (o != null && m.containsKey(String.valueOf(o))) {
+                    field.set(mergeObj, m.get(o.toString()));
+                } else if(m.containsKey(DEFAULT_KEY)){
+                    field.set(mergeObj, m.get(DEFAULT_KEY));
                 }
             } catch (IllegalAccessException e) {
                 logger.error("数据属性加工失败:" + field, e);

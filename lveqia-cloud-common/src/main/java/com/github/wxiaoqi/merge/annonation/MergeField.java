@@ -19,6 +19,13 @@ public @interface MergeField {
     String key() default "";
 
     /**
+     * 默认值
+     * @return
+     */
+    String value() default "";
+
+
+    /**
      * 目标类
      * @return
      */

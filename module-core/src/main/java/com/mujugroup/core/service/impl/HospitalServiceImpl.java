@@ -24,8 +24,8 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Map<String, String> getHospitalMapByAid(String param) {
-        logger.debug("getHospitalMapByAid->{}", param);
+    public Map<String, String> getHidMapByAid(String param) {
+        logger.debug("getHidMapByAid->{}", param);
         Map<String,String> map = new HashMap<>();
         List<Hospital> list =  hospitalMapper.findListByAid(param);
         for (Hospital hospital: list) {

@@ -14,10 +14,10 @@ public class StatusAidBean implements Serializable {
 
     private int actCount;
 
-    @MergeField(feign = HospitalService.class, method = "getHospitalMapByAid", isQueryByParam = true)
+    @MergeField(value = "未知", feign = HospitalService.class, method = "getHidMapByAid", isQueryByParam = true)
     private String hospital;
 
-    @MergeField(feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
+    @MergeField(value = "0", feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
     private String payCount;
 
     public int getHid() {

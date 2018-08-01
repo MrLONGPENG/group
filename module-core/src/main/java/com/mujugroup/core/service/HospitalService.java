@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface HospitalService {
 
-    Map<String, String> getHospitalMapByAid(String param);
+    Map<String, String> getHidMapByAid(String param);
 }

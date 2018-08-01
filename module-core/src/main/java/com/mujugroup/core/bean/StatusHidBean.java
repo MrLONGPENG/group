@@ -16,10 +16,10 @@ public class StatusHidBean implements Serializable {
 
     private int actCount;
 
-    @MergeField(feign = DepartmentService.class, method = "getDepartmentMapByHid", isQueryByParam = true)
+    @MergeField(value = "未知", feign = DepartmentService.class, method = "getOidMapByHid", isQueryByParam = true)
     private String department;
 
-    @MergeField(feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
+    @MergeField(value = "0", feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
     private String payCount;
 
     public int getOid() {
