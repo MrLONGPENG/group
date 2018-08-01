@@ -2,6 +2,8 @@ package com.mujugroup.wx.service.impl;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.util.DBMap;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.mapper.WxOrderMapper;
@@ -47,6 +49,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
+    public WxOrder findLastOrderByDid(String did) {
+        return wxOrderMapper.findLastOrderByDid(did);
+    }
+
+    @Override
     public WxOrder findOrderByNo(String orderNo) {
         return wxOrderMapper.findByNo(orderNo);
     }
@@ -89,6 +96,17 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<WxOrder> findListAll() {
         return wxOrderMapper.findListAll();
+    }
+
+
+    @Override
+    public List<DBMap> getPayCountByAid(String aid) {
+        return wxOrderMapper.getPayCountByAid(aid, DateUtil.getLastDay());
+    }
+
+    @Override
+    public List<DBMap> getPayCountByHid(String aid, String hid) {
+        return wxOrderMapper.getPayCountByHid(aid, hid, DateUtil.getLastDay());
     }
 
 

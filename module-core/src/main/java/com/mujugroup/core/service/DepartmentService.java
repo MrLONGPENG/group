@@ -1,5 +1,7 @@
 package com.mujugroup.core.service;
 
+import java.util.Map;
+
 public interface DepartmentService {
-    String test();
+    Map<String, String> getDepartmentMapByHid(String param);
 }

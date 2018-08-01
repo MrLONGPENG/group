@@ -1,5 +1,6 @@
 package com.mujugroup.wx.mapper;
 
+import com.lveqia.cloud.common.util.DBMap;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.sql.WxOrderSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -46,6 +47,11 @@ public interface WxOrderMapper {
     })
     WxOrder findById(Integer id);
 
+    @ResultMap("wxOrder")
+    @Select("SELECT * FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID LIMIT 1")
+    WxOrder findLastOrderByDid(@Param("did")String did);
+
+
     @Select("SELECT * FROM t_wx_order")
     @ResultMap("wxOrder")
     List<WxOrder> findListAll();
@@ -59,4 +65,20 @@ public interface WxOrderMapper {
     @Select("SELECT * FROM t_wx_order where open_id= #{openId} and pay_status= #{status} order by id desc")
     @ResultMap("wxOrder")
     List<WxOrder> findListBySelf(@Param("openId")String openId, @Param("status")Integer status);
+
+
+    @Select("SELECT hid, count(DISTINCT did) as count FROM t_wx_order where aid= #{aid}" +
+            " AND pay_status = 2 AND pay_time > #{payTime} group by hid")
+    @Results({@Result(column="hid", property="key", javaType=String.class)
+            ,@Result(column="count", property="value", javaType=String.class)})
+    List<DBMap> getPayCountByAid(@Param("aid")String aid, @Param("payTime")long payTime);
+
+
+    @Select("SELECT oid, count(DISTINCT did) as count FROM t_wx_order WHERE aid= #{aid} AND hid= #{hid}" +
+            " AND pay_status = 2 AND pay_time > #{payTime} group by oid")
+    @Results({@Result(column="oid", property="key", javaType=String.class)
+            ,@Result(column="count", property="value", javaType=String.class)})
+    List<DBMap> getPayCountByHid(@Param("aid")String aid, @Param("hid")String hid, @Param("payTime")long payTime);
+
+
 }

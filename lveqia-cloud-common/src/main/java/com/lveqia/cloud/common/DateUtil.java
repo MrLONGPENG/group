@@ -100,4 +100,11 @@ public class DateUtil {
         System.out.println(System.currentTimeMillis()/1000);
         System.out.println(getTimesNight()+9*60*60);
     }
+
+    /**
+     * 最近24小时即 当前时间到一天以前
+     */
+    public static long getLastDay() {
+        return System.currentTimeMillis()/1000 - 24*60*60;
+    }
 }

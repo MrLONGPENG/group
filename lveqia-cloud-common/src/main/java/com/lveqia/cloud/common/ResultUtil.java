@@ -51,10 +51,15 @@ public class ResultUtil {
     }
 
     public static String success(Object object, PageInfo pageInfo) {
+        return success(object, pageInfo, null);
+    }
+
+    public static String success(Object object, PageInfo pageInfo, String info) {
         Result<Object> result = new Result<>();
         result.setCode(CODE_SUCCESS);
         result.setInfo(SUCCESS);
         result.setData(object);
+        result.setDesc(info);
         if(pageInfo!=null){
             result.setSize(pageInfo.getSize());
             result.setPages(pageInfo.getPages());
@@ -106,6 +111,7 @@ public class ResultUtil {
         private int code;
         private long timestamp;
         private String info;
+        private String desc;
         private String version;
         private T data;
 
@@ -145,6 +151,14 @@ public class ResultUtil {
 
         public void setInfo(String info) {
             this.info = info;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
         }
 
         public String getVersion() {

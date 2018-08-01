@@ -15,12 +15,10 @@ public class LockInfoServiceImpl implements LockInfoService {
 
 
     private final LockInfoMapper lockInfoMapper;
-    private final DeviceService deviceService;
 
     @Autowired
-    public LockInfoServiceImpl(LockInfoMapper lockInfoMapper, DeviceService deviceService) {
+    public LockInfoServiceImpl(LockInfoMapper lockInfoMapper) {
         this.lockInfoMapper = lockInfoMapper;
-        this.deviceService = deviceService;
     }
 
 

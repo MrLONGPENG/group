@@ -3,6 +3,8 @@ package com.mujugroup.wx.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.DBMap;
 import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxOrder;
@@ -10,7 +12,6 @@ import com.mujugroup.wx.service.WxOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -45,7 +48,6 @@ public class WxOrderController {
         logger.debug("order-list:{}", sessionThirdKey);
         PageHelper.startPage(pageNum, pageSize);
         List<WxOrder> list = wxOrderService.listSelfOrder(sessionThirdKey);
-
         if(list!=null){
             PageInfo pageInfo =  PageInfo.of(list);
             List<OrderBean> orders = new ArrayList<>();
@@ -66,5 +68,44 @@ public class WxOrderController {
             return ResultUtil.success(details);
         }
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+    }
+
+
+    /**
+     * 查询最近24小时的支付数据
+     */
+    @RequestMapping(value = "/getPayCount", method = RequestMethod.POST)
+    public Map<String, String> getPayCount(String key) {
+        logger.warn("order-getPayCount[{}]", key);
+        String[] ids = key.split(",");
+        HashMap<String, String> hashMap =  new HashMap<>();
+        if(ids.length==1){
+            List<DBMap> list = wxOrderService.getPayCountByAid(ids[0]);
+            list.forEach(dbMap -> dbMap.addTo(hashMap));
+        }else if(ids.length == 2){
+            List<DBMap> list = wxOrderService.getPayCountByHid(ids[0], ids[1]);
+            list.forEach(dbMap -> dbMap.addTo(hashMap));
+        }
+        logger.debug(hashMap.toString());
+        return hashMap;
+    }
+
+    @RequestMapping(value = "/getPaymentInfo", method = RequestMethod.POST)
+    public Map<String, String> getPaymentInfo(String key) {
+        HashMap<String, String> hashMap =  new HashMap<>();
+        String[] array = key.split(",");
+        WxOrder wxOrder;
+        StringBuilder sb;
+        for (String did: array) {
+            wxOrder = wxOrderService.findLastOrderByDid(did);
+            if(wxOrder!=null){
+                // DID;订单号;支付金额(分);支付时间;到期时间(秒)
+                sb = new StringBuilder(StringUtil.autoFillDid(wxOrder.getDid()));
+                sb.append(";").append(wxOrder.getTradeNo()).append(";").append(wxOrder.getPayPrice());
+                sb.append(";").append(wxOrder.getPayTime()).append(";").append(wxOrder.getEndTime());
+                hashMap.put(did, new String(sb));
+            }
+        }
+        return hashMap;
     }
 }

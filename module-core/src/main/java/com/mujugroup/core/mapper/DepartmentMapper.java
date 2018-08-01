@@ -40,8 +40,12 @@ public interface DepartmentMapper {
     })
     Department findById(Integer id);
 
-    @Select("SELECT * FROM t_department limit 1000")
+    @Select("SELECT * FROM t_department")
     @ResultMap("department")
     List<Department> findListAll();
 
+
+    @ResultMap("department")
+    @Select("SELECT * FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
+    List<Department> findListByHid(String hid);
 }

@@ -18,9 +18,5 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @RequestMapping(value = "/test")
-    public String test(){
-        return departmentService.test();
-    }
 
 }

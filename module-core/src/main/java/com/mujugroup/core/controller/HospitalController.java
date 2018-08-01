@@ -18,9 +18,5 @@ public class HospitalController {
         this.hospitalService = hospitalService;
     }
 
-    @RequestMapping(value = "/test")
-    public String test(){
-        return hospitalService.test();
-    }
 
 }

@@ -1,6 +1,8 @@
 package com.mujugroup.core.mapper;
 
-import com.mujugroup.core.bean.DeviceBean;
+import com.mujugroup.core.bean.StatusAidBean;
+import com.mujugroup.core.bean.StatusHidBean;
+import com.mujugroup.core.bean.StatusOidBean;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -63,4 +65,42 @@ public interface DeviceMapper {
     @ResultMap("device")
     @Select("SELECT * FROM t_device WHERE status = #{status}")
     List<Device> findListByStatus(int status);
+
+
+    @Select("SELECT hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
+            " FROM t_device WHERE agentId = #{aid} AND status = 14 GROUP BY hospitalId")
+    @Results(value = {@Result(column="hid",property="hid",javaType=Integer.class)
+            ,@Result(column="aid",property="aid",javaType=Integer.class)
+            ,@Result(column="act",property="actCount",javaType=Integer.class)
+            ,@Result(column="hid",property="hospital",javaType=String.class)
+            ,@Result(column="hid",property="payCount",javaType=String.class)
+
+    })
+    List<StatusAidBean> findGroupByAid(@Param("aid")int aid);
+
+    @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
+            " FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} AND status = 14 GROUP BY depart")
+    @Results(value = {@Result(column="oid",property="oid",javaType=Integer.class)
+            ,@Result(column="hid",property="hid",javaType=Integer.class)
+            ,@Result(column="aid",property="aid",javaType=Integer.class)
+            ,@Result(column="act",property="actCount",javaType=Integer.class)
+            ,@Result(column="oid",property="department",javaType=String.class)
+            ,@Result(column="oid",property="payCount",javaType=String.class)
+
+    })
+    List<StatusHidBean> findGroupByHid(@Param("aid")int aid, @Param("hid")int hid);
+
+
+    @Select("SELECT mac as did, `code` as bid, depart as oid, hospitalId as hid, agentId as aid" +
+            ", COUNT(DISTINCT mac) as act FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} " +
+            " AND depart = #{oid} AND status = 14 GROUP BY mac")
+    @Results( value = {@Result(column="did",property="did",javaType=String.class)
+            ,@Result(column="bid",property="bid",javaType=String.class)
+            ,@Result(column="oid",property="oid",javaType=Integer.class)
+            ,@Result(column="hid",property="hid",javaType=Integer.class)
+            ,@Result(column="aid",property="aid",javaType=Integer.class)
+            ,@Result(column="did",property="paymentInfo",javaType=String.class)
+            ,@Result(column="bid",property="hardwareInfo",javaType=String.class)
+    })
+    List<StatusOidBean> findGroupByOid(@Param("aid")int aid, @Param("hid")int hid, @Param("oid")int oid);
 }

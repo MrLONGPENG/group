@@ -49,8 +49,13 @@ public interface HospitalMapper {
     })
     Hospital findById(Integer id);
 
-    @Select("SELECT * FROM t_hospital limit 1000")
+    @Select("SELECT * FROM t_hospital WHERE enable = 22")
     @ResultMap("hospital")
     List<Hospital> findListAll();
 
+
+
+    @ResultMap("hospital")
+    @Select("SELECT * FROM t_hospital WHERE enable = 22 AND agentId = #{aid} ")
+    List<Hospital> findListByAid(String aid);
 }
