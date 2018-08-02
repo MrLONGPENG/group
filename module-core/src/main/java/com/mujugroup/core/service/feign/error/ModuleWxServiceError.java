@@ -1,5 +1,6 @@
 package com.mujugroup.core.service.feign.error;
 
+import com.lveqia.cloud.common.ResultUtil;
 import com.mujugroup.core.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,5 +24,10 @@ public class ModuleWxServiceError implements ModuleWxService {
     public Map<String, String> getPaymentInfo(String key) {
         logger.debug("Remote call module-wx-getPaymentInfo[{}] failure", key);
         return new HashMap<>();
+    }
+
+    @Override
+    public String queryUptime(int key, int kid) {
+        return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
     }
 }

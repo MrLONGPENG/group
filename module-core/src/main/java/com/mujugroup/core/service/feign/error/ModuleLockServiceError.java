@@ -19,4 +19,10 @@ public class ModuleLockServiceError implements ModuleLockService {
         logger.warn("Remote call module-lock-getHardwareInfo[{}] failure", key);
         return new HashMap<>();
     }
+
+    @Override
+    public String deviceBeep(String did) {
+        logger.warn("Remote call module-lock-deviceBeep[{}] failure", did);
+        return null;
+    }
 }

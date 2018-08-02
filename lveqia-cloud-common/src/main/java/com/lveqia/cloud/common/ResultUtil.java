@@ -15,6 +15,7 @@ public class ResultUtil {
     public final static int CODE_REQUEST_FORMAT = 203;
     public final static int CODE_VALIDATION_FAIL = 204;
     public final static int CODE_DB_STORAGE_FAIL = 205;
+    public final static int CODE_REMOTE_CALL_FAIL = 206;
     public final static int CODE_THIRD_DATA_ERROR  = 210;
 
     public final static int CODE_PASSWORD_ERROR  = 401;
@@ -22,6 +23,7 @@ public class ResultUtil {
     public final static int CODE_NOT_FIND_DATA = 403;
     public final static int CODE_NOT_FIND_PATH = 404;
     public final static int CODE_NOT_AUTHORITY = 405;
+
 
 
     public final static int CODE_UNKNOWN_ERROR = 500;
@@ -83,6 +85,7 @@ public class ResultUtil {
             case CODE_REQUEST_FORMAT:   return error(code,"请求参数格式错误");
             case CODE_VALIDATION_FAIL:  return error(code,"效验数据失败");
             case CODE_DB_STORAGE_FAIL:  return error(code,"数据存储失败");
+            case CODE_REMOTE_CALL_FAIL: return error(code,"远程调用服务失败");
             case CODE_THIRD_DATA_ERROR: return error(code,"第三方数据格式错误");
             // 400+ 错误
 

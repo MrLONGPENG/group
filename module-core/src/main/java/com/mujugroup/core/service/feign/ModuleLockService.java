@@ -17,4 +17,7 @@ public interface ModuleLockService {
     @RequestMapping(value = "/info/getHardwareInfo", method = RequestMethod.POST)
     Map<String, String> getHardwareInfo(@RequestParam(value = "key") String key);
 
+    @RequestMapping(value = "/device/beep", method = RequestMethod.POST)
+    String deviceBeep(@RequestParam(value = "did") String did);
+
 }

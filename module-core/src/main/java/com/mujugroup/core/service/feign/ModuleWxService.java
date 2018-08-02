@@ -19,4 +19,7 @@ public interface ModuleWxService {
 
     @RequestMapping(value = "/order/getPaymentInfo", method = RequestMethod.POST)
     Map<String, String> getPaymentInfo(@RequestParam(value = "key") String key);
+
+    @RequestMapping(value = "/uptime/query", method = RequestMethod.POST)
+    String queryUptime(@RequestParam(name="key") int key, @RequestParam(name="kid") int kid);
 }
