@@ -9,6 +9,8 @@ import com.mujugroup.wx.model.WxUptime;
  */
 public interface WxUptimeService {
 
+    WxUptime query(int key, int kid);
+
     WxUptime findListByHospital(Integer hid);
 
     WxUptime getDefaultWxUptime();
@@ -18,4 +20,6 @@ public interface WxUptimeService {
     boolean update(int key, int kid, String startDesc, String stopDesc, String explain) throws ParamException;
 
     boolean delete(int key, int kid) throws ParamException;
+
+
 }

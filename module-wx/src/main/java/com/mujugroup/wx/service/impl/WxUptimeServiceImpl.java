@@ -33,12 +33,21 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
 
     @Override
-    public WxUptime findListByHospital(Integer hid) {
-        List<WxUptime> list = wxUptimeMapper.findListByRelation(WxRelation.KEY_HOSPITAL, hid);
+    public WxUptime query(int key, int kid) {
+        List<WxUptime> list = wxUptimeMapper.findListByRelation(key, kid);
         if (list == null || list.size() ==0) {
-            return  getDefaultWxUptime();
+            return null;
         }
         return list.get(0);
+    }
+
+    @Override
+    public WxUptime findListByHospital(Integer hid) {
+        WxUptime wxUptime= query(WxRelation.KEY_HOSPITAL, hid);
+        if (wxUptime == null) {
+            return getDefaultWxUptime();
+        }
+        return wxUptime;
     }
 
     /**
@@ -112,4 +121,5 @@ public class WxUptimeServiceImpl implements WxUptimeService {
         wxRelationMapper.deleteByType(WxRelation.TYPE_UPTIME, key, kid);
         return true;
     }
+
 }

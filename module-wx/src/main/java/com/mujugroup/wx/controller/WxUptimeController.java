@@ -30,21 +30,33 @@ public class WxUptimeController {
         this.wxUptimeService = wxUptimeService;
     }
 
-    @RequestMapping(value = "/find")
-    public String find(String sessionThirdKey, String hid){
-        logger.debug("uptime-list:{} hospitalId:{}", sessionThirdKey, hid);
-        WxUptime wxUptime;
-        if(StringUtil.isEmpty(hid)){
-            wxUptime = wxUptimeService.getDefaultWxUptime();
-        }else{
-            wxUptime = wxUptimeService.findListByHospital(Integer.parseInt(hid));
+
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    @ApiOperation(value="医院开锁时间查询接口", notes="根据类型查询医院开锁时间,未找到返回默认数据")
+    public String find(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+            , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
+            , required = true) @RequestParam(name="kid") int kid) {
+        logger.debug("find key:{} kid:{}", key, kid);
+        WxUptime wxUptime = wxUptimeService.query(key, kid);
+        if (wxUptime != null) {
+            return ResultUtil.success(wxUptime);
+        }else {
+            return ResultUtil.success(wxUptimeService.getDefaultWxUptime());
         }
+    }
+
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @ApiOperation(value="医院开锁时间查询接口", notes="根据类型查询医院开锁时间,未找到返回空")
+    public String query(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+            , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
+            , required = true) @RequestParam(name="kid") int kid){
+        logger.debug("query key:{} kid:{}", key, kid);
+        WxUptime wxUptime = wxUptimeService.query(key, kid);
         if(wxUptime != null){
             return ResultUtil.success(wxUptime);
         }
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
-
 
     @ApiOperation(value="医院开锁时间新增或更新接口", notes="根据类型(代理商;医院;科室)更新医院开锁时间")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -69,10 +81,10 @@ public class WxUptimeController {
 
 
     @ApiOperation(value="医院开锁时间删除接口", notes="根据类型(代理商;医院;科室)删除医院开锁时间")
-    @RequestMapping(value = "/delete/{key}/{kid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
-            , required = true) @PathVariable(name="key") int key, @ApiParam(value="外键ID"
-            , required = true) @PathVariable(name="kid") int kid) {
+            , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
+            , required = true) @RequestParam(name="kid") int kid) {
         try {
             if(wxUptimeService.delete(key, kid)){
                 return ResultUtil.success();
