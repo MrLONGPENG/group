@@ -19,8 +19,4 @@ public class LveqiaCloudConfigApplication {
         SpringApplication.run(LveqiaCloudConfigApplication.class, args);
     }
 
-    @RequestMapping("/")
-    public String home() {
-        return "Hello World!";
-    }
 }
