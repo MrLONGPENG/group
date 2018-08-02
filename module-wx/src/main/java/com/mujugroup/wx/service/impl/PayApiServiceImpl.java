@@ -121,10 +121,7 @@ public class PayApiServiceImpl implements PayApiService {
             String orderNo = map.get("out_trade_no");
             WxOrder wxOrder = wxOrderService.findOrderByNo(orderNo);
             long payTime = System.currentTimeMillis()/1000;
-            long endTime = wxUptimeService.getEndTimeByHid(wxOrder.getHid());
-            if(endTime - payTime > 24*60*60){
-                endTime -= 24*60*60; // 若隔天，减少一天
-            }
+            long endTime = wxUptimeService.getEndTimeByKey(wxOrder.getKey());
             wxOrder.setPayTime(payTime);
             wxOrder.setEndTime(endTime);
             wxOrder.setTransactionId(map.get("transaction_id"));
