@@ -36,8 +36,11 @@ public interface WxRelationMapper {
     })
     WxRelation findById(Integer id);
 
-    @Select("SELECT * FROM t_wx_relation limit 1000")
+    @Select("SELECT * FROM t_wx_relation")
     @ResultMap("wxRelation")
     List<WxRelation> findListAll();
 
+
+    @Delete("delete from t_wx_relation where `type`= #{type} AND `key`= #{key} AND `kid`= #{kid}")
+    boolean deleteByType(@Param(value="type")int type, @Param(value="key")int key, @Param(value="kid")int kid);
 }

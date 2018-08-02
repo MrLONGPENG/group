@@ -63,10 +63,37 @@ public class DateUtil {
      * @return 时+分+秒 （单位秒）
      */
     public static int getTimesNoDate(){
-        Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.HOUR_OF_DAY)*60*60 + cal.get(Calendar.MINUTE)*60 + cal.get(Calendar.SECOND);
+        Calendar c = Calendar.getInstance();
+        return getTimesNoDate(new int[]{c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND)});
     }
 
+
+    /**
+     * 获取不含日期的时间戳
+     * @param desc hh:mm 或 hh:mm:ss
+     * @return 时+分+秒 （单位秒）
+     */
+    public static int getTimesNoDate(String desc) throws NumberFormatException{
+        String[] array = desc.split(":");
+        int[] times = new int[array.length];
+        for (int i = 0; i <array.length ; i++) {
+            times[i] = Integer.parseInt(array[i]);
+        }
+        return getTimesNoDate(times);
+    }
+    /**
+     * 获取不含日期的时间戳
+     * @param times new Int[时，分，秒]
+     * @return 时+分+秒 （单位秒）
+     */
+    private static int getTimesNoDate(int[] times){
+        switch (times.length){
+            case 1 : return times[0]*60*60;
+            case 2 : return times[0]*60*60 + times[1]*60;
+            case 3 : return times[0]*60*60 + times[1]*60 + times[2];
+        }
+        return 0;
+    }
 
     /**
      * 获得当天凌晨时间

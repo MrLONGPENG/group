@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service;
 
+import com.mujugroup.wx.exception.ParamException;
 import com.mujugroup.wx.model.WxUptime;
 
 
@@ -8,9 +9,13 @@ import com.mujugroup.wx.model.WxUptime;
  */
 public interface WxUptimeService {
 
-    WxUptime getDefaultWxUptime();
-
     WxUptime findListByHospital(Integer hid);
 
+    WxUptime getDefaultWxUptime();
+
     Long getEndTimeByHid(Integer hid);
+
+    boolean update(int key, int kid, String startDesc, String stopDesc, String explain) throws ParamException;
+
+    boolean delete(int key, int kid) throws ParamException;
 }

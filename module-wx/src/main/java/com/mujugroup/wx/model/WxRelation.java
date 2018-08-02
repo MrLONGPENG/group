@@ -19,6 +19,9 @@ public class WxRelation implements Serializable {
 	public static final int KEY_HOSPITAL = 2;  	// 医院
 	//public static final int KEY_DEPARTMENT = 2; // 科室
 
+	//public static final int TYPE_GOODS = 1;  	// 商品套餐
+	public static final int TYPE_UPTIME = 2;  	// 运行时间
+
     /**
      * 主键
      * 

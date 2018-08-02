@@ -17,6 +17,7 @@ import java.util.List;
 public interface WxUptimeMapper {
 
     @InsertProvider(type = WxUptimeSqlProvider.class, method = "insert")
+    @Options(useGeneratedKeys = true, keyColumn = "id")
     boolean insert(WxUptime wxUptime);
 
     @UpdateProvider(type = WxUptimeSqlProvider.class, method = "update")
