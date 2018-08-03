@@ -11,19 +11,21 @@ import java.util.concurrent.ExecutionException;
  */
 public interface WxUptimeService {
 
-    WxUptime query(int key, int kid);
+    WxUptime query(int type, int key, int kid);
 
-    WxUptime findListByHospital(Integer hid);
+    WxUptime findListByHospital(int hid);
 
-    WxUptime getDefaultWxUptime();
+    WxUptime findListByHospital(int type, int hid);
+
+    WxUptime getDefaultWxUptime(int type);
 
     Long getEndTimeByKey(String[] keys);
 
     Long getEndTimeByKey(String key) throws ExecutionException;
 
-    boolean update(int key, int kid, String startDesc, String stopDesc, String explain) throws ParamException;
+    boolean update(int type, int key, int kid, String startDesc, String stopDesc, String explain) throws ParamException;
 
-    boolean delete(int key, int kid) throws ParamException;
+    boolean delete(int type, int key, int kid) throws ParamException;
 
 
 }

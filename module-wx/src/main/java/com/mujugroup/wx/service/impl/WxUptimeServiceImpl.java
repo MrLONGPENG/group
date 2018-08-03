@@ -68,8 +68,8 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
 
     @Override
-    public WxUptime query(int key, int kid) {
-        List<WxUptime> list = wxUptimeMapper.findListByRelation(key, kid);
+    public WxUptime query(int type, int key, int kid) {
+        List<WxUptime> list = wxUptimeMapper.findListByRelation(type, key, kid);
         if (list == null || list.size() ==0) {
             return null;
         }
@@ -77,29 +77,44 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
 
     @Override
-    public WxUptime findListByHospital(Integer hid) {
-        WxUptime wxUptime= query(WxRelation.KEY_HOSPITAL, hid);
+    public WxUptime findListByHospital(int hid) {
+        return findListByHospital(WxRelation.TYPE_UPTIME, hid);
+    }
+
+    @Override
+    public WxUptime findListByHospital(int type, int hid) {
+        WxUptime wxUptime= query(type, WxRelation.KEY_HOSPITAL, hid);
         if (wxUptime == null) {
-            return getDefaultWxUptime();
+            return getDefaultWxUptime(type);
         }
         return wxUptime;
     }
 
+
+
     /**
      * 获取默认数据
+     * @param type
      */
     @Override
-    public WxUptime getDefaultWxUptime() {
-        logger.debug("未找到医院指定开关锁时间，采用默认开关锁时间");
-        List<WxUptime> list = wxUptimeMapper.findListByRelation(WxRelation.KEY_DEFAULT, WxRelation.KID_DEFAULT);
+    public WxUptime getDefaultWxUptime(int type) {
+        logger.debug("采用默认时间Type:{}", type);
+        List<WxUptime> list = wxUptimeMapper.findListByRelation(type, WxRelation.KEY_DEFAULT, WxRelation.KID_DEFAULT);
         if(list== null || list.size() ==0) {
             WxUptime wxUptime = new WxUptime();
-            wxUptime.setId(0);
-            wxUptime.setStartDesc("18:00");
-            wxUptime.setStartTime(18*60*60);
-            wxUptime.setStopDesc("6:00");
-            wxUptime.setStopTime(6*60*60);
-            wxUptime.setExplain("默认数据(代码生成)");
+            if(type == WxRelation.TYPE_MIDDAY){
+                wxUptime.setStartDesc("12:00");
+                wxUptime.setStartTime(12*60*60);
+                wxUptime.setStopDesc("13:00");
+                wxUptime.setStopTime(13*60*60);
+                wxUptime.setExplain("默认午休数据(代码生成)");
+            }else{
+                wxUptime.setStartDesc("18:00");
+                wxUptime.setStartTime(18*60*60);
+                wxUptime.setStopDesc("6:00");
+                wxUptime.setStopTime(6*60*60);
+                wxUptime.setExplain("默认普通数据(代码生成)");
+            }
             return wxUptime;
         }
         return list.get(0);
@@ -114,7 +129,7 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     @Override
     public Long getEndTimeByKey(String[] keys) {
         if(keys.length< 4) return DateUtil.getTimesNight();
-        WxUptime wxUptime = findListByHospital(Integer.parseInt(keys[1]));
+        WxUptime wxUptime = findListByHospital(WxRelation.TYPE_UPTIME, Integer.parseInt(keys[1]));
         long endTime =  DateUtil.getTimesNight() + wxUptime.getStopTime();
         if(endTime - System.currentTimeMillis()/1000 > 24*60*60){
             endTime -= 24*60*60; // 若隔天，减少一天
@@ -129,15 +144,19 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
     @Override
     @Transactional
-    public boolean update(int key, int kid, String startDesc, String stopDesc, String explain)
+    public boolean update(int type, int key, int kid, String startDesc, String stopDesc, String explain)
             throws NumberFormatException, ParamException {
         int startTime = DateUtil.getTimesNoDate(startDesc);
         int stopTime = DateUtil.getTimesNoDate(stopDesc);
-        if(startTime <= stopTime) throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                , "开始时间不能小于等于结束时间，否则无法跨天计算");
+        if(type== WxRelation.TYPE_UPTIME  &&startTime < stopTime) throw new ParamException(
+                ResultUtil.CODE_REQUEST_FORMAT, "开始时间不能小于结束时间，否则无法跨天计算");
+        if(type== WxRelation.TYPE_MIDDAY  &&startTime >= stopTime) throw new ParamException(
+                ResultUtil.CODE_REQUEST_FORMAT, "午休时间开始时间不能大于等于结束时间");
+        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY) throw new ParamException(
+                ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
         // 若为默认数据，那么KID没有其他意义，置默认值
         if(key == WxRelation.KEY_DEFAULT) kid = WxRelation.KID_DEFAULT;
-        List<WxUptime> list =  wxUptimeMapper.findListByRelation(key, kid);
+        List<WxUptime> list =  wxUptimeMapper.findListByRelation(type, key, kid);
         if(list !=null && list.size()>0){
             if(list.size() >1) logger.warn("当前规则有多个时间设置，需要处理！！");
             for (WxUptime wxUptime:list) {
@@ -154,7 +173,7 @@ public class WxUptimeServiceImpl implements WxUptimeService {
             wxUptimeMapper.insert(wxUptime);
             WxRelation relation = new WxRelation();
             relation.setKey(key);  relation.setKid(kid);
-            relation.setRid(wxUptime.getId());relation.setType(WxRelation.TYPE_UPTIME);
+            relation.setRid(wxUptime.getId());relation.setType(type);
             wxRelationMapper.insert(relation);
         }
         return true;
@@ -162,14 +181,16 @@ public class WxUptimeServiceImpl implements WxUptimeService {
 
     @Override
     @Transactional
-    public boolean delete(int key, int kid) throws ParamException {
+    public boolean delete(int type, int key, int kid) throws ParamException {
         if(key == WxRelation.KEY_DEFAULT) throw new ParamException(
                 ResultUtil.CODE_REQUEST_FORMAT, "默认数据无法删除");
-        List<WxUptime> list =  wxUptimeMapper.findListByRelation(key, kid);
+        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY)
+            throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
+        List<WxUptime> list =  wxUptimeMapper.findListByRelation(type, key, kid);
         if(list !=null && list.size()>0){
             list.stream().mapToInt(WxUptime::getId).forEach(wxUptimeMapper::deleteById);
         }
-        wxRelationMapper.deleteByType(WxRelation.TYPE_UPTIME, key, kid);
+        wxRelationMapper.deleteByType(type, key, kid);
         return true;
     }
 

@@ -29,11 +29,22 @@ public class UsingBean implements Serializable {
     private Integer stopTime;
     private String stopDesc;
 
-    public void setWxUptime(WxUptime wxUptime) {
+    // 医院午休时间
+    private Integer middayStartTime;
+    private Integer middayStopTime;
+    private String middayStartDesc;
+    private String middayStopDesc;
+
+    public void setWxUptime(WxUptime wxUptime, WxUptime midday) {
         setStartTime(wxUptime.getStartTime());
         setStartDesc(wxUptime.getStartDesc());
         setStopTime(wxUptime.getStopTime());
         setStopDesc(wxUptime.getStopDesc());
+
+        setMiddayStartTime(midday.getStartTime());
+        setMiddayStartDesc(midday.getStartDesc());
+        setMiddayStopTime(midday.getStopTime());
+        setMiddayStopDesc(midday.getStopDesc());
     }
 
 
@@ -164,5 +175,37 @@ public class UsingBean implements Serializable {
 
     public void setStopDesc(String stopDesc) {
         this.stopDesc = stopDesc;
+    }
+
+    public Integer getMiddayStartTime() {
+        return middayStartTime;
+    }
+
+    public void setMiddayStartTime(Integer middayStartTime) {
+        this.middayStartTime = middayStartTime;
+    }
+
+    public Integer getMiddayStopTime() {
+        return middayStopTime;
+    }
+
+    public void setMiddayStopTime(Integer middayStopTime) {
+        this.middayStopTime = middayStopTime;
+    }
+
+    public String getMiddayStartDesc() {
+        return middayStartDesc;
+    }
+
+    public void setMiddayStartDesc(String middayStartDesc) {
+        this.middayStartDesc = middayStartDesc;
+    }
+
+    public String getMiddayStopDesc() {
+        return middayStopDesc;
+    }
+
+    public void setMiddayStopDesc(String middayStopDesc) {
+        this.middayStopDesc = middayStopDesc;
     }
 }

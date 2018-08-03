@@ -2,8 +2,8 @@ package com.mujugroup.wx.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.exception.ParamException;
+import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.service.WxUptimeService;
 import io.swagger.annotations.Api;
@@ -33,25 +33,33 @@ public class WxUptimeController {
 
     @RequestMapping(value = "/find", method = RequestMethod.POST)
     @ApiOperation(value="医院开锁时间查询接口", notes="根据类型查询医院开锁时间,未找到返回默认数据")
-    public String find(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+    public String find(@ApiParam(value="时间类型(2:运行时间 3:午休时间)", required = true)@RequestParam(name="type"
+            , defaultValue = "2") int type, @ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
             , required = true) @RequestParam(name="kid") int kid) {
-        logger.debug("find key:{} kid:{}", key, kid);
-        WxUptime wxUptime = wxUptimeService.query(key, kid);
+        logger.debug("query type:{} key:{} kid:{}", type, key, kid);
+        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY){
+            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
+        }
+        WxUptime wxUptime = wxUptimeService.query(type, key, kid);
         if (wxUptime != null) {
             return ResultUtil.success(wxUptime);
         }else {
-            return ResultUtil.success(wxUptimeService.getDefaultWxUptime());
+            return ResultUtil.success(wxUptimeService.getDefaultWxUptime(type));
         }
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ApiOperation(value="医院开锁时间查询接口", notes="根据类型查询医院开锁时间,未找到返回空")
-    public String query(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+    public String query(@ApiParam(value="时间类型(2:运行时间 3:午休时间)", required = true)@RequestParam(name="type"
+            , defaultValue = "2") int type, @ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
             , required = true) @RequestParam(name="kid") int kid){
-        logger.debug("query key:{} kid:{}", key, kid);
-        WxUptime wxUptime = wxUptimeService.query(key, kid);
+        logger.debug("query type:{} key:{} kid:{}", type, key, kid);
+        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY){
+            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
+        }
+        WxUptime wxUptime = wxUptimeService.query(type, key, kid);
         if(wxUptime != null){
             return ResultUtil.success(wxUptime);
         }
@@ -60,14 +68,15 @@ public class WxUptimeController {
 
     @ApiOperation(value="医院开锁时间新增或更新接口", notes="根据类型(代理商;医院;科室)更新医院开锁时间")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+    public String update(@ApiParam(value="时间类型(2:运行时间 3:午休时间)", required = true)@RequestParam(name="type"
+            , defaultValue = "2") int type, @ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID", required = true)
             @RequestParam(name="kid") int kid, @ApiParam(value="开始时间，格式hh:mm", required = true)
             @RequestParam(name="startDesc") String startDesc, @ApiParam(value="结束时间，格式hh:mm"
             , required = true)  @RequestParam(name="stopDesc") String stopDesc, @ApiParam(value="此属性使用说明" +
             ", 非必须") @RequestParam(name="explain", required = false) String explain) {
         try {
-            if(wxUptimeService.update(key, kid, startDesc, stopDesc, explain)){
+            if(wxUptimeService.update(type, key, kid, startDesc, stopDesc, explain)){
                 return ResultUtil.success();
             }else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
@@ -82,11 +91,12 @@ public class WxUptimeController {
 
     @ApiOperation(value="医院开锁时间删除接口", notes="根据类型(代理商;医院;科室)删除医院开锁时间")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String delete(@ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+    public String delete(@ApiParam(value="时间类型(2:运行时间 3:午休时间)", required = true)@RequestParam(name="type"
+            , defaultValue = "2") int type, @ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
             , required = true) @RequestParam(name="kid") int kid) {
         try {
-            if(wxUptimeService.delete(key, kid)){
+            if(wxUptimeService.delete(type, key, kid)){
                 return ResultUtil.success();
             }else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);

@@ -39,12 +39,13 @@ public class WxUptimeSqlProvider {
         }}.toString();
     }
 
-    public String findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid){
+    public String findListByRelation(@Param("type")Integer type, @Param("key")Integer key, @Param("kid") Integer kid){
         return new SQL(){ {
             SELECT("*");
             FROM("t_wx_uptime A");
             INNER_JOIN("t_wx_relation B ON A.id = B.rid");
-            WHERE("B.`type` = 2"); // 指定运行时间类型
+            if(type!= null) WHERE("B.`type` = #{type}"); // 2:运行时间 3:午休时间
+            else WHERE("B.`type` = 2");                  // 默认2
             if(key != null) AND().WHERE("B.`key` = #{key}");
             if(kid != null) AND().WHERE("B.`kid` = #{kid}");
         }}.toString();

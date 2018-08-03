@@ -76,42 +76,50 @@ public class BellTask {
      * 只有在非开锁情况下需要警报，未知情况下不报
      */
     private boolean isNeedBell(Integer agentId, Integer hospitalId, Integer depart) {
-        Uptime uptime = getUptime(agentId, hospitalId, depart);
-        if(uptime!=null){
-            int time = DateUtil.getTimesNoDate();
+        int time = DateUtil.getTimesNoDate();
+        Uptime midday = getUptime(3, agentId, hospitalId, depart); // 午休时间
+        if(midday!=null && !midday.isEmpty){
+            if(time > midday.start && time< midday.stop) return false;
+        }
+
+        Uptime uptime = getUptime(2, agentId, hospitalId, depart); // 运行时间
+        if(uptime!=null && !uptime.isEmpty){
             return time > uptime.stop && time < uptime.start;
         }
         return false;
     }
 
-    private Uptime getUptime(Integer agentId, Integer hospitalId, Integer depart) {
-        String key = agentId+"-"+ hospitalId+"-"+ depart;
+    private Uptime getUptime(int type, int agentId, int hospitalId, int depart) {
+        String key = type +"-"+agentId+"-"+ hospitalId+"-"+ depart;
         if(uptimeMap.containsKey(key)) return uptimeMap.get(key);
-        Uptime uptime = null;
-        JsonObject jsonObject =  getJsonObject(new int[]{0, agentId, hospitalId, depart});
+        JsonObject jsonObject =  getJsonObject(type, new int[]{0, agentId, hospitalId, depart});
+        Uptime uptime = new Uptime();
         if(jsonObject!=null && jsonObject.has("data") && jsonObject.get("data").isJsonObject()){
             JsonObject data = jsonObject.get("data").getAsJsonObject();
-            uptime = new Uptime();
             uptime.start = data.get("startTime").getAsInt();
             uptime.stop  = data.get("stopTime").getAsInt();
             uptimeMap.put(key, uptime);
+        }else{
+            uptime.isEmpty = true;
+            uptimeMap.put(key,  uptime);
         }
         return uptime;
     }
 
-    private JsonObject getJsonObject(int[] kid) {
+    private JsonObject getJsonObject(int type, int[] kid) {
         String result;
         for (int i = 3; i > -1; i--){
-            logger.debug("key:{} kid:{}", i, kid[i]);
-            result = moduleWxService.queryUptime(i, kid[i]);
+            logger.debug("type:{} key:{} kid:{}", type, i, kid[i]);
+            result = moduleWxService.queryUptime(type, i, kid[i]);
             if(result == null) continue;
-            JsonObject object = new JsonParser().parse(moduleWxService.queryUptime(i, kid[i])).getAsJsonObject();
+            JsonObject object = new JsonParser().parse(result).getAsJsonObject();
             if(object.has("code") && object.get("code").getAsInt() == 200) return object;
         }
         return null;
     }
 
     private class Uptime {
+        boolean isEmpty;
         int start;
         int stop;
     }

@@ -27,7 +27,7 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public String queryUptime(int key, int kid) {
+    public String queryUptime(int type, int key, int kid) {
         return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
     }
 }

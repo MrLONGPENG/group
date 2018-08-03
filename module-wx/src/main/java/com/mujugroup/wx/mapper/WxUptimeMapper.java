@@ -45,6 +45,6 @@ public interface WxUptimeMapper {
 
     @ResultMap("wxUptime")
     @SelectProvider(type = WxUptimeSqlProvider.class, method = "findListByRelation")
-    List<WxUptime> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid);
+    List<WxUptime> findListByRelation(@Param("type")Integer type, @Param("key") Integer key, @Param("kid") Integer kid);
 
 }

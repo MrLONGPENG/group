@@ -10,17 +10,21 @@ public class UptimeBean {
     private Integer stopTime;
     private String stopDesc;
     // 医院午休时间
-    private Integer middayStartTime = 12*60*60;
-    private Integer middayStopTime = 13*60*60;
-    private String middayStartDesc = "12:00";
-    private String middayStopDesc = "13:00";
+    private Integer middayStartTime;
+    private Integer middayStopTime;
+    private String middayStartDesc;
+    private String middayStopDesc;
 
 
-    public UptimeBean(WxUptime wxUptime) {
-        setStartTime(wxUptime.getStartTime());
-        setStartDesc(wxUptime.getStartDesc());
-        setStopTime(wxUptime.getStopTime());
-        setStopDesc(wxUptime.getStopDesc());
+    public UptimeBean(WxUptime uptime, WxUptime midday) {
+        setStartTime(uptime.getStartTime());
+        setStartDesc(uptime.getStartDesc());
+        setStopTime(uptime.getStopTime());
+        setStopDesc(uptime.getStopDesc());
+        setMiddayStartTime(midday.getStartTime());
+        setMiddayStartDesc(midday.getStartDesc());
+        setMiddayStopTime(midday.getStopTime());
+        setMiddayStopDesc(midday.getStopDesc());
     }
 
     public Integer getStartTime() {

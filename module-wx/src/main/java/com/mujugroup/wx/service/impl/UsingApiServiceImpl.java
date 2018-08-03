@@ -8,6 +8,7 @@ import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
+import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.model.WxUsing;
 import com.mujugroup.wx.service.*;
@@ -97,7 +98,9 @@ public class UsingApiServiceImpl implements UsingApiService {
                     usingBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
                     usingBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
                     // 根据医院ID设置开关锁时间
-                    usingBean.setWxUptime(wxUptimeService.findListByHospital(data.get("hospitalId").getAsInt()));
+                    int hid = data.get("hospitalId").getAsInt();
+                    usingBean.setWxUptime(wxUptimeService.findListByHospital(hid) ,wxUptimeService
+                            .findListByHospital(WxRelation.TYPE_MIDDAY, hid));
                 }else{
                     usingBean.setType(3);
                     usingBean.setInfo("设备未激活或非法设备");
@@ -116,6 +119,21 @@ public class UsingApiServiceImpl implements UsingApiService {
     @Override
     public UnlockBean unlock(String did, String[] arr) {
         UnlockBean unlockBean = new UnlockBean();
+
+        WxUptime midday = wxUptimeService.findListByHospital(WxRelation.TYPE_MIDDAY, Integer.valueOf(arr[3]));
+        if(midday != null){
+            int currTime =  DateUtil.getTimesNoDate();
+            if(currTime > midday.getStartTime() && currTime < midday.getStopTime()){
+                logger.debug("午休时间直接开锁");
+                if(thirdUnlock(arr[1])){
+                    unlockBean.setPayState(2);
+                }else{
+                    unlockBean.setPayState(4);
+                    unlockBean.setInfo("远程调用开锁失败");
+                }
+                return unlockBean;
+            }
+        }
 
         WxUptime wxUptime = wxUptimeService.findListByHospital(Integer.valueOf(arr[3]));
         if(wxUptime != null){
@@ -146,7 +164,8 @@ public class UsingApiServiceImpl implements UsingApiService {
 
     @Override
     public UptimeBean uptime(String[] arr) {
-        return new UptimeBean(wxUptimeService.findListByHospital(Integer.valueOf(arr[3])));
+        return new UptimeBean(wxUptimeService.findListByHospital(Integer.valueOf(arr[3]))
+                , wxUptimeService.findListByHospital(WxRelation.TYPE_MIDDAY, Integer.valueOf(arr[3])));
     }
 
 

@@ -21,8 +21,9 @@ public class WxRelation implements Serializable {
 
 	//public static final int TYPE_GOODS = 1;  	// 商品套餐
 	public static final int TYPE_UPTIME = 2;  	// 运行时间
+	public static final int TYPE_MIDDAY = 3;	// 午休时间
 
-    /**
+	/**
      * 主键
      * 
      * 表字段 : t_wx_relation.id

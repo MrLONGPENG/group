@@ -1,7 +1,6 @@
 package com.mujugroup.wx.model;
 
 
-import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
 
