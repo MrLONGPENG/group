@@ -48,7 +48,7 @@ public interface WxOrderMapper {
     WxOrder findById(Integer id);
 
     @ResultMap("wxOrder")
-    @Select("SELECT * FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID LIMIT 1")
+    @Select("SELECT * FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID DESC LIMIT 1")
     WxOrder findLastOrderByDid(@Param("did")String did);
 
 

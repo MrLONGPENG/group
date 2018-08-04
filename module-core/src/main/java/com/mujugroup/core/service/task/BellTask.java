@@ -23,11 +23,15 @@ import java.util.Map;
 @Component
 public class BellTask {
 
+    private final static int DELAY_TIME = 15*60;    // 到时延迟十五分钟
+    private final static int INTERVAL_TIME = 10*60; // 十分钟
     private final DeviceService deviceService;
     private final ModuleWxService moduleWxService;
     private final ModuleLockService moduleLockService;
     private final Map<String,Uptime> uptimeMap = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(BellTask.class);
+
+
     @Autowired
     public BellTask(DeviceService deviceService, ModuleWxService moduleWxService, ModuleLockService moduleLockService) {
         this.deviceService = deviceService;
@@ -35,14 +39,14 @@ public class BellTask {
         this.moduleLockService = moduleLockService;
     }
 
-    @Scheduled(cron="0 0/15 8-17 * * *")
+    @Scheduled(cron="0 0/5 6-21 * * *")
     public void onCron(){
         logger.debug("BellTask date: {}", new Date());
         uptimeMap.clear();
-        onDevice(1, 5);
+        onDevice(DateUtil.getTimesNoDate(),1, 5);
     }
 
-    private void onDevice(int pageNum, int pageSize) {
+    private void onDevice(int currTime, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Device> list=  deviceService.findListByStatus(14);
         if(list == null) return;
@@ -51,7 +55,7 @@ public class BellTask {
         for (Device device : list) {
             if(device.getPay()!=0) continue; //TODO 临时增加控制是否开启bell
             // 只在设置的时间内可以警报，其他未知情况全部跳过
-            if(isNeedBell(device.getAgentId(), device.getHospitalId(), device.getDepart())){
+            if(isNeedBell(currTime, device.getAgentId(), device.getHospitalId(), device.getDepart())){
                 key.append(device.getCode()).append(",");
             }
         }
@@ -68,23 +72,24 @@ public class BellTask {
         }
 
         if(pageInfo.getPages() > pageNum){
-            onDevice(pageNum+1, pageSize);
+            onDevice(currTime, pageNum+1, pageSize);
         }
     }
 
     /**
      * 只有在非开锁情况下需要警报，未知情况下不报
      */
-    private boolean isNeedBell(Integer agentId, Integer hospitalId, Integer depart) {
-        int time = DateUtil.getTimesNoDate();
+    private boolean isNeedBell(int currTime, Integer agentId, Integer hospitalId, Integer depart) {
         Uptime midday = getUptime(3, agentId, hospitalId, depart); // 午休时间
         if(midday!=null && !midday.isEmpty){
-            if(time > midday.start && time< midday.stop) return false;
+            if(currTime > midday.start && currTime< midday.stop) return false;
         }
 
         Uptime uptime = getUptime(2, agentId, hospitalId, depart); // 运行时间
         if(uptime!=null && !uptime.isEmpty){
-            return time > uptime.stop && time < uptime.start;
+            //logger.debug("hh{}： mm:{}", uptime.stop/3600, uptime.stop%3600/60);
+            //logger.debug("时间{}： 余数:{}", currTime - uptime.stop, (currTime - uptime.stop) % INTERVAL_TIME);
+            return currTime > uptime.stop && currTime < uptime.start && (currTime - uptime.stop) % INTERVAL_TIME == 0;
         }
         return false;
     }
@@ -97,7 +102,7 @@ public class BellTask {
         if(jsonObject!=null && jsonObject.has("data") && jsonObject.get("data").isJsonObject()){
             JsonObject data = jsonObject.get("data").getAsJsonObject();
             uptime.start = data.get("startTime").getAsInt();
-            uptime.stop  = data.get("stopTime").getAsInt();
+            uptime.stop  = data.get("stopTime").getAsInt()+ DELAY_TIME;
             uptimeMap.put(key, uptime);
         }else{
             uptime.isEmpty = true;
@@ -109,7 +114,7 @@ public class BellTask {
     private JsonObject getJsonObject(int type, int[] kid) {
         String result;
         for (int i = 3; i > -1; i--){
-            logger.debug("type:{} key:{} kid:{}", type, i, kid[i]);
+            //logger.debug("type:{} key:{} kid:{}", type, i, kid[i]);
             result = moduleWxService.queryUptime(type, i, kid[i]);
             if(result == null) continue;
             JsonObject object = new JsonParser().parse(result).getAsJsonObject();

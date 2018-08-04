@@ -1,11 +1,13 @@
 rootProject.name = 'lveqia-cloud-all'
 
-include ('lveqia-cloud-eureka')
-include ('lveqia-cloud-config')
-include ('lveqia-cloud-common')
-include ('lveqia-cloud-zuul')
-include ('lveqia-cloud-mybatis')
-include ('module-lock')
-include ('module-wx')
+include 'lveqia-cloud-eureka'
+include 'lveqia-cloud-config'
+include 'lveqia-cloud-common'
+include 'lveqia-cloud-zuul'
+include 'lveqia-cloud-mybatis'
 include 'module-core'
+include 'module-data'
+include 'module-lock'
+include 'module-wx'
+
 
