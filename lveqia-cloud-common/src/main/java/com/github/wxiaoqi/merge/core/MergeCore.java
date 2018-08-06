@@ -170,17 +170,21 @@ public class MergeCore {
                         }
                         key = new String(sb);
                     }
-                    if(annotation.isCache()){
+                    Map<String, String> value;
+                    if(annotation.isCache()) {
                         mergeFieldMap.put(key, annotation);
                         // 从缓存获取
-                        Map<String, String> value = caches.get(key);
-                        if (value != null) {
-                            if(value.size()==0) caches.refresh(key);
-                            invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
-                            continue;
-                        }
+                        value = caches.get(key);
+                    }else {
+                        Object bean = BeanFactoryUtils.getBean(annotation.feign());
+                        Method method = annotation.feign().getMethod(annotation.method(), String.class);
+                        String query = key.contains("#")? key.substring(key.indexOf(",")+1) : annotation.key();
+                        value = (Map<String, String>) method.invoke(bean,query);
                     }
-
+                    if (value != null) {
+                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
+                        continue;
+                    }
                 }
                 Object bean = BeanFactoryUtils.getBean(annotation.feign());
                 Method method = annotation.feign().getMethod(annotation.method(), String.class);
