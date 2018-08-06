@@ -41,6 +41,7 @@ public class MergeCore {
         this.mergeFieldMap = new HashMap<>();
         this.caches = CacheBuilder.newBuilder()
                 .maximumSize(mergeProperties.getGuavaCacheNumMaxSize())
+                .expireAfterWrite(mergeProperties.getGuavaCacheExpireWriteTime(), TimeUnit.MINUTES)
                 .refreshAfterWrite(mergeProperties.getGuavaCacheRefreshWriteTime(), TimeUnit.MINUTES)
                 .build(new CacheLoader<String, Map<String, String>>() {
                     @Override
@@ -169,14 +170,17 @@ public class MergeCore {
                         }
                         key = new String(sb);
                     }
-                    mergeFieldMap.put(key, annotation);
-                    // 从缓存获取
-                    Map<String, String> value = caches.get(key);
-                    if (value != null) {
-                        if(value.size()==0) caches.refresh(key);
-                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
-                        continue;
+                    if(annotation.isCache()){
+                        mergeFieldMap.put(key, annotation);
+                        // 从缓存获取
+                        Map<String, String> value = caches.get(key);
+                        if (value != null) {
+                            if(value.size()==0) caches.refresh(key);
+                            invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
+                            continue;
+                        }
                     }
+
                 }
                 Object bean = BeanFactoryUtils.getBean(annotation.feign());
                 Method method = annotation.feign().getMethod(annotation.method(), String.class);

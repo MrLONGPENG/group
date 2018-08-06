@@ -14,6 +14,11 @@ public class MergeProperties {
      * guava缓存的键值数
      */
     private Integer guavaCacheNumMaxSize;
+
+    /**
+     * guava缓存过期时间
+     */
+    private Integer guavaCacheExpireWriteTime;
     /**
      * guava更新混存的下一次时间,分钟
      */
@@ -29,6 +34,14 @@ public class MergeProperties {
 
     public void setGuavaCacheNumMaxSize(Integer guavaCacheNumMaxSize) {
         this.guavaCacheNumMaxSize = guavaCacheNumMaxSize;
+    }
+
+    public Integer getGuavaCacheExpireWriteTime() {
+        return guavaCacheExpireWriteTime;
+    }
+
+    public void setGuavaCacheExpireWriteTime(Integer guavaCacheExpireWriteTime) {
+        this.guavaCacheExpireWriteTime = guavaCacheExpireWriteTime;
     }
 
     public Integer getGuavaCacheRefreshWriteTime() {

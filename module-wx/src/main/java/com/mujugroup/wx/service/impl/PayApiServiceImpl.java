@@ -2,30 +2,24 @@ package com.mujugroup.wx.service.impl;
 
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
-import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.google.gson.Gson;
 import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.IpUtil;
 import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.cache.ILocalCache;
 import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;
-import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.model.WxUsing;
 import com.mujugroup.wx.service.*;
 import com.mujugroup.wx.service.feign.ModuleLockService;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,10 +36,11 @@ public class PayApiServiceImpl implements PayApiService {
     private final WxGoodsService wxGoodsService;
     private final ModuleLockService moduleLockService;
 
-
-
     @Value("${wx_url_notify}")
     String notifyUrl;
+
+    @Resource(name = "endTimeCache")
+    private ILocalCache<String, Long> endTimeCache;
 
     @Autowired
     public PayApiServiceImpl(UsingApiService usingApiService, WxUptimeService wxUptimeService
@@ -113,7 +108,7 @@ public class PayApiServiceImpl implements PayApiService {
 
     @Override
     public String completePay(String notifyXml) throws Exception {
-        logger.info("微信支付回调接收数据:"+notifyXml);
+        //logger.debug("微信支付回调接收数据:{}", notifyXml);
         Map<String, String> map = WXPayUtil.xmlToMap(notifyXml);
         if(WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
                 && "SUCCESS".equals(map.get("result_code"))
@@ -121,7 +116,8 @@ public class PayApiServiceImpl implements PayApiService {
             String orderNo = map.get("out_trade_no");
             WxOrder wxOrder = wxOrderService.findOrderByNo(orderNo);
             long payTime = System.currentTimeMillis()/1000;
-            long endTime = wxUptimeService.getEndTimeByKey(wxOrder.getKey());
+            long endTime = endTimeCache.get(wxOrder.getKey());
+            //logger.debug("支付时间:{} 到期时间:{}", new Date(payTime *1000), new Date(endTime *1000));
             wxOrder.setPayTime(payTime);
             wxOrder.setEndTime(endTime);
             wxOrder.setTransactionId(map.get("transaction_id"));

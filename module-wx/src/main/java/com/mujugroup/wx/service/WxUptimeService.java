@@ -19,10 +19,6 @@ public interface WxUptimeService {
 
     WxUptime getDefaultWxUptime(int type);
 
-    Long getEndTimeByKey(String[] keys);
-
-    Long getEndTimeByKey(String key) throws ExecutionException;
-
     boolean update(int type, int key, int kid, String startDesc, String stopDesc, String explain) throws ParamException;
 
     boolean delete(int type, int key, int kid) throws ParamException;

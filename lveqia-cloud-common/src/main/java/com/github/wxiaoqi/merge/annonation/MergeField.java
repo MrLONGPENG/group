@@ -37,6 +37,20 @@ public @interface MergeField {
      */
     String method() default "";
 
+
+    /**
+     * 是否增加缓存（isValueNeedMerge()为true情况此属性无效）
+     * @return
+     */
+    boolean isCache() default false;
+
+
+    /**
+     * 是否以请求参数作为查询值（isValueNeedMerge()为true情况此属性无效）
+     * @return
+     */
+    boolean isQueryByParam() default false;
+
     /**
      * 是否以属性值合并作为查询值
      * @return
@@ -44,9 +58,4 @@ public @interface MergeField {
     boolean isValueNeedMerge() default false;
 
 
-    /**
-     * 是否以请求参数作为查询值
-     * @return
-     */
-    boolean isQueryByParam() default false;
 }
