@@ -8,7 +8,6 @@ import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.mapper.WxUptimeMapper;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.service.WxGoodsService;
 import com.mujugroup.wx.service.WxUptimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,29 +34,38 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
 
     @Override
-    public WxUptime query(int type, int key, int kid) {
-        List<WxUptime> list = wxUptimeMapper.findListByRelation(type, key, kid);
-        if (list == null || list.size() ==0) {
-            return null;
-        }
-        return list.get(0);
+    public WxUptime find(int type, String aid, String hid, String oid) {
+        return find(type, Integer.parseInt(aid), Integer.parseInt(hid), Integer.parseInt(oid));
     }
 
     @Override
-    public WxUptime findListByHospital(int hid) {
-        return findListByHospital(WxRelation.TYPE_UPTIME, hid);
-    }
-
-    @Override
-    public WxUptime findListByHospital(int type, int hid) {
-        WxUptime wxUptime= query(type, WxRelation.KEY_HOSPITAL, hid);
+    public WxUptime find(int type, int aid, int hid, int oid) {
+        WxUptime wxUptime= findByXid(new int[]{0, aid, hid, oid}, type);
         if (wxUptime == null) {
             return getDefaultWxUptime(type);
         }
         return wxUptime;
     }
 
+    @Override
+    public WxUptime findByXid(int[] ints, int type) {
+        WxUptime wxUptime = null;
+        for (int i = 3; i > -1; i--){
+            wxUptime = query(type, i, ints[i]);
+            if(wxUptime!=null) break;
+        }
+        return wxUptime;
+    }
 
+    @Override
+    public WxUptime query(int type, int key, int kid) {
+        if(key == WxRelation.KEY_DEFAULT) kid = WxRelation.KID_DEFAULT;
+        List<WxUptime> list = wxUptimeMapper.findListByRelation(type, key, kid);
+        if (list == null || list.size() ==0) {
+            return null;
+        }
+        return list.get(0);
+    }
 
     /**
      * 获取默认数据
@@ -66,25 +74,22 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     @Override
     public WxUptime getDefaultWxUptime(int type) {
         logger.debug("采用默认时间Type:{}", type);
-        List<WxUptime> list = wxUptimeMapper.findListByRelation(type, WxRelation.KEY_DEFAULT, WxRelation.KID_DEFAULT);
-        if(list== null || list.size() ==0) {
-            WxUptime wxUptime = new WxUptime();
-            if(type == WxRelation.TYPE_MIDDAY){
-                wxUptime.setStartDesc("12:00");
-                wxUptime.setStartTime(12*60*60);
-                wxUptime.setStopDesc("13:00");
-                wxUptime.setStopTime(13*60*60);
-                wxUptime.setExplain("默认午休数据(代码生成)");
-            }else{
-                wxUptime.setStartDesc("18:00");
-                wxUptime.setStartTime(18*60*60);
-                wxUptime.setStopDesc("6:00");
-                wxUptime.setStopTime(6*60*60);
-                wxUptime.setExplain("默认普通数据(代码生成)");
-            }
-            return wxUptime;
+        WxUptime wxUptime = new WxUptime();
+        if(type == WxRelation.TYPE_MIDDAY){
+            wxUptime.setStartDesc("12:00");
+            wxUptime.setStartTime(12*60*60);
+            wxUptime.setStopDesc("13:00");
+            wxUptime.setStopTime(13*60*60);
+            wxUptime.setExplain("默认午休数据(代码生成)");
+        }else{
+            wxUptime.setStartDesc("18:00");
+            wxUptime.setStartTime(18*60*60);
+            wxUptime.setStopDesc("6:00");
+            wxUptime.setStopTime(6*60*60);
+            wxUptime.setExplain("默认普通数据(代码生成)");
         }
-        return list.get(0);
+        return wxUptime;
+
     }
 
     @Override
@@ -93,10 +98,10 @@ public class WxUptimeServiceImpl implements WxUptimeService {
             throws NumberFormatException, ParamException {
         int startTime = DateUtil.getTimesNoDate(startDesc);
         int stopTime = DateUtil.getTimesNoDate(stopDesc);
-        if(type== WxRelation.TYPE_UPTIME  &&startTime < stopTime) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "开始时间不能小于结束时间，否则无法跨天计算");
-        if(type== WxRelation.TYPE_MIDDAY  &&startTime >= stopTime) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "午休时间开始时间不能大于等于结束时间");
+        if(type== WxRelation.TYPE_UPTIME  &&startTime <= stopTime) throw new ParamException(
+                ResultUtil.CODE_REQUEST_FORMAT, "开始时间不能小于等于结束时间，否则无法跨天计算");
+        if(type== WxRelation.TYPE_MIDDAY  &&startTime > stopTime) throw new ParamException(
+                ResultUtil.CODE_REQUEST_FORMAT, "午休时间开始时间不能大于结束时间");
         if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY) throw new ParamException(
                 ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
         // 若为默认数据，那么KID没有其他意义，置默认值

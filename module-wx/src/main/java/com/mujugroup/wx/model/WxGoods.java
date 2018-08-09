@@ -1,7 +1,6 @@
 package com.mujugroup.wx.model;
 
 
-import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -14,6 +13,17 @@ import javax.persistence.*;
 @SuppressWarnings("serial")
 @Table(name = "t_wx_goods")
 public class WxGoods implements Serializable {
+
+	/*** 排除晚上类型商品 */
+	public static final int EXCLUDE_NIGHT = 2;
+	/*** 排除午休类型商品 */
+    public static final int EXCLUDE_MIDDAY = 3;
+
+	/*** 类型-晚上套餐 */
+	public static final int TYPE_NIGHT= 2;
+
+	/*** 类型-午休套餐 */
+	public static final int TYPE_MIDDAY = 3;
 
     /**
      * 主键
@@ -54,7 +64,8 @@ public class WxGoods implements Serializable {
     private Integer days;
 
     /**
-     * 商品类型(1:押金；2:套餐；)
+     * 商品类型(1:押金；2:套餐；3:午休 4:被子)
+	 * 其他说明：2和3不同时存在，套餐包含第二天午休时间, 单独午休不包含晚上的套餐
      * 表字段 : t_wx_goods.type
      */
     @Column(name = "type")

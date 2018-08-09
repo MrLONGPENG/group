@@ -38,15 +38,18 @@ public class EndTimeCache extends GuavaCache<String, Long> implements ILocalCach
     protected Long loadData(String key) {
         String[] keys = key.split(";");
         if(keys.length< 4) return DateUtil.getTimesNight();
-        WxUptime wxUptime = wxUptimeService.findListByHospital(WxRelation.TYPE_UPTIME, Integer.parseInt(keys[1]));
-        long endTime =  DateUtil.getTimesNight() + wxUptime.getStopTime();
-        if(endTime - System.currentTimeMillis()/1000 > 24*60*60){
-            endTime -= 24*60*60; // 若隔天，减少一天
-            logger.debug("第二天上午购买  到期时间:{}", new Date(endTime *1000));
-        }
         WxGoods wxGoods = wxGoodsService.findById(Integer.parseInt(keys[3]));
-        if(wxGoods.getDays()> 1){
-            endTime += (wxGoods.getDays()-1)*24*60*60;
+        long endTime = DateUtil.getTimesMorning();
+        if(wxGoods.getType() == WxGoods.TYPE_MIDDAY){
+            WxUptime midday = wxUptimeService.find(WxRelation.TYPE_MIDDAY, keys[0], keys[1], keys[2]);
+            endTime += midday.getStopTime();
+        }else if(wxGoods.getType() == WxGoods.TYPE_NIGHT){
+            WxUptime wxUptime = wxUptimeService.find(WxRelation.TYPE_UPTIME, keys[0], keys[1], keys[2]);
+            if(DateUtil.getTimesNoDate() < wxUptime.getStartTime()){ // 当前时分秒小于开锁时间，即第二天上午购买
+                endTime -= 24*60*60; // 若隔天，减少一天
+                logger.debug("第二天上午购买  到期时间:{}", new Date(endTime *1000));
+            }
+            endTime += (wxUptime.getStopTime() + wxGoods.getDays() * 24 * 60 * 60);
             logger.debug("购买天数{} 到期时间:{}", wxGoods.getDays(), new Date(endTime *1000));
         }
         return endTime;

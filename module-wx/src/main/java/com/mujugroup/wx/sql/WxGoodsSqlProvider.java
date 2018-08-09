@@ -43,12 +43,14 @@ public class WxGoodsSqlProvider {
         }}.toString();
     }
 
-    public String findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid){
+
+    public String findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type")Integer type){
         return new SQL(){ {
                 SELECT("*");
                 FROM("t_wx_goods A");
                 INNER_JOIN("t_wx_relation B ON A.id = B.rid");
                 WHERE("B.`type` = 1");// 指定商品套餐类型
+                if(type!= null) AND().WHERE("A.`type` = #{type}"); // 此处类型为商品类型
                 if(key != null) AND().WHERE("B.`key` = #{key}");
                 if(kid != null) AND().WHERE("B.`kid` = #{kid}");
         }}.toString();

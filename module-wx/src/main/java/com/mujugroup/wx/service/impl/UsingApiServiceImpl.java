@@ -8,6 +8,7 @@ import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
+import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.model.WxUsing;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 
 @RefreshScope
@@ -91,16 +93,17 @@ public class UsingApiServiceImpl implements UsingApiService {
                         usingBean.setType(0);
                     }
                     usingBean.setPay(wxUsing!=null);
-                    usingBean.setCode(generateCode(openId, realDid, data.get("agentId").getAsString()
-                            , data.get("hospitalId").getAsString(), data.get("departmentId").getAsString()));
+                    String aid = data.get("agentId").getAsString();
+                    String hid = data.get("hospitalId").getAsString();
+                    String oid = data.get("departmentId").getAsString();
+                    usingBean.setCode(generateCode(openId, realDid, aid, hid, oid));
                     usingBean.setHospitalBed(data.get("hospitalBed").getAsString());
                     usingBean.setHospital(data.getAsJsonObject("hospital").get("name").getAsString());
                     usingBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
                     usingBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
                     // 根据医院ID设置开关锁时间
-                    int hid = data.get("hospitalId").getAsInt();
-                    usingBean.setWxUptime(wxUptimeService.findListByHospital(hid) ,wxUptimeService
-                            .findListByHospital(WxRelation.TYPE_MIDDAY, hid));
+                    usingBean.setWxUptime(wxUptimeService.find(WxRelation.TYPE_UPTIME, aid, hid, oid)
+                            , wxUptimeService.find(WxRelation.TYPE_MIDDAY, aid, hid, oid));
                 }else{
                     usingBean.setType(3);
                     usingBean.setInfo("设备未激活或非法设备");
@@ -119,36 +122,34 @@ public class UsingApiServiceImpl implements UsingApiService {
     @Override
     public UnlockBean unlock(String did, String[] arr) {
         UnlockBean unlockBean = new UnlockBean();
-
-        WxUptime midday = wxUptimeService.findListByHospital(WxRelation.TYPE_MIDDAY, Integer.valueOf(arr[3]));
-        if(midday != null){
-            int currTime =  DateUtil.getTimesNoDate();
-            if(currTime > midday.getStartTime() && currTime < midday.getStopTime()){
-                logger.debug("午休时间直接开锁");
-                if(thirdUnlock(arr[1])){
-                    unlockBean.setPayState(2);
-                }else{
-                    unlockBean.setPayState(4);
-                    unlockBean.setInfo("远程调用开锁失败");
-                }
+        int currTime =  DateUtil.getTimesNoDate();
+        WxUptime midday = wxUptimeService.find(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]);
+        boolean isMidday = midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime();
+        if(!isMidday){
+            WxUptime wxUptime = wxUptimeService.find(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]);
+            if(wxUptime != null && currTime > wxUptime.getStopTime() && currTime < wxUptime.getStartTime()){
+                unlockBean.setPayState(3);
+                unlockBean.setInfo(String.format("上午%s到下午%s无法开锁，如有任何问题可联系客服"
+                        , wxUptime.getStopDesc(), wxUptime.getStartDesc()));
                 return unlockBean;
             }
         }
-
-        WxUptime wxUptime = wxUptimeService.findListByHospital(Integer.valueOf(arr[3]));
-        if(wxUptime != null){
-           int currTime =  DateUtil.getTimesNoDate();
-           if(currTime > wxUptime.getStopTime() && currTime < wxUptime.getStartTime()){
-               unlockBean.setPayState(3);
-               unlockBean.setInfo(String.format("上午%s到下午%s无法开锁，如有任何问题可联系客服"
-                       , wxUptime.getStopDesc(), wxUptime.getStartDesc()));
-           }
-        }
+        boolean isFree = false;
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000, false);
-        if(wxUsing==null) {
+        if(isMidday && wxUsing ==null){
+            logger.debug("午休时间开锁，先查询午休是否免费，再查询昨天是否有支付，若有则免费开锁");
+            List<WxGoods> goodsList = wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_NIGHT, arr[2], arr[3], arr[4]);
+            isFree = goodsList.stream().anyMatch(g -> g.getType() == WxGoods.TYPE_MIDDAY && g.getPrice() == 0);
+            if(!isFree){
+                unlockBean.setGoods(goodsList);
+                wxUsing = wxUsingService.findUsingByDid(did, DateUtil.getTimesMorning(), false);
+            }
+        }
+        if(wxUsing==null && !isFree) {
             unlockBean.setPayState(1);
-            unlockBean.setGoods(wxGoodsService.findListByHospital(arr[3]));
-        }else if(!arr[0].equals(wxUsing.getOpenId())){
+            if (isMidday) return unlockBean; // 午休开锁，
+            unlockBean.setGoods(wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_MIDDAY, arr[2], arr[3], arr[4]));
+        }else if(!isMidday && !arr[0].equals(wxUsing.getOpenId())){
             unlockBean.setPayState(3);
             unlockBean.setInfo("该设备已被别人使用");
         }else{
@@ -164,8 +165,8 @@ public class UsingApiServiceImpl implements UsingApiService {
 
     @Override
     public UptimeBean uptime(String[] arr) {
-        return new UptimeBean(wxUptimeService.findListByHospital(Integer.valueOf(arr[3]))
-                , wxUptimeService.findListByHospital(WxRelation.TYPE_MIDDAY, Integer.valueOf(arr[3])));
+        return new UptimeBean(wxUptimeService.find(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4])
+                , wxUptimeService.find(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
     }
 
 

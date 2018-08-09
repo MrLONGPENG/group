@@ -41,6 +41,15 @@ public interface WxRelationMapper {
     List<WxRelation> findListAll();
 
 
+    /**
+     * 根据类型删除指定的外键ID(单个)
+     */
+    @Delete("delete from t_wx_relation where `type`= #{type} AND `rid`= #{rid}")
+    boolean deleteByRid(@Param(value="type")int type, @Param(value="rid")int rid);
+
+    /**
+     * 根据类型删除指定外键类型的数据(一个或多个)
+     */
     @Delete("delete from t_wx_relation where `type`= #{type} AND `key`= #{key} AND `kid`= #{kid}")
     boolean deleteByType(@Param(value="type")int type, @Param(value="key")int key, @Param(value="kid")int kid);
 }

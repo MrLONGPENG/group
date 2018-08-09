@@ -34,14 +34,14 @@ public class WxUptimeController {
     @RequestMapping(value = "/find", method = RequestMethod.POST)
     @ApiOperation(value="医院开锁时间查询接口", notes="根据类型查询医院开锁时间,未找到返回默认数据")
     public String find(@ApiParam(value="时间类型(2:运行时间 3:午休时间)", required = true)@RequestParam(name="type"
-            , defaultValue = "2") int type, @ApiParam(value="外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
-            , required = true) @RequestParam(name="key") int key, @ApiParam(value="外键ID"
-            , required = true) @RequestParam(name="kid") int kid) {
-        logger.debug("query type:{} key:{} kid:{}", type, key, kid);
+            , defaultValue = "2") int type, @ApiParam(value="代理商ID", required = true) @RequestParam(name="aid")
+            int aid,@ApiParam(value="医院ID", required = true) @RequestParam(name="hid") int hid ,@ApiParam(value=
+            "科室ID" , required = true) @RequestParam(name="oid") int oid) {
+        logger.debug("find type:{} aid:{} hid:{} oid:{}", type, aid, hid, oid);
         if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY){
             return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
         }
-        WxUptime wxUptime = wxUptimeService.query(type, key, kid);
+        WxUptime wxUptime = wxUptimeService.findByXid(new int[]{0, aid, hid, oid}, type);
         if (wxUptime != null) {
             return ResultUtil.success(wxUptime);
         }else {

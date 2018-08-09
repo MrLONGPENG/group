@@ -37,19 +37,25 @@ public class ResultUtil {
         if(code == 200) return success();
         return error(code);
     }
-
+    /**
+     * 根据CODE返回结果
+     */
+    public static String code(int code , String info) {
+        if(code == 200) return success(null, null, info);
+        return error(code, info);
+    }
     /**
      * 返回正常的结果，不带数据
      */
     public static String success() {
-        return success(SUCCESS);
+        return success(null, null, SUCCESS);
     }
 
     /**
      * 返回正常的结果，带数据
      */
     public static String success(Object object) {
-        return success(object, null);
+        return success(object, null, null);
     }
 
     public static String success(Object object, PageInfo pageInfo) {

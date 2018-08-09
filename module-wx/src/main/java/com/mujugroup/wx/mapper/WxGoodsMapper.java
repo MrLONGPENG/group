@@ -17,6 +17,7 @@ import java.util.List;
 public interface WxGoodsMapper {
 
     @InsertProvider(type = WxGoodsSqlProvider.class, method = "insert")
+    @Options(useGeneratedKeys = true, keyColumn = "id")
     boolean insert(WxGoods wxGoods);
 
     @UpdateProvider(type = WxGoodsSqlProvider.class, method = "update")
@@ -45,6 +46,6 @@ public interface WxGoodsMapper {
 
     @ResultMap("wxGoods")
     @SelectProvider(type = WxGoodsSqlProvider.class, method = "findListByRelation")
-    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid);
+    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type") Integer type);
 
 }
