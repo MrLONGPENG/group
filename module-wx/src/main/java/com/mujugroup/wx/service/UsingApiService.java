@@ -1,9 +1,10 @@
 package com.mujugroup.wx.service;
 
+import com.mujugroup.wx.bean.QueryBean;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
-import com.mujugroup.wx.model.WxUsing;
+import com.mujugroup.wx.exception.TokenException;
 
 public interface UsingApiService {
 
@@ -21,5 +22,5 @@ public interface UsingApiService {
 
     void notify(String did, Integer lockStatus);
 
-
+    QueryBean query(String sessionThirdKey, String did, String code, boolean isSync) throws TokenException;
 }

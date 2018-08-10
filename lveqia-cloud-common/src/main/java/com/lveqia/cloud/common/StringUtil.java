@@ -97,5 +97,11 @@ public class StringUtil {
     }
 
 
-
+    public static String toKeys(int type, String... args) {
+        StringBuffer buffer = new StringBuffer().append(type);
+        for (String key:args) {
+            buffer.append(";").append(key);
+        }
+        return new String(buffer);
+    }
 }

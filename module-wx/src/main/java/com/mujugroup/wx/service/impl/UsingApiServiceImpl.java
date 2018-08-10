@@ -5,9 +5,12 @@ import com.google.gson.JsonParser;
 import com.lveqia.cloud.common.AESUtil;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.cache.ILocalCache;
+import com.mujugroup.wx.bean.QueryBean;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
+import com.mujugroup.wx.exception.TokenException;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
@@ -19,8 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @RefreshScope
@@ -36,18 +43,23 @@ public class UsingApiServiceImpl implements UsingApiService {
     private final WxUptimeService wxUptimeService;
     private final ModuleCoreService moduleCoreService;
     private final ModuleLockService moduleLockService;
+    private final RedisTemplate redisTemplate;
 
+    @Resource(name = "uptimeCache")
+    private ILocalCache<String, WxUptime> uptimeCache;
 
     @Autowired
     public UsingApiServiceImpl(SessionService sessionService, WxUsingService wxUsingService
-            , WxGoodsService wxGoodsService, WxUptimeService wxUptimeService
+            , WxGoodsService wxGoodsService, WxUptimeService wxUptimeService, RedisTemplate redisTemplate
             , ModuleCoreService moduleCoreService, ModuleLockService moduleLockService) {
+        this.redisTemplate = redisTemplate;
         this.wxUsingService = wxUsingService;
         this.sessionService = sessionService;
         this.wxGoodsService = wxGoodsService;
         this.wxUptimeService = wxUptimeService;
         this.moduleCoreService = moduleCoreService;
         this.moduleLockService = moduleLockService;
+
     }
 
     /**
@@ -102,8 +114,8 @@ public class UsingApiServiceImpl implements UsingApiService {
                     usingBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
                     usingBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
                     // 根据医院ID设置开关锁时间
-                    usingBean.setWxUptime(wxUptimeService.find(WxRelation.TYPE_UPTIME, aid, hid, oid)
-                            , wxUptimeService.find(WxRelation.TYPE_MIDDAY, aid, hid, oid));
+                    usingBean.setWxUptime(uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, aid, hid, oid))
+                            , uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, aid, hid, oid)));
                 }else{
                     usingBean.setType(3);
                     usingBean.setInfo("设备未激活或非法设备");
@@ -123,10 +135,10 @@ public class UsingApiServiceImpl implements UsingApiService {
     public UnlockBean unlock(String did, String[] arr) {
         UnlockBean unlockBean = new UnlockBean();
         int currTime =  DateUtil.getTimesNoDate();
-        WxUptime midday = wxUptimeService.find(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]);
+        WxUptime midday = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
         boolean isMidday = midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime();
         if(!isMidday){
-            WxUptime wxUptime = wxUptimeService.find(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]);
+            WxUptime wxUptime = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]));
             if(wxUptime != null && currTime > wxUptime.getStopTime() && currTime < wxUptime.getStartTime()){
                 unlockBean.setPayState(3);
                 unlockBean.setInfo(String.format("上午%s到下午%s无法开锁，如有任何问题可联系客服"
@@ -140,14 +152,20 @@ public class UsingApiServiceImpl implements UsingApiService {
             logger.debug("午休时间开锁，先查询午休是否免费，再查询昨天是否有支付，若有则免费开锁");
             List<WxGoods> goodsList = wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_NIGHT, arr[2], arr[3], arr[4]);
             isFree = goodsList.stream().anyMatch(g -> g.getType() == WxGoods.TYPE_MIDDAY && g.getPrice() == 0);
-            if(!isFree){
+            wxUsing = wxUsingService.findUsingByDid(did, DateUtil.getTimesMorning(), false);
+            if(wxUsing==null && !isFree){
+                logger.debug("昨天未使用，且午休收费状态");
+                unlockBean.setPayState(1);
                 unlockBean.setGoods(goodsList);
-                wxUsing = wxUsingService.findUsingByDid(did, DateUtil.getTimesMorning(), false);
+                return unlockBean;
+            }else if(wxUsing!=null){
+                logger.debug("昨天已使用，午休时间开锁，则需要更新订单到期时");
+                wxUsing.setEndTime(DateUtil.getTimesMorning() + midday.getStopTime());
+                wxUsingService.update(wxUsing);
             }
         }
         if(wxUsing==null && !isFree) {
             unlockBean.setPayState(1);
-            if (isMidday) return unlockBean; // 午休开锁，
             unlockBean.setGoods(wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_MIDDAY, arr[2], arr[3], arr[4]));
         }else if(!isMidday && !arr[0].equals(wxUsing.getOpenId())){
             unlockBean.setPayState(3);
@@ -165,8 +183,8 @@ public class UsingApiServiceImpl implements UsingApiService {
 
     @Override
     public UptimeBean uptime(String[] arr) {
-        return new UptimeBean(wxUptimeService.find(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4])
-                , wxUptimeService.find(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
+        return new UptimeBean(uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]))
+                , uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4])));
     }
 
 
@@ -229,5 +247,38 @@ public class UsingApiServiceImpl implements UsingApiService {
         }else{
             logger.info("notify 此设备未使用");
         }
+    }
+
+    @Override
+    public QueryBean query(String sessionThirdKey, String did, String code, boolean isSync) throws TokenException {
+        String[] arr = parseCode(sessionThirdKey, code);
+        if (arr == null) throw new TokenException();
+        QueryBean queryBean = new QueryBean();
+        WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000
+                , getCount(sessionThirdKey)%5==4 || isSync);
+        if(wxUsing!=null) {
+            queryBean.setWxUsing(wxUsing);
+        }else{
+            queryBean.setDid(did);
+            queryBean.setUsing("2".equals(moduleLockService.getStatus(did)));
+            int currTime =  DateUtil.getTimesNoDate();
+            WxUptime midday = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
+            if(midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime()){
+                queryBean.setMidday(true);
+                queryBean.setPayTime(DateUtil.getTimesMorning() + midday.getStartTime());
+                queryBean.setEndTime(DateUtil.getTimesMorning() + midday.getStopTime());
+            }
+        }
+        return queryBean;
+    }
+
+    /**
+     * 根据sessionThirdKey 缓存计数
+     */
+    private long getCount(String sessionThirdKey) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(sessionThirdKey
+                , redisTemplate.getRequiredConnectionFactory());
+        entityIdCounter.expire(2, TimeUnit.MINUTES);
+        return entityIdCounter.getAndIncrement();
     }
 }

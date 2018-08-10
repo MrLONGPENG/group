@@ -39,6 +39,10 @@ public class PayApiServiceImpl implements PayApiService {
     @Value("${wx_url_notify}")
     String notifyUrl;
 
+
+    @Value("${spring.profiles.active}")
+    private String model;
+
     @Resource(name = "endTimeCache")
     private ILocalCache<String, Long> endTimeCache;
 
@@ -110,7 +114,7 @@ public class PayApiServiceImpl implements PayApiService {
     public String completePay(String notifyXml) throws Exception {
         //logger.debug("微信支付回调接收数据:{}", notifyXml);
         Map<String, String> map = WXPayUtil.xmlToMap(notifyXml);
-        if(WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
+        if("dev".equals(model) ||WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
                 && "SUCCESS".equals(map.get("result_code"))
                 && "SUCCESS".equals(map.get("return_code"))){
             String orderNo = map.get("out_trade_no");
