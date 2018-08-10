@@ -30,13 +30,13 @@ public class LockDidController {
 
     @RequestMapping(value = "/getDeviceId")
     public String getDeviceId(String did){
-        logger.debug("getDeviceId:" + did);
+        logger.debug("getDeviceId:{}", did);
         return query(did, null);
     }
 
     @RequestMapping(value = "/query")
     public String query(String did, String bid){
-        logger.debug("did:"+did +"  bid:"+bid);
+        logger.debug("query did:{} bid:{}", did ,bid);
         if(did == null && bid ==null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
         LockDid lockDid;
         if(did!=null){
@@ -48,6 +48,18 @@ public class LockDidController {
         if(lockDid == null) return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         return ResultUtil.success(lockDid);
     }
+
+
+    @RequestMapping(value = "/delete")
+    public String delete(String did){
+        logger.debug("delete:{}", did);
+        if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        LockDid lockDid = lockDidService.getLockDidByDid(StringUtil.autoFillDid(did));
+        return lockDid != null && (lockDidService.deleteByDid(StringUtil.autoFillDid(lockDid.getDid()))
+                || lockDidService.deleteByBid(StringUtil.autoFillDid(lockDid.getLockId(), 19)))
+                ?  ResultUtil.success() : ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
+    }
+
 
     @RequestMapping(value = "/status")
     public String getStatus(String did){

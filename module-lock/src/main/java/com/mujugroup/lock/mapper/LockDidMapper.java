@@ -51,7 +51,7 @@ public interface LockDidMapper {
      * 根据参数查询对象
      * @return List<LockDid>
      */
-    @Select("SELECT * FROM `t_lock_did`  WHERE did = #{did}")
+    @Select("SELECT * FROM `t_lock_did` WHERE did = #{did}")
     @ResultMap("lockDid")
     LockDid getLockDidByDid(@Param("did") String did);
 
@@ -59,8 +59,18 @@ public interface LockDidMapper {
      * 根据参数查询对象
      * @return List<LockDid>
      */
-    @Select("SELECT * FROM `t_lock_did`  WHERE lock_id = #{bid}")
+    @Select("SELECT * FROM `t_lock_did` WHERE lock_id = #{bid}")
     @ResultMap("lockDid")
     LockDid getLockDidByBid(@Param("bid") String bid);
 
+
+    /**
+     * 根据DID删除
+     */
+    @Delete("delete from `t_lock_did` where did= #{did}")
+    boolean deleteByDid(@Param("did") String did);
+
+
+    @Delete("delete from `t_lock_did` where lock_id= #{bid}")
+    boolean deleteByBid(@Param("bid") String bid);
 }

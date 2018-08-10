@@ -13,6 +13,10 @@ public interface LockDidService {
 
     LockDid getLockDidByBid(String bid);
 
+    boolean deleteByDid (String did);
+
+    boolean deleteByBid(String bid);
+
     boolean batchInsert(List<LockDid> list);
 
     List<LockDid> onBatch(String did, String bid, int brand, int count, boolean isHex);

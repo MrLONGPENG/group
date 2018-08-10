@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,16 +38,32 @@ public class LockDidServiceImpl implements LockDidService {
     @Override
     @Cacheable(value = "lock_did_did", key = "#did", unless="#result == null")
     public LockDid getLockDidByDid(String did) {
-        logger.debug("getLockDidByDid");
+        logger.debug("getLockDidByDid:{}", did);
         return lockDidMapper.getLockDidByDid(did);
     }
 
     @Override
     @Cacheable(value = "lock_did_bid", key = "#bid", unless="#result == null")
     public LockDid getLockDidByBid(String bid) {
-        logger.debug("getLockDidByBid");
+        logger.debug("getLockDidByBid:{}", bid);
         return lockDidMapper.getLockDidByBid(bid);
     }
+
+
+    @Override
+    @CacheEvict(value = "lock_did_did", key = "#did")
+    public boolean deleteByDid (String did) {
+        logger.debug("deleteLockDid:{}", did);
+        return lockDidMapper.deleteByDid(did);
+    }
+
+    @Override
+    @CacheEvict(value = "lock_did_bid", key = "#bid")
+    public boolean deleteByBid(String bid) {
+        logger.debug("deleteLockBid:{}", bid);
+        return lockDidMapper.deleteByBid(bid);
+    }
+
 
     @Override
     @Transactional
