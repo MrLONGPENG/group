@@ -55,9 +55,14 @@ public class LockDidController {
         logger.debug("delete:{}", did);
         if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         LockDid lockDid = lockDidService.getLockDidByDid(StringUtil.autoFillDid(did));
-        return lockDid != null && (lockDidService.deleteByDid(StringUtil.autoFillDid(lockDid.getDid()))
-                || lockDidService.deleteByBid(StringUtil.autoFillDid(lockDid.getLockId(), 19)))
-                ?  ResultUtil.success() : ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
+
+        if(lockDid!=null){
+            lockDidService.deleteByDid(StringUtil.autoFillDid(lockDid.getDid()));
+            lockDidService.deleteByBid(String.valueOf(lockDid.getLockId()));
+            return ResultUtil.success();
+        }else{
+            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
+        }
     }
 
 

@@ -34,7 +34,6 @@ public class ReceiveServiceImpl implements ReceiveService {
     @Override
     public String receive(String info) {
         try {
-            logger.info(info);
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();
             switch (json.get("msgType").getAsInt()){
                 case 200: switchLock(json.getAsJsonObject("result"), true);break;//开关锁
