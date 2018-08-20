@@ -1,6 +1,8 @@
 package com.mujugroup.wx.sql;
 
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.wx.model.WxUser;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -51,6 +53,15 @@ public class WxUserSqlProvider {
             if(wxUser.getCrtTime()!= null) SET("`crtTime` = #{crtTime}");
             if(wxUser.getUpdateTime()!= null) SET("`update_time` = #{updateTime}");
             WHERE("id = #{id}");
+        }}.toString();
+    }
+
+    public String getTotalUserCount(@Param("start")String start, @Param("end") String end){
+        return new SQL(){{
+            SELECT("COUNT(DISTINCT `open_id`) as `value`");
+            FROM("t_wx_user");
+            if(!Constant.DIGIT_ZERO.equals(start)) AND().WHERE("crtTime >= FROM_UNIXTIME(#{start})");
+            if(!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("crtTime < FROM_UNIXTIME(#{end})");
         }}.toString();
     }
 }

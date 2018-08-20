@@ -1,6 +1,8 @@
 package com.mujugroup.wx.sql;
 
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.wx.model.WxOrder;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -51,6 +53,16 @@ public class WxOrderSqlProvider {
             if(wxOrder.getEndTime()!= null) SET("`end_time` = #{endTime}");
             if(wxOrder.getCrtTime()!= null) SET("`crtTime` = #{crtTime}");
             WHERE("id = #{id}");
+        }}.toString();
+    }
+
+    public String getYesterdayUsageCount(@Param("aid")String aid, @Param("start")String start, @Param("end")String end){
+        return new SQL(){{
+            SELECT("COUNT(DISTINCT `did`) as `value`");
+            FROM("t_wx_order");
+            if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("aid = #{aid}");
+            if(!Constant.DIGIT_ZERO.equals(start)) AND().WHERE("pay_time >= #{start}");
+            if(!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("pay_time < #{end}");
         }}.toString();
     }
 }

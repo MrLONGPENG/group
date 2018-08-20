@@ -1,5 +1,6 @@
 package com.mujugroup.core.mapper;
 
+import com.lveqia.cloud.common.util.DBMap;
 import com.mujugroup.core.bean.StatusAidBean;
 import com.mujugroup.core.bean.StatusHidBean;
 import com.mujugroup.core.bean.StatusOidBean;
@@ -9,7 +10,9 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 设备关联表,数据库操作接口类
@@ -74,9 +77,9 @@ public interface DeviceMapper {
             ,@Result(column="act",property="actCount",javaType=Integer.class)
             ,@Result(column="hid",property="hospital",javaType=String.class)
             ,@Result(column="hid",property="payCount",javaType=String.class)
-
     })
     List<StatusAidBean> findGroupByAid(@Param("aid")int aid);
+
 
     @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
             " FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} AND status = 14 GROUP BY depart")
@@ -103,4 +106,27 @@ public interface DeviceMapper {
             ,@Result(column="hospitalBed",property="hospitalBed",javaType=String.class)
     })
     List<StatusOidBean> findGroupByOid(@Param("aid")int aid, @Param("hid")int hid, @Param("oid")int oid);
+
+
+    @Results(id = "dbMap", value = {@Result(column="key", property="key", javaType=String.class)
+            , @Result(column="value", property="value", javaType=String.class)})
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByDays")
+    List<DBMap> getActiveByDays(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end);
+
+
+    @ResultMap("dbMap")
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByWeeks")
+    List<DBMap> getActiveByWeeks(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end);
+
+
+    @ResultMap("dbMap")
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByMonth")
+    List<DBMap> getActiveByMonth(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end);
+
+
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getTotalActiveCount")
+    String getTotalActiveCount(@Param("aid") String aid, @Param("end") String end);
 }

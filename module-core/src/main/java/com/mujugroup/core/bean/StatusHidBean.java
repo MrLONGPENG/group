@@ -1,7 +1,7 @@
 package com.mujugroup.core.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
-import com.mujugroup.core.service.DepartmentService;
+import com.mujugroup.core.service.MergeService;
 import com.mujugroup.core.service.feign.ModuleWxService;
 
 import java.io.Serializable;
@@ -16,10 +16,10 @@ public class StatusHidBean implements Serializable {
 
     private int actCount;
 
-    @MergeField(value = "未知", feign = DepartmentService.class, method = "getOidMapByHid", isQueryByParam = true)
+    @MergeField(defaultValue = "未知", feign = MergeService.class, method = "getOidMapByHid", isQueryByParam = true)
     private String department;
 
-    @MergeField(value = "0", feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
+    @MergeField(defaultValue = "0", feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
     private String payCount;
 
     public int getOid() {

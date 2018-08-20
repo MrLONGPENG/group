@@ -38,22 +38,72 @@ public class DateUtil {
         return null;
     }
 
+    public static int getDay(String yyyyMM){
+        return getDay(Integer.parseInt(yyyyMM.substring(0,4)),Integer.parseInt(yyyyMM.substring(4)));
+    }
+
+    private static int getDay(int year,int month){
+        int day;
+        switch (month) {
+            case 1:case 3:case 5:case 7:case 8:case 10:case 12:day = 31;break;
+            case 4:case 6:case 9:case 11:day = 30;break;
+            default: day = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28;break;
+        }
+        return day;
+    }
+
+    /**
+     * 10位时间戳转当前月 yyyyMM
+     */
+    public static String timestampToMonth(int timestamp) {
+        return dateToString(new Date(timestamp*1000L), "yyyyMM");
+    }
+
+    /**
+     * 10位时间戳转当前周 yyyyMMdd-yyyyMMdd
+     */
+    public static String timestampToWeek(int timestamp) {
+        Date date1,date2;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp * 1000L);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        date1 = calendar.getTime();
+        calendar.add(Calendar.WEEK_OF_YEAR, 1);
+        date2 = calendar.getTime();
+        return dateToString(date1, TYPE_DATE_08)+"-"+dateToString(date2, TYPE_DATE_08);
+    }
+
+    /**
+     * 10位时间戳转当前日 yyyyMMdd
+     */
+    public static String timestampToDays(int timestamp) {
+        return timestampToString(timestamp, TYPE_DATE_08);
+    }
+
+
+    /**
+     * 10位时间戳转时间字符串
+     */
+    public static String timestampToString(int timestamp, int type) {
+        return dateToString(new Date(timestamp*1000L), type);
+    }
+
 
     public static String dateToString(int type) {
         return dateToString(getCurrentDate(), type);
     }
 
-    public static String dateToString(Date date, int type) {
+    private static String dateToString(Date date, int type) {
         return dateToString(date, FORMAT[type]);
     }
 
 
-    public static String dateToString(Date date, String pattern) {
+    private static String dateToString(Date date, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(date);
     }
 
-    public static Date getCurrentDate() {
+    private static Date getCurrentDate() {
         return new Date();
     }
 
@@ -134,4 +184,7 @@ public class DateUtil {
     public static long getLastDay() {
         return System.currentTimeMillis()/1000 - 24*60*60;
     }
+
+
+
 }

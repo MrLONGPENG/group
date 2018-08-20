@@ -1,7 +1,13 @@
 package com.mujugroup.core.sql;
 
+import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.core.model.Device;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
+
+import java.util.Date;
 
 /**
  * 设备关联表,SQL语句组装类
@@ -67,4 +73,47 @@ public class DeviceSqlProvider {
             WHERE("id = #{id}");
         }}.toString();
     }
+
+    public String getActiveByDays(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end){
+        return getActiveByKey("DATE_FORMAT(`crtTime`,'%Y%m%d') as `key`", aid, hid, oid, start, end);
+    }
+
+    public String getActiveByWeeks(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end){
+        return getActiveByKey("CONCAT(DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+1 DAY)" +
+                ",'%Y%m%d'), '-', DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+8 DAY),'%Y%m%d'))" +
+                " as `key`", aid, hid, oid, start, end);
+    }
+
+    public String getActiveByMonth(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end){
+        return getActiveByKey("DATE_FORMAT(crtTime,'%Y%m') as `key`", aid, hid, oid, start, end);
+    }
+
+
+    public String getTotalActiveCount(@Param("aid")String aid, @Param("end") String end){
+        return getActiveByKey(null, aid, "0","0","0", end);
+    }
+
+    private String getActiveByKey(String key, String aid, String hid, String oid, String start, String end){
+        return new SQL(){{
+            if(key!=null){
+                SELECT(key + ", COUNT(DISTINCT `mac`) as `value`");
+            }else {
+                SELECT("COUNT(DISTINCT `mac`) as `value`");
+            }
+            FROM("t_device");
+            WHERE("status = 14");
+            if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("agentId = #{aid}");
+            if(!Constant.DIGIT_ZERO.equals(hid)) AND().WHERE("hospitalId = #{hid}");
+            if(!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("depart = #{oid}");
+            if(!Constant.DIGIT_ZERO.equals(start)) AND().WHERE("crtTime >= FROM_UNIXTIME(#{start})");
+            if(!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("crtTime < FROM_UNIXTIME(#{end})");
+            if(key != null) GROUP_BY("`key`");
+        }}.toString();
+    }
+
+
+
 }

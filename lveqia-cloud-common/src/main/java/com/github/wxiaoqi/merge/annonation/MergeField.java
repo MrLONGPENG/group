@@ -22,7 +22,7 @@ public @interface MergeField {
      * 默认值
      * @return
      */
-    String value() default "";
+    String defaultValue() default "";
 
 
     /**

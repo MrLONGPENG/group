@@ -81,4 +81,6 @@ public interface WxOrderMapper {
     List<DBMap> getPayCountByHid(@Param("aid")String aid, @Param("hid")String hid, @Param("payTime")long payTime);
 
 
+    @SelectProvider(type = WxOrderSqlProvider.class, method = "getYesterdayUsageCount")
+    String getYesterdayUsageCount(@Param("aid")String aid, @Param("start") String start, @Param("end") String end);
 }

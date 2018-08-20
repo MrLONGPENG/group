@@ -11,6 +11,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.lveqia.cloud.common.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -50,7 +51,8 @@ public class MergeCore {
                         MergeField mergeField = mergeFieldMap.get(key);
                         Object bean = BeanFactoryUtils.getBean(mergeField.feign());
                         Method method = mergeField.feign().getMethod(mergeField.method(), String.class);
-                        String query = key.contains("#")? key.substring(key.indexOf(",")+1) : mergeField.key();
+                        String query = key.contains(Constant.SIGN_NUMBER)
+                                ? key.substring(key.indexOf(Constant.SIGN_COMMA)+1) : mergeField.key();
                         Map<String, String> invoke = (Map<String, String>) method.invoke(bean,query);
                         return invoke;
                     }
@@ -62,7 +64,8 @@ public class MergeCore {
                             MergeField mergeField = mergeFieldMap.get(key);
                             Object bean = BeanFactoryUtils.getBean(mergeField.feign());
                             Method method = mergeField.feign().getMethod(mergeField.method(), String.class);
-                            String query = key.contains("#")? key.substring(key.indexOf(",")+1) : mergeField.key();
+                            String query = key.contains(Constant.SIGN_NUMBER)
+                                    ? key.substring(key.indexOf(Constant.SIGN_COMMA)+1) : mergeField.key();
                             Map<String, String> invoke = (Map<String, String>) method.invoke(bean,query);
                             return invoke;
                         });
@@ -74,11 +77,6 @@ public class MergeCore {
 
     /**
      * aop方式加工
-     *
-     * @param pjp
-     * @param anno
-     * @return
-     * @throws Throwable
      */
     public Object mergeData(ProceedingJoinPoint pjp, MergeResult anno) throws Throwable {
         Object proceed = pjp.proceed();
@@ -87,7 +85,7 @@ public class MergeCore {
             Method m = signature.getMethod();
             Type returnType = m.getGenericReturnType();
             if(!(returnType instanceof ParameterizedType)){
-                mergeOne(proceed.getClass(), proceed);
+                mergeOne(proceed.getClass(), proceed, pjp.getArgs());
                 return proceed;
             }
             ParameterizedType parameterizedType = (ParameterizedType)returnType;
@@ -117,19 +115,11 @@ public class MergeCore {
 
     /**
      * 手动调用进行配置合并
-     *
-     * @param clazz
-     * @param result
-     * @param params
-     * @throws ExecutionException
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
      */
     public void mergeResult(Class clazz, List<?> result, Object[] params) throws NoSuchMethodException
             , InvocationTargetException, IllegalAccessException, ExecutionException {
         Field[] fields = clazz.getDeclaredFields();
-        List<Field> mergeFields = new ArrayList<Field>();
+        List<Field> mergeFields = new ArrayList<>();
         Map<String, Map<String, String>> invokes = new HashMap<>();
         String className = clazz.getName();
         // 获取属性
@@ -140,59 +130,134 @@ public class MergeCore {
                 String args = annotation.key();
                 // 表示该属性需要将值聚合成条件远程查询
                 if (annotation.isValueNeedMerge()) {
-                    StringBuffer sb = new StringBuffer();
-                    Set<String> ids = new HashSet<>();
-                    result.forEach(obj -> {
-                        field.setAccessible(true);
-                        Object o;
-                        try {
-                            o = field.get(obj);
-                            if (o != null) {
-                                if (!ids.contains(o)) {
-                                    ids.add(o.toString());
-                                    sb.append(o.toString()).append(",");
-                                }
-                            }
-                        } catch (IllegalAccessException e) {
-                            logger.error("数据属性加工失败:" + field, e);
-                            throw new RuntimeException("数据属性加工失败:" + field, e);
-                        }
-
-                    });
-                    args = sb.substring(0, sb.length() - 1);
+                    args = getKey(result, field);
                 } else {
-                    String key = className + field.getName();
-                    if(annotation.isQueryByParam()){
-                        StringBuffer sb = new StringBuffer(className);
-                        sb.append("#").append(field.getName());
-                        for (Object object:params) {
-                            sb.append(",").append(object);
-                        }
-                        key = new String(sb);
-                    }
-                    Map<String, String> value;
-                    if(annotation.isCache()) {
-                        mergeFieldMap.put(key, annotation);
-                        // 从缓存获取
-                        value = caches.get(key);
-                    }else {
-                        Object bean = BeanFactoryUtils.getBean(annotation.feign());
-                        Method method = annotation.feign().getMethod(annotation.method(), String.class);
-                        String query = key.contains("#")? key.substring(key.indexOf(",")+1) : annotation.key();
-                        value = (Map<String, String>) method.invoke(bean,query);
-                    }
+                    Map<String, String> value = getValueByKey(params, className, field, annotation);
                     if (value != null) {
-                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
+                        invokes.put(field.getName(), addDefaultKey(value, annotation.defaultValue()));
                         continue;
                     }
                 }
                 Object bean = BeanFactoryUtils.getBean(annotation.feign());
                 Method method = annotation.feign().getMethod(annotation.method(), String.class);
                 Map<String, String> value = (Map<String, String>) method.invoke(bean, args);
-                invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
+                invokes.put(field.getName(), addDefaultKey(value, annotation.defaultValue()));
             }
         }
         result.forEach(obj -> mergeObjFieldValue(obj, mergeFields, invokes));
+    }
+
+
+
+
+
+    /**
+     * 手动对单个结果进行配置合并
+     */
+    public void mergeOne(Class clazz, Object mergeObj, Object[] params) throws ExecutionException
+            , NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Field[] fields = clazz.getDeclaredFields();
+        List<Field> mergeFields = new ArrayList<>();
+        Map<String, Map<String, String>> invokes = new HashMap<>();
+        String className = clazz.getName();
+        // 获取属性
+        for (Field field : fields) {
+            MergeField annotation = field.getAnnotation(MergeField.class);
+            if (annotation != null) {
+                mergeFields.add(field);
+                String args = annotation.key();
+                // 表示该属性需要将值聚合成条件远程查询
+                if (annotation.isValueNeedMerge()) {
+                    args = getKeyByOne(mergeObj, field, args);
+                } else {
+                    Map<String, String> value = getValueByKey(params, className, field, annotation);
+                    if (value != null) {
+                        invokes.put(field.getName(), addDefaultKey(value, annotation.defaultValue()));
+                        continue;
+                    }
+                }
+                Object bean = BeanFactoryUtils.getBean(annotation.feign());
+                Method method = annotation.feign().getMethod(annotation.method(), String.class);
+                Map<String, String> value = (Map<String, String>) method.invoke(bean, args);
+                invokes.put(field.getName(), addDefaultKey(value, annotation.defaultValue()));
+            }
+        }
+        mergeObjFieldValue(mergeObj, mergeFields, invokes);
+    }
+
+
+    /**
+     * 根据属性合并查询Key
+     */
+    private String getKey(List<?> result, Field field) {
+        String args;
+        StringBuffer sb = new StringBuffer();
+        Set<String> ids = new HashSet<>();
+        result.forEach(obj -> {
+            field.setAccessible(true);
+            Object o;
+            try {
+                o = field.get(obj);
+                if (o != null) {
+                    if (!ids.contains(o)) {
+                        ids.add(o.toString());
+                        sb.append(o.toString()).append(Constant.SIGN_COMMA);
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                logger.error("数据属性加工失败:" + field, e);
+                throw new RuntimeException("数据属性加工失败:" + field, e);
+            }
+
+        });
+        args = sb.substring(0, sb.length() - 1);
+        return args;
+    }
+
+
+    /**
+     * 单个属性 不需要循环组合查询条件
+     */
+    private String getKeyByOne(Object mergeObj, Field field, String args) {
+        field.setAccessible(true);
+        Object o;
+        try {
+            o = field.get(mergeObj);
+        } catch (IllegalAccessException e) {
+            logger.error("数据属性加工失败:" + field, e);
+            throw new RuntimeException("数据属性加工失败:" + field, e);
+        }
+        if (o != null) {
+            args = o.toString();
+        }
+        return args;
+    }
+
+    /**
+     * 根据方法的参数，获取远程数据结果集，同时判定是否需要缓存
+     */
+    private Map<String, String> getValueByKey(Object[] params, String className, Field field, MergeField annotation)
+            throws ExecutionException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        String key = className + field.getName();
+        if(annotation.isQueryByParam()){
+            StringBuffer sb = new StringBuffer(className);
+            sb.append(Constant.SIGN_NUMBER).append(field.getName());
+            for (Object object:params) {
+                sb.append(Constant.SIGN_COMMA).append(object);
+            }
+            key = new String(sb);
+        }
+        Map<String, String> value;
+        if(annotation.isCache()) { // 从缓存获取
+            mergeFieldMap.put(key, annotation);
+            value = caches.get(key);
+        }else {
+            Object bean = BeanFactoryUtils.getBean(annotation.feign());
+            Method method = annotation.feign().getMethod(annotation.method(), String.class);
+            String query = key.contains("#")? key.substring(key.indexOf(",")+1) : annotation.key();
+            value = (Map<String, String>) method.invoke(bean,query);
+        }
+        return value;
     }
 
     /**
@@ -205,59 +270,7 @@ public class MergeCore {
         return map;
     }
 
-    /**
-     * 手动对单个结果进行配置合并
-     *
-     * @param clazz
-     * @param mergeObj
-     * @throws ExecutionException
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public void mergeOne(Class clazz, Object mergeObj) throws ExecutionException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Field[] fields = clazz.getDeclaredFields();
-        List<Field> mergeFields = new ArrayList<Field>();
-        Map<String, Map<String, String>> invokes = new HashMap<>();
-        String className = clazz.getName();
-        // 获取属性
-        for (Field field : fields) {
-            MergeField annotation = field.getAnnotation(MergeField.class);
-            if (annotation != null) {
-                mergeFields.add(field);
-                String args = annotation.key();
-                // 表示该属性需要将值聚合成条件远程查询
-                if (annotation.isValueNeedMerge()) {
-                    field.setAccessible(true);
-                    Object o;
-                    try {
-                        o = field.get(mergeObj);
-                    } catch (IllegalAccessException e) {
-                        logger.error("数据属性加工失败:" + field, e);
-                        throw new RuntimeException("数据属性加工失败:" + field, e);
-                    }
-                    if (o != null) {
-                        args = o.toString();
-                    }
-                } else {
-                    String key = className + field.getName();
-                    mergeFieldMap.put(key, annotation);
-                    // 从缓存获取
-                    Map<String, String> value = caches.get(key);
-                    if (value != null) {
-                        if(value.size()==0) caches.refresh(key);
-                        invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
-                        continue;
-                    }
-                }
-                Object bean = BeanFactoryUtils.getBean(annotation.feign());
-                Method method = annotation.feign().getMethod(annotation.method(), String.class);
-                Map<String, String> value = (Map<String, String>) method.invoke(bean, args);
-                invokes.put(field.getName(), addDefaultKey(value, annotation.value()));
-            }
-        }
-        mergeObjFieldValue(mergeObj, mergeFields, invokes);
-    }
+
 
     /**
      * 合并对象属性值

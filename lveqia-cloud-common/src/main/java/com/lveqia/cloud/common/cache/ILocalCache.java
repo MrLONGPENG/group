@@ -1,8 +1,6 @@
 package com.lveqia.cloud.common.cache;
 
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * 本地缓存接口 (在分布式项目中使用本地缓存请慎重)
  * @author leolaurel

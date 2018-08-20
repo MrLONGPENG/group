@@ -53,4 +53,8 @@ public interface WxUserMapper {
     @Select("SELECT * FROM t_wx_user WHERE open_id = #{openid}")
     @ResultMap("wxUser")
     WxUser findByOpenId(String openid);
+
+
+    @SelectProvider(type = WxUserSqlProvider.class, method = "getTotalUserCount")
+    String getTotalUserCount(@Param("start")String start, @Param("end") String end);
 }
