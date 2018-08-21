@@ -127,6 +127,7 @@ public interface DeviceMapper {
             , @Param("start") String start, @Param("end") String end);
 
 
-    @SelectProvider(type = DeviceSqlProvider.class, method = "getTotalActiveCount")
-    String getTotalActiveCount(@Param("aid") String aid, @Param("end") String end);
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveCount")
+    String getActiveCount(@Param("aid") String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") String start, @Param("end") String end);
 }

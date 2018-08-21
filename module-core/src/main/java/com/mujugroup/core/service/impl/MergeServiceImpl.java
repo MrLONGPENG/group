@@ -80,8 +80,8 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
-            String[] params = key.split(Constant.SIGN_COMMA);
-            hashMap.put(key, deviceMapper.getTotalActiveCount(params[0], params[1]));
+            String[] keys = key.split(Constant.SIGN_COMMA);
+            hashMap.put(key, deviceMapper.getActiveCount(keys[0], keys[1], keys[2], Constant.DIGIT_ZERO, keys[3]));
         }
         return hashMap;
     }

@@ -23,14 +23,14 @@ public class StaActive implements Serializable {
             , isValueNeedMerge = true)
     private String totalActive;
 
-    public StaActive(int aid, int grain, String refDate) {
+    public StaActive(int aid, int hid, int oid, int grain, String refDate) {
         this.refDate = refDate;
         this.active = refDate;
-        this.totalActive = getKey(aid, grain, refDate);
+        this.totalActive = getKey(aid, hid, oid, grain, refDate);
     }
 
-    private String getKey(int aid, int grain, String refDate) {
-        return StringUtil.toParams(aid, getTimestamp(grain, refDate));
+    private String getKey(int aid, int hid, int oid, int grain, String refDate) {
+        return StringUtil.toParams(aid, hid, oid, getTimestamp(grain, refDate));
     }
 
     private long getTimestamp(int grain, String refDate) {

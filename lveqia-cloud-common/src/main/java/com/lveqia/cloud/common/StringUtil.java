@@ -112,7 +112,7 @@ public class StringUtil {
     /**
      * 采用逗号字符串形式拼接
      */
-    public static String toParams(int aid, long... args) {
+    public static String toParams(long aid, long... args) {
         StringBuffer buffer = new StringBuffer().append(aid);
         for (long key:args) {
             buffer.append(Constant.SIGN_COMMA).append(key);

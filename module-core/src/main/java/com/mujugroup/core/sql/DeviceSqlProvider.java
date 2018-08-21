@@ -1,13 +1,9 @@
 package com.mujugroup.core.sql;
 
-import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.core.model.Device;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
-
-import java.util.Date;
 
 /**
  * 设备关联表,SQL语句组装类
@@ -92,8 +88,9 @@ public class DeviceSqlProvider {
     }
 
 
-    public String getTotalActiveCount(@Param("aid")String aid, @Param("end") String end){
-        return getActiveByKey(null, aid, "0","0","0", end);
+    public String getActiveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
+            , @Param("start") String start, @Param("end") String end){
+        return getActiveByKey(null, aid, hid, oid, start, end);
     }
 
     private String getActiveByKey(String key, String aid, String hid, String oid, String start, String end){

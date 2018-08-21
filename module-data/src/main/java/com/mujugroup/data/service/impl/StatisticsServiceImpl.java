@@ -75,7 +75,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<StaActive> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaActive(aid, grain, key));
+            list.add(new StaActive(aid, hid, oid, grain, key));
         }
         return list;
     }

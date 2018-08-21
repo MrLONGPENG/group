@@ -15,6 +15,7 @@ public class OverviewServiceImpl implements OverviewService {
     @MergeResult
     public OverviewInfo info(int aid, long timestamp) {
         // 请确保时间戳，小于当日凌晨，以便可以缓存数据
-        return new OverviewInfo(Constant.DIGIT_ZERO, StringUtil.toParams(aid, timestamp), Constant.DIGIT_ZERO);
+        return new OverviewInfo(Constant.DIGIT_ZERO, StringUtil.toParams(aid,0, 0, timestamp)
+                , Constant.DIGIT_ZERO);
     }
 }
