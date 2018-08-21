@@ -2,7 +2,8 @@ package com.mujugroup.wx.service.impl;
 
 import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
-import com.mujugroup.wx.exception.ParamException;
+import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxGoodsMapper;
 import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.model.WxGoods;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,19 +106,14 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     @Transactional
     public boolean update(int type, int key, int kid, int gid, String name, int price, int days
             , int state, String explain) throws ParamException {
-        if(type<1||type>4) throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                , "当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
-        if(state !=1 && state!= 2) throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                , "商品状态{state}只能为1:当前可用 2:敬请期待");
-        if(type ==2 && days <= 0) throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                , "商品类型为基本套餐时候,必须指定Days属性,最小数量为1天");
-        if(key == WxRelation.KEY_DEFAULT && gid <= 0) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "默认数据无法新增，请更改外键类型或指定默认商品ID");
+        if(type<1||type>4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
+        if(state !=1 && state!= 2) throw new ParamException("商品状态{state}只能为1:当前可用 2:敬请期待");
+        if(type ==2 && days <= 0) throw new ParamException("商品类型为基本套餐时候,必须指定Days属性,最小数量为1天");
+        if(key == WxRelation.KEY_DEFAULT && gid <= 0) throw new ParamException("默认数据无法新增，请更改外键类型或指定默认商品ID");
         if(gid > 0 ) { // 更新指定商品
             List<WxGoods> list = queryList(key, kid, type);
             WxGoods wxGoods = list.stream().filter(goods -> goods.getId() == gid).findFirst().orElseThrow(
-                    () -> new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                            , "该商品类型中无法找到指定数据，请确认GID["+gid+"]是否存在")
+                    () -> new ParamException("该商品类型中无法找到指定数据，请确认GID["+gid+"]是否存在")
             );
             wxGoodsMapper.update(bindData(wxGoods, name, type, price, days, state, explain));
         }else {
@@ -143,11 +140,9 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     @Transactional
-    public boolean delete(int type, int key, int kid, int gid) throws ParamException {
-        if(key == WxRelation.KEY_DEFAULT) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "默认数据无法删除");
-        if(type<1||type>4) throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT
-                , "当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
+    public boolean delete(int type, int key, int kid, int gid) throws ParamException, OtherException {
+        if(key == WxRelation.KEY_DEFAULT) throw new ParamException( "默认数据无法删除");
+        if(type<1||type>4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
         List<WxGoods> list = queryList(key, kid, type);
         if(list !=null && list.size()>0){
             list.stream().filter(goods -> goods.getId() == gid || gid == 0)
@@ -160,7 +155,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
             }
             if(isDelete) return true;
         }
-        throw new ParamException(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
+        throw new OtherException(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
     }
 
 }

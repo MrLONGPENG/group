@@ -8,7 +8,7 @@ import com.mujugroup.data.service.feign.ModuleWxService;
 import java.io.Serializable;
 
 /**
- * 概览接口返回时间
+ * 概览接口返回数据
  */
 public class OverviewInfo implements Serializable {
 
@@ -19,8 +19,7 @@ public class OverviewInfo implements Serializable {
     @MergeField(feign = ModuleCoreService.class, method = "getTotalActiveCount"
             , isQueryByParam = true, isCache = true, defaultValue = Constant.DIGIT_ZERO)
     private String totalActive;
-
-
+    
     @MergeField(feign = ModuleWxService.class, method = "getYesterdayUsageCount"
             , isQueryByParam = true, isCache = true, defaultValue = Constant.DIGIT_ZERO)
     private String yesterdayUsageCount;

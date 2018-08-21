@@ -9,7 +9,7 @@ public interface MergeService {
 
     Map<String, String> getOidMapByHid(String param);
 
-    Map<String, String> getActiveValue(String param);
+    Map<String, String> getActiveCount(String param);
 
     Map<String, String> getTotalActiveCount(String param);
 }

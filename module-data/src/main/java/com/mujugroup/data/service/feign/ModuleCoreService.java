@@ -14,8 +14,8 @@ import java.util.Map;
 @FeignClient(value = "module-core" ,fallback = ModuleCoreServiceError.class)
 public interface ModuleCoreService {
 
-    @RequestMapping(value = "/merge/getActiveValue",method = RequestMethod.POST)
-    Map<String, String> getActiveValue(@RequestParam(value = "param") String param);
+    @RequestMapping(value = "/merge/getActiveCount",method = RequestMethod.POST)
+    Map<String, String> getActiveCount(@RequestParam(value = "param") String param);
 
     @RequestMapping(value = "/merge/getTotalActiveCount",method = RequestMethod.POST)
     Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param);

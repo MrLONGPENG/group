@@ -1,6 +1,8 @@
 package com.lveqia.cloud.common;
 
 
+import com.lveqia.cloud.common.util.Constant;
+
 import java.util.Random;
 
 public class StringUtil {
@@ -96,11 +98,24 @@ public class StringUtil {
         System.out.println(StringUtil.autoFillDid(100101));
     }
 
-
+    /**
+     * 采用分号字符串形式拼接
+     */
     public static String toKeys(int type, String... args) {
         StringBuffer buffer = new StringBuffer().append(type);
         for (String key:args) {
-            buffer.append(";").append(key);
+            buffer.append(Constant.SIGN_SEMICOLON).append(key);
+        }
+        return new String(buffer);
+    }
+
+    /**
+     * 采用逗号字符串形式拼接
+     */
+    public static String toParams(int aid, long... args) {
+        StringBuffer buffer = new StringBuffer().append(aid);
+        for (long key:args) {
+            buffer.append(Constant.SIGN_COMMA).append(key);
         }
         return new String(buffer);
     }

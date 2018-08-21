@@ -1,6 +1,6 @@
 package com.mujugroup.wx.service;
 
-import com.mujugroup.wx.exception.ParamException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxUptime;
 
 

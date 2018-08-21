@@ -4,6 +4,8 @@ public class Constant {
 
     /** 符号--逗号（,） */
     public static final String SIGN_COMMA = ",";
+    /** 符号--分号（;） */
+    public static final String SIGN_SEMICOLON = ";";
     /** 符号--井号（#）  */
     public static final String SIGN_NUMBER = "#";
 
@@ -13,6 +15,9 @@ public class Constant {
     /** 时间戳-- 8 hour  */
     public static final long TIMESTAMP_HOUR_8 = 8*60*60;
 
-    /** 时间戳-- 24 hour  */
-    public static final long TIMESTAMP_HOUR_24 = 24*60*60;
+    /** 时间戳-- 1 天 （24 hour） */
+    public static final long TIMESTAMP_DAYS_1 = 24*60*60;
+
+    /** 时间戳-- 7 天  */
+    public static final long TIMESTAMP_DAYS_7 = 7*24*60*60;
 }

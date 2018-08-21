@@ -13,15 +13,16 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
     private final Logger logger = LoggerFactory.getLogger(ModuleCoreServiceError.class);
 
+
     @Override
-    public Map<String, String> getActiveValue(String param) {
-        logger.debug("data->remote core fail, param:{}",param);
+    public Map<String, String> getActiveCount(String param) {
+        logger.debug("data->remote core fail, method:getActiveCount param:{}",param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getTotalActiveCount(String param) {
-        logger.debug("data->remote core fail, param:{}",param);
+        logger.debug("data->remote core fail, method:getTotalActiveCount param:{}",param);
         return new HashMap<>();
     }
 }

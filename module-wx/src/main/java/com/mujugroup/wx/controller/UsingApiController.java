@@ -1,7 +1,7 @@
 package com.mujugroup.wx.controller;
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.wx.exception.TokenException;
+import com.lveqia.cloud.common.exception.TokenException;
 import com.mujugroup.wx.service.UsingApiService;
 import com.mujugroup.wx.service.WxUsingService;
 import io.swagger.annotations.Api;

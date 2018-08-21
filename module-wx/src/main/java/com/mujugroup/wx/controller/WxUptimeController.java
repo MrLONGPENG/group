@@ -2,7 +2,7 @@ package com.mujugroup.wx.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.wx.exception.ParamException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
 import com.mujugroup.wx.service.WxUptimeService;
@@ -12,7 +12,10 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**

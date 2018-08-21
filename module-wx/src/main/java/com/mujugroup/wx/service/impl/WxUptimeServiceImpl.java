@@ -1,9 +1,8 @@
 package com.mujugroup.wx.service.impl;
 
 import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
-import com.mujugroup.wx.exception.ParamException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.mapper.WxUptimeMapper;
 import com.mujugroup.wx.model.WxRelation;
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -98,12 +98,12 @@ public class WxUptimeServiceImpl implements WxUptimeService {
             throws NumberFormatException, ParamException {
         int startTime = DateUtil.getTimesNoDate(startDesc);
         int stopTime = DateUtil.getTimesNoDate(stopDesc);
-        if(type== WxRelation.TYPE_UPTIME  &&startTime <= stopTime) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "开始时间不能小于等于结束时间，否则无法跨天计算");
-        if(type== WxRelation.TYPE_MIDDAY  &&startTime > stopTime) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "午休时间开始时间不能大于结束时间");
-        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
+        if(type== WxRelation.TYPE_UPTIME  &&startTime <= stopTime)
+            throw new ParamException("开始时间不能小于等于结束时间，否则无法跨天计算");
+        if(type== WxRelation.TYPE_MIDDAY  &&startTime > stopTime)
+            throw new ParamException("午休时间开始时间不能大于结束时间");
+        if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY)
+            throw new ParamException("Type只能为2:运行时间 3:午休时间");
         // 若为默认数据，那么KID没有其他意义，置默认值
         if(key == WxRelation.KEY_DEFAULT) kid = WxRelation.KID_DEFAULT;
         List<WxUptime> list =  wxUptimeMapper.findListByRelation(type, key, kid);
@@ -132,10 +132,9 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     @Override
     @Transactional
     public boolean delete(int type, int key, int kid) throws ParamException {
-        if(key == WxRelation.KEY_DEFAULT) throw new ParamException(
-                ResultUtil.CODE_REQUEST_FORMAT, "默认数据无法删除");
+        if(key == WxRelation.KEY_DEFAULT) throw new ParamException("默认数据无法删除");
         if(type!= WxRelation.TYPE_UPTIME  && type != WxRelation.TYPE_MIDDAY)
-            throw new ParamException(ResultUtil.CODE_REQUEST_FORMAT, "Type只能为2:运行时间 3:午休时间");
+            throw new ParamException("Type只能为2:运行时间 3:午休时间");
         List<WxUptime> list =  wxUptimeMapper.findListByRelation(type, key, kid);
         if(list !=null && list.size()>0){
             list.stream().mapToInt(WxUptime::getId).forEach(wxUptimeMapper::deleteById);

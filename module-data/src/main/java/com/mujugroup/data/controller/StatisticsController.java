@@ -1,8 +1,7 @@
 package com.mujugroup.data.controller;
 
-import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.data.bean.ActiveBean;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.data.service.StatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/statistics")
@@ -26,15 +23,14 @@ public class StatisticsController {
 
     private final StatisticsService statisticsService;
 
-
     @Autowired
     public StatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
     }
 
     @ApiOperation(value="查询木巨柜激活情况", notes="根据代理商、医院、科室查询木巨柜激活情况")
-    @RequestMapping(value = "/active",method = RequestMethod.POST)
-    public String active(@ApiParam(value="代理商ID", required = true) @RequestParam(name="aid") int aid
+    @RequestMapping(value = "/chart",method = RequestMethod.POST)
+    public String chart(@ApiParam(value="代理商ID", required = true) @RequestParam(name="aid") int aid
             , @ApiParam(value="医院ID")@RequestParam(name="hid", required=false, defaultValue="0") int hid
             , @ApiParam(value="科室ID")@RequestParam(name="oid", required=false, defaultValue="0") int oid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
@@ -43,12 +39,19 @@ public class StatisticsController {
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
             , defaultValue="1") int grain) {
         logger.debug("active {} {} {} {} {}", aid, hid, oid, grain, action);
-        long morning = DateUtil.getTimesMorning();
-        if(startTime > morning || stopTime > morning || startTime == stopTime)return ResultUtil.code(
-                ResultUtil.CODE_REQUEST_FORMAT , "开始结束时间戳不能相等且不能大于当天凌晨");
-        List<ActiveBean> list = statisticsService.activeStatistics(aid, hid, oid, grain, startTime, stopTime);
-        if(list!=null && list.size() > 0 ) return ResultUtil.success(list);
-        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+        try {
+            switch (action){
+                case "getStaUsage": case "get_statistics_usage" :
+                    return ResultUtil.success(statisticsService.getUsage(aid, hid, oid, grain, startTime, stopTime));
+                case "getStaActive" : case "get_statistics_active" :
+                    return ResultUtil.success(statisticsService.getActive(aid, hid, oid, grain, startTime, stopTime));
+                case "getStaUsageRate": case "get_statistics_usage_rate" :
+                    return ResultUtil.success(statisticsService.getUsageRate(aid, hid, oid, grain, startTime, stopTime));
+            }
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+        return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "无法找到Action:"+action);
     }
 
 }

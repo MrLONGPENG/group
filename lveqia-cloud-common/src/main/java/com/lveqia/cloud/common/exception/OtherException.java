@@ -1,6 +1,6 @@
-package com.mujugroup.wx.exception;
+package com.lveqia.cloud.common.exception;
 
-public class ParamException extends Exception {
+public class OtherException extends Exception {
 
     private int code;
 
@@ -13,7 +13,7 @@ public class ParamException extends Exception {
     }
 
     //有参的构造方法
-    public ParamException(int code, String message){
+    public OtherException(int code, String message){
         super(message);
         setCode(code);
     }

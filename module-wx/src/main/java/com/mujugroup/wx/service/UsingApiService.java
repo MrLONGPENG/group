@@ -1,10 +1,10 @@
 package com.mujugroup.wx.service;
 
+import com.lveqia.cloud.common.exception.TokenException;
 import com.mujugroup.wx.bean.QueryBean;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
-import com.mujugroup.wx.exception.TokenException;
 
 public interface UsingApiService {
 

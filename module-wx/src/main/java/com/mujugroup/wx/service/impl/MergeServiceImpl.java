@@ -46,7 +46,7 @@ public class MergeServiceImpl implements MergeService {
         logger.debug("getYesterdayUsageCount->{}", param);
         String[] params = param.split(Constant.SIGN_COMMA);
         Map<String,String> map = new HashMap<>();
-        long start = Long.parseLong(params[1]) - Constant.TIMESTAMP_HOUR_24;
+        long start = Long.parseLong(params[1]) - Constant.TIMESTAMP_DAYS_1;
         map.put(Constant.DIGIT_ZERO, wxOrderMapper.getYesterdayUsageCount(params[0], String.valueOf(start), params[1]));
         return map;
     }

@@ -171,6 +171,23 @@ public class DateUtil {
         return cal.getTimeInMillis()/1000;
     }
 
+    /**
+     * 获得当月月底的时间戳
+     */
+    public static long getTimesEndMonth(String yyyyMM){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(stringToDate(yyyyMM, "yyyyMM"));
+        cal.add(Calendar.MONTH, 1);
+        return cal.getTimeInMillis()/1000 ;//返回值去除后3位  00:00:00.000
+    }
+
+    /**
+     * 字符串转时间戳
+     */
+    public static long toTimestamp(String date, int type) {
+        return stringToDate(date, type).getTime()/1000L;
+    }
+
     public static void main(String[] args) {
         System.out.println(DateUtil.dateToString(new Date(getTimesMorning()*1000),DateUtil.TYPE_DATETIME_19));
         System.out.println(DateUtil.dateToString(new Date(getTimesNight()*1000),DateUtil.TYPE_DATETIME_19));

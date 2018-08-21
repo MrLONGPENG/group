@@ -201,7 +201,7 @@ public class MergeCore {
                 if (o != null) {
                     if (!ids.contains(o)) {
                         ids.add(o.toString());
-                        sb.append(o.toString()).append(Constant.SIGN_COMMA);
+                        sb.append(o.toString()).append(Constant.SIGN_SEMICOLON);
                     }
                 }
             } catch (IllegalAccessException e) {
@@ -254,7 +254,8 @@ public class MergeCore {
         }else {
             Object bean = BeanFactoryUtils.getBean(annotation.feign());
             Method method = annotation.feign().getMethod(annotation.method(), String.class);
-            String query = key.contains("#")? key.substring(key.indexOf(",")+1) : annotation.key();
+            String query = key.contains(Constant.SIGN_NUMBER) ? key.substring(
+                    key.indexOf(Constant.SIGN_COMMA) + 1 ) : annotation.key();
             value = (Map<String, String>) method.invoke(bean,query);
         }
         return value;

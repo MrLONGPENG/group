@@ -1,6 +1,5 @@
 package com.mujugroup.core.service.impl;
 
-import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
 import com.mujugroup.core.mapper.DepartmentMapper;
@@ -55,7 +54,7 @@ public class MergeServiceImpl implements MergeService {
     }
 
     @Override
-    public Map<String, String> getActiveValue(String param) {
+    public Map<String, String> getActiveCount(String param) {
         logger.debug("getActiveValue->{}", param);
         String[] params = param.split(Constant.SIGN_COMMA);
         HashMap<String, String> hashMap =  new HashMap<>();
@@ -78,9 +77,12 @@ public class MergeServiceImpl implements MergeService {
     @Override
     public Map<String, String> getTotalActiveCount(String param) {
         logger.debug("getTotalActiveCount->{}", param);
-        String[] params = param.split(Constant.SIGN_COMMA);
         HashMap<String, String> hashMap =  new HashMap<>();
-        hashMap.put("0", deviceMapper.getTotalActiveCount(params[0], params[1]));
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key:array){
+            String[] params = key.split(Constant.SIGN_COMMA);
+            hashMap.put(key, deviceMapper.getTotalActiveCount(params[0], params[1]));
+        }
         return hashMap;
     }
 }

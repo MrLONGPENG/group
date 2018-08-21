@@ -2,7 +2,8 @@ package com.mujugroup.wx.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.wx.exception.ParamException;
+import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.service.WxGoodsService;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 
@@ -98,6 +100,8 @@ public class WxGoodsController {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
             }
         } catch (ParamException e) {
+            return ResultUtil.code(e.getCode(), e.getMessage());
+        } catch (OtherException e) {
             return ResultUtil.code(e.getCode(), e.getMessage());
         }
     }
