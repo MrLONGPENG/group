@@ -239,7 +239,7 @@ public class MergeCore {
     private Map<String, String> getValueByKey(Object[] params, String className, Field field, MergeField annotation)
             throws ExecutionException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String key = className + field.getName();
-        if(annotation.isQueryByParam()){
+        if(annotation.isQueryByParam()){// 采用格式：类名#属性名,参数1,参数n
             StringBuffer sb = new StringBuffer(className);
             sb.append(Constant.SIGN_NUMBER).append(field.getName());
             for (Object object:params) {

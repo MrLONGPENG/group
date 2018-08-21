@@ -70,42 +70,4 @@ public class WxOrderController {
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
-
-    /**
-     * 查询最近24小时的支付数据
-     */
-    @RequestMapping(value = "/getPayCount", method = RequestMethod.POST)
-    public Map<String, String> getPayCount(String key) {
-        logger.warn("order-getPayCount[{}]", key);
-        String[] ids = key.split(",");
-        HashMap<String, String> hashMap =  new HashMap<>();
-        if(ids.length==1){
-            List<DBMap> list = wxOrderService.getPayCountByAid(ids[0]);
-            list.forEach(dbMap -> dbMap.addTo(hashMap));
-        }else if(ids.length == 2){
-            List<DBMap> list = wxOrderService.getPayCountByHid(ids[0], ids[1]);
-            list.forEach(dbMap -> dbMap.addTo(hashMap));
-        }
-        logger.debug(hashMap.toString());
-        return hashMap;
-    }
-
-    @RequestMapping(value = "/getPaymentInfo", method = RequestMethod.POST)
-    public Map<String, String> getPaymentInfo(String key) {
-        HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = key.split(",");
-        WxOrder wxOrder;
-        StringBuilder sb;
-        for (String did: array) {
-            wxOrder = wxOrderService.findLastOrderByDid(did);
-            if(wxOrder!=null){
-                // DID;订单号;支付金额(分);支付时间;到期时间(秒)
-                sb = new StringBuilder(StringUtil.autoFillDid(wxOrder.getDid()));
-                sb.append(";").append(wxOrder.getTradeNo()).append(";").append(wxOrder.getPayPrice());
-                sb.append(";").append(wxOrder.getPayTime()).append(";").append(wxOrder.getEndTime());
-                hashMap.put(did, new String(sb));
-            }
-        }
-        return hashMap;
-    }
 }

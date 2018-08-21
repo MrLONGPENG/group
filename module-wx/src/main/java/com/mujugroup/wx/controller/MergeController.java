@@ -24,6 +24,17 @@ public class MergeController {
         this.mergeService = mergeService;
     }
 
+    @RequestMapping(value = "/getPayCount", method = RequestMethod.POST)
+    Map<String, String> getPayCount(@RequestParam(value = "param") String param){
+        return mergeService.getPayCount(param);
+    }
+
+    @RequestMapping(value = "/getPaymentInfo", method = RequestMethod.POST)
+    Map<String, String> getPaymentInfo(@RequestParam(value = "param") String param){
+        return mergeService.getPaymentInfo(param);
+    }
+
+
     @RequestMapping(value = "/getTotalUserCount",method = RequestMethod.POST)
     public Map<String, String> getTotalUserCount(@RequestParam(value = "param") String param){
         return mergeService.getTotalUserCount(param);

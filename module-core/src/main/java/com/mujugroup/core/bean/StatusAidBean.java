@@ -1,6 +1,7 @@
 package com.mujugroup.core.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.core.service.MergeService;
 import com.mujugroup.core.service.feign.ModuleWxService;
 
@@ -17,7 +18,8 @@ public class StatusAidBean implements Serializable {
     @MergeField(defaultValue = "未知", feign = MergeService.class, method = "getHidMapByAid", isQueryByParam = true)
     private String hospital;
 
-    @MergeField(defaultValue = "0", feign = ModuleWxService.class, method = "getPayCount", isQueryByParam = true)
+    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getPayCount"
+            , isQueryByParam = true)
     private String payCount;
 
     public int getHid() {

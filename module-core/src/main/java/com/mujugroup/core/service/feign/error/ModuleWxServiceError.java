@@ -15,14 +15,14 @@ public class ModuleWxServiceError implements ModuleWxService {
     private final Logger logger = LoggerFactory.getLogger(ModuleWxServiceError.class);
 
     @Override
-    public Map<String, String> getPayCount(String key) {
-        logger.debug("Remote call module-wx-getPayCount[{}] failure", key);
+    public Map<String, String> getPayCount(String param) {
+        logger.debug("Remote call module-wx-getPayCount[{}] failure", param);
         return new HashMap<>();
     }
 
     @Override
-    public Map<String, String> getPaymentInfo(String key) {
-        logger.debug("Remote call module-wx-getPaymentInfo[{}] failure", key);
+    public Map<String, String> getPaymentInfo(String param) {
+        logger.debug("Remote call module-wx-getPaymentInfo[{}] failure", param);
         return new HashMap<>();
     }
 

@@ -14,8 +14,8 @@ import java.util.Map;
 @FeignClient(value = "module-lock" ,fallback = ModuleLockServiceError.class)
 public interface ModuleLockService {
 
-    @RequestMapping(value = "/info/getHardwareInfo", method = RequestMethod.POST)
-    Map<String, String> getHardwareInfo(@RequestParam(value = "key") String key);
+    @RequestMapping(value = "/merge/getHardwareInfo", method = RequestMethod.POST)
+    Map<String, String> getHardwareInfo(@RequestParam(value = "param") String param);
 
     @RequestMapping(value = "/device/beep", method = RequestMethod.POST)
     String deviceBeep(@RequestParam(value = "did") String did);

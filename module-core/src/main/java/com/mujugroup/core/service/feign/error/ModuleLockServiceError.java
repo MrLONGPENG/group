@@ -15,8 +15,8 @@ public class ModuleLockServiceError implements ModuleLockService {
     private final Logger logger = LoggerFactory.getLogger(ModuleLockServiceError.class);
 
     @Override
-    public Map<String, String> getHardwareInfo(String key) {
-        logger.warn("Remote call module-lock-getHardwareInfo[{}] failure", key);
+    public Map<String, String> getHardwareInfo(String param) {
+        logger.warn("Remote call module-lock-getHardwareInfo[{}] failure", param);
         return new HashMap<>();
     }
 
