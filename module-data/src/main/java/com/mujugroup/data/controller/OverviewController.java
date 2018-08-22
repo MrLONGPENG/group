@@ -36,13 +36,6 @@ public class OverviewController {
             , defaultValue=Constant.DIGIT_ZERO) int aid, @ApiParam(value="概览统计时间戳(秒)，时间戳为0或为空" +
             "，默认按当前时间计算") @RequestParam(name="timestamp", defaultValue=Constant.DIGIT_ZERO) long timestamp){
         logger.debug("active {} {}", aid, timestamp);
-        long morning = DateUtil.getTimesMorning();
-        if(timestamp == 0 || timestamp > morning ) {
-            timestamp = morning;
-        }else { // 采用东八区（北京时间）计算
-            long offset = timestamp % Constant.TIMESTAMP_DAYS_1;
-            if(offset > 0) timestamp -= offset + Constant.TIMESTAMP_HOUR_8;
-        }
         OverviewInfo overviewInfo = overviewService.info(aid, timestamp);
         if(overviewInfo!=null) return ResultUtil.success(overviewInfo);
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);

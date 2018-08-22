@@ -70,21 +70,12 @@ public class DeviceSqlProvider {
         }}.toString();
     }
 
-    public String getActiveByDays(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end){
-        return getActiveByKey("DATE_FORMAT(`crtTime`,'%Y%m%d') as `key`", aid, hid, oid, start, end);
-    }
-
-    public String getActiveByWeeks(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end){
-        return getActiveByKey("CONCAT(DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+1 DAY)" +
-                ",'%Y%m%d'), '-', DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+8 DAY),'%Y%m%d'))" +
-                " as `key`", aid, hid, oid, start, end);
-    }
-
-    public String getActiveByMonth(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end){
-        return getActiveByKey("DATE_FORMAT(crtTime,'%Y%m') as `key`", aid, hid, oid, start, end);
+    public String getActiveByGroup(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("grain") String grain, @Param("start") String start, @Param("end") String end){
+        return getActiveByKey("1".equals(grain) ? "DATE_FORMAT(`crtTime`,'%Y%m%d') as `key`" : "2".equals(grain)
+                ? "CONCAT(DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+1 DAY)" +
+                ",'%Y%m%d'), '-', DATE_FORMAT(DATE_ADD(crtTime,INTERVAL -DAYOFWEEK(DATE(crtTime))+8 DAY)" +
+                ",'%Y%m%d')) as `key`" : "DATE_FORMAT(crtTime,'%Y%m') as `key`", aid, hid, oid, start, end);
     }
 
 

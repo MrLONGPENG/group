@@ -1,6 +1,7 @@
 package com.mujugroup.data.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.service.feign.ModuleWxService;
 
@@ -14,13 +15,13 @@ public class StaUsage implements Serializable {
     private String refDate;
 
     @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getUsageCount"
-            , isQueryByParam = true)
+            , isValueNeedMerge = true)
     private String usage;
 
 
-    public StaUsage(String refDate) {
+    public StaUsage(String refDate, int aid, int hid, int oid) {
         this.refDate = refDate;
-        this.usage = refDate;
+        this.usage = StringUtil.toLinkByComma(aid, hid, oid, 0, 0, refDate);
     }
 
 

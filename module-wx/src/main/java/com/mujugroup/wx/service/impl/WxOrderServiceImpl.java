@@ -3,6 +3,7 @@ package com.mujugroup.wx.service.impl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.wx.bean.OrderBean;
@@ -12,8 +13,12 @@ import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.SessionService;
 import com.mujugroup.wx.service.WxOrderService;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     private final WxOrderMapper wxOrderMapper;
     private final SessionService sessionService;
     private final ModuleCoreService moduleCoreService;
+    private final Logger logger = LoggerFactory.getLogger(WxOrderServiceImpl.class);
     @Autowired
     public WxOrderServiceImpl(WxOrderMapper wxOrderMapper, SessionService sessionService
             , ModuleCoreService moduleCoreService) {
@@ -107,6 +113,53 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<DBMap> getPayCountByHid(String aid, String hid) {
         return wxOrderMapper.getPayCountByHid(aid, hid, DateUtil.getLastDay());
+    }
+
+
+    /**
+     * 根据传入的起止时间戳，计算当期使用数
+     */
+    @Override
+    @Cacheable(value = "wx-order-usage-count")
+    public String getUsageCount(String aid, String hid, String oid, String start, String end) {
+        logger.debug("getUsageCount real-time data");
+        return String.valueOf(wxOrderMapper.getUsageCount(aid, hid, oid
+                , Long.parseLong(start), Long.parseLong(end)).getCount1());
+    }
+
+    /**
+     * 根据传入的日期格式，计算采用日累加方式
+     * @param date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
+     */
+    @Override
+    @Cacheable(value = "wx-order-usage-count-date")
+    public String getUsageCountByDate(String aid, String hid, String oid, String date) {
+        logger.debug("getUsageCountByDate real-time data");
+        int avgCount;
+        long timestamp;
+        if(date.length() == 17) {       // 粒度--周
+            timestamp = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            avgCount = appendUsageCount(aid, hid, oid, timestamp, 7);
+        }else if(date.length() == 6) {  // 粒度--月
+            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            avgCount = appendUsageCount(aid, hid, oid, timestamp, DateUtil.getDay(date));
+        }else{ // 其他默认粒度--日
+            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            avgCount = appendUsageCount(aid, hid, oid, timestamp, 1);
+        }
+        return String.valueOf(avgCount);
+    }
+
+    /**
+     * 周、月使用数，采用累加方式
+     */
+    private int appendUsageCount(String aid, String hid, String oid, long timestamp, int days) {
+        int avgCount = 0;
+        for (int i = 0; i < days; i++) {
+            avgCount += wxOrderMapper.getUsageCount(aid, hid, oid, timestamp + i * Constant.TIMESTAMP_DAYS_1
+                    ,timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1).getCount1();
+        }
+        return avgCount;
     }
 
 

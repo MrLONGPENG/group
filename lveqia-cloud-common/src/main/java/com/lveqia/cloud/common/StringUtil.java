@@ -98,25 +98,40 @@ public class StringUtil {
         System.out.println(StringUtil.autoFillDid(100101));
     }
 
+
     /**
-     * 采用分号字符串形式拼接
+     * 通过指定符号拼接字符串
+     * @return  params[sign]arg1[sign]...args
      */
-    public static String toKeys(int type, String... args) {
-        StringBuffer buffer = new StringBuffer().append(type);
-        for (String key:args) {
-            buffer.append(Constant.SIGN_SEMICOLON).append(key);
+    private static String toLink(String sign, String params, Object... args) {
+        StringBuffer buffer = new StringBuffer().append(params);
+        for (Object key:args) {
+            buffer.append(sign).append(key);
         }
         return new String(buffer);
     }
 
     /**
+     * 采用分号字符串形式拼接
+     */
+    public static String toLink(long type, Object... args) {
+        return toLink(Constant.SIGN_SEMICOLON, String.valueOf(type), args);
+    }
+
+    /**
      * 采用逗号字符串形式拼接
      */
-    public static String toParams(long aid, long... args) {
-        StringBuffer buffer = new StringBuffer().append(aid);
-        for (long key:args) {
-            buffer.append(Constant.SIGN_COMMA).append(key);
-        }
-        return new String(buffer);
+    public static String toLinkByComma(long params, Object... args) {
+        return toLinkByComma(String.valueOf(params), args);
     }
+
+    /**
+     * 采用逗号字符串形式拼接
+     */
+    public static String toLinkByComma(String params, Object... args) {
+        return toLink(Constant.SIGN_COMMA, params, args);
+    }
+
+
+
 }

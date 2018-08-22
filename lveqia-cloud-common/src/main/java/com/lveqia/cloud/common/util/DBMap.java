@@ -2,6 +2,10 @@ package com.lveqia.cloud.common.util;
 
 import java.util.HashMap;
 
+
+/**
+ * 构建数据库返回Map结构数据对象
+ */
 public class DBMap {
 
     private String key;

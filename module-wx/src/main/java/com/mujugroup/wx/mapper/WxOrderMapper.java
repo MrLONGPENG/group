@@ -1,6 +1,7 @@
 package com.mujugroup.wx.mapper;
 
 import com.lveqia.cloud.common.util.DBMap;
+import com.lveqia.cloud.common.util.DBObj;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.sql.WxOrderSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -81,6 +82,10 @@ public interface WxOrderMapper {
     List<DBMap> getPayCountByHid(@Param("aid")String aid, @Param("hid")String hid, @Param("payTime")long payTime);
 
 
-    @SelectProvider(type = WxOrderSqlProvider.class, method = "getYesterdayUsageCount")
-    String getYesterdayUsageCount(@Param("aid")String aid, @Param("start") String start, @Param("end") String end);
+
+    @SelectProvider(type = WxOrderSqlProvider.class, method = "getUsageCount")
+    @Results({@Result(column="count1", property="count1", javaType=Integer.class)
+            ,@Result(column="count2", property="count2", javaType=Integer.class)})
+    DBObj getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("start") long start, @Param("end") long end);
 }

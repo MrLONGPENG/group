@@ -12,4 +12,5 @@ public interface WxUserService {
 
     WxUser onUpdate(String sessionThirdKey, String phone, String nickName, String gender, String language, String country, String province, String city, String avatarUrl);
 
+    String getTotalUserCount(String start, String end);
 }

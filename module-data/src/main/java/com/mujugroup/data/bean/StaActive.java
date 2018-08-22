@@ -1,7 +1,6 @@
 package com.mujugroup.data.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
-import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.service.feign.ModuleCoreService;
@@ -15,31 +14,18 @@ public class StaActive implements Serializable {
 
     private String refDate;
 
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getActiveCount"
+    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getNewlyActiveCount"
             , isQueryByParam = true)
-    private String active;
+    private String newlyActive;
 
     @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getTotalActiveCount"
             , isValueNeedMerge = true)
     private String totalActive;
 
-    public StaActive(int aid, int hid, int oid, int grain, String refDate) {
+    public StaActive(int aid, int hid, int oid, long end, String refDate) {
         this.refDate = refDate;
-        this.active = refDate;
-        this.totalActive = getKey(aid, hid, oid, grain, refDate);
-    }
-
-    private String getKey(int aid, int hid, int oid, int grain, String refDate) {
-        return StringUtil.toParams(aid, hid, oid, getTimestamp(grain, refDate));
-    }
-
-    private long getTimestamp(int grain, String refDate) {
-        switch (grain){
-            case 1 : return DateUtil.toTimestamp(refDate, DateUtil.TYPE_DATE_08) + Constant.TIMESTAMP_DAYS_1;
-            case 2 : return DateUtil.toTimestamp(refDate.substring(9), DateUtil.TYPE_DATE_08);
-            case 3 : return DateUtil.getTimesEndMonth(refDate);
-        }
-        return 0;
+        this.newlyActive = refDate;
+        this.totalActive = StringUtil.toLinkByComma(aid, hid, oid, end);
     }
 
     public String getRefDate() {
@@ -50,12 +36,12 @@ public class StaActive implements Serializable {
         this.refDate = refDate;
     }
 
-    public String getActive() {
-        return active;
+    public String getNewlyActive() {
+        return newlyActive;
     }
 
-    public void setActive(String active) {
-        this.active = active;
+    public void setNewlyActive(String newlyActive) {
+        this.newlyActive = newlyActive;
     }
 
     public String getTotalActive() {

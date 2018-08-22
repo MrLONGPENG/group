@@ -27,7 +27,7 @@ public interface WxOrderService {
 
     List<DBMap> getPayCountByHid(String aid, String hid);
 
+    String getUsageCount(String aid, String hid, String oid, String start, String end);
 
-
-
+    String getUsageCountByDate(String aid, String hid, String oid, String date);
 }

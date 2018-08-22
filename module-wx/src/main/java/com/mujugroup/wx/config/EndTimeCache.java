@@ -3,6 +3,7 @@ package com.mujugroup.wx.config;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.cache.GuavaCache;
 import com.lveqia.cloud.common.cache.ILocalCache;
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
@@ -36,7 +37,7 @@ public class EndTimeCache extends GuavaCache<String, Long> implements ILocalCach
 
     @Override
     protected Long loadData(String key) {
-        String[] keys = key.split(";");
+        String[] keys = key.split(Constant.SIGN_SEMICOLON);
         if(keys.length< 4) return DateUtil.getTimesNight();
         WxGoods wxGoods = wxGoodsService.findById(Integer.parseInt(keys[3]));
         long endTime = DateUtil.getTimesMorning();
@@ -46,10 +47,10 @@ public class EndTimeCache extends GuavaCache<String, Long> implements ILocalCach
         }else if(wxGoods.getType() == WxGoods.TYPE_NIGHT){
             WxUptime wxUptime = wxUptimeService.find(WxRelation.TYPE_UPTIME, keys[0], keys[1], keys[2]);
             if(DateUtil.getTimesNoDate() < wxUptime.getStartTime()){ // 当前时分秒小于开锁时间，即第二天上午购买
-                endTime -= 24*60*60; // 若隔天，减少一天
+                endTime -= Constant.TIMESTAMP_DAYS_1; // 若隔天，减少一天
                 logger.debug("第二天上午购买  到期时间:{}", new Date(endTime *1000));
             }
-            endTime += (wxUptime.getStopTime() + wxGoods.getDays() * 24 * 60 * 60);
+            endTime += (wxUptime.getStopTime() + wxGoods.getDays() * Constant.TIMESTAMP_DAYS_1);
             logger.debug("购买天数{} 到期时间:{}", wxGoods.getDays(), new Date(endTime *1000));
         }
         return endTime;

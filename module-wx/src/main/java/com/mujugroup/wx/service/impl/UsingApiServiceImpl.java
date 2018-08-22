@@ -115,8 +115,8 @@ public class UsingApiServiceImpl implements UsingApiService {
                     usingBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
                     usingBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
                     // 根据医院ID设置开关锁时间
-                    usingBean.setWxUptime(uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, aid, hid, oid))
-                            , uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, aid, hid, oid)));
+                    usingBean.setWxUptime(uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_UPTIME, aid, hid, oid))
+                            , uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, aid, hid, oid)));
                 }else{
                     usingBean.setType(3);
                     usingBean.setInfo("设备未激活或非法设备");
@@ -136,10 +136,10 @@ public class UsingApiServiceImpl implements UsingApiService {
     public UnlockBean unlock(String did, String[] arr) {
         UnlockBean unlockBean = new UnlockBean();
         int currTime =  DateUtil.getTimesNoDate();
-        WxUptime midday = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
+        WxUptime midday = uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
         boolean isMidday = midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime();
         if(!isMidday){
-            WxUptime wxUptime = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]));
+            WxUptime wxUptime = uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]));
             if(wxUptime != null && currTime > wxUptime.getStopTime() && currTime < wxUptime.getStartTime()){
                 unlockBean.setPayState(3);
                 unlockBean.setInfo(String.format("上午%s到下午%s无法开锁，如有任何问题可联系客服"
@@ -184,8 +184,8 @@ public class UsingApiServiceImpl implements UsingApiService {
 
     @Override
     public UptimeBean uptime(String[] arr) {
-        return new UptimeBean(uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]))
-                , uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4])));
+        return new UptimeBean(uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_UPTIME, arr[2], arr[3], arr[4]))
+                , uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4])));
     }
 
 
@@ -263,7 +263,7 @@ public class UsingApiServiceImpl implements UsingApiService {
             queryBean.setDid(did);
             queryBean.setUsing("2".equals(moduleLockService.getStatus(did)));
             int currTime =  DateUtil.getTimesNoDate();
-            WxUptime midday = uptimeCache.get(StringUtil.toKeys(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
+            WxUptime midday = uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
             if(midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime()){
                 queryBean.setMidday(true);
                 queryBean.setPayTime(DateUtil.getTimesMorning() + midday.getStartTime());

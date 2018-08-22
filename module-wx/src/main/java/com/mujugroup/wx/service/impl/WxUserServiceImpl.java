@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.annotations.Cacheable;
 
 import java.util.Date;
 
@@ -88,6 +89,13 @@ public class WxUserServiceImpl implements WxUserService {
             wxUserMapper.update(wxUser);
         }
         return wxUser;
+    }
+
+    @Override
+    @Cacheable(value = "wx-user-total-count")
+    public String getTotalUserCount(String start, String end) {
+        logger.debug("getTotalUserCount real-time data");
+        return wxUserMapper.getTotalUserCount(start, end);
     }
 
     @Override

@@ -110,24 +110,14 @@ public interface DeviceMapper {
 
     @Results(id = "dbMap", value = {@Result(column="key", property="key", javaType=String.class)
             , @Result(column="value", property="value", javaType=String.class)})
-    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByDays")
-    List<DBMap> getActiveByDays(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end);
-
-
-    @ResultMap("dbMap")
-    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByWeeks")
-    List<DBMap> getActiveByWeeks(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end);
-
-
-    @ResultMap("dbMap")
-    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByMonth")
-    List<DBMap> getActiveByMonth(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") String start, @Param("end") String end);
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveByGroup")
+    List<DBMap> getActiveByGroup(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
+            , @Param("grain") String grain, @Param("start") String start, @Param("end") String end);
 
 
     @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveCount")
     String getActiveCount(@Param("aid") String aid, @Param("hid")String hid, @Param("oid")String oid
             , @Param("start") String start, @Param("end") String end);
+
+
 }

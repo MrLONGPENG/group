@@ -54,21 +54,13 @@ public class MergeServiceImpl implements MergeService {
     }
 
     @Override
-    public Map<String, String> getActiveCount(String param) {
-        logger.debug("getActiveValue->{}", param);
+    public Map<String, String> getNewlyActiveCount(String param) {
+        logger.debug("getNewlyActiveCount->{}", param);
         String[] params = param.split(Constant.SIGN_COMMA);
         HashMap<String, String> hashMap =  new HashMap<>();
         List<DBMap> list = null;
-        switch (params[3]){
-            case "1":
-                list = deviceMapper.getActiveByDays(params[0], params[1], params[2], params[4], params[5]);
-                break;
-            case "2":
-                list = deviceMapper.getActiveByWeeks(params[0], params[1], params[2], params[4], params[5]);
-                break;
-            case "3":
-                list = deviceMapper.getActiveByMonth(params[0], params[1], params[2], params[4], params[5]);
-                break;
+        if("1,2,3".contains(params[3])){
+            list = deviceMapper.getActiveByGroup(params[0], params[1], params[2], params[3], params[4], params[5]);
         }
         if(list!=null) list.forEach(dbMap -> dbMap.addTo(hashMap));
         return hashMap;

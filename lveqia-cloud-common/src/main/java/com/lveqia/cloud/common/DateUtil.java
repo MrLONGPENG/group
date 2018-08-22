@@ -17,9 +17,10 @@ public class DateUtil {
     public static final int TYPE_DATETIME_19 = 4;
     public static final int TYPE_DATETIME_14 = 5;
     public static final int TYPE_DAY_HOUR = 6;
+    public static final int TYPE_MONTH = 7;
 
     private static final String[] FORMAT = {"yyyy-MM-dd","yyyyMMdd", "HH:mm:ss","HHmmss"
-            ,"yyyy-MM-dd HH:mm:ss","yyyyMMddHHmmss","ddHH"};
+            ,"yyyy-MM-dd HH:mm:ss", "yyyyMMddHHmmss", "ddHH", "yyyyMM"};
 
     public static Date stringToDate(String date, int type) {
         return stringToDate(date, FORMAT[type]);
@@ -38,6 +39,9 @@ public class DateUtil {
         return null;
     }
 
+    /**
+     * 计算该月有多少天， 返回值 28-29-30-31
+     */
     public static int getDay(String yyyyMM){
         return getDay(Integer.parseInt(yyyyMM.substring(0,4)),Integer.parseInt(yyyyMM.substring(4)));
     }
@@ -56,7 +60,7 @@ public class DateUtil {
      * 10位时间戳转当前月 yyyyMM
      */
     public static String timestampToMonth(int timestamp) {
-        return dateToString(new Date(timestamp*1000L), "yyyyMM");
+        return dateToString(new Date(timestamp*1000L), TYPE_MONTH);
     }
 
     /**

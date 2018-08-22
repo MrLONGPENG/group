@@ -15,8 +15,8 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
 
     @Override
-    public Map<String, String> getActiveCount(String param) {
-        logger.debug("data->remote core fail, method:getActiveCount param:{}",param);
+    public Map<String, String> getNewlyActiveCount(String param) {
+        logger.debug("data->remote core fail, method:getNewlyActiveCount param:{}",param);
         return new HashMap<>();
     }
 

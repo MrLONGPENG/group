@@ -24,24 +24,42 @@ public class MergeController {
         this.mergeService = mergeService;
     }
 
+
+    /**
+     * 获取最近二十四小时支付数
+     * @param param  aid 或 aid,hid
+     */
     @RequestMapping(value = "/getPayCount", method = RequestMethod.POST)
-    Map<String, String> getPayCount(@RequestParam(value = "param") String param){
+    public Map<String, String> getPayCount(@RequestParam(value = "param") String param){
         return mergeService.getPayCount(param);
     }
 
+    /**
+     * 获取最后一次支付信息
+     * @param param  did  多个分号分隔
+     */
     @RequestMapping(value = "/getPaymentInfo", method = RequestMethod.POST)
-    Map<String, String> getPaymentInfo(@RequestParam(value = "param") String param){
+    public Map<String, String> getPaymentInfo(@RequestParam(value = "param") String param){
         return mergeService.getPaymentInfo(param);
     }
 
-
-    @RequestMapping(value = "/getTotalUserCount",method = RequestMethod.POST)
-    public Map<String, String> getTotalUserCount(@RequestParam(value = "param") String param){
-        return mergeService.getTotalUserCount(param);
+    /**
+     * 根据条件获取指定时间类的使用数量
+     * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid,hid,oid,start,end,date value:count
+     */
+    @RequestMapping(value = "/getUsageCount",method = RequestMethod.POST)
+    public Map<String, String> getUsageCount(@RequestParam(value = "param") String param){
+        return mergeService.getUsageCount(param);
     }
 
-    @RequestMapping(value = "/getYesterdayUsageCount",method = RequestMethod.POST)
-    public Map<String, String> getYesterdayUsageCount(@RequestParam(value = "param") String param){
-        return mergeService.getYesterdayUsageCount(param);
+    /**
+     * 获取指定时间范围内总用户数
+     * @param param start,end  开始与结束时间戳
+     * @return key:start,end value:count
+     */
+    @RequestMapping(value = "/getUserCount",method = RequestMethod.POST)
+    public Map<String, String> getUserCount(@RequestParam(value = "param") String param){
+        return mergeService.getUserCount(param);
     }
 }

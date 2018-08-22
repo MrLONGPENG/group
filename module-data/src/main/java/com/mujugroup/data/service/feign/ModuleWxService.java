@@ -14,9 +14,12 @@ import java.util.Map;
 @FeignClient(value = "module-wx" ,fallback = ModuleWxServiceError.class)
 public interface ModuleWxService {
 
-    @RequestMapping(value = "/merge/getTotalUserCount",method = RequestMethod.POST)
-    Map<String, String> getTotalUserCount(@RequestParam(value = "param") String param);
+    @RequestMapping(value = "/merge/getUserCount",method = RequestMethod.POST)
+    Map<String, String> getUserCount(@RequestParam(value = "param") String param);
 
-    @RequestMapping(value = "/merge/getYesterdayUsageCount",method = RequestMethod.POST)
-    Map<String, String> getYesterdayUsageCount(@RequestParam(value = "param") String param);
+    @RequestMapping(value = "/merge/getUsageCount",method = RequestMethod.POST)
+    Map<String, String> getUsageCount(@RequestParam(value = "param") String param);
+
+
+
 }

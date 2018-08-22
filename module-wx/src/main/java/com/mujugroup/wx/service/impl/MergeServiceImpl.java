@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service.impl;
 
+import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
@@ -8,6 +9,7 @@ import com.mujugroup.wx.mapper.WxUserMapper;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.MergeService;
 import com.mujugroup.wx.service.WxOrderService;
+import com.mujugroup.wx.service.WxUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,21 +23,20 @@ import java.util.Map;
 @Service("mergeService")
 public class MergeServiceImpl implements MergeService {
 
-    private final WxUserMapper wxUserMapper;
-    private final WxOrderMapper wxOrderMapper;
+    private final WxUserService wxUserService;
     private final WxOrderService wxOrderService;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
-    public MergeServiceImpl(WxUserMapper wxUserMapper, WxOrderMapper wxOrderMapper, WxOrderService wxOrderService) {
-        this.wxUserMapper = wxUserMapper;
-        this.wxOrderMapper = wxOrderMapper;
+
+    public MergeServiceImpl(WxUserService wxUserService, WxOrderService wxOrderService) {
+        this.wxUserService = wxUserService;
         this.wxOrderService = wxOrderService;
     }
 
-
-
     /**
-     * 查询最近24小时的支付数据
+     * 询最近24小时的支付数量
+     * @param param aid 或 aid,hid
+     * @return  key:did或hid value:count
      */
     @RequestMapping(value = "/getPayCount", method = RequestMethod.POST)
     public Map<String, String> getPayCount(String param) {
@@ -53,6 +54,11 @@ public class MergeServiceImpl implements MergeService {
         return hashMap;
     }
 
+    /**
+     * 获取最后一次支付的信息
+     * @param param did (ps:多个数据分号分割)\
+     * @return  key:did value:DID;订单号;支付金额(分);支付时间;到期时间(秒)
+     */
     @RequestMapping(value = "/getPaymentInfo", method = RequestMethod.POST)
     public Map<String, String> getPaymentInfo(String param) {
         HashMap<String, String> hashMap =  new HashMap<>();
@@ -75,31 +81,44 @@ public class MergeServiceImpl implements MergeService {
     }
 
     /**
-     * 根据条件获取全部的用户
-     * @param param 代理商ID,时间戳(截至时间)
+     * 根据条件获取指定时间类的使用数量
+     * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid,hid,oid,start,end,date value:count
      */
     @Override
-    public Map<String, String> getTotalUserCount(String param) {
-        logger.debug("getTotalUserCount->{}", param);
-        String[] params = param.split(Constant.SIGN_COMMA);
+    public Map<String, String> getUsageCount(String param) {
+        logger.debug("getUsageCount->{}", param);
         Map<String,String> map = new HashMap<>();
-        map.put(Constant.DIGIT_ZERO, wxUserMapper.getTotalUserCount(Constant.DIGIT_ZERO, params[1]));
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key :array) {
+            String[] keys = key.split(Constant.SIGN_COMMA);
+            if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
+                map.put(key, wxOrderService.getUsageCountByDate(keys[0], keys[1], keys[2], keys[5]));
+            }else{
+                map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3], keys[4]));
+            }
+        }
         return map;
     }
 
+
     /**
-     * 根据条件获取昨天的使用情况
-     * @param param 代理商ID,时间戳(截至时间)
+     * 根据条件获取全部的用户
+     * @param param 开始时间戳,截止时间戳（0等于除去该条件）
+     * @return  key:start,end value:count
      */
     @Override
-    public Map<String, String> getYesterdayUsageCount(String param) {
-        logger.debug("getYesterdayUsageCount->{}", param);
-        String[] params = param.split(Constant.SIGN_COMMA);
+    public Map<String, String> getUserCount(String param) {
+        logger.debug("getTotalUserCount->{}", param);
         Map<String,String> map = new HashMap<>();
-        long start = Long.parseLong(params[1]) - Constant.TIMESTAMP_DAYS_1;
-        map.put(Constant.DIGIT_ZERO, wxOrderMapper.getYesterdayUsageCount(params[0], String.valueOf(start), params[1]));
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key :array) {
+            String[] keys = key.split(Constant.SIGN_COMMA);
+            map.put(key, wxUserService.getTotalUserCount(keys[0], keys[1]));
+        }
         return map;
     }
+
 
 
 }

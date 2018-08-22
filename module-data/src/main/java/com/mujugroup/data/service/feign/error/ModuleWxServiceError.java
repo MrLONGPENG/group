@@ -13,14 +13,16 @@ public class ModuleWxServiceError implements ModuleWxService {
     private final Logger logger = LoggerFactory.getLogger(ModuleWxServiceError.class);
 
     @Override
-    public Map<String, String> getTotalUserCount(String param) {
-        logger.debug("data->remote WX fail, method:getTotalUserCount param:{}",param);
+    public Map<String, String> getUserCount(String param) {
+        logger.debug("data->remote wx fail, method:getTotalUserCount param:{}",param);
         return new HashMap<>();
     }
 
     @Override
-    public Map<String, String> getYesterdayUsageCount(String param) {
-        logger.debug("data->remote WX fail, method:getYesterdayUsageCount param:{}",param);
+    public Map<String, String> getUsageCount(String param) {
+        logger.debug("data->remote wx fail, method:getUsageCount param:{}",param);
         return new HashMap<>();
     }
+
+
 }

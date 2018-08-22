@@ -24,17 +24,19 @@ public class MergeController {
     }
 
     /**
-     * 获取指定粒度范围 激活数据
+     * 获取指定粒度范围 最新增加激活数据
      * @param param 代理商ID,医院ID,科室ID,粒度类型(1:日 2:周 3:月),开始时间戳,结束时间戳
+     * @return key:yyyyMMdd/yyyyMMdd-yyyyMMdd/yyyyMM value:count
      */
-    @RequestMapping(value = "/getActiveCount",method = RequestMethod.POST)
-    public Map<String, String> getActiveCount(@RequestParam(value = "param") String param){
-        return mergeService.getActiveCount(param);
+    @RequestMapping(value = "/getNewlyActiveCount",method = RequestMethod.POST)
+    public Map<String, String> getNewlyActiveCount(@RequestParam(value = "param") String param){
+        return mergeService.getNewlyActiveCount(param);
     }
 
     /**
-     * 获取到指定时间的激活数(多组数据用“;”分割)
+     * 获取到指定时间的总激活数(多组数据用“;”分割)
      * @param param 代理商ID,医院ID,科室ID,结束时间戳
+     * @return key:aid,hid,oid,end value:count
      */
     @RequestMapping(value = "/getTotalActiveCount",method = RequestMethod.POST)
     public Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param){

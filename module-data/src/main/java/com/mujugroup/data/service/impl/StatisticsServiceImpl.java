@@ -44,8 +44,6 @@ public class StatisticsServiceImpl implements StatisticsService {
         return list;
     }
 
-
-
     /**
      * 根据时间戳以及粒度获取字符串时间格式
      */
@@ -57,13 +55,27 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         throw new ParamException("粒度类型只能为(1:日 2:周 3:月)");
     }
+
+    /**
+     * 根据粒度以及Key，获取结束时间戳
+     */
+    private long getEndTimestamp(int grain, String refDate) {
+        switch (grain){
+            case 1 : return DateUtil.toTimestamp(refDate, DateUtil.TYPE_DATE_08) + Constant.TIMESTAMP_DAYS_1;
+            case 2 : return DateUtil.toTimestamp(refDate.substring(9), DateUtil.TYPE_DATE_08);
+            case 3 : return DateUtil.getTimesEndMonth(refDate);
+        }
+        return 0;
+    }
+
+
     @Override
     @MergeResult
     public List<StaUsage> getUsage(int aid, int hid, int oid, int grain, int startTime, int stopTime) throws ParamException {
         List<StaUsage> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaUsage(key));
+            list.add(new StaUsage(key, aid, hid, oid));
         }
         return list;
     }
@@ -75,7 +87,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<StaActive> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaActive(aid, hid, oid, grain, key));
+            list.add(new StaActive(aid, hid, oid, getEndTimestamp(grain, key), key));
         }
         return list;
     }
