@@ -22,7 +22,7 @@ public class StaActive implements Serializable {
             , isValueNeedMerge = true)
     private String totalActive;
 
-    public StaActive(int aid, int hid, int oid, long end, String refDate) {
+    public StaActive(String refDate, int aid, int hid, int oid, long end) {
         this.refDate = refDate;
         this.newlyActive = refDate;
         this.totalActive = StringUtil.toLinkByComma(aid, hid, oid, end);

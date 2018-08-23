@@ -24,5 +24,11 @@ public class ModuleWxServiceError implements ModuleWxService {
         return new HashMap<>();
     }
 
+    @Override
+    public Map<String, String> getUsageRate(String param) {
+        logger.debug("data->remote wx fail, method:getUsageRate param:{}",param);
+        return new HashMap<>();
+    }
+
 
 }

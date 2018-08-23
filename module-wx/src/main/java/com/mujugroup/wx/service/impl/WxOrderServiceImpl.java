@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
 
 
 @Service("wxOrderService")
@@ -135,8 +135,8 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Cacheable(value = "wx-order-usage-count-date")
     public String getUsageCountByDate(String aid, String hid, String oid, String date) {
         logger.debug("getUsageCountByDate real-time data");
-        int avgCount;
         long timestamp;
+        String avgCount;
         if(date.length() == 17) {       // 粒度--周
             timestamp = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
             avgCount = appendUsageCount(aid, hid, oid, timestamp, 7);
@@ -147,19 +147,65 @@ public class WxOrderServiceImpl implements WxOrderService {
             timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
             avgCount = appendUsageCount(aid, hid, oid, timestamp, 1);
         }
+        return avgCount;
+    }
+
+    /**
+     * 根据传入的日期格式，计算采用每日均使用率
+     * @param date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
+     */
+    @Override
+    @Cacheable(value = "wx-order-usage-rate-date")
+    public String getUsageRate(String aid, String hid, String oid, String date) {
+        logger.debug("getUsageRate real-time data");
+        String avgCount;
+        long timestamp;
+        if(date.length() == 17) {       // 粒度--周
+            timestamp = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            avgCount = averageUsageRate(aid, hid, oid, timestamp, 7);
+        }else if(date.length() == 6) {  // 粒度--月
+            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            avgCount = averageUsageRate(aid, hid, oid, timestamp, DateUtil.getDay(date));
+        }else{ // 其他默认粒度--日
+            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            avgCount = averageUsageRate(aid, hid, oid, timestamp, 1);
+        }
         return String.valueOf(avgCount);
+    }
+
+    /**
+     * 周、月使用率，采用日均方法计算平均值
+     */
+    private String averageUsageRate(String aid, String hid, String oid, long timestamp, int days) {
+        double avgCount =0;
+        long start,end;
+        int[] arrUsage = new int[days];
+        Object[] keys = new String[days];
+        for (int i = 0; i < days; i++) {
+            start = timestamp + i * Constant.TIMESTAMP_DAYS_1;
+            end = timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1;
+            keys[i] = StringUtil.toLinkByComma(aid, hid, oid, end);
+            arrUsage[i] = wxOrderMapper.getUsageCount(aid, hid, oid, start, end).getCount1();
+        }
+        Map<String, String> map = moduleCoreService.getTotalActiveCount(StringUtil.toLink(keys));
+        for (int i = 0; i < days; i++) {
+            avgCount += arrUsage[i] / Double.parseDouble(map.get(keys[i].toString()));
+        }
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        return numberFormat.format((avgCount / (float) days * 100));
     }
 
     /**
      * 周、月使用数，采用累加方式
      */
-    private int appendUsageCount(String aid, String hid, String oid, long timestamp, int days) {
+    private String appendUsageCount(String aid, String hid, String oid, long timestamp, int days) {
         int avgCount = 0;
         for (int i = 0; i < days; i++) {
             avgCount += wxOrderMapper.getUsageCount(aid, hid, oid, timestamp + i * Constant.TIMESTAMP_DAYS_1
                     ,timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1).getCount1();
         }
-        return avgCount;
+        return String.valueOf(avgCount);
     }
 
 

@@ -87,18 +87,19 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<StaActive> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaActive(aid, hid, oid, getEndTimestamp(grain, key), key));
+            list.add(new StaActive(key, aid, hid, oid, getEndTimestamp(grain, key)));
         }
         return list;
     }
 
     @Override
     @MergeResult
-    public List<StaUsageRate> getUsageRate(int aid, int hid, int oid, int grain, int startTime, int stopTime) throws ParamException {
+    public List<StaUsageRate> getUsageRate(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+            throws ParamException {
         List<StaUsageRate> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaUsageRate(key));
+            list.add(new StaUsageRate(key, aid, hid, oid));
         }
         return list;
     }

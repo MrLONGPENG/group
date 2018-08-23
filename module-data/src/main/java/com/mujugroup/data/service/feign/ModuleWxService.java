@@ -20,6 +20,6 @@ public interface ModuleWxService {
     @RequestMapping(value = "/merge/getUsageCount",method = RequestMethod.POST)
     Map<String, String> getUsageCount(@RequestParam(value = "param") String param);
 
-
-
+    @RequestMapping(value = "/merge/getUsageRate",method = RequestMethod.POST)
+    Map<String, String> getUsageRate(@RequestParam(value = "param") String param);
 }

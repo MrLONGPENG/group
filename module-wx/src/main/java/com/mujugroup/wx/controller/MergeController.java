@@ -43,6 +43,17 @@ public class MergeController {
         return mergeService.getPaymentInfo(param);
     }
 
+
+    /**
+     * 根据条件获取指定时间类的使用率
+     * @param param 代理商ID,医院ID,科室ID,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid,hid,oid,date value:count
+     */
+    @RequestMapping(value = "/getUsageRate",method = RequestMethod.POST)
+    public Map<String, String> getUsageRate(@RequestParam(value = "param") String param){
+        return mergeService.getUsageRate(param);
+    }
+
     /**
      * 根据条件获取指定时间类的使用数量
      * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)

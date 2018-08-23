@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class ModuleCoreServiceError implements ModuleCoreService {
 
@@ -21,5 +24,11 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     public String deviceList(int pageNum, int pageSize, int status) {
         logger.warn("Remote call module-core failure->deviceList");
         return null;
+    }
+
+    @Override
+    public Map<String, String> getTotalActiveCount(String param) {
+        logger.warn("Remote call module-core failure->param:{}", param);
+        return new HashMap<>();
     }
 }

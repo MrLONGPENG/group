@@ -30,4 +30,6 @@ public interface WxOrderService {
     String getUsageCount(String aid, String hid, String oid, String start, String end);
 
     String getUsageCountByDate(String aid, String hid, String oid, String date);
+
+    String getUsageRate(String aid, String hid, String oid, String date);
 }

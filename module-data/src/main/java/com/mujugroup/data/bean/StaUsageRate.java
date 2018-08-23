@@ -1,10 +1,9 @@
 package com.mujugroup.data.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
-import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.service.feign.ModuleWxService;
-
 import java.io.Serializable;
 
 /**
@@ -14,19 +13,14 @@ public class StaUsageRate implements Serializable {
 
     private String refDate;
 
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getActiveValue"
-            , isQueryByParam = true)
-    private String active;
-
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getUsageCount"
+    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getUsageRate"
             , isValueNeedMerge = true)
-    private String usage;
+    private String usageRate;
 
 
-    public StaUsageRate(String refDate) {
+    public StaUsageRate(String refDate, int aid, int hid, int oid) {
         this.refDate = refDate;
-        this.active = refDate;
-        this.usage = refDate;
+        this.usageRate =  StringUtil.toLinkByComma(aid, hid, oid, refDate);
     }
 
 
@@ -38,19 +32,11 @@ public class StaUsageRate implements Serializable {
         this.refDate = refDate;
     }
 
-    public String getActive() {
-        return active;
+    public String getUsageRate() {
+        return usageRate;
     }
 
-    public void setActive(String active) {
-        this.active = active;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
+    public void setUsageRate(String usageRate) {
+        this.usageRate = usageRate;
     }
 }

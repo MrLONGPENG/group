@@ -6,48 +6,17 @@ import com.lveqia.cloud.common.util.Constant;
 import java.util.Random;
 
 public class StringUtil {
-
     /**
-     * <p>Checks if a String is empty ("") or null.</p>
-     *
-     * <pre>
-     * StringUtils.isEmpty(null)      = true
-     * StringUtils.isEmpty("")        = true
-     * StringUtils.isEmpty(" ")       = false
-     * StringUtils.isEmpty("bob")     = false
-     * StringUtils.isEmpty("  bob  ") = false
-     * </pre>
-     *
-     * <p>NOTE: This method changed in Lang version 2.0.
-     * It no longer trims the String.
-     * That functionality is available in isBlank().</p>
-     *
+     * 检查字符串("") or null
      * @param str  the String to check, may be null
      * @return <code>true</code> if the String is empty or null
      */
     public static boolean isEmpty(String str) {
-        //org.apache.commons.lang.StringUtils.isEmpty(str);
         return str == null || str.length() == 0;
     }
 
     /**
-     * <p>Checks if the String contains only unicode digits.
-     * A decimal point is not a unicode digit and returns false.</p>
-     *
-     * <p><code>null</code> will return <code>false</code>.
-     * An empty String (length()=0) will return <code>true</code>.</p>
-     *
-     * <pre>
-     * StringUtils.isNumeric("123")  = true
-     * StringUtils.isNumeric(null)   = false
-     * StringUtils.isNumeric("")     = false
-     * StringUtils.isNumeric("  ")   = false
-     * StringUtils.isNumeric("12 3") = false
-     * StringUtils.isNumeric("ab2c") = false
-     * StringUtils.isNumeric("12-3") = false
-     * StringUtils.isNumeric("12.3") = false
-     * </pre>
-     *
+     *  检查字符串是否是数字， null/空字符串 皆为false
      * @param str  the String to check, may be null
      * @return <code>true</code> if only contains digits, and is non-null
      */
@@ -99,37 +68,33 @@ public class StringUtil {
     }
 
 
+
     /**
      * 通过指定符号拼接字符串
      * @return  params[sign]arg1[sign]...args
      */
-    private static String toLink(String sign, String params, Object... args) {
-        StringBuffer buffer = new StringBuffer().append(params);
-        for (Object key:args) {
-            buffer.append(sign).append(key);
+    private static String join(String separator, Object... array){
+        StringBuffer buffer = new StringBuffer();
+        for (Object key:array) {
+            if(buffer.length()!=0) buffer.append(separator);
+            buffer.append(key);
         }
         return new String(buffer);
     }
 
+
     /**
      * 采用分号字符串形式拼接
      */
-    public static String toLink(long type, Object... args) {
-        return toLink(Constant.SIGN_SEMICOLON, String.valueOf(type), args);
+    public static String toLink(Object... args) {
+        return join(Constant.SIGN_SEMICOLON, args);
     }
 
     /**
      * 采用逗号字符串形式拼接
      */
-    public static String toLinkByComma(long params, Object... args) {
-        return toLinkByComma(String.valueOf(params), args);
-    }
-
-    /**
-     * 采用逗号字符串形式拼接
-     */
-    public static String toLinkByComma(String params, Object... args) {
-        return toLink(Constant.SIGN_COMMA, params, args);
+    public static String toLinkByComma(Object... args) {
+        return join(Constant.SIGN_COMMA, args);
     }
 
 

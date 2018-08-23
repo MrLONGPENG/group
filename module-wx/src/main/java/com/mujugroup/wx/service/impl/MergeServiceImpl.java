@@ -1,11 +1,8 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
-import com.mujugroup.wx.mapper.WxOrderMapper;
-import com.mujugroup.wx.mapper.WxUserMapper;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.MergeService;
 import com.mujugroup.wx.service.WxOrderService;
@@ -81,7 +78,7 @@ public class MergeServiceImpl implements MergeService {
     }
 
     /**
-     * 根据条件获取指定时间类的使用数量
+     * 根据条件获取指定时间类的使用数量（子循环有采用缓存，请注意查询时间参数）
      * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
      * @return  key:aid,hid,oid,start,end,date value:count
      */
@@ -103,7 +100,25 @@ public class MergeServiceImpl implements MergeService {
 
 
     /**
-     * 根据条件获取全部的用户
+     * 根据条件获取指定时间类的使用率（子循环有采用缓存，请注意查询参数date）
+     * @param param 代理商ID,医院ID,科室ID,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid,hid,oid,date value:count
+     */
+    @Override
+    public Map<String, String> getUsageRate(String param) {
+        logger.debug("getUsageRate->{}", param);
+        Map<String,String> map = new HashMap<>();
+        String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key :array) {
+            keys = key.split(Constant.SIGN_COMMA);
+            map.put(key, wxOrderService.getUsageRate(keys[0], keys[1], keys[2], keys[3]));
+        }
+        return map;
+    }
+
+
+    /**
+     * 根据条件获取全部的用户（子循环有采用缓存，请主要查询时间参数）
      * @param param 开始时间戳,截止时间戳（0等于除去该条件）
      * @return  key:start,end value:count
      */
