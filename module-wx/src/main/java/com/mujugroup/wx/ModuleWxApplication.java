@@ -1,5 +1,7 @@
 package com.mujugroup.wx;
 
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -22,6 +24,10 @@ public class ModuleWxApplication {
         SpringApplication.run(ModuleWxApplication.class, args);
     }
 
+    @Bean
+    public MapperFactory getFactory(){
+        return new DefaultMapperFactory.Builder().build();
+    }
 
     @Bean
     RestTemplate restTemplate() {

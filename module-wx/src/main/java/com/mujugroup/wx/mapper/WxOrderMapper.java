@@ -88,4 +88,11 @@ public interface WxOrderMapper {
             ,@Result(column="count2", property="count2", javaType=Integer.class)})
     DBObj getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
             , @Param("start") long start, @Param("end") long end);
+
+
+
+    @ResultMap("wxOrder")
+    @SelectProvider(type = WxOrderSqlProvider.class, method = "findList")
+    List<WxOrder> findList(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
+            , @Param("start") long start, @Param("end") long end, @Param("tradeNo") String tradeNo);
 }

@@ -173,6 +173,11 @@ public class WxOrderServiceImpl implements WxOrderService {
         return String.valueOf(avgCount);
     }
 
+    @Override
+    public List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo) {
+        return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo);
+    }
+
     /**
      * 周、月使用率，采用日均方法计算平均值
      */

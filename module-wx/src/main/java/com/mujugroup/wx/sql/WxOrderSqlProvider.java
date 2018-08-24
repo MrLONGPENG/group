@@ -1,5 +1,6 @@
 package com.mujugroup.wx.sql;
 
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.wx.model.WxOrder;
 import org.apache.ibatis.annotations.Param;
@@ -69,4 +70,22 @@ public class WxOrderSqlProvider {
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
         }}.toString();
     }
+
+
+    public String findList(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
+            , @Param("start")long start, @Param("end")long end, @Param("tradeNo") String tradeNo){
+        return new SQL(){{
+            SELECT("*"); FROM("t_wx_order");
+            WHERE("pay_status > 1");
+            if(aid != 0) AND().WHERE("aid = #{aid}");
+            if(hid != 0) AND().WHERE("hid = #{hid}");
+            if(oid != 0) AND().WHERE("oid = #{oid}");
+            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
+            if(end != 0 ) AND().WHERE("pay_time < #{end}");
+            if(!StringUtil.isEmpty(tradeNo)) AND().WHERE("trade_no = #{tradeNo}");
+            ORDER_BY("id desc");
+        }}.toString();
+    }
+
+
 }

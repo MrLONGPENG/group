@@ -32,4 +32,6 @@ public interface WxOrderService {
     String getUsageCountByDate(String aid, String hid, String oid, String date);
 
     String getUsageRate(String aid, String hid, String oid, String date);
+
+    List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo);
 }
