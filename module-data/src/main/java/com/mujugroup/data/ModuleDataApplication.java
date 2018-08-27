@@ -1,6 +1,8 @@
 package com.mujugroup.data;
 
 import com.github.wxiaoqi.merge.EnableAceMerge;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -21,6 +23,11 @@ public class ModuleDataApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ModuleDataApplication.class, args);
+    }
+
+    @Bean
+    public MapperFactory getFactory(){
+        return new DefaultMapperFactory.Builder().build();
     }
 
     @Bean

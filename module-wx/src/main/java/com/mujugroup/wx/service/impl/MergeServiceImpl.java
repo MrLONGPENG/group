@@ -3,8 +3,10 @@ package com.mujugroup.wx.service.impl;
 import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
+import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.MergeService;
+import com.mujugroup.wx.service.WxGoodsService;
 import com.mujugroup.wx.service.WxOrderService;
 import com.mujugroup.wx.service.WxUserService;
 import org.slf4j.Logger;
@@ -22,12 +24,15 @@ public class MergeServiceImpl implements MergeService {
 
     private final WxUserService wxUserService;
     private final WxOrderService wxOrderService;
+    private final WxGoodsService wxGoodsService;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
 
-    public MergeServiceImpl(WxUserService wxUserService, WxOrderService wxOrderService) {
+    public MergeServiceImpl(WxUserService wxUserService, WxOrderService wxOrderService, WxGoodsService wxGoodsService) {
         this.wxUserService = wxUserService;
         this.wxOrderService = wxOrderService;
+        this.wxGoodsService = wxGoodsService;
+
     }
 
     /**
@@ -112,6 +117,17 @@ public class MergeServiceImpl implements MergeService {
         for (String key :array) {
             keys = key.split(Constant.SIGN_COMMA);
             map.put(key, wxOrderService.getUsageRate(keys[0], keys[1], keys[2], keys[3]));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, String> getOrderTypeById(String param) {
+        logger.debug("getUsageRate->{}", param);
+        Map<String,String> map = new HashMap<>();
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key :array) {
+            map.put(key, wxGoodsService.findById(Integer.parseInt(key)).getType()==WxGoods.TYPE_MIDDAY ? "午休":"晚修");
         }
         return map;
     }

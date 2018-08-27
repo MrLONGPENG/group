@@ -77,4 +77,37 @@ public class MergeServiceImpl implements MergeService {
         }
         return hashMap;
     }
+
+    @Override
+    public Map<String, String> getAgentById(String param) {
+        logger.debug("getAgentById->{}", param);
+        HashMap<String, String> hashMap =  new HashMap<>();
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key:array){
+            hashMap.put(key, "代理商key:"+key);
+        }
+        return hashMap;
+    }
+
+    @Override
+    public Map<String, String> getHospitalById(String param) {
+        logger.debug("getHospitalById->{}", param);
+        HashMap<String, String> hashMap =  new HashMap<>();
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key:array){
+            hashMap.put(key, hospitalMapper.findById(Integer.parseInt(key)).getName());
+        }
+        return hashMap;
+    }
+
+    @Override
+    public Map<String, String> getDepartmentById(String param) {
+        logger.debug("getDepartmentById->{}", param);
+        HashMap<String, String> hashMap =  new HashMap<>();
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key:array){
+            hashMap.put(key, departmentMapper.findById(Integer.parseInt(key)).getName());
+        }
+        return hashMap;
+    }
 }

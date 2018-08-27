@@ -1,12 +1,13 @@
-package com.lveqia.cloud.common.dto;
+package com.lveqia.cloud.common.to;
 
 
 /**
- * Data Transfer Object
+ *  Service Transfer Object
  * 订单-数据传输对象
  */
-public class OrderDto {
+public class OrderTO {
 
+    private String id;
     private String aid;
     private String hid;
     private String oid;
@@ -17,6 +18,14 @@ public class OrderDto {
     private Integer payPrice;
 
     private Long payTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAid() {
         return aid;

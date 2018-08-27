@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service;
 
+import com.lveqia.cloud.common.to.AidHidOidTO;
 import com.lveqia.cloud.common.util.DBMap;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxGoods;
@@ -34,4 +35,6 @@ public interface WxOrderService {
     String getUsageRate(String aid, String hid, String oid, String date);
 
     List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo);
+
+    List<WxOrder> findList(AidHidOidTO dto);
 }

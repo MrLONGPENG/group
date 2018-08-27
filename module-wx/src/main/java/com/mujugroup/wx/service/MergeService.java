@@ -14,4 +14,6 @@ public interface MergeService {
     Map<String, String> getUsageCount(String param);
 
     Map<String,String> getUsageRate(String param);
+
+    Map<String,String> getOrderTypeById(String param);
 }

@@ -2,9 +2,9 @@ package com.mujugroup.data.service;
 
 
 import com.lveqia.cloud.common.exception.ParamException;
-import com.mujugroup.data.bean.StaUsage;
-import com.mujugroup.data.bean.StaActive;
-import com.mujugroup.data.bean.StaUsageRate;
+import com.mujugroup.data.objeck.vo.StaUsage;
+import com.mujugroup.data.objeck.vo.StaActive;
+import com.mujugroup.data.objeck.vo.StaUsageRate;
 
 import java.util.List;
 

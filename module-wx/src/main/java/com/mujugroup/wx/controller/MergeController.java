@@ -73,4 +73,15 @@ public class MergeController {
     public Map<String, String> getUserCount(@RequestParam(value = "param") String param){
         return mergeService.getUserCount(param);
     }
+
+
+    /**
+     * 获取订单类型：晚修；午休
+     * @param param gid
+     * @return key:gid value:晚修/午休
+     */
+    @RequestMapping(value = "/getOrderTypeById",method = RequestMethod.POST)
+    public Map<String, String> getOrderTypeById(@RequestParam(value = "param") String param){
+        return mergeService.getOrderTypeById(param);
+    }
 }

@@ -1,4 +1,4 @@
-package com.mujugroup.data.bean;
+package com.mujugroup.data.objeck.vo;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.StringUtil;

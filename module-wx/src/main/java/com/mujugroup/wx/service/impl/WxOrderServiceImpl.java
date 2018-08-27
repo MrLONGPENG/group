@@ -3,6 +3,7 @@ package com.mujugroup.wx.service.impl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.to.AidHidOidTO;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
 import com.lveqia.cloud.common.StringUtil;
@@ -176,6 +177,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo) {
         return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo);
+    }
+
+    @Override
+    public List<WxOrder> findList(AidHidOidTO dto) {
+        return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd(), dto.getTradeNo());
     }
 
     /**

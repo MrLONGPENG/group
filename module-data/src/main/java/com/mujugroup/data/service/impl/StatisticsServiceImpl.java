@@ -4,9 +4,9 @@ import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
-import com.mujugroup.data.bean.StaActive;
-import com.mujugroup.data.bean.StaUsage;
-import com.mujugroup.data.bean.StaUsageRate;
+import com.mujugroup.data.objeck.vo.StaActive;
+import com.mujugroup.data.objeck.vo.StaUsage;
+import com.mujugroup.data.objeck.vo.StaUsageRate;
 import com.mujugroup.data.service.StatisticsService;
 import org.springframework.stereotype.Service;
 

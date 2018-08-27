@@ -130,7 +130,7 @@ public class MergeCore {
                 String args = annotation.key();
                 // 表示该属性需要将值聚合成条件远程查询
                 if (annotation.isValueNeedMerge()) {
-                    args = getKey(result, field);
+                    args = getKey(args, result, field);
                 } else {
                     Map<String, String> value = getValueByKey(params, className, field, annotation);
                     if (value != null) {
@@ -168,7 +168,7 @@ public class MergeCore {
                 String args = annotation.key();
                 // 表示该属性需要将值聚合成条件远程查询
                 if (annotation.isValueNeedMerge()) {
-                    args = getKeyByOne(mergeObj, field, args);
+                    args = getKeyByOne(args, mergeObj, field);
                 } else {
                     Map<String, String> value = getValueByKey(params, className, field, annotation);
                     if (value != null) {
@@ -189,8 +189,7 @@ public class MergeCore {
     /**
      * 根据属性合并查询Key
      */
-    private String getKey(List<?> result, Field field) {
-        String args;
+    private String getKey(String args, List<?> result, Field field) {
         StringBuffer sb = new StringBuffer();
         Set<String> ids = new HashSet<>();
         result.forEach(obj -> {
@@ -210,7 +209,7 @@ public class MergeCore {
             }
 
         });
-        args = sb.substring(0, sb.length() - 1);
+        if(sb.length() > 0) args = sb.substring(0, sb.length() - 1);
         return args;
     }
 
@@ -218,7 +217,7 @@ public class MergeCore {
     /**
      * 单个属性 不需要循环组合查询条件
      */
-    private String getKeyByOne(Object mergeObj, Field field, String args) {
+    private String getKeyByOne(String args, Object mergeObj, Field field) {
         field.setAccessible(true);
         Object o;
         try {

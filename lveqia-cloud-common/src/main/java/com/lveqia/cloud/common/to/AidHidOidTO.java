@@ -1,12 +1,12 @@
-package com.lveqia.cloud.common.dto;
+package com.lveqia.cloud.common.to;
 
 
 /**
- * Data Transfer Object
+ * Service Transfer Object
  * 请求参数-数据传输对象
  * 代理商ID,医院ID,科室ID
  */
-public class AidHidOidDto {
+public class AidHidOidTO {
 
     private int aid;
     private int hid;
@@ -14,6 +14,23 @@ public class AidHidOidDto {
     private long start;
     private long end;
     private String tradeNo;
+
+    private int pageNum;
+    private int pageSize;
+
+    public AidHidOidTO(){
+
+    }
+
+    public AidHidOidTO(int aid, int hid, int oid, long start, long end, int pageNum, int pageSize) {
+        this.aid = aid;
+        this.hid = hid;
+        this.oid = oid;
+        this.start = start;
+        this.end = end;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+    }
 
     public int getAid() {
         return aid;
@@ -61,5 +78,21 @@ public class AidHidOidDto {
 
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

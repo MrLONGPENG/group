@@ -25,4 +25,22 @@ public class ModuleCoreServiceError implements ModuleCoreService {
         logger.debug("data->remote core fail, method:getTotalActiveCount param:{}",param);
         return new HashMap<>();
     }
+
+    @Override
+    public Map<String, String> getAgentById(String param) {
+        logger.debug("data->remote core fail, method:getAgentById param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<String, String> getHospitalById(String param) {
+        logger.debug("data->remote core fail, method:getHospitalById param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<String, String> getDepartmentById(String param) {
+        logger.debug("data->remote core fail, method:getDepartmentById param:{}",param);
+        return new HashMap<>();
+    }
 }

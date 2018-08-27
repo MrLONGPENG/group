@@ -1,12 +1,11 @@
 package com.mujugroup.wx.service;
 
 
-import com.lveqia.cloud.common.dto.AidHidOidDto;
-import com.lveqia.cloud.common.dto.OrderDto;
-
-import java.util.List;
+import com.lveqia.cloud.common.to.AidHidOidTO;
+import com.lveqia.cloud.common.to.OrderTO;
+import com.lveqia.cloud.common.to.PageTO;
 
 public interface FeignService {
 
-    List<OrderDto> getOrderList(AidHidOidDto aidHidOidDto);
+    PageTO<OrderTO> getOrderList(AidHidOidTO aidHidOidDto);
 }

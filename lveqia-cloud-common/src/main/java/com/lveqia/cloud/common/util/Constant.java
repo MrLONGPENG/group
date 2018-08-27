@@ -12,6 +12,9 @@ public class Constant {
     /** 数字--0  */
     public static final String DIGIT_ZERO = "0";
 
+    /** 字符串--未知  */
+    public static final String STRING_UNKNOWN = "未知";
+
     /** 时间戳-- 8 hour  */
     public static final long TIMESTAMP_HOUR_8 = 8*60*60;
 
@@ -20,4 +23,5 @@ public class Constant {
 
     /** 时间戳-- 7 天  */
     public static final long TIMESTAMP_DAYS_7 = 7*24*60*60;
+
 }

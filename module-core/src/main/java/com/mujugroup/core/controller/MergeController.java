@@ -42,4 +42,34 @@ public class MergeController {
     public Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param){
         return mergeService.getTotalActiveCount(param);
     }
+
+    /**
+     * 根据代理商ID获取代理商名字
+     * @param param 多个代理商ID,“;”分割
+     * @return 代理商名字
+     */
+    @RequestMapping(value = "/getAgentById",method = RequestMethod.POST)
+    public Map<String, String> getAgentById(@RequestParam(value = "param") String param){
+        return mergeService.getAgentById(param);
+    }
+
+    /**
+     * 根据医院D获取医院名字
+     * @param param 多个代理商ID,“;”分割
+     * @return 代理商名字
+     */
+    @RequestMapping(value = "/getHospitalById",method = RequestMethod.POST)
+    public Map<String, String> getHospitalById(@RequestParam(value = "param") String param){
+        return mergeService.getHospitalById(param);
+    }
+
+    /**
+     * 根据科室ID获取科室名字
+     * @param param 多个代理商ID,“;”分割
+     * @return 代理商名字
+     */
+    @RequestMapping(value = "/getDepartmentById",method = RequestMethod.POST)
+    public Map<String, String> getDepartmentById(@RequestParam(value = "param") String param){
+        return mergeService.getDepartmentById(param);
+    }
 }
