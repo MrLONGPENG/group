@@ -188,7 +188,7 @@ public class WxOrderServiceImpl implements WxOrderService {
      * 周、月使用率，采用日均方法计算平均值
      */
     private String averageUsageRate(String aid, String hid, String oid, long timestamp, int days) {
-        double avgCount =0;
+        double avgCount =0, allCount;
         long start,end;
         int[] arrUsage = new int[days];
         Object[] keys = new String[days];
@@ -200,7 +200,8 @@ public class WxOrderServiceImpl implements WxOrderService {
         }
         Map<String, String> map = moduleCoreService.getTotalActiveCount(StringUtil.toLink(keys));
         for (int i = 0; i < days; i++) {
-            avgCount += arrUsage[i] / Double.parseDouble(map.get(keys[i].toString()));
+            allCount = Double.parseDouble(map.get(keys[i].toString()));
+            if(allCount !=0) avgCount += arrUsage[i] / allCount;
         }
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
