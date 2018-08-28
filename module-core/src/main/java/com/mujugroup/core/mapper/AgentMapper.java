@@ -25,10 +25,10 @@ public interface AgentMapper {
     @UpdateProvider(type = AgentProvider.class, method = "update")
     boolean update(Agent sysManager);
 
-    @Delete("delete from t_sys_manager where id= #{id}")
+    @Delete("delete from t_sys_manager where managerid= #{id}")
     boolean deleteById(int id);
 
-    @Select("SELECT * FROM t_sys_manager WHERE id = #{id}")
+    @Select("SELECT * FROM t_sys_manager WHERE managerid = #{id}")
     @Results(id = "sysManager", value = {
             @Result(column="managerid",property="managerid",javaType=Integer.class)
              ,@Result(column="account",property="account",javaType=String.class)
