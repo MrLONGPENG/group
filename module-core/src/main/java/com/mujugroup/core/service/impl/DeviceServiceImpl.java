@@ -1,10 +1,10 @@
 package com.mujugroup.core.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
-import com.mujugroup.core.bean.DeviceBean;
-import com.mujugroup.core.bean.StatusAidBean;
-import com.mujugroup.core.bean.StatusHidBean;
-import com.mujugroup.core.bean.StatusOidBean;
+import com.mujugroup.core.objeck.bean.DeviceBean;
+import com.mujugroup.core.objeck.bean.StatusAidBean;
+import com.mujugroup.core.objeck.bean.StatusHidBean;
+import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.mapper.BeanMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.model.Device;

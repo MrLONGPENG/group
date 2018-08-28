@@ -2,6 +2,7 @@ package com.mujugroup.core.service.impl;
 
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
+import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
@@ -17,14 +18,16 @@ import java.util.Map;
 
 @Service("mergeService")
 public class MergeServiceImpl implements MergeService {
+    private final AgentMapper agentMapper;
     private final DeviceMapper deviceMapper;
     private final HospitalMapper hospitalMapper;
     private final DepartmentMapper departmentMapper;
     ;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
-    public MergeServiceImpl(DeviceMapper deviceMapper, HospitalMapper hospitalMapper
+    public MergeServiceImpl(AgentMapper agentMapper, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
             , DepartmentMapper departmentMapper) {
+        this.agentMapper = agentMapper;
         this.deviceMapper = deviceMapper;
         this.hospitalMapper = hospitalMapper;
         this.departmentMapper = departmentMapper;
@@ -84,7 +87,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
-            hashMap.put(key, "代理商key:"+key);
+            hashMap.put(key, agentMapper.findById(Integer.parseInt(key)).getName());
         }
         return hashMap;
     }

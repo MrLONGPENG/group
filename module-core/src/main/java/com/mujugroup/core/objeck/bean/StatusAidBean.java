@@ -1,4 +1,4 @@
-package com.mujugroup.core.bean;
+package com.mujugroup.core.objeck.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.util.Constant;
@@ -7,9 +7,7 @@ import com.mujugroup.core.service.feign.ModuleWxService;
 
 import java.io.Serializable;
 
-public class StatusHidBean implements Serializable {
-
-    private int oid;
+public class StatusAidBean implements Serializable {
 
     private int hid;
 
@@ -17,20 +15,12 @@ public class StatusHidBean implements Serializable {
 
     private int actCount;
 
-    @MergeField(defaultValue = "未知", feign = MergeService.class, method = "getOidMapByHid", isQueryByParam = true)
-    private String department;
+    @MergeField(defaultValue = "未知", feign = MergeService.class, method = "getHidMapByAid", isQueryByParam = true)
+    private String hospital;
 
     @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getPayCount"
             , isQueryByParam = true)
     private String payCount;
-
-    public int getOid() {
-        return oid;
-    }
-
-    public void setOid(int oid) {
-        this.oid = oid;
-    }
 
     public int getHid() {
         return hid;
@@ -56,12 +46,12 @@ public class StatusHidBean implements Serializable {
         this.actCount = actCount;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getHospital() {
+        return hospital;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
     }
 
     public String getPayCount() {

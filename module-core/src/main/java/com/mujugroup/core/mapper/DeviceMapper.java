@@ -1,18 +1,16 @@
 package com.mujugroup.core.mapper;
 
 import com.lveqia.cloud.common.util.DBMap;
-import com.mujugroup.core.bean.StatusAidBean;
-import com.mujugroup.core.bean.StatusHidBean;
-import com.mujugroup.core.bean.StatusOidBean;
+import com.mujugroup.core.objeck.bean.StatusAidBean;
+import com.mujugroup.core.objeck.bean.StatusHidBean;
+import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 设备关联表,数据库操作接口类

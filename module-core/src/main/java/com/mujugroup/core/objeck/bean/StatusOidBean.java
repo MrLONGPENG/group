@@ -1,4 +1,4 @@
-package com.mujugroup.core.bean;
+package com.mujugroup.core.objeck.bean;
 
 
 import com.github.wxiaoqi.merge.annonation.MergeField;

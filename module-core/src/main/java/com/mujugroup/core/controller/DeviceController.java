@@ -4,8 +4,8 @@ package com.mujugroup.core.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.core.bean.DeviceBean;
 import com.mujugroup.core.model.Device;
+import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ public class DeviceController {
     }
 
     @ApiOperation(value="查询设备信息", notes="根据DID查询指定设备信息")
-    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
     public String query(String did) {
         logger.info("device--query");
         DeviceBean bean =  deviceService.findDeviceBeanByDid(did);

@@ -1,9 +1,9 @@
 package com.mujugroup.core.controller;
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.mujugroup.core.bean.StatusAidBean;
-import com.mujugroup.core.bean.StatusHidBean;
-import com.mujugroup.core.bean.StatusOidBean;
+import com.mujugroup.core.objeck.bean.StatusAidBean;
+import com.mujugroup.core.objeck.bean.StatusHidBean;
+import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

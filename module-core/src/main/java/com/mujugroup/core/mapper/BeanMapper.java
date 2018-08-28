@@ -1,18 +1,11 @@
 package com.mujugroup.core.mapper;
 
-import com.mujugroup.core.bean.DepartmentBean;
-import com.mujugroup.core.bean.DeviceBean;
-import com.mujugroup.core.bean.HospitalBean;
-import com.mujugroup.core.model.Department;
-import com.mujugroup.core.model.Device;
-import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.sql.DeviceSqlProvider;
+import com.mujugroup.core.objeck.bean.DepartmentBean;
+import com.mujugroup.core.objeck.bean.DeviceBean;
+import com.mujugroup.core.objeck.bean.HospitalBean;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * 设备关联表,数据库操作接口类
