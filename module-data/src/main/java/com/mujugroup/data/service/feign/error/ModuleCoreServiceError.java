@@ -39,6 +39,18 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     }
 
     @Override
+    public Map<String, String> getProvinceByHid(String param) {
+        logger.debug("data->remote core fail, method:getProvinceByHid param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<String, String> getCityByHid(String param) {
+        logger.debug("data->remote core fail, method:getCityByHid param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
     public Map<String, String> getDepartmentById(String param) {
         logger.debug("data->remote core fail, method:getDepartmentById param:{}",param);
         return new HashMap<>();
@@ -47,6 +59,11 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     @Override
     public Map<String, String> getBedInfoByDid(String param) {
         logger.debug("data->remote core fail, method:getBedInfoByDid param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<Integer, String> getHospitalByAid(int aid) {
         return new HashMap<>();
     }
 }

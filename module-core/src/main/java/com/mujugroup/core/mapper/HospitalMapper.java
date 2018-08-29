@@ -58,4 +58,18 @@ public interface HospitalMapper {
     @ResultMap("hospital")
     @Select("SELECT * FROM t_hospital WHERE enable = 22 AND agentId = #{aid} ")
     List<Hospital> findListByAid(String aid);
+
+    @ResultType(String.class)
+    @Select("SELECT `name` FROM `t_hospital` WHERE `id` = #{hid}")
+    String getHospitalById(@Param("hid") String hid);
+
+    @ResultType(String.class)
+    @Select("SELECT c.`name` FROM `t_hospital` h LEFT JOIN `t_country_province_city` c" +
+            " ON h.`province` = c.`id` WHERE h.`id` = #{hid}")
+    String getProvinceByHid(@Param("hid") String hid);
+
+    @ResultType(String.class)
+    @Select("SELECT c.`name` FROM `t_hospital` h LEFT JOIN `t_country_province_city` c" +
+            " ON h.`city` = c.`id` WHERE h.`id` = #{hid}")
+    String getCityByHid(@Param("hid") String hid);
 }

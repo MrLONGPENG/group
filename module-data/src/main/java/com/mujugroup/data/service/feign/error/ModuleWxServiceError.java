@@ -37,6 +37,12 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
+    public Map<String, String> getTotalProfit(String param) {
+        logger.debug("data->remote wx fail, method:getTotalProfit param:{}",param);
+        return new HashMap<>();
+    }
+
+    @Override
     public Map<String, String> getOrderTypeById(String param) {
         logger.debug("data->remote wx fail, method:getOrderTypeById param:{}",param);
         return new HashMap<>();

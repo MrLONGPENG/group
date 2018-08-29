@@ -87,5 +87,22 @@ public class WxOrderSqlProvider {
         }}.toString();
     }
 
+    public String getTotalProfit(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
+            , @Param("did")String did, @Param("tradeNo") String tradeNo
+            , @Param("start") long start, @Param("end") long end){
+        return new SQL(){{
+            SELECT("COALESCE(SUM(`pay_price`),0)"); FROM("t_wx_order");
+            WHERE("pay_status > 1");
+            if(aid != 0) AND().WHERE("aid = #{aid}");
+            if(hid != 0) AND().WHERE("hid = #{hid}");
+            if(oid != 0) AND().WHERE("oid = #{oid}");
+            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
+            if(end != 0 ) AND().WHERE("pay_time < #{end}");
+            if(!StringUtil.isEmpty(did)) AND().WHERE("did = #{did}");
+            if(!StringUtil.isEmpty(tradeNo)) AND().WHERE("trade_no = #{tradeNo}");
+            ORDER_BY("id desc");
+        }}.toString();
+    }
+
 
 }

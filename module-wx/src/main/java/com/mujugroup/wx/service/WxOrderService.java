@@ -34,7 +34,16 @@ public interface WxOrderService {
 
     String getUsageRate(String aid, String hid, String oid, String date);
 
+    String getTotalProfitByDate(String aid, String hid, String oid, String date);
+
+    String getTotalProfit(String aid, String hid, String oid, String start, String end);
+
+    String getTotalProfit(int aid, int hid, int oid, String did, String tradeNo, long start, long end);
+
     List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo);
 
     List<WxOrder> findList(AidHidOidTO dto);
+
+
+
 }

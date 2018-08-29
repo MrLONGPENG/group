@@ -27,7 +27,6 @@ import java.util.Map;
 @Service("wxOrderService")
 public class WxOrderServiceImpl implements WxOrderService {
 
-
     private final WxOrderMapper wxOrderMapper;
     private final SessionService sessionService;
     private final ModuleCoreService moduleCoreService;
@@ -172,6 +171,43 @@ public class WxOrderServiceImpl implements WxOrderService {
             avgCount = averageUsageRate(aid, hid, oid, timestamp, 1);
         }
         return String.valueOf(avgCount);
+    }
+
+    /**
+     * 获取指定时间内、指定条件下的利润总和
+     * @param date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
+     */
+    @Override
+    public String getTotalProfitByDate(String aid, String hid, String oid, String date) {
+        long start, end;
+        if(date.length() == 17) {       // 粒度--周
+            start = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            end = start + Constant.TIMESTAMP_DAYS_7;
+        }else if(date.length() == 6) {  // 粒度--月
+            start = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            end = start + Constant.TIMESTAMP_DAYS_1 * DateUtil.getDay(date);
+        }else{ // 其他默认粒度--日
+            start = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            end = start + Constant.TIMESTAMP_DAYS_1;
+        }
+        return getTotalProfit(Integer.parseInt(aid), Integer.parseInt(hid), Integer.parseInt(oid)
+                , null, null, start, end);
+    }
+
+    /**
+     * 获取指定时间内、指定条件下的利润总和
+     */
+    @Override
+    public String getTotalProfit(String aid, String hid, String oid, String start, String end) {
+        return getTotalProfit(Integer.parseInt(aid), Integer.parseInt(hid), Integer.parseInt(oid)
+                , null, null, Long.parseLong(start), Long.parseLong(end));
+    }
+    /**
+     * 获取指定时间内、指定条件下的利润总和
+     */
+    @Override
+    public String getTotalProfit(int aid, int hid, int oid, String did, String tradeNo, long start, long end) {
+        return wxOrderMapper.getTotalProfit(aid, hid, oid, did, tradeNo, start, end);
     }
 
     @Override

@@ -55,12 +55,32 @@ public class MergeController {
 
     /**
      * 根据医院D获取医院名字
-     * @param param 多个代理商ID,“;”分割
-     * @return 代理商名字
+     * @param param 多个医院ID,“;”分割
+     * @return 医院ID
      */
     @RequestMapping(value = "/getHospitalById",method = RequestMethod.POST)
     public Map<String, String> getHospitalById(@RequestParam(value = "param") String param){
         return mergeService.getHospitalById(param);
+    }
+
+    /**
+     * 根据医院D获取医院所属省份
+     * @param param 多个医院ID,“;”分割
+     * @return 医院ID
+     */
+    @RequestMapping(value = "/getProvinceByHid",method = RequestMethod.POST)
+    public Map<String, String> getProvinceByHid(@RequestParam(value = "param") String param){
+        return mergeService.getProvinceByHid(param);
+    }
+
+    /**
+     * 根据医院D获取医院所属城市
+     * @param param 多个医院ID,“;”分割
+     * @return 医院ID
+     */
+    @RequestMapping(value = "/getCityByHid",method = RequestMethod.POST)
+    public Map<String, String> getCityByHid(@RequestParam(value = "param") String param){
+        return mergeService.getCityByHid(param);
     }
 
     /**

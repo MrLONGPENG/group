@@ -4,6 +4,7 @@ import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
+import com.mujugroup.data.objeck.bo.ExcelBO;
 import com.mujugroup.data.objeck.vo.StaActive;
 import com.mujugroup.data.objeck.vo.StaUsage;
 import com.mujugroup.data.objeck.vo.StaUsageRate;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service("statisticsService")
 public class StatisticsServiceImpl implements StatisticsService {
+
 
     /**
      * 指定时间间隔以及粒度  获取日期结果集
@@ -105,4 +107,18 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         return list;
     }
+
+
+    @Override
+    @MergeResult
+    public List<ExcelBO> getExcelBO(String name, int aid, int hid, int grain, int startTime, int stopTime)
+            throws ParamException {
+        List<ExcelBO> list = new ArrayList<>();
+        List<String> refDate = getRefDate(startTime, stopTime, grain);
+        for (String key:refDate){
+            list.add(new ExcelBO(name, key, aid, hid, getEndTimestamp(grain, key, stopTime)));
+        }
+        return list;
+    }
+
 }

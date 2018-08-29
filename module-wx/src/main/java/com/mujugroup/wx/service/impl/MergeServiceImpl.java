@@ -28,7 +28,8 @@ public class MergeServiceImpl implements MergeService {
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
 
-    public MergeServiceImpl(WxUserService wxUserService, WxOrderService wxOrderService, WxGoodsService wxGoodsService) {
+    public MergeServiceImpl(WxUserService wxUserService, WxOrderService wxOrderService
+            , WxGoodsService wxGoodsService) {
         this.wxUserService = wxUserService;
         this.wxOrderService = wxOrderService;
         this.wxGoodsService = wxGoodsService;
@@ -122,6 +123,23 @@ public class MergeServiceImpl implements MergeService {
     }
 
     @Override
+    public Map<String, String> getTotalProfit(String param) {
+        logger.debug("getTotalProfit->{}", param);
+        Map<String,String> map = new HashMap<>();
+        String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key :array) {
+            keys = key.split(Constant.SIGN_COMMA);
+            if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
+                map.put(key, wxOrderService.getTotalProfitByDate(keys[0], keys[1], keys[2], keys[5]));
+            }else{
+                map.put(key, wxOrderService.getTotalProfit(keys[0], keys[1], keys[2], keys[3], keys[4]));
+            }
+        }
+        return map;
+    }
+
+
+    @Override
     public Map<String, String> getOrderTypeById(String param) {
         logger.debug("getUsageRate->{}", param);
         Map<String,String> map = new HashMap<>();
@@ -131,6 +149,8 @@ public class MergeServiceImpl implements MergeService {
         }
         return map;
     }
+
+
 
 
     /**

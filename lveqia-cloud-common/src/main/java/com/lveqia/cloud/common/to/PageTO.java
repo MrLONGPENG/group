@@ -4,6 +4,11 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
+/**
+ *  Service Transfer Object
+ * 分页数据-传输对象
+ * @param <T>
+ */
 public class PageTO<T> {
 
     private PageInfo pageInfo;

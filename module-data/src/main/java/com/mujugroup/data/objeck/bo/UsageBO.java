@@ -1,4 +1,4 @@
-package com.mujugroup.data.objeck.vo;
+package com.mujugroup.data.objeck.bo;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.StringUtil;
@@ -9,9 +9,11 @@ import com.mujugroup.data.service.feign.ModuleWxService;
 import java.io.Serializable;
 
 /**
- * 概览接口返回数据
+ * Business Object
+ * 概览-使用情况数据，不含今日
+ * 总激活数、总用户数、昨日使用数以及使用率
  */
-public class OverviewInfo implements Serializable {
+public class UsageBO implements Serializable {
 
     @MergeField(feign = ModuleCoreService.class, method = "getTotalActiveCount"
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
@@ -28,20 +30,16 @@ public class OverviewInfo implements Serializable {
     private String yesterdayUsageCount;
 
 
-    public OverviewInfo(int aid, long timestamp) {
-        this.totalActive = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);
+    public UsageBO(int aid, long timestamp) {
+        // 拼接总用户数 ｛开始时间戳,结束时间戳｝
         this.totalUser = StringUtil.toLinkByComma(Constant.DIGIT_ZERO, timestamp);
-        this.yesterdayUsageCount = getYesterdayUsageKey(aid, timestamp);
+        // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝
+        this.totalActive = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);
+        // 拼接昨天使用数的查询条件 ｛AID,HID,OID,开始时间戳,结束时间戳｝
+        this.yesterdayUsageCount = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO
+                , Constant.DIGIT_ZERO, timestamp - Constant.TIMESTAMP_DAYS_1, timestamp);
     }
 
-    /**
-     * 拼接昨天使用数的查询条件
-     * @return  代理商ID,医院ID,科室ID,开始时间戳，结束时间戳
-     */
-    private String getYesterdayUsageKey(int aid, long timestamp) {
-        long start = timestamp - Constant.TIMESTAMP_DAYS_1;
-        return  StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, start, timestamp);
-    }
 
     public String getTotalUser() {
         return totalUser;

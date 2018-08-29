@@ -74,6 +74,16 @@ public class MergeController {
         return mergeService.getUserCount(param);
     }
 
+    /**
+     * 获取指定时间内、指定条件下的利润总和
+     * @param param aid,hid,oid,start,end
+     * @return key:aid,hid,oid,start,end value:profit(单位分)
+     */
+    @RequestMapping(value = "/getTotalProfit",method = RequestMethod.POST)
+    public Map<String, String> getTotalProfit(@RequestParam(value = "param") String param){
+        return mergeService.getTotalProfit(param);
+    }
+
 
     /**
      * 获取订单类型：晚修；午休

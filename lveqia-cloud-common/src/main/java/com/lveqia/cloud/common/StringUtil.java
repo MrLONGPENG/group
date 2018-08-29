@@ -73,7 +73,7 @@ public class StringUtil {
      * 通过指定符号拼接字符串
      * @return  params[sign]arg1[sign]...args
      */
-    private static String join(String separator, Object... array){
+    public static String join(String separator, Object... array){
         StringBuffer buffer = new StringBuffer();
         for (Object key:array) {
             if(buffer.length()!=0) buffer.append(separator);
