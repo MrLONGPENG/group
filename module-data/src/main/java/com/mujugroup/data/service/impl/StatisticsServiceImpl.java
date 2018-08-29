@@ -57,15 +57,17 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     /**
-     * 根据粒度以及Key，获取结束时间戳
+     * 根据粒度以及Key，获取结束时间戳, 同时确保生成的结束时间小于等于传入的结束时间
      */
-    private long getEndTimestamp(int grain, String refDate) {
+    private long getEndTimestamp(int grain, String refDate, int stopTime) {
+        long result = 0;
         switch (grain){
-            case 1 : return DateUtil.toTimestamp(refDate, DateUtil.TYPE_DATE_08) + Constant.TIMESTAMP_DAYS_1;
-            case 2 : return DateUtil.toTimestamp(refDate.substring(9), DateUtil.TYPE_DATE_08);
-            case 3 : return DateUtil.getTimesEndMonth(refDate);
+            case 1 : result = DateUtil.toTimestamp(refDate, DateUtil.TYPE_DATE_08) + Constant.TIMESTAMP_DAYS_1;break;
+            case 2 : result = DateUtil.toTimestamp(refDate.substring(9), DateUtil.TYPE_DATE_08);break;
+            case 3 : result = DateUtil.getTimesEndMonth(refDate);break;
         }
-        return 0;
+        if(result > stopTime || result == 0) result = stopTime;
+        return result;
     }
 
 
@@ -87,7 +89,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<StaActive> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaActive(key, aid, hid, oid, getEndTimestamp(grain, key)));
+            list.add(new StaActive(key, aid, hid, oid, getEndTimestamp(grain, key, stopTime)));
         }
         return list;
     }

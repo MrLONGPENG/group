@@ -35,5 +35,8 @@ public interface ModuleCoreService {
     Map<String, String> getDepartmentById(@RequestParam(value = "param") String param);
 
 
+    /** 根据DID获取床位信息 */
+    @RequestMapping(value = "/merge/getBedInfoByDid",method = RequestMethod.POST)
+    Map<String, String> getBedInfoByDid(@RequestParam(value = "param") String param);
 
 }

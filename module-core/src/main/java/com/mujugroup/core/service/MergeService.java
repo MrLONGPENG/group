@@ -18,4 +18,6 @@ public interface MergeService {
     Map<String,String> getHospitalById(String param);
 
     Map<String,String> getDepartmentById(String param);
+
+    Map<String,String> getBedInfoByDid(String param);
 }

@@ -72,4 +72,15 @@ public class MergeController {
     public Map<String, String> getDepartmentById(@RequestParam(value = "param") String param){
         return mergeService.getDepartmentById(param);
     }
+
+
+    /**
+     * 根据DID获取床位信息
+     * @param param 多个DID,“;”分割
+     * @return 床位信息
+     */
+    @RequestMapping(value = "/getBedInfoByDid",method = RequestMethod.POST)
+    public Map<String, String> getBedInfoByDid(@RequestParam(value = "param") String param){
+        return mergeService.getBedInfoByDid(param);
+    }
 }

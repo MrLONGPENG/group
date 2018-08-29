@@ -28,7 +28,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @MergeResult
     public List<OrderBO> mergeOrderBO(List<OrderTO> list) {
-        mapperFactory.classMap(OrderTO.class, OrderBO.class).byDefault().register();
+        mapperFactory.classMap(OrderTO.class, OrderBO.class)
+                .field("aid","agent")
+                .field("hid","hospital")
+                .field("oid","department")
+                .field("gid","orderType")
+                .field("did","bedInfo")
+                .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, OrderBO.class);
     }
 }

@@ -16,57 +16,67 @@ public class OrderBO implements Serializable {
 
     @MergeField(feign = ModuleCoreService.class, method = "getAgentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
-    private String aid;
+    private String agent;
 
     @MergeField(feign = ModuleCoreService.class, method = "getHospitalById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
-    private String hid;
+    private String hospital;
 
     @MergeField(feign = ModuleCoreService.class, method = "getDepartmentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
-    private String oid;
+    private String department;
+
+    @MergeField(feign = ModuleCoreService.class, method = "getBedInfoByDid"
+            , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
+    private String bedInfo;
 
     @MergeField(feign = ModuleWxService.class, method = "getOrderTypeById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
-    private String gid;
+    private String orderType;
 
     private String tradeNo;
-
     private Integer payPrice;
-
+    private Integer payStatus;
     private Long payTime;
 
-
-    public String getAid() {
-        return aid;
+    public String getAgent() {
+        return agent;
     }
 
-    public void setAid(String aid) {
-        this.aid = aid;
+    public void setAgent(String agent) {
+        this.agent = agent;
     }
 
-    public String getHid() {
-        return hid;
+    public String getHospital() {
+        return hospital;
     }
 
-    public void setHid(String hid) {
-        this.hid = hid;
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
     }
 
-    public String getOid() {
-        return oid;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setOid(String oid) {
-        this.oid = oid;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
-    public String getGid() {
-        return gid;
+    public String getBedInfo() {
+        return bedInfo;
     }
 
-    public void setGid(String gid) {
-        this.gid = gid;
+    public void setBedInfo(String bedInfo) {
+        this.bedInfo = bedInfo;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
     public String getTradeNo() {
@@ -83,6 +93,14 @@ public class OrderBO implements Serializable {
 
     public void setPayPrice(Integer payPrice) {
         this.payPrice = payPrice;
+    }
+
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
     }
 
     public Long getPayTime() {

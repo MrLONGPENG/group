@@ -8,15 +8,14 @@ package com.lveqia.cloud.common.to;
 public class OrderTO {
 
     private String id;
+    private String did;
     private String aid;
     private String hid;
     private String oid;
     private String gid;
-
     private String tradeNo;
-
     private Integer payPrice;
-
+    private Integer payStatus;
     private Long payTime;
 
     public String getId() {
@@ -25,6 +24,14 @@ public class OrderTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDid() {
+        return did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
     }
 
     public String getAid() {
@@ -67,6 +74,13 @@ public class OrderTO {
         this.tradeNo = tradeNo;
     }
 
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
+    }
 
     public Integer getPayPrice() {
         return payPrice;

@@ -48,4 +48,9 @@ public interface DepartmentMapper {
     @ResultMap("department")
     @Select("SELECT * FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
     List<Department> findListByHid(String hid);
+
+
+    @ResultType(String.class)
+    @Select("SELECT `name` FROM `t_department` WHERE `status`= 1 AND `id` = #{id}")
+    String getDepartmentNameById(@Param("id") String id);
 }
