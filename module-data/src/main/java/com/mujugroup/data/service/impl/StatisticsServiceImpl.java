@@ -6,6 +6,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.objeck.bo.ExcelBO;
 import com.mujugroup.data.objeck.vo.StaActive;
+import com.mujugroup.data.objeck.vo.StaProfit;
 import com.mujugroup.data.objeck.vo.StaUsage;
 import com.mujugroup.data.objeck.vo.StaUsageRate;
 import com.mujugroup.data.service.StatisticsService;
@@ -75,11 +76,24 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @MergeResult
-    public List<StaUsage> getUsage(int aid, int hid, int oid, int grain, int startTime, int stopTime) throws ParamException {
+    public List<StaUsage> getUsage(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+            throws ParamException {
         List<StaUsage> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
             list.add(new StaUsage(key, aid, hid, oid));
+        }
+        return list;
+    }
+
+    @Override
+    @MergeResult
+    public List<StaProfit> getProfit(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+            throws ParamException {
+        List<StaProfit> list = new ArrayList<>();
+        List<String> refDate = getRefDate(startTime, stopTime, grain);
+        for (String key:refDate){
+            list.add(new StaProfit(key, aid, hid, oid));
         }
         return list;
     }

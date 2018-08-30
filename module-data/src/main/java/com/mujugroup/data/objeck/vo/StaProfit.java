@@ -8,20 +8,20 @@ import com.mujugroup.data.service.feign.ModuleWxService;
 import java.io.Serializable;
 
 /**
- * 图表-统计使用情况
+ * 图表-收益统计接口
  */
-public class StaUsage implements Serializable {
+public class StaProfit implements Serializable {
 
     private String refDate;
 
-    @MergeField(feign = ModuleWxService.class, method = "getUsageCount"
+    @MergeField(feign = ModuleWxService.class, method = "getTotalProfit"
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
-    private String usage;
+    private String profit;
 
 
-    public StaUsage(String refDate, int aid, int hid, int oid) {
+    public StaProfit(String refDate, int aid, int hid, int oid) {
         this.refDate = refDate;
-        this.usage = StringUtil.toLinkByComma(aid, hid, oid, 0, 0, refDate);
+        this.profit = StringUtil.toLinkByComma(aid, hid, oid, 0, 0, refDate);
     }
 
 
@@ -33,11 +33,11 @@ public class StaUsage implements Serializable {
         this.refDate = refDate;
     }
 
-    public String getUsage() {
-        return usage;
+    public String getProfit() {
+        return profit;
     }
 
-    public void setUsage(String usage) {
-        this.usage = usage;
+    public void setProfit(String profit) {
+        this.profit = profit;
     }
 }

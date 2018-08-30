@@ -3,6 +3,7 @@ package com.mujugroup.data.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.data.objeck.bo.ExcelBO;
+import com.mujugroup.data.objeck.vo.StaProfit;
 import com.mujugroup.data.objeck.vo.StaUsage;
 import com.mujugroup.data.objeck.vo.StaActive;
 import com.mujugroup.data.objeck.vo.StaUsageRate;
@@ -18,6 +19,9 @@ public interface StatisticsService {
     List<StaUsage>  getUsage(int aid, int hid, int oid, int grain
             , int startTime, int stopTime) throws ParamException;
 
+    List<StaProfit> getProfit(int aid, int hid, int oid, int grain
+            , int startTime, int stopTime) throws ParamException;
+
     List<StaActive> getActive(int aid, int hid, int oid, int grain
             , int startTime, int stopTime) throws ParamException;
 
@@ -26,4 +30,6 @@ public interface StatisticsService {
 
     List<ExcelBO> getExcelBO(String name, int aid, int hid, int grain, int startTime
             , int stopTime) throws ParamException;
+
+
 }

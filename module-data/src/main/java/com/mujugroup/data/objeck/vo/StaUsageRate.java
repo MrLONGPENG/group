@@ -7,14 +7,14 @@ import com.mujugroup.data.service.feign.ModuleWxService;
 import java.io.Serializable;
 
 /**
- * 统计使用情况
+ * 图表-统计使用率情况
  */
 public class StaUsageRate implements Serializable {
 
     private String refDate;
 
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleWxService.class, method = "getUsageRate"
-            , isValueNeedMerge = true)
+    @MergeField(feign = ModuleWxService.class, method = "getUsageRate"
+            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String usageRate;
 
 

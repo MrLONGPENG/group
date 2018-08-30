@@ -53,6 +53,8 @@ public class StatisticsController {
                     return ResultUtil.success(statisticsService.getUsage(aid, hid, oid, grain, startTime, stopTime));
                 case "getStaActive" : case "get_statistics_active" :
                     return ResultUtil.success(statisticsService.getActive(aid, hid, oid, grain, startTime, stopTime));
+                case "getStaProfit" : case "get_statistics_profit" :
+                    return ResultUtil.success(statisticsService.getProfit(aid, hid, oid, grain, startTime, stopTime));
                 case "getStaUsageRate": case "get_statistics_usage_rate" :
                     return ResultUtil.success(statisticsService.getUsageRate(aid, hid, oid, grain, startTime, stopTime));
             }
@@ -71,9 +73,11 @@ public class StatisticsController {
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
             , defaultValue="1") int grain, HttpServletResponse response) throws Exception {
+        long time = System.currentTimeMillis();
         List<ExcelData> list = excelService.getExcelDataList(aid, hid,grain, startTime, stopTime);
         ExcelUtils.exportExcel(response, StringUtil.join("", DateUtil.timestampToDays(startTime)
                 , "-", DateUtil.timestampToDays(stopTime), ".xlsx"), list);
+        logger.debug("导出Excel花费{}毫秒", System.currentTimeMillis() - time);
     }
 
 

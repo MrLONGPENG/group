@@ -8,18 +8,18 @@ import com.mujugroup.data.service.feign.ModuleCoreService;
 import java.io.Serializable;
 
 /**
- * 统计激活情况
+ * 图表-统计激活情况
  */
 public class StaActive implements Serializable {
 
     private String refDate;
 
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getNewlyActiveCount"
-            , isQueryByParam = true)
+    @MergeField(feign = ModuleCoreService.class, method = "getNewlyActiveCount"
+            , isQueryByParam = true, defaultValue = Constant.DIGIT_ZERO)
     private String newlyActive;
 
-    @MergeField(defaultValue = Constant.DIGIT_ZERO, feign = ModuleCoreService.class, method = "getTotalActiveCount"
-            , isValueNeedMerge = true)
+    @MergeField(feign = ModuleCoreService.class, method = "getTotalActiveCount"
+            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String totalActive;
 
     public StaActive(String refDate, int aid, int hid, int oid, long end) {
