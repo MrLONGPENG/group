@@ -95,7 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 }).successHandler((httpServletRequest, httpServletResponse, authentication) -> {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
-                    out.write(ResultUtil.success());
+                    out.write(ResultUtil.success(sysUserService.getCurrInfo()));
                     out.flush();
                     out.close();
                 })
