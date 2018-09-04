@@ -1,5 +1,6 @@
 package com.lveqia.cloud.zuul.service.impl;
 
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysUserService;
@@ -28,7 +29,12 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = sysUserMapper.loadUserByUsername(username);
+        UserDetails userDetails;
+        if(StringUtil.isNumeric(username)){
+            userDetails = sysUserMapper.loadUserByPhone(username);
+        }else {
+            userDetails = sysUserMapper.loadUserByUsername(username);
+        }
         if (userDetails == null) {
             throw new UsernameNotFoundException("用户名不对");
         }

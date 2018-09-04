@@ -53,8 +53,13 @@ public interface SysUserMapper {
     @ResultMap("sysUser")
     List<SysUser> findListAll();
 
+    @ResultMap("sysUser")
+    @Select("SELECT * FROM t_sys_user WHERE phone = #{phone}")
+    SysUser loadUserByPhone(@Param("phone") String phone);
 
     @ResultMap("sysUser")
     @Select("SELECT * FROM t_sys_user WHERE username = #{username}")
-    SysUser loadUserByUsername(String username);
+    SysUser loadUserByUsername(@Param("username") String username);
+
+
 }
