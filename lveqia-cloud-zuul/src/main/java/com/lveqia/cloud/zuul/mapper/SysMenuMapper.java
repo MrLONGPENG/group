@@ -1,6 +1,7 @@
 package com.lveqia.cloud.zuul.mapper;
 
 import com.lveqia.cloud.zuul.model.SysMenu;
+import com.lveqia.cloud.zuul.objeck.vo.MenuVO;
 import com.lveqia.cloud.zuul.sql.SysMenuSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
@@ -55,4 +56,9 @@ public interface SysMenuMapper {
     @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu ORDER BY LENGTH(url) DESC")
     List<SysMenu> getAllMenuByLength();
+
+    @ResultMap("sysMenu")
+    @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
+            " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =1) AND `enabled`=true")
+    List<SysMenu> getMenusByUserId(@Param("id") Integer id);
 }

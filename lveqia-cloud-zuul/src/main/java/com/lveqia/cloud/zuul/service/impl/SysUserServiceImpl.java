@@ -1,6 +1,5 @@
 package com.lveqia.cloud.zuul.service.impl;
 
-import com.lveqia.cloud.zuul.config.WebSecurityConfig;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysUserService;

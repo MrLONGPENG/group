@@ -28,7 +28,6 @@ import java.io.PrintWriter;
  * Created by sang on 2017/12/28.
  */
 @Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -79,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 /*.and().httpBasic()*/
-                .and().formLogin().loginPage("/authority").loginProcessingUrl("/my/login")
+                .and().formLogin().loginPage("/authority").loginProcessingUrl("/sys/login")
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
@@ -100,7 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
-                .and().logout().logoutUrl("/my/logout").invalidateHttpSession(true).permitAll()
+                .and().logout().logoutUrl("/sys/logout").invalidateHttpSession(true).permitAll()
                 .and().exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
                     logger.debug("AuthenticationAccessDeniedHandler");
                     response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);

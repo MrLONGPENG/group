@@ -15,7 +15,6 @@ dependencies {
     compile project(':lveqia-cloud-common')
     compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.0.3.RELEASE'
 }
 
 dependencyManagement {

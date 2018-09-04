@@ -14,7 +14,7 @@ import javax.persistence.*;
 
 /**
  * 
- * 类名:SysUser
+ * 类名:UserVO
  * 创建人:leolaurel
  * 创建时间:20180725
  */

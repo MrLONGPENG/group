@@ -2,10 +2,11 @@ package com.lveqia.cloud.zuul.service.impl;
 
 import com.lveqia.cloud.zuul.mapper.SysMenuMapper;
 import com.lveqia.cloud.zuul.model.SysMenu;
+import com.lveqia.cloud.zuul.objeck.vo.MenuVO;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,10 +23,6 @@ public class SysMenuServiceImpl implements SysMenuService {
         this.sysMenuMapper = sysMenuMapper;
     }
 
-    @Override
-    public String test() {
-        return "hello world!";
-    }
 
     @Override
     public List<SysMenu> getAllMenu() {
@@ -36,4 +33,45 @@ public class SysMenuServiceImpl implements SysMenuService {
     public List<SysMenu> getAllMenuByLength() {
         return sysMenuMapper.getAllMenuByLength();
     }
+
+    @Override
+    public List<MenuVO> getMenusByUserId(Integer id) {
+        MenuVO tree;
+        List<MenuVO> children;
+        List<MenuVO> trees = new ArrayList<>();
+        List<SysMenu> list = sysMenuMapper.getMenusByUserId(id);
+        for (SysMenu sysMenu : list){
+            if (sysMenu.getParentId() == null){
+                tree = new MenuVO();
+                children = getChildren(list, sysMenu.getId());
+                if (children != null && children.size() > 0) {
+                    tree.setId(sysMenu.getId());
+                    tree.setName(sysMenu.getName());
+                    tree.setIconCls(sysMenu.getIconCls());
+                    tree.setComponent(sysMenu.getComponent());
+                    tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
+                    tree.setChildren(children);
+                    trees.add(tree);
+                }
+            }
+        }
+        return trees;
+    }
+    private List<MenuVO> getChildren(List<SysMenu> list, Integer parentId) {
+        MenuVO tree;
+        List<MenuVO> trees = new ArrayList<>();
+        for (SysMenu sysMenu : list) {
+            if (parentId.equals(sysMenu.getParentId())){
+                tree = new MenuVO();
+                tree.setId(sysMenu.getId());
+                tree.setName(sysMenu.getName());
+                tree.setIconCls(sysMenu.getIconCls());
+                tree.setComponent(sysMenu.getComponent());
+                tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
+                trees.add(tree);
+            }
+        }
+        return trees;
+    }
+
 }
