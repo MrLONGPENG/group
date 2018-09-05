@@ -1,6 +1,8 @@
 package com.lveqia.cloud.zuul.service.impl;
 
+import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.exception.OtherException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysUserService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,4 +57,35 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return null; // anonymousUser
     }
+
+    @Override
+    public boolean register(String username, String password, String phone) throws OtherException {
+        if(StringUtil.isNumeric(username)){
+            throw new OtherException(ResultUtil.CODE_REQUEST_FORMAT, "用户名不能全为数字");
+        }
+        if(!StringUtil.isNumeric(phone)){
+            throw new OtherException(ResultUtil.CODE_REQUEST_FORMAT, "手机号只能全部为数字");
+        }
+        if (sysUserMapper.loadUserByUsername(username) != null) {
+            throw new OtherException(ResultUtil.CODE_DATA_DUPLICATION, "用户名重复，注册失败!");
+        }
+        if (sysUserMapper.loadUserByPhone(phone) != null) {
+            throw new OtherException(ResultUtil.CODE_DATA_DUPLICATION, "手机号码已注册，注册失败!");
+        }
+        SysUser sysUser = new SysUser();
+        sysUser.setPhone(phone);
+        sysUser.setUsername(username);
+        sysUser.setPassword(new BCryptPasswordEncoder().encode(password));
+        return sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    public boolean update(SysUser sysUser, String name, String telephone, String address, String password){
+        if(!StringUtil.isEmpty(name)) sysUser.setName(name);
+        if(!StringUtil.isEmpty(address)) sysUser.setAddress(address);
+        if(!StringUtil.isEmpty(telephone)) sysUser.setTelephone(telephone);
+        if(!StringUtil.isEmpty(password)) sysUser.setPassword(new BCryptPasswordEncoder().encode(password));
+        return sysUserMapper.update(sysUser);
+    }
+
 }

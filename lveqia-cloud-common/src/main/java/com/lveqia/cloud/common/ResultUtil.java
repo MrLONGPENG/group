@@ -16,6 +16,7 @@ public class ResultUtil {
     public final static int CODE_VALIDATION_FAIL = 204;
     public final static int CODE_DB_STORAGE_FAIL = 205;
     public final static int CODE_REMOTE_CALL_FAIL = 206;
+    public final static int CODE_DATA_DUPLICATION = 207;
     public final static int CODE_THIRD_DATA_ERROR  = 210;
 
     public final static int CODE_PASSWORD_ERROR  = 401;
@@ -93,6 +94,7 @@ public class ResultUtil {
             case CODE_DB_STORAGE_FAIL:  return error(code,"数据存储失败");
             case CODE_REMOTE_CALL_FAIL: return error(code,"远程调用服务失败");
             case CODE_THIRD_DATA_ERROR: return error(code,"第三方数据格式错误");
+            case CODE_DATA_DUPLICATION: return error(code,"已存在重复的数据");
             // 400+ 错误
 
             case CODE_PASSWORD_ERROR:  return error(code,"用户名或密码输入错误，登录失败!");

@@ -1,4 +1,4 @@
-package com.lveqia.cloud.zuul.objeck;
+package com.lveqia.cloud.zuul.objeck.vo;
 
 
 import com.lveqia.cloud.zuul.model.SysRole;
