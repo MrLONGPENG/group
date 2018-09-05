@@ -46,6 +46,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                 children = getChildren(list, sysMenu.getId());
                 if (children != null && children.size() > 0) {
                     tree.setId(sysMenu.getId());
+                    tree.setPath(sysMenu.getPath());
                     tree.setName(sysMenu.getName());
                     tree.setIconCls(sysMenu.getIconCls());
                     tree.setComponent(sysMenu.getComponent());
@@ -65,6 +66,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                 tree = new MenuVO();
                 tree.setId(sysMenu.getId());
                 tree.setName(sysMenu.getName());
+                tree.setPath(sysMenu.getPath());
                 tree.setIconCls(sysMenu.getIconCls());
                 tree.setComponent(sysMenu.getComponent());
                 tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
