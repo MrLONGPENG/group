@@ -2,6 +2,7 @@ package com.mujugroup.data.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.objeck.bo.ExcelBO;
@@ -76,48 +77,68 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @MergeResult
-    public List<StaUsage> getUsage(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+    public List<StaUsage> getUsage(String ids, int aid, int hid, int oid, int grain, int startTime, int stopTime)
             throws ParamException {
         List<StaUsage> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaUsage(key, aid, hid, oid));
+            if(StringUtil.isEmpty(ids)){
+                list.add(new StaUsage(key, aid, hid, oid));
+            }else {
+                list.add(new StaUsage(key, ids));
+            }
+
         }
         return list;
     }
 
     @Override
     @MergeResult
-    public List<StaProfit> getProfit(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+    public List<StaProfit> getProfit(String ids, int aid, int hid, int oid, int grain, int startTime, int stopTime)
             throws ParamException {
         List<StaProfit> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaProfit(key, aid, hid, oid));
+            if(StringUtil.isEmpty(ids)){
+                list.add(new StaProfit(key, aid, hid, oid));
+            }else{
+                list.add(new StaProfit(key, ids));
+            }
+
         }
         return list;
     }
 
     @Override
     @MergeResult
-    public List<StaActive> getActive(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+    public List<StaActive> getActive(String ids, int aid, int hid, int oid, int grain, int startTime, int stopTime)
             throws ParamException {
         List<StaActive> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaActive(key, aid, hid, oid, getEndTimestamp(grain, key, stopTime)));
+            if(StringUtil.isEmpty(ids)){
+                list.add(new StaActive(key, aid, hid, oid, getEndTimestamp(grain, key, stopTime)));
+            }else{
+                list.add(new StaActive(key, ids, getEndTimestamp(grain, key, stopTime)));
+            }
+
         }
         return list;
     }
 
     @Override
     @MergeResult
-    public List<StaUsageRate> getUsageRate(int aid, int hid, int oid, int grain, int startTime, int stopTime)
+    public List<StaUsageRate> getUsageRate(String ids, int aid, int hid, int oid, int grain, int startTime, int stopTime)
             throws ParamException {
         List<StaUsageRate> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new StaUsageRate(key, aid, hid, oid));
+            if(StringUtil.isEmpty(ids)){
+                list.add(new StaUsageRate(key, aid, hid, oid));
+            }else{
+                list.add(new StaUsageRate(key, ids));
+            }
+
         }
         return list;
     }

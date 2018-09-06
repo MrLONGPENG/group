@@ -77,6 +77,7 @@ public class MergeController {
     /**
      * 获取指定时间内、指定条件下的利润总和
      * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     *               医院ID支持多个查询，即格式:1_2_3
      * @return key:aid,hid,oid,start,end,date value:profit(单位分)
      */
     @RequestMapping(value = "/getTotalProfit",method = RequestMethod.POST)

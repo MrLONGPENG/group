@@ -98,5 +98,15 @@ public class StringUtil {
     }
 
 
-
+    /**
+     * 把格式 1_2_3 换成 1,2,3
+     * @param key 1_2_3
+     * @return   1,2,3
+     */
+    public static String formatIds(String key) {
+        if(key!=null && key.contains(Constant.SIGN_LINE)) { // 把格式 1_2_3 换成 1,2,3
+            key = key.replaceAll(Constant.SIGN_LINE, Constant.SIGN_COMMA);
+        }
+        return key;
+    }
 }

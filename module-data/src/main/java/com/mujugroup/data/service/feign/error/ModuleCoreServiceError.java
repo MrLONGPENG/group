@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ModuleCoreServiceError implements ModuleCoreService {
@@ -65,5 +67,10 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     @Override
     public Map<Integer, String> getHospitalByAid(int aid) {
         return new HashMap<>();
+    }
+
+    @Override
+    public Set<Integer> getHospitalByRegion(int pid, int cid) {
+        return new HashSet<>();
     }
 }

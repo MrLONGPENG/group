@@ -28,6 +28,12 @@ public class StaActive implements Serializable {
         this.totalActive = StringUtil.toLinkByComma(aid, hid, oid, end);
     }
 
+    public StaActive(String refDate, String ids, long end) {
+        this.refDate = refDate;
+        this.newlyActive = refDate;
+        this.totalActive = StringUtil.toLinkByComma(0, ids, 0, end);
+    }
+
     public String getRefDate() {
         return refDate;
     }

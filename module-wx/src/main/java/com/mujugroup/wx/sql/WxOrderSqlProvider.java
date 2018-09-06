@@ -63,7 +63,11 @@ public class WxOrderSqlProvider {
             SELECT("COUNT(DISTINCT `did`) as `count1`, COUNT(`did`) as `count2`");
             FROM("t_wx_order");
             if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("aid = #{aid}");
-            if(!Constant.DIGIT_ZERO.equals(hid)) AND().WHERE("hid = #{hid}");
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)) {
+                AND().WHERE("`hid` in ( #{hid})");
+            }else if(!Constant.DIGIT_ZERO.equals(hid)){
+                AND().WHERE("`hid` = #{hid}");
+            }
             if(!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
             // TODO 当存在支付时间的数据，即为已支付状态,当增加退款等状态时候，此处还需修改
             if(start != 0 ) AND().WHERE("pay_time >= #{start}");
@@ -87,15 +91,19 @@ public class WxOrderSqlProvider {
         }}.toString();
     }
 
-    public String getTotalProfit(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
+    public String getTotalProfit(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
             , @Param("did")String did, @Param("tradeNo") String tradeNo
             , @Param("start") long start, @Param("end") long end){
         return new SQL(){{
             SELECT("COALESCE(SUM(`pay_price`),0)"); FROM("t_wx_order");
             WHERE("pay_status > 1");
-            if(aid != 0) AND().WHERE("aid = #{aid}");
-            if(hid != 0) AND().WHERE("hid = #{hid}");
-            if(oid != 0) AND().WHERE("oid = #{oid}");
+            if(!StringUtil.isEmpty(aid) && !Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("aid = #{aid}");
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)){
+                AND().WHERE("`hid` in ( #{hid})");
+            }else if(!Constant.DIGIT_ZERO.equals(hid)){
+                AND().WHERE("hid = #{hid}");
+            }
+            if(!StringUtil.isEmpty(oid) && !Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
             if(start != 0 ) AND().WHERE("pay_time >= #{start}");
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
             if(!StringUtil.isEmpty(did)) AND().WHERE("did = #{did}");

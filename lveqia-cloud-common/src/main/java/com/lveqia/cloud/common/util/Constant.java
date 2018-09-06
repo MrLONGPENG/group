@@ -1,13 +1,18 @@
 package com.lveqia.cloud.common.util;
 
 public class Constant {
-
+    /** 符号--下划线（_）  */
+    public static final String SIGN_LINE = "_";
     /** 符号--逗号（,） */
     public static final String SIGN_COMMA = ",";
     /** 符号--分号（;） */
     public static final String SIGN_SEMICOLON = ";";
     /** 符号--井号（#）  */
     public static final String SIGN_NUMBER = "#";
+//    /** 符号--加号（+）  */
+//    public static final String SIGN_PLUS = "+";
+//    /** 符号--减号（-）  */
+//    public static final String SIGN_MINUS = "-";
 
     /** 数字--0  */
     public static final String DIGIT_ZERO = "0";

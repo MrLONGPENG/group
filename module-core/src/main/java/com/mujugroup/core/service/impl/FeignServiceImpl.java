@@ -5,9 +5,7 @@ import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("feignService")
 public class FeignServiceImpl implements FeignService {
@@ -30,5 +28,15 @@ public class FeignServiceImpl implements FeignService {
             map.put(hospital.getId(), hospital.getName());
         }
         return map;
+    }
+
+    @Override
+    public Set<Integer> getHospitalByRegion(String pid, String cid) {
+        Set<Integer> set = new HashSet<>();
+        List<Hospital> list = hospitalMapper.getHospitalByRegion(pid, cid);
+        for (Hospital hospital: list){
+            set.add(hospital.getId());
+        }
+        return set;
     }
 }

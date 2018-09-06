@@ -35,7 +35,8 @@ public class MergeController {
 
     /**
      * 获取到指定时间的总激活数(多组数据用“;”分割)
-     * @param param 代理商ID,医院ID,科室ID,结束时间戳
+     * @param param 代理商ID,医院ID,科室ID,结束时间戳{ ps：医院ID支持格式1_2_3}
+     *
      * @return key:aid,hid,oid,end value:count
      */
     @RequestMapping(value = "/getTotalActiveCount",method = RequestMethod.POST)

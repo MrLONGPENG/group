@@ -72,4 +72,9 @@ public interface HospitalMapper {
     @Select("SELECT c.`name` FROM `t_hospital` h LEFT JOIN `t_country_province_city` c" +
             " ON h.`city` = c.`id` WHERE h.`id` = #{hid}")
     String getCityByHid(@Param("hid") String hid);
+
+
+    @ResultMap("hospital")
+    @Select("SELECT * FROM t_hospital WHERE enable = 22 AND province = #{pid} AND city = #{cid} ")
+    List<Hospital> getHospitalByRegion(@Param("pid") String pid, @Param("cid") String cid);
 }

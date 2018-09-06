@@ -23,6 +23,11 @@ public class StaUsageRate implements Serializable {
         this.usageRate =  StringUtil.toLinkByComma(aid, hid, oid, refDate);
     }
 
+    public StaUsageRate(String refDate, String ids) {
+        this.refDate = refDate;
+        this.usageRate =  StringUtil.toLinkByComma(0, ids, 0, refDate);
+    }
+
 
     public String getRefDate() {
         return refDate;

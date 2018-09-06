@@ -24,6 +24,11 @@ public class StaProfit implements Serializable {
         this.profit = StringUtil.toLinkByComma(aid, hid, oid, 0, 0, refDate);
     }
 
+    public StaProfit(String refDate, String ids) {
+        this.refDate = refDate;
+        this.profit = StringUtil.toLinkByComma(0, ids, 0, 0, 0, refDate);
+    }
+
 
     public String getRefDate() {
         return refDate;

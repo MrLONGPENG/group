@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             logger.debug("sessionId:{}", request.getSession().getId());
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
+            config.addAllowedOrigin("http://data.mujugroup.com");
             config.addAllowedOrigin("http://localhost:8080");
             config.addAllowedHeader("*");
             config.addAllowedMethod("*");

@@ -86,6 +86,7 @@ public class MergeServiceImpl implements MergeService {
     /**
      * 根据条件获取指定时间类的使用数量（子循环有采用缓存，请注意查询时间参数）
      * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     *              医院ID支持多个查询，即格式:1_2_3
      * @return  key:aid,hid,oid,start,end,date value:count
      */
     @Override
@@ -95,6 +96,7 @@ public class MergeServiceImpl implements MergeService {
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
             String[] keys = key.split(Constant.SIGN_COMMA);
+            keys[1] = StringUtil.formatIds(keys[1]);
             if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
                 map.put(key, wxOrderService.getUsageCountByDate(keys[0], keys[1], keys[2], keys[5]));
             }else{
@@ -117,11 +119,18 @@ public class MergeServiceImpl implements MergeService {
         String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
             keys = key.split(Constant.SIGN_COMMA);
-            map.put(key, wxOrderService.getUsageRate(keys[0], keys[1], keys[2], keys[3]));
+            map.put(key, wxOrderService.getUsageRate(keys[0], StringUtil.formatIds(keys[1]), keys[2], keys[3]));
         }
         return map;
     }
 
+
+    /**
+     * 获取指定时间内、指定条件下的利润总和
+     * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     *               医院ID支持多个查询，即格式:1_2_3
+     * @return key:aid,hid,oid,start,end,date value:profit(单位分)
+     */
     @Override
     public Map<String, String> getTotalProfit(String param) {
         logger.debug("getTotalProfit->{}", param);
@@ -129,6 +138,7 @@ public class MergeServiceImpl implements MergeService {
         String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
             keys = key.split(Constant.SIGN_COMMA);
+            keys[1] = StringUtil.formatIds(keys[1]);
             if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
                 map.put(key, wxOrderService.getTotalProfitByDate(keys[0], keys[1], keys[2], keys[5]));
             }else{
@@ -137,6 +147,8 @@ public class MergeServiceImpl implements MergeService {
         }
         return map;
     }
+
+
 
 
     @Override
@@ -169,7 +181,5 @@ public class MergeServiceImpl implements MergeService {
         }
         return map;
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package com.mujugroup.core.sql;
 
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.core.model.Device;
 import org.apache.ibatis.annotations.Param;
@@ -94,7 +95,11 @@ public class DeviceSqlProvider {
             FROM("t_device");
             WHERE("status = 14");
             if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("agentId = #{aid}");
-            if(!Constant.DIGIT_ZERO.equals(hid)) AND().WHERE("hospitalId = #{hid}");
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)){
+                AND().WHERE("`hospitalId` in (#{hid})");
+            }else if(!Constant.DIGIT_ZERO.equals(hid)){
+                AND().WHERE("`hospitalId` = #{hid}");
+            }
             if(!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("depart = #{oid}");
             if(!Constant.DIGIT_ZERO.equals(start)) AND().WHERE("crtTime >= FROM_UNIXTIME(#{start})");
             if(!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("crtTime < FROM_UNIXTIME(#{end})");

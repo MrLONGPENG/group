@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
+import java.util.Set;
 
 @Component(value ="moduleCoreService")
 @FeignClient(value = "module-core" ,fallback = ModuleCoreServiceError.class)
@@ -51,5 +52,10 @@ public interface ModuleCoreService {
     /** 根据AID获取使属医院的ID与名字 */
     @RequestMapping(value = "/feign/getHospitalByAid",method = RequestMethod.POST)
     Map<Integer, String> getHospitalByAid(@RequestParam(value = "aid") int aid);
+
+
+    /** 根据AID获取使属医院的ID与名字 */
+    @RequestMapping(value = "/feign/getHospitalByRegion",method = RequestMethod.POST)
+    Set<Integer> getHospitalByRegion(@RequestParam(value = "pid") int pid, @RequestParam(value = "cid")int cid);
 
 }

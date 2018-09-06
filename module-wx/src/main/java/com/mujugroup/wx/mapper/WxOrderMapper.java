@@ -98,6 +98,7 @@ public interface WxOrderMapper {
 
     @ResultType(String.class)
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getTotalProfit")
-    String getTotalProfit(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid, @Param("did")String did
-            , @Param("tradeNo") String tradeNo , @Param("start") long start, @Param("end") long end);
+    String getTotalProfit(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
+            , @Param("did")String did, @Param("tradeNo") String tradeNo
+            , @Param("start") long start, @Param("end") long end);
 }

@@ -1,5 +1,6 @@
 package com.mujugroup.core.service.impl;
 
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.lveqia.cloud.common.util.DBMap;
 import com.mujugroup.core.mapper.AgentMapper;
@@ -76,7 +77,8 @@ public class MergeServiceImpl implements MergeService {
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
             String[] keys = key.split(Constant.SIGN_COMMA);
-            hashMap.put(key, deviceMapper.getActiveCount(keys[0], keys[1], keys[2], Constant.DIGIT_ZERO, keys[3]));
+            hashMap.put(key, deviceMapper.getActiveCount(keys[0], StringUtil.formatIds(keys[1]), keys[2]
+                    , Constant.DIGIT_ZERO, keys[3]));
         }
         return hashMap;
     }

@@ -190,8 +190,7 @@ public class WxOrderServiceImpl implements WxOrderService {
             start = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
             end = start + Constant.TIMESTAMP_DAYS_1;
         }
-        return getTotalProfit(Integer.parseInt(aid), Integer.parseInt(hid), Integer.parseInt(oid)
-                , null, null, start, end);
+        return getTotalProfit(aid, hid, oid,null,null, start, end);
     }
 
     /**
@@ -199,14 +198,13 @@ public class WxOrderServiceImpl implements WxOrderService {
      */
     @Override
     public String getTotalProfit(String aid, String hid, String oid, String start, String end) {
-        return getTotalProfit(Integer.parseInt(aid), Integer.parseInt(hid), Integer.parseInt(oid)
-                , null, null, Long.parseLong(start), Long.parseLong(end));
+        return getTotalProfit(aid, hid, oid,null,null, Long.parseLong(start), Long.parseLong(end));
     }
     /**
      * 获取指定时间内、指定条件下的利润总和
      */
     @Override
-    public String getTotalProfit(int aid, int hid, int oid, String did, String tradeNo, long start, long end) {
+    public String getTotalProfit(String aid, String hid, String oid, String did, String tradeNo, long start, long end) {
         return wxOrderMapper.getTotalProfit(aid, hid, oid, did, tradeNo, start, end);
     }
 
