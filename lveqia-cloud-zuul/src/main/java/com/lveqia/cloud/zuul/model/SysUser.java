@@ -47,11 +47,11 @@ public class SysUser implements UserDetails {
     private String phone;
 
     /**
-     * 住宅电话
-     * 表字段 : t_sys_user.telephone
+     * 电子邮箱
+     * 表字段 : t_sys_user.email
      */
-    @Column(name = "telephone")
-    private String telephone;
+    @Column(name = "email")
+    private String email;
 
     /**
      * 联系地址
@@ -121,15 +121,15 @@ public class SysUser implements UserDetails {
 		this.phone = phone;
 	}
 
-    public String getTelephone() {
-		return telephone;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-    public String getAddress() {
+	public String getAddress() {
 		return address;
 	}
 

@@ -2,7 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxGoodsMapper;
 import com.mujugroup.wx.mapper.WxRelationMapper;
@@ -140,7 +140,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     @Transactional
-    public boolean delete(int type, int key, int kid, int gid) throws ParamException, OtherException {
+    public boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException {
         if(key == WxRelation.KEY_DEFAULT) throw new ParamException( "默认数据无法删除");
         if(type<1||type>4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
         List<WxGoods> list = queryList(key, kid, type);
@@ -155,7 +155,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
             }
             if(isDelete) return true;
         }
-        throw new OtherException(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
+        throw new BaseException(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
     }
 
 }

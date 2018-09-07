@@ -1,6 +1,6 @@
 package com.mujugroup.wx.service;
 
-import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxGoods;
 
@@ -25,5 +25,5 @@ public interface WxGoodsService {
     boolean update(int type, int key, int kid, int gid, String name, int price, int days, int state, String explain)
             throws ParamException;
 
-    boolean delete(int type, int key, int kid, int gid) throws ParamException, OtherException;
+    boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException;
 }

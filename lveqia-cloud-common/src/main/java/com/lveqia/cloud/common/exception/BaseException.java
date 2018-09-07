@@ -1,6 +1,6 @@
 package com.lveqia.cloud.common.exception;
 
-public class OtherException extends Exception {
+public class BaseException extends Exception {
 
     private int code;
 
@@ -13,7 +13,7 @@ public class OtherException extends Exception {
     }
 
     //有参的构造方法
-    public OtherException(int code, String message){
+    public BaseException(int code, String message){
         super(message);
         setCode(code);
     }

@@ -2,7 +2,7 @@ package com.mujugroup.wx.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.service.WxGoodsService;
@@ -101,7 +101,7 @@ public class WxGoodsController {
             }
         } catch (ParamException e) {
             return ResultUtil.code(e.getCode(), e.getMessage());
-        } catch (OtherException e) {
+        } catch (BaseException e) {
             return ResultUtil.code(e.getCode(), e.getMessage());
         }
     }

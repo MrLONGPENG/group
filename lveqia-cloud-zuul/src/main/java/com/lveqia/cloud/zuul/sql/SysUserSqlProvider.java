@@ -17,7 +17,7 @@ public class SysUserSqlProvider {
             if(sysUser.getId()!= null) VALUES("`id`", "#{id}");
             if(sysUser.getName()!= null) VALUES("`name`", "#{name}");
             if(sysUser.getPhone()!= null) VALUES("`phone`", "#{phone}");
-            if(sysUser.getTelephone()!= null) VALUES("`telephone`", "#{telephone}");
+            if(sysUser.getEmail()!= null) VALUES("`email`", "#{email}");
             if(sysUser.getAddress()!= null) VALUES("`address`", "#{address}");
             if(sysUser.isEnabled()) VALUES("`enabled`", "#{enabled}");
             if(sysUser.getUsername()!= null) VALUES("`username`", "#{username}");
@@ -35,7 +35,7 @@ public class SysUserSqlProvider {
             if(sysUser.getId()!= null) SET("`id` = #{id}");
             if(sysUser.getName()!= null) SET("`name` = #{name}");
             if(sysUser.getPhone()!= null) SET("`phone` = #{phone}");
-            if(sysUser.getTelephone()!= null) SET("`telephone` = #{telephone}");
+            if(sysUser.getEmail()!= null) SET("`email` = #{email}");
             if(sysUser.getAddress()!= null) SET("`address` = #{address}");
             if(sysUser.isEnabled()) SET("`enabled` = #{enabled}");
             if(sysUser.getUsername()!= null) SET("`username` = #{username}");

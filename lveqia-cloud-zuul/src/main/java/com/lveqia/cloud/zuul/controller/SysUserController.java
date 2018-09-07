@@ -2,7 +2,7 @@ package com.lveqia.cloud.zuul.controller;
 
 
 import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.exception.OtherException;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.objeck.vo.UserVO;
 import com.lveqia.cloud.zuul.service.SysUserService;
@@ -48,9 +48,23 @@ public class SysUserController {
         try {
             return sysUserService.register(username, password, phone) ? ResultUtil.success("注册成功!")
                     : ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR,"注册失败!");
-        } catch (OtherException e) {
+        } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    @ApiOperation(value="用户密码修改接口", notes="在已登录的情况下，通过验证旧密码，更新新密码")
+    public String modify(String oldPassword,  String newPassword){
+        SysUser sysUser = sysUserService.getCurrInfo();
+        if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
+        try {
+            sysUserService.modify(sysUser, oldPassword, newPassword);
+        } catch (BaseException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+        return  ResultUtil.success("修改密码成功!");
+
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
