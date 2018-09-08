@@ -30,9 +30,9 @@ public class SwaggerConfig {
     public SwaggerResourcesProvider swaggerResourcesProvider() {
         return () -> {
             List<SwaggerResource> resources = new ArrayList<>();
-            properties.getRoutes().values()
-                    .forEach(route ->
-                            resources.add(createResource(route.getServiceId(), route.getPath())));
+            resources.add(createResource("module-auth","/**"));
+            properties.getRoutes().values().forEach(route ->
+                    resources.add(createResource(route.getServiceId(), route.getPath())));
             return resources;
         };
     }

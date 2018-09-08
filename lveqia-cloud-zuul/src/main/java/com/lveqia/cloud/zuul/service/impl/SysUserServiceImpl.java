@@ -16,8 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
-
 
 @Transactional
 @Service("sysUserService")
@@ -52,9 +50,6 @@ public class SysUserServiceImpl implements SysUserService {
         if (principal instanceof UserDetails) {
             logger.debug(((UserDetails) principal).getUsername());
             return (SysUser) principal;
-        }
-        if (principal instanceof Principal) {
-            logger.debug( ((Principal) principal).getName());
         }
         return null; // anonymousUser
     }

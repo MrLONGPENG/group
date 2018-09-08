@@ -3,6 +3,8 @@ package com.lveqia.cloud.common.util;
 public class Constant {
     /** 符号--下划线（_）  */
     public static final String SIGN_LINE = "_";
+    /** 符号--百分号（%） */
+    public static final String SIGN_PERCENT = "%";
     /** 符号--逗号（,） */
     public static final String SIGN_COMMA = ",";
     /** 符号--分号（;） */

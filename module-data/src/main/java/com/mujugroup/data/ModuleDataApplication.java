@@ -11,13 +11,15 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.client.RestTemplate;
 
 @EnableHystrix
 @EnableAceMerge
 @EnableScheduling
-@EnableEurekaClient
 @EnableFeignClients
+@EnableEurekaClient
+@EnableRedisHttpSession
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class ModuleDataApplication {
 
@@ -34,4 +36,5 @@ public class ModuleDataApplication {
     RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }
