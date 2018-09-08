@@ -1,6 +1,7 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.Hospital;
+import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.sql.HospitalSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -77,4 +78,11 @@ public interface HospitalMapper {
     @ResultMap("hospital")
     @Select("SELECT * FROM t_hospital WHERE enable = 22 AND province = #{pid} AND city = #{cid} ")
     List<Hospital> getHospitalByRegion(@Param("pid") String pid, @Param("cid") String cid);
+
+
+    @Results({@Result(id=true, column="id",property="id",javaType=Integer.class)
+            ,@Result(column="name",property="name",javaType=String.class)
+    })
+    @SelectProvider(type = HospitalSqlProvider.class, method = "getHospitalList")
+    List<SelectVO> getHospitalList(@Param("aid") int aid, @Param("name") String name);
 }

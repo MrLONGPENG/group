@@ -1,6 +1,9 @@
 package com.mujugroup.core.sql;
 
+import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.core.model.Hospital;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -57,6 +60,20 @@ public class HospitalSqlProvider {
             if(hospital.getIssync()!= null) SET("issync = #{issync}");
             if(hospital.getLevel()!= null) SET("level = #{level}");
             WHERE("id = #{id}");
+        }}.toString();
+    }
+
+    public String getHospitalList(@Param("aid") int aid, @Param("name") String name){
+        return new SQL(){{
+            SELECT("id, name");
+            FROM("t_hospital");
+            WHERE("enable = 22");
+            if(aid!=0) AND().WHERE("agentId = #{aid}");
+            if(!StringUtil.isEmpty(name) && name.contains(Constant.SIGN_PERCENT)){
+                AND().WHERE("name like %#{aid}%");
+            }else if(!StringUtil.isEmpty(name)){
+                AND().WHERE("name = #{aid}");
+            }
         }}.toString();
     }
 }
