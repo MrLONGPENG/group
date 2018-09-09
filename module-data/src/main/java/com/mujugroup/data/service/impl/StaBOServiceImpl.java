@@ -6,19 +6,20 @@ import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.objeck.bo.ExcelBO;
-import com.mujugroup.data.objeck.vo.StaActive;
-import com.mujugroup.data.objeck.vo.StaProfit;
-import com.mujugroup.data.objeck.vo.StaUsage;
-import com.mujugroup.data.objeck.vo.StaUsageRate;
-import com.mujugroup.data.service.StatisticsService;
+import com.mujugroup.data.objeck.bo.sta.StaActive;
+import com.mujugroup.data.objeck.bo.sta.StaProfit;
+import com.mujugroup.data.objeck.bo.sta.StaUsage;
+import com.mujugroup.data.objeck.bo.sta.StaUsageRate;
+import com.mujugroup.data.service.StaBOService;
+import com.mujugroup.data.service.StaVOService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Service("statisticsService")
-public class StatisticsServiceImpl implements StatisticsService {
+@Service("staBOService")
+public class StaBOServiceImpl implements StaBOService {
 
 
     /**

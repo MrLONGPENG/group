@@ -3,10 +3,12 @@ package com.mujugroup.data.controller;
 import com.lveqia.cloud.common.DateUtil;
 import com.lveqia.cloud.common.ResultUtil;
 import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StatisticsService;
+import com.mujugroup.data.service.StaBOService;
+import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.utils.ExcelData;
 import com.mujugroup.data.utils.ExcelUtils;
@@ -29,14 +31,14 @@ public class StatisticsController {
     private final Logger logger = LoggerFactory.getLogger(StatisticsController.class);
 
     private final ExcelService excelService;
-    private final StatisticsService statisticsService;
+    private final StaVOService staVOService;
     private final ModuleCoreService moduleCoreService;
 
     @Autowired
-    public StatisticsController(ExcelService excelService, StatisticsService statisticsService
+    public StatisticsController(ExcelService excelService, StaVOService staVOService
             , ModuleCoreService moduleCoreService) {
         this.excelService = excelService;
-        this.statisticsService = statisticsService;
+        this.staVOService = staVOService;
         this.moduleCoreService = moduleCoreService;
     }
 
@@ -60,20 +62,12 @@ public class StatisticsController {
             if(set != null && set.size() > 0 ) ids = StringUtil.join(Constant.SIGN_LINE,  set.toArray());
         }
         try {
-            switch (action){
-                case "getStaUsage": case "get_statistics_usage" :
-                    return ResultUtil.success(statisticsService.getUsage(ids, aid, hid, oid, grain, start, stop));
-                case "getStaActive" : case "get_statistics_active" :
-                    return ResultUtil.success(statisticsService.getActive(ids, aid, hid, oid, grain, start, stop));
-                case "getStaProfit" : case "get_statistics_profit" :
-                    return ResultUtil.success(statisticsService.getProfit(ids, aid, hid, oid, grain, start, stop));
-                case "getStaUsageRate": case "get_statistics_usage_rate" :
-                    return ResultUtil.success(statisticsService.getUsageRate(ids, aid, hid, oid, grain, start, stop));
-            }
+            return ResultUtil.success(staVOService.getStaVOList(action, ids, aid, hid, oid, grain, start, stop));
+        } catch (BaseException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
         } catch (ParamException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
-        return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "无法找到Action:"+action);
     }
 
     @ApiOperation(value="按医院标签展示表格数据", notes="根据代理商、医院、科室查询木巨柜使用、收益情况")

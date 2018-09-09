@@ -1,9 +1,10 @@
-package com.mujugroup.data.objeck.vo;
+package com.mujugroup.data.objeck.bo.sta;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.service.feign.ModuleWxService;
+
 import java.io.Serializable;
 
 /**
@@ -27,7 +28,6 @@ public class StaUsageRate implements Serializable {
         this.refDate = refDate;
         this.usageRate =  StringUtil.toLinkByComma(0, ids, 0, refDate);
     }
-
 
     public String getRefDate() {
         return refDate;

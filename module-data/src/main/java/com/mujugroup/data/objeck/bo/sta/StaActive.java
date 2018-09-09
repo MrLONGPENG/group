@@ -1,4 +1,4 @@
-package com.mujugroup.data.objeck.vo;
+package com.mujugroup.data.objeck.bo.sta;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.StringUtil;

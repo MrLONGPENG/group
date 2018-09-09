@@ -3,7 +3,8 @@ package com.mujugroup.data.service.impl;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.data.objeck.bo.ExcelBO;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StatisticsService;
+import com.mujugroup.data.service.StaBOService;
+import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.utils.ExcelData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,11 @@ public class ExcelServiceImpl implements ExcelService {
 
 
     private final ModuleCoreService moduleCoreService;
-    private final StatisticsService statisticsService;
+    private final StaBOService staBOService;
     @Autowired
-    public ExcelServiceImpl(ModuleCoreService moduleCoreService, StatisticsService statisticsService) {
+    public ExcelServiceImpl(ModuleCoreService moduleCoreService, StaBOService staBOService) {
         this.moduleCoreService = moduleCoreService;
-        this.statisticsService = statisticsService;
+        this.staBOService = staBOService;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ExcelServiceImpl implements ExcelService {
         data.setName(name);
         data.setTitles(titles);
         try {
-            List<ExcelBO> rows = statisticsService.getExcelBO(name, aid, hid, grain, startTime, stopTime);
+            List<ExcelBO> rows = staBOService.getExcelBO(name, aid, hid, grain, startTime, stopTime);
             data.setRows(rows);
         } catch (ParamException e) {
             e.printStackTrace();

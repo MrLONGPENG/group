@@ -1,4 +1,4 @@
-package com.mujugroup.data.objeck.vo;
+package com.mujugroup.data.objeck.bo.sta;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.StringUtil;
@@ -28,7 +28,6 @@ public class StaProfit implements Serializable {
         this.refDate = refDate;
         this.profit = StringUtil.toLinkByComma(0, ids, 0, 0, 0, refDate);
     }
-
 
     public String getRefDate() {
         return refDate;
