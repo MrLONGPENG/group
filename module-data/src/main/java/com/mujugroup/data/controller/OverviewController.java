@@ -5,6 +5,7 @@ import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.objeck.bo.ProfitBO;
 import com.mujugroup.data.objeck.bo.UsageBO;
 import com.mujugroup.data.service.OverviewService;
+import com.mujugroup.data.service.StaVOService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class OverviewController {
     private final Logger logger = LoggerFactory.getLogger(OverviewController.class);
 
+    private final StaVOService staVOService;
     private final OverviewService overviewService;
 
     @Autowired
-    public OverviewController(OverviewService overviewService) {
+    public OverviewController(StaVOService staVOService, OverviewService overviewService) {
+        this.staVOService = staVOService;
         this.overviewService = overviewService;
     }
 
@@ -49,7 +52,7 @@ public class OverviewController {
             "，默认按当前时间计算") @RequestParam(name="timestamp", defaultValue=Constant.DIGIT_ZERO) long timestamp){
         logger.debug("overview->profit {} {}", aid, timestamp);
         ProfitBO profitBO = overviewService.profit(aid, timestamp);
-        if(profitBO!=null) return ResultUtil.success(profitBO);
+        if(profitBO!=null) return ResultUtil.success(staVOService.getProfitVO(profitBO));
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 }

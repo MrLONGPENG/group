@@ -35,9 +35,9 @@ public class OrderBO implements Serializable {
     private String orderType;
 
     private String tradeNo;
-    private Integer payPrice;
+    private Double payPrice;
     private Integer payStatus;
-    private Long payTime;
+    private String payTime;
 
     public String getAgent() {
         return agent;
@@ -87,12 +87,20 @@ public class OrderBO implements Serializable {
         this.tradeNo = tradeNo;
     }
 
-    public Integer getPayPrice() {
+    public Double getPayPrice() {
         return payPrice;
     }
 
-    public void setPayPrice(Integer payPrice) {
+    public void setPayPrice(Double payPrice) {
         this.payPrice = payPrice;
+    }
+
+    public String getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(String payTime) {
+        this.payTime = payTime;
     }
 
     public Integer getPayStatus() {
@@ -103,11 +111,4 @@ public class OrderBO implements Serializable {
         this.payStatus = payStatus;
     }
 
-    public Long getPayTime() {
-        return payTime;
-    }
-
-    public void setPayTime(Long payTime) {
-        this.payTime = payTime;
-    }
 }

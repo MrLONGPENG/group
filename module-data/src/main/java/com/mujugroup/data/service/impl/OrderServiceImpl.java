@@ -34,6 +34,8 @@ public class OrderServiceImpl implements OrderService {
                 .field("oid","department")
                 .field("gid","orderType")
                 .field("did","bedInfo")
+                .fieldMap("payTime").converter("timestampConvert").add()
+                .fieldMap("payPrice").converter("rmbPriceConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, OrderBO.class);
     }
