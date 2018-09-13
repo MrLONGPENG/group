@@ -1,16 +1,15 @@
 package com.mujugroup.data.service.feign;
 
 
-import com.lveqia.cloud.common.to.AidHidOidTO;
-import com.lveqia.cloud.common.to.OrderTO;
-import com.lveqia.cloud.common.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
+import com.lveqia.cloud.common.objeck.to.OrderTO;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.mujugroup.data.service.feign.error.ModuleWxServiceError;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Component(value ="moduleWxService")

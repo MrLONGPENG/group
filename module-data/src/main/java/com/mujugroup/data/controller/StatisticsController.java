@@ -7,7 +7,6 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StaBOService;
 import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.utils.ExcelData;
@@ -19,7 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
 
@@ -80,8 +82,9 @@ public class StatisticsController {
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
             , defaultValue="1") int grain){
+//        logger.debug("session id {}", httpServletRequest.getSession().getId());
         logger.debug("table {} {} {} {} {}", aid, hid, pid, cid, grain);
-        return ResultUtil.success(excelService.getExcelDataList(aid, hid,grain, startTime, stopTime));
+        return ResultUtil.success(excelService.getExcelDataList(aid, hid, grain, startTime, stopTime));
     }
 
 
@@ -94,10 +97,11 @@ public class StatisticsController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain, HttpServletResponse response) throws Exception {
+            , defaultValue="1") int grain, HttpServletResponse response, HttpSession httpSession) throws Exception {
+        logger.debug("session id {}", httpSession.getId());
         logger.debug("excel {} {} {} {} {}", aid, hid, pid, cid, grain);
         long time = System.currentTimeMillis();
-        List<ExcelData> list = excelService.getExcelDataList(aid, hid,grain, startTime, stopTime);
+        List<ExcelData> list = excelService.getExcelDataList(aid, hid, grain, startTime, stopTime);
         ExcelUtils.exportExcel(response, StringUtil.join("", DateUtil.timestampToDays(startTime)
                 , "-", DateUtil.timestampToDays(stopTime), ".xlsx"), list);
         logger.debug("导出Excel花费{}毫秒", System.currentTimeMillis() - time);

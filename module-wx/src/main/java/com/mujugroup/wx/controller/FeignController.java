@@ -1,14 +1,12 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.to.AidHidOidTO;
-import com.lveqia.cloud.common.to.OrderTO;
-import com.lveqia.cloud.common.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
+import com.lveqia.cloud.common.objeck.to.OrderTO;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.mujugroup.wx.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 服务模块之间调用接口

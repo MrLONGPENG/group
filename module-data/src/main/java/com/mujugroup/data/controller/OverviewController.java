@@ -1,6 +1,7 @@
 package com.mujugroup.data.controller;
 
 import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.StringUtil;
 import com.lveqia.cloud.common.util.Constant;
 import com.mujugroup.data.objeck.bo.ProfitBO;
 import com.mujugroup.data.objeck.bo.UsageBO;
@@ -40,7 +41,11 @@ public class OverviewController {
             "，默认按当前时间计算") @RequestParam(name="timestamp", defaultValue=Constant.DIGIT_ZERO) long timestamp){
         logger.debug("overview->usage {} {}", aid, timestamp);
         UsageBO usageBO = overviewService.usage(aid, timestamp);
-        if(usageBO!=null) return ResultUtil.success(usageBO);
+        if(usageBO!=null) {
+            String percent = StringUtil.getPercent(usageBO.getYesterdayUsageCount(), usageBO.getTotalActive());
+            usageBO.setYesterdayUsageRate(percent);
+            return ResultUtil.success(usageBO);
+        }
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 

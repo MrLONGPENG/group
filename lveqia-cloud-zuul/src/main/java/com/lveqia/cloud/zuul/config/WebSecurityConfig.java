@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         logger.debug("WebSecurityConfig--http");
         http.csrf().disable().cors().configurationSource(request -> {
             logger.debug("sessionId:{}", request.getSession().getId());

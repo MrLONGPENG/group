@@ -2,10 +2,16 @@ package com.lveqia.cloud.common;
 
 
 import com.lveqia.cloud.common.util.Constant;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.Random;
 
 public class StringUtil {
+
+    /**金额为分的格式 */
+    private static final String CURRENCY_FEN_REGEX = "\\-?[0-9]+";
+
     /**
      * 检查字符串("") or null
      * @param str  the String to check, may be null
@@ -108,5 +114,36 @@ public class StringUtil {
             key = key.replaceAll(Constant.SIGN_LINE, Constant.SIGN_COMMA);
         }
         return key;
+    }
+
+
+    /**
+     * 将分为单位的转换为元 （除100）
+     */
+    public static String changeF2Y(String amount){
+        if(isEmpty(amount)) return Constant.DIGIT_ZERO;
+        if(!amount.matches(CURRENCY_FEN_REGEX)) {
+            return Constant.DIGIT_ZERO;
+        }
+        return BigDecimal.valueOf(Long.valueOf(amount)).divide(new BigDecimal(100)
+                ,2,RoundingMode.UP).toString();
+    }
+
+    /**
+     * 将元为单位的转换为分 （乘100）
+     */
+    public static String changeY2F(String amount){
+        if(isEmpty(amount)) return Constant.DIGIT_ZERO;
+        return BigDecimal.valueOf(Double.valueOf(amount)).multiply(new BigDecimal(100)).toString();
+    }
+
+    /**
+     * 计算百分数
+     */
+    public static String getPercent(String count, String total) {
+        Double c = Double.valueOf(count), t = Double.valueOf(total);
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点
+        return nf.format( c * 100/t);
     }
 }

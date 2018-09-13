@@ -3,7 +3,7 @@ package com.mujugroup.data.objeck.vo;
 public class StaProfitVO {
     private String refDate;
 
-    private double profit;
+    private String profit;
 
     public String getRefDate() {
         return refDate;
@@ -13,11 +13,11 @@ public class StaProfitVO {
         this.refDate = refDate;
     }
 
-    public double getProfit() {
+    public String getProfit() {
         return profit;
     }
 
-    public void setProfit(double profit) {
+    public void setProfit(String profit) {
         this.profit = profit;
     }
 }

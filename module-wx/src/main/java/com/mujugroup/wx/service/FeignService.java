@@ -1,9 +1,9 @@
 package com.mujugroup.wx.service;
 
 
-import com.lveqia.cloud.common.to.AidHidOidTO;
-import com.lveqia.cloud.common.to.OrderTO;
-import com.lveqia.cloud.common.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
+import com.lveqia.cloud.common.objeck.to.OrderTO;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 
 public interface FeignService {
 

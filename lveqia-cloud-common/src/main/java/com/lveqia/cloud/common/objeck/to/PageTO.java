@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common.to;
+package com.lveqia.cloud.common.objeck.to;
 
 import com.github.pagehelper.PageInfo;
 

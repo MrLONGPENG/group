@@ -1,7 +1,7 @@
 package com.mujugroup.data.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
-import com.lveqia.cloud.common.to.OrderTO;
+import com.lveqia.cloud.common.objeck.to.OrderTO;
 import com.mujugroup.data.objeck.bo.OrderBO;
 import com.mujugroup.data.service.OrderService;
 import ma.glasnost.orika.MapperFactory;
@@ -34,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
                 .field("oid","department")
                 .field("gid","orderType")
                 .field("did","bedInfo")
+                .field("did","did")
                 .fieldMap("payTime").converter("timestampConvert").add()
                 .fieldMap("payPrice").converter("rmbPriceConvert").add()
                 .byDefault().register();

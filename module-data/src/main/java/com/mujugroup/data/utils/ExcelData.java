@@ -1,7 +1,5 @@
 package com.mujugroup.data.utils;
 
-import com.mujugroup.data.objeck.bo.ExcelBO;
-
 import java.util.List;
 
 public class ExcelData {
@@ -11,7 +9,7 @@ public class ExcelData {
     private String[] titles;
 
     // 数据
-    private List<ExcelBO> rows;
+    private List<String[]> rows;
 
     // 页签名称
     private String name;
@@ -24,11 +22,11 @@ public class ExcelData {
         this.titles = titles;
     }
 
-    public List<ExcelBO> getRows() {
+    public List<String[]> getRows() {
         return rows;
     }
 
-    public void setRows(List<ExcelBO> rows) {
+    public void setRows(List<String[]> rows) {
         this.rows = rows;
     }
 

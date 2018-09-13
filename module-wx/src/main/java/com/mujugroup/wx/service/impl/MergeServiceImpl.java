@@ -157,7 +157,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
-            map.put(key, wxGoodsService.findById(Integer.parseInt(key)).getType()==WxGoods.TYPE_MIDDAY ? "午休":"晚修");
+            map.put(key, wxGoodsService.findById(Integer.parseInt(key)).getType()==WxGoods.TYPE_MIDDAY ? "午休":"晚休");
         }
         return map;
     }

@@ -3,22 +3,22 @@ package com.mujugroup.data.objeck.vo;
 
 public class ProfitVO {
 
-    private Double totalProfit;
-    private Double yesterdayProfit;
+    private String totalProfit;
+    private String yesterdayProfit;
 
-    public Double getTotalProfit() {
+    public String getTotalProfit() {
         return totalProfit;
     }
 
-    public void setTotalProfit(Double totalProfit) {
+    public void setTotalProfit(String totalProfit) {
         this.totalProfit = totalProfit;
     }
 
-    public Double getYesterdayProfit() {
+    public String getYesterdayProfit() {
         return yesterdayProfit;
     }
 
-    public void setYesterdayProfit(Double yesterdayProfit) {
+    public void setYesterdayProfit(String yesterdayProfit) {
         this.yesterdayProfit = yesterdayProfit;
     }
 }

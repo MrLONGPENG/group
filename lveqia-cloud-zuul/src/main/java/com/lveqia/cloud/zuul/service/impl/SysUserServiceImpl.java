@@ -77,11 +77,11 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public boolean modify(SysUser sysUser, String oldPassword, String newPassword) throws BaseException {
-        String password = encoder.encode(oldPassword);
-        if(encoder.matches(password, sysUser.getPassword())){
+        UserDetails user = loadUserByUsername(sysUser.getUsername());
+        if(!encoder.matches(oldPassword, user.getPassword())){
             throw new BaseException(ResultUtil.CODE_VALIDATION_FAIL, "原始密码错误，无法修改");
         }
-        sysUser.setPassword(password);
+        sysUser.setPassword(encoder.encode(newPassword));
         return sysUserMapper.update(sysUser);
     }
 

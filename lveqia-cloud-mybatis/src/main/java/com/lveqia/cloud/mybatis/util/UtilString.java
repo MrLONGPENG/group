@@ -146,7 +146,7 @@ public class UtilString {
 //		String retName;
 //		switch(flag){
 //		case "po"  : retName = tableName + "_po"; break;
-//		case "vo"  : retName = tableName + "_vo"; break;
+//		case "info"  : retName = tableName + "_vo"; break;
 //		default : retName = null;
 //		}
 //		return retName;

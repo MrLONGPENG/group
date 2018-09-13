@@ -14,6 +14,8 @@ import java.io.Serializable;
  */
 public class OrderBO implements Serializable {
 
+    private String did;
+
     @MergeField(feign = ModuleCoreService.class, method = "getAgentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
     private String agent;
@@ -35,9 +37,17 @@ public class OrderBO implements Serializable {
     private String orderType;
 
     private String tradeNo;
-    private Double payPrice;
+    private String payPrice;
     private Integer payStatus;
     private String payTime;
+
+    public String getDid() {
+        return did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
+    }
 
     public String getAgent() {
         return agent;
@@ -87,11 +97,11 @@ public class OrderBO implements Serializable {
         this.tradeNo = tradeNo;
     }
 
-    public Double getPayPrice() {
+    public String getPayPrice() {
         return payPrice;
     }
 
-    public void setPayPrice(Double payPrice) {
+    public void setPayPrice(String payPrice) {
         this.payPrice = payPrice;
     }
 

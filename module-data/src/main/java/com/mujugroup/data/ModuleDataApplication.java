@@ -2,6 +2,8 @@ package com.mujugroup.data;
 
 import com.github.wxiaoqi.merge.EnableAceMerge;
 import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.Constant;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -14,11 +16,9 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @EnableHystrix
 @EnableAceMerge
@@ -26,6 +26,7 @@ import java.math.RoundingMode;
 @EnableFeignClients
 @EnableEurekaClient
 @EnableRedisHttpSession
+@EnableWebSecurity
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class ModuleDataApplication {
 
@@ -51,20 +52,20 @@ public class ModuleDataApplication {
                 });
         //价格分转元，带两位小数
         defaultMapperFactory.getConverterFactory().registerConverter("rmbPriceConvert"
-                , new BidirectionalConverter<Object,Double>(){
+                , new BidirectionalConverter<Object,String>(){
                     @Override
-                    public Double convertTo(Object source, Type<Double> destinationType) {
-                        float val = 0;
+                    public String convertTo(Object source, Type<String> destinationType) {
+                        String val = Constant.DIGIT_ZERO;
                         if(source instanceof Integer){
-                            val = (int)source/100f;
+                            val = String.valueOf(source);
                         }else if(source instanceof String){
-                            val = Integer.parseInt((String)source)/100f;
+                            val = (String)source;
                         }
-                        return new BigDecimal(val).setScale(2, RoundingMode.UP).doubleValue();
+                        return StringUtil.changeF2Y(val);
                     }
                     @Override
-                    public Object convertFrom(Double source, Type<Object> destinationType) {
-                        return new Double(source*100).intValue();
+                    public Object convertFrom(String source, Type<Object> destinationType) {
+                        return StringUtil.changeY2F(source);
                     }
                 });
 

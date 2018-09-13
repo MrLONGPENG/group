@@ -29,6 +29,9 @@ public class UsageBO implements Serializable {
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String yesterdayUsageCount;
 
+    // 昨日使用率
+    private String yesterdayUsageRate;
+
 
     public UsageBO(int aid, long timestamp) {
         // 拼接总用户数 ｛开始时间戳,结束时间戳｝
@@ -63,5 +66,13 @@ public class UsageBO implements Serializable {
 
     public void setYesterdayUsageCount(String yesterdayUsageCount) {
         this.yesterdayUsageCount = yesterdayUsageCount;
+    }
+
+    public String getYesterdayUsageRate() {
+        return yesterdayUsageRate;
+    }
+
+    public void setYesterdayUsageRate(String yesterdayUsageRate) {
+        this.yesterdayUsageRate = yesterdayUsageRate;
     }
 }

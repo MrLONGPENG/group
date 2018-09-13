@@ -2,14 +2,23 @@ package com.mujugroup.data.utils;
 
 import com.lveqia.cloud.common.StringUtil;
 import com.mujugroup.data.objeck.bo.ExcelBO;
+import com.mujugroup.data.objeck.bo.OrderBO;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelUtils {
+
+    public static void exportExcel(HttpServletResponse response, String fileName, ExcelData data)
+            throws Exception {
+        ArrayList<ExcelData> list = new ArrayList<>();
+        list.add(data);
+        exportExcel(response, fileName, list);
+    }
 
 
     public static void exportExcel(HttpServletResponse response, String fileName, List<ExcelData> data)
@@ -20,6 +29,7 @@ public class ExcelUtils {
         response.setHeader("Content-Disposition","attachment;filename=" + encodeName);
         exportExcel(data, response.getOutputStream());
     }
+
 
     /**
      * 写入多个Sheet页面
@@ -75,7 +85,7 @@ public class ExcelUtils {
         return rowIndex;
     }
 
-    private static void writeRowsToExcel(XSSFWorkbook wb, Sheet sheet, List<ExcelBO> rows, int rowIndex) {
+    private static void writeRowsToExcel(XSSFWorkbook wb, Sheet sheet, List<String[]> rows, int rowIndex) {
         XSSFFont dataFont = wb.createFont();
         dataFont.setFontName("宋体");
         dataFont.setColor(IndexedColors.BLACK.index);
@@ -83,10 +93,8 @@ public class ExcelUtils {
         dataStyle.setAlignment(HorizontalAlignment.CENTER);
         dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         dataStyle.setFont(dataFont);
-        for (ExcelBO bo : rows) {
-            writeCellToExcel(sheet.createRow(rowIndex), dataStyle, new String[]{bo.getRefDate()
-                    , bo.getAgent(), bo.getProvince(), bo.getCity(), bo.getHospital()
-                    , bo.getActive(), bo.getUsage(), bo.getUsageRate(), bo.getProfit()});
+        for (String[] arr : rows) {
+            writeCellToExcel(sheet.createRow(rowIndex), dataStyle, arr);
             rowIndex++;
         }
     }
@@ -113,5 +121,25 @@ public class ExcelUtils {
                 sheet.setColumnWidth(i, orgWidth);
             }
         }
+    }
+
+
+    public static List<String[]> toRows(List<ExcelBO> list) {
+        List<String[]>  result  = new ArrayList<>();
+        for (ExcelBO bo: list) {
+            result.add(new String[]{bo.getRefDate(), bo.getAgent(), bo.getProvince(), bo.getCity(), bo.getHospital()
+                    , bo.getActive(), bo.getUsage(), bo.getUsageRate(), StringUtil.changeF2Y(bo.getProfit())});
+        }
+        return result;
+    }
+
+    public static List<String[]> toRowsByOrderBO(List<OrderBO> list) {
+        List<String[]>  result  = new ArrayList<>();
+        for (OrderBO bo: list) {
+            result.add(new String[]{bo.getPayTime(), bo.getTradeNo() , bo.getAgent() , bo.getHospital()
+                    , bo.getDepartment() , bo.getBedInfo(), bo.getDid(), bo.getOrderType() ,bo.getPayPrice()
+                    , bo.getPayStatus() == 2 ? "已完成": "已退款"});
+        }
+        return result;
     }
 }
