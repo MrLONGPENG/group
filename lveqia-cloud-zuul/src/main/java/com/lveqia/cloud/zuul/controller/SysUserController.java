@@ -23,12 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description="系统用户相关接口")
 public class SysUserController {
 
-    private final MapperFactory mapperFactory;
     private final SysUserService sysUserService;
 
     @Autowired
-    public SysUserController(MapperFactory mapperFactory, SysUserService sysUserService) {
-        this.mapperFactory = mapperFactory;
+    public SysUserController(SysUserService sysUserService) {
         this.sysUserService = sysUserService;
     }
 
@@ -37,8 +35,7 @@ public class SysUserController {
     public String info(){
         SysUser sysUser = sysUserService.getCurrInfo();
         if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
-        mapperFactory.classMap(SysUser.class, UserVO.class).byDefault().register();
-        return ResultUtil.success(mapperFactory.getMapperFacade().map(sysUser, UserVO.class));
+        return ResultUtil.success(sysUser);
     }
 
 

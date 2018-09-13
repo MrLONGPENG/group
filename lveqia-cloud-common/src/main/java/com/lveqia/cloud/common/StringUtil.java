@@ -144,6 +144,6 @@ public class StringUtil {
         Double c = Double.valueOf(count), t = Double.valueOf(total);
         NumberFormat nf = NumberFormat.getPercentInstance();
         nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点
-        return nf.format( c * 100/t);
+        return nf.format( c/t);
     }
 }
