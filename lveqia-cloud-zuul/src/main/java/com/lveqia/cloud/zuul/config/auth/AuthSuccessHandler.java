@@ -26,7 +26,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         PrintWriter out = response.getWriter();
         SysUser user = (SysUser) authentication.getPrincipal();
         UserInfo userInfo = new UserInfo(user.getId(), user.getName(), user.getUsername());
-        out.write(ResultUtil.success(AuthUtil.generateToken(userInfo)));
+        userInfo.setToken(AuthUtil.generateToken(userInfo));
+        out.write(ResultUtil.success(userInfo));
         out.flush();
         out.close();
     }

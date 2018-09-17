@@ -5,6 +5,7 @@ public class UserInfo {
     private int id;
     private String name;
     private String username;
+    private String token;
 
     public UserInfo(Integer id, String name, String username) {
         this.id = id;
@@ -34,5 +35,13 @@ public class UserInfo {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
