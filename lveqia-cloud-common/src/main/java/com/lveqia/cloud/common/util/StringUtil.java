@@ -1,7 +1,7 @@
-package com.lveqia.cloud.common;
+package com.lveqia.cloud.common.util;
 
 
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.config.Constant;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;

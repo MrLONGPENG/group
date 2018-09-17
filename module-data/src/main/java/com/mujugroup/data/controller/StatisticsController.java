@@ -1,11 +1,12 @@
 package com.mujugroup.data.controller;
 
-import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.AuthUtil;
+import com.lveqia.cloud.common.util.DateUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.data.service.ExcelService;
 import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
@@ -81,8 +82,9 @@ public class StatisticsController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain){
-//        logger.debug("session id {}", httpServletRequest.getSession().getId());
+            , defaultValue="1") int grain, HttpServletRequest request){
+        logger.debug("session id {}", request.getSession().getId());
+        logger.debug("uid id {}", AuthUtil.getUidByRequest(request));
         logger.debug("table {} {} {} {} {}", aid, hid, pid, cid, grain);
         return ResultUtil.success(excelService.getExcelDataList(aid, hid, grain, startTime, stopTime));
     }
@@ -97,8 +99,9 @@ public class StatisticsController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain, HttpServletResponse response, HttpSession httpSession) throws Exception {
-        logger.debug("session id {}", httpSession.getId());
+            , defaultValue="1") int grain, HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        logger.debug("session id {}", request.getSession());
         logger.debug("excel {} {} {} {} {}", aid, hid, pid, cid, grain);
         long time = System.currentTimeMillis();
         List<ExcelData> list = excelService.getExcelDataList(aid, hid, grain, startTime, stopTime);

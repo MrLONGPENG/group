@@ -1,6 +1,6 @@
 package com.mujugroup.wx.bean;
 
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.model.WxOrder;
 
 /**

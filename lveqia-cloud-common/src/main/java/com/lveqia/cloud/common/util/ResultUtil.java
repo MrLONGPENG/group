@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common;
+package com.lveqia.cloud.common.util;
 
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
@@ -101,7 +101,7 @@ public class ResultUtil {
             case CODE_ACCOUNT_DISABLE: return error(code,"账户被禁用，登录失败，请联系管理员!");
             case CODE_NOT_FIND_DATA:   return error(code,"没有找到数据或请求参数错误");
             case CODE_NOT_FIND_PATH:   return error(code,"接口路径没有找到，请检查路由!");
-            case CODE_NOT_AUTHORITY:   return error(code,"没有登陆或权限不足，请联系管理员!");
+            case CODE_NOT_AUTHORITY:   return error(code,"无权限操作此资源，请联系管理员!");
             case CODE_UNKNOWN_ERROR:   return error(code,"未知错误");
         }
         return error(code,"Unknown error");

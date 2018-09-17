@@ -1,7 +1,7 @@
 package com.mujugroup.lock.service.impl;
 
 
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.mapper.LockDidMapper;
 import com.mujugroup.lock.model.LockDid;
 import com.mujugroup.lock.service.LockDidService;

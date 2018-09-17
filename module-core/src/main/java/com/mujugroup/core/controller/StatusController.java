@@ -1,6 +1,6 @@
 package com.mujugroup.core.controller;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;

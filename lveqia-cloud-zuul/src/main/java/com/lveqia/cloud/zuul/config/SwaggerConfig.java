@@ -30,7 +30,7 @@ public class SwaggerConfig {
     public SwaggerResourcesProvider swaggerResourcesProvider() {
         return () -> {
             List<SwaggerResource> resources = new ArrayList<>();
-            resources.add(createResource("module-auth","/**"));
+            resources.add(createResource("module-jwt","/**"));
             properties.getRoutes().values().forEach(route ->
                     resources.add(createResource(route.getServiceId(), route.getPath())));
             return resources;

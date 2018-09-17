@@ -1,5 +1,6 @@
-package com.lveqia.cloud.zuul.config;
+package com.lveqia.cloud.zuul.config.auth;
 
+import com.lveqia.cloud.zuul.config.WebSecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDecisionManager;
@@ -16,12 +17,14 @@ import java.util.Collection;
 
 /**
  * Created by sang on 2017/12/28.
+ * 当Url需要判断权限的时候，进入此处检查角色是否匹配
  */
 @Component
 public class UrlAccessDecisionManager implements AccessDecisionManager {
     private final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
     @Override
-    public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, AuthenticationException {
+    public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection)
+            throws AccessDeniedException, AuthenticationException {
         logger.debug("UrlAccessDecisionManager->decide");
         // 下面逻辑采用：当接口需要的权限只要用户存在其中一个即有权限
         for (ConfigAttribute ca : collection) {

@@ -1,4 +1,4 @@
-package com.lveqia.cloud.zuul.config;
+package com.lveqia.cloud.zuul.config.auth;
 
 import com.lveqia.cloud.zuul.model.SysMenu;
 import com.lveqia.cloud.zuul.model.SysRole;
@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by sang on 2017/12/28.
+ * 读出菜单列表，判断Url是否需要检查权限
  */
 @Component
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
@@ -36,6 +37,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
             FilterInvocation filterInvocation = (FilterInvocation) o;
             String requestUrl = filterInvocation.getRequestUrl();        //获取请求地址
             logger.debug("filter ->id {} url {}", filterInvocation.getHttpRequest().getSession().getId(), requestUrl);
+            // TODO 此处菜单需要改为缓存，避免每次查询
             List<SysMenu> allMenu = sysMenuService.getAllMenuByLength();
             for (SysMenu menu : allMenu) {
                 if (antPathMatcher.match(menu.getUrl(), requestUrl) && menu.getRoles().size()>0) {
@@ -52,9 +54,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         }else {
             logger.warn("Url Filter Invocation instanceof error");
         }
-
-
-        return null; //没有匹配上的资源，不做权限控制
+        return null; //TODO  没有匹配上的资源，不做权限控制，若需要控制，此处需要修改
     }
 
     @Override

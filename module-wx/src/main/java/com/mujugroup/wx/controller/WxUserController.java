@@ -1,6 +1,6 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.model.WxUser;
 import com.mujugroup.wx.service.WxUserService;

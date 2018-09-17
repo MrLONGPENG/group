@@ -1,7 +1,7 @@
 package com.mujugroup.core.sql;
 
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.core.model.Device;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;

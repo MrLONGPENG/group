@@ -1,7 +1,7 @@
 package com.mujugroup.core.objeck.bean;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.core.service.MergeService;
 import com.mujugroup.core.service.feign.ModuleWxService;
 

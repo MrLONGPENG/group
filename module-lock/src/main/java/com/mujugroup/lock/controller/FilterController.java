@@ -1,6 +1,6 @@
 package com.mujugroup.lock.controller;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;

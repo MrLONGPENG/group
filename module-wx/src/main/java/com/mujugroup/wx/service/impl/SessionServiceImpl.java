@@ -1,7 +1,7 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.AESUtil;
-import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.util.AESUtil;
+import com.lveqia.cloud.common.util.DateUtil;
 import com.mujugroup.wx.bean.WeChatSession;
 import com.mujugroup.wx.service.SessionService;
 import org.slf4j.Logger;

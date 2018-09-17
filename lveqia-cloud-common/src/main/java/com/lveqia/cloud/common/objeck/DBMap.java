@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common.util;
+package com.lveqia.cloud.common.objeck;
 
 import java.util.HashMap;
 

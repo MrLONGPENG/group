@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common;
+package com.lveqia.cloud.common.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

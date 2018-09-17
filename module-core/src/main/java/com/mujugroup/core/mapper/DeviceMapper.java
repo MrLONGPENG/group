@@ -1,6 +1,6 @@
 package com.mujugroup.core.mapper;
 
-import com.lveqia.cloud.common.util.DBMap;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;

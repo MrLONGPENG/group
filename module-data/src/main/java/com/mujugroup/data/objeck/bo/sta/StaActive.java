@@ -1,8 +1,8 @@
 package com.mujugroup.data.objeck.bo.sta;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 
 import java.io.Serializable;

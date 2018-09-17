@@ -1,7 +1,7 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxGoodsMapper;

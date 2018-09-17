@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common;
+package com.lveqia.cloud.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

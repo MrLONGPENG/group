@@ -1,7 +1,7 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.DateUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.mapper.WxUptimeMapper;

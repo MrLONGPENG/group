@@ -1,5 +1,7 @@
 package com.lveqia.cloud.zuul.config;
 
+import com.lveqia.cloud.common.util.AuthUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
@@ -7,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Component
@@ -41,15 +44,16 @@ public class AccessFilter extends ZuulFilter {
         logger.debug("Method {} SessionId {} request url {}", request.getMethod()
                 , request.getSession().getId(), request.getRequestURL().toString());
         //获取传来的参数accessToken
-       /* Object accessToken = request.getParameter("accessToken");
-        if(accessToken == null) {
-            logger.warn("access token is empty");
-            //过滤该请求，不往下级服务去转发请求，到此结束
-            ctx.setSendZuulResponse(false);
-            ctx.setResponseStatusCode(401);
-            ctx.setResponseBody("{\"result\":\"accessToken is empty!\"}");
-            return null;
-        }*/
+//        String accessToken = AuthUtil.getToken(request);
+//        if(accessToken == null) {
+//            logger.warn("access token is empty");
+//            //过滤该请求，不往下级服务去转发请求，到此结束
+//            ctx.setSendZuulResponse(false);
+//            ctx.getResponse().setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            ctx.getResponse().setContentType("application/json;charset=UTF-8");
+//            ctx.setResponseBody(ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY, "没有指定Token，无权限操作!"));
+//            return null;
+//        }
         return null;
 
     }

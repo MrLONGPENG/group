@@ -1,6 +1,6 @@
 package com.lveqia.cloud.zuul.controller;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;

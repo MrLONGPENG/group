@@ -1,7 +1,7 @@
 package com.mujugroup.wx.mapper;
 
-import com.lveqia.cloud.common.util.DBMap;
-import com.lveqia.cloud.common.util.DBObj;
+import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.DBObj;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.sql.WxOrderSqlProvider;
 import org.apache.ibatis.annotations.*;

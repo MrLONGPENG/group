@@ -1,7 +1,7 @@
 package com.mujugroup.lock.service.impl;
 
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.lock.model.LockInfo;
 import com.mujugroup.lock.service.LockInfoService;
 import com.mujugroup.lock.service.MergeService;

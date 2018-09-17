@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.util.DateUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.service.DeviceService;
 import com.mujugroup.core.service.feign.ModuleLockService;

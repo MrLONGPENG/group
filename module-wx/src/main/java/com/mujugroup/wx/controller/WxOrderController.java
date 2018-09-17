@@ -3,9 +3,7 @@ package com.mujugroup.wx.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.DBMap;
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.WxOrderService;
@@ -21,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController

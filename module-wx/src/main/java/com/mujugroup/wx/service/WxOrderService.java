@@ -1,7 +1,7 @@
 package com.mujugroup.wx.service;
 
 import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.util.DBMap;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;

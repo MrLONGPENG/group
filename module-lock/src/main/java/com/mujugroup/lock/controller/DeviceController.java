@@ -1,8 +1,8 @@
 package com.mujugroup.lock.controller;
 
 import com.google.gson.JsonObject;
-import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

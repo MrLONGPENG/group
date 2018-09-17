@@ -1,6 +1,6 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.TokenException;
 import com.mujugroup.wx.service.UsingApiService;
 import com.mujugroup.wx.service.WxUsingService;

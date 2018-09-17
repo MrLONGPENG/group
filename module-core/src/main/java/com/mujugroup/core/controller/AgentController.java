@@ -1,7 +1,7 @@
 package com.mujugroup.core.controller;
 
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.AgentService;
 import io.swagger.annotations.Api;

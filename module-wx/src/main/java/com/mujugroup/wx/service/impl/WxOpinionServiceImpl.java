@@ -1,6 +1,6 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.mapper.WxOpinionMapper;
 import com.mujugroup.wx.model.WxOpinion;
 import com.mujugroup.wx.service.SessionService;

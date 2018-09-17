@@ -1,8 +1,8 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.Constant;
-import com.lveqia.cloud.common.util.DBMap;
+import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.MergeService;

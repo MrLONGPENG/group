@@ -12,7 +12,7 @@ public class ModuleAuthServiceError implements ModuleAuthService {
 
     @Override
     public int getUserId(String sessionId) {
-        logger.debug("data->remote auth fail, method:getUserId {}", sessionId);
+        logger.debug("data->remote jwt fail, method:getUserId {}", sessionId);
         return -2;
     }
 

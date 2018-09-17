@@ -1,9 +1,9 @@
 package com.mujugroup.data;
 
 import com.github.wxiaoqi.merge.EnableAceMerge;
-import com.lveqia.cloud.common.DateUtil;
-import com.lveqia.cloud.common.StringUtil;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.util.DateUtil;
+import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.common.config.Constant;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -16,7 +16,6 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.client.RestTemplate;
 
 @EnableHystrix
@@ -24,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableScheduling
 @EnableFeignClients
 @EnableEurekaClient
-@EnableRedisHttpSession
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class ModuleDataApplication {
 

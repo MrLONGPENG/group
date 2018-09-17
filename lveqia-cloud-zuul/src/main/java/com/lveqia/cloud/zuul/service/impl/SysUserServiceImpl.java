@@ -1,7 +1,7 @@
 package com.lveqia.cloud.zuul.service.impl;
 
-import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;

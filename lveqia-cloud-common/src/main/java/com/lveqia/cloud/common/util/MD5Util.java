@@ -1,4 +1,4 @@
-package com.lveqia.cloud.common;
+package com.lveqia.cloud.common.util;
 
 import java.security.MessageDigest;
 import java.util.*;

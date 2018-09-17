@@ -1,9 +1,9 @@
 package com.mujugroup.wx.config;
 
-import com.lveqia.cloud.common.DateUtil;
+import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.cache.GuavaCache;
 import com.lveqia.cloud.common.cache.ILocalCache;
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;

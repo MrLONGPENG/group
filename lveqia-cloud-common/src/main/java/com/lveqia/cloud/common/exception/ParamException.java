@@ -1,6 +1,6 @@
 package com.lveqia.cloud.common.exception;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 
 public class ParamException extends Exception {
 

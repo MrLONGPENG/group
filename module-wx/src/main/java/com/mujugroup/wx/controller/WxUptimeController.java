@@ -1,7 +1,7 @@
 package com.mujugroup.wx.controller;
 
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;

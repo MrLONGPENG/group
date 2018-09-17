@@ -1,8 +1,8 @@
 package com.mujugroup.wx.controller;
 
 
-import com.lveqia.cloud.common.ResultUtil;
-import com.lveqia.cloud.common.StringUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.service.WxOpinionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

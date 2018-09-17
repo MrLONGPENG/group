@@ -1,7 +1,7 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.IpUtil;
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.IpUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.service.PayApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

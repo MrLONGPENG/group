@@ -1,6 +1,6 @@
 package com.mujugroup.data.service.impl;
 
-import com.lveqia.cloud.common.ResultUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.data.objeck.bo.ProfitBO;

@@ -1,6 +1,6 @@
 package com.mujugroup.wx.sql;
 
-import com.lveqia.cloud.common.util.Constant;
+import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.wx.model.WxUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
