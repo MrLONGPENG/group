@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -45,18 +51,24 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             if (userInfo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String key = AuthUtil.getKey(userInfo);
                 String redisToken = stringRedisTemplate.boundValueOps(key).get();
-                if (!AuthUtil.isTokenExpired(userInfo) && redisToken != null){
+                if (!AuthUtil.isTokenExpired(userInfo) && redisToken != null && redisToken.equals(userInfo.getToken())){
                     stringRedisTemplate.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
                     logger.debug("Token 有效， username " + userInfo.getUsername() + ", setting security context");
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userInfo, null, null);
+                            userInfo, null, getAuthorities(userInfo.getRoleInfo()));
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
             filterChain.doFilter(request, response);
-
         }
+    }
 
+    private Collection<? extends GrantedAuthority> getAuthorities(List<?> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Object role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
+        return authorities;
     }
 }

@@ -5,17 +5,15 @@ import com.lveqia.cloud.common.objeck.info.UserInfo;
 import io.jsonwebtoken.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 public class AuthUtil implements Serializable {
 
-    private final static String TOKEN_HEAD = "Bearer";
+    private final static String TOKEN_HEAD = "Bearer "; //注意空隔
     private final static String TOKEN_HEADER = "Authorization";
     private static final String CLAIM_KEY_UID = "uid" ;
+    private static final String CLAIM_KEY_URG = "urg" ;
     private static byte[] secret = "cloud_auth".getBytes();
     private static final long EXPIRATION_TOKEN = Constant.TIMESTAMP_DAYS_1 * 1000;
     public static final long EXPIRATION_REDIS = Constant.TIMESTAMP_HOUR_3 * 1000;
@@ -51,6 +49,7 @@ public class AuthUtil implements Serializable {
         if(claims != null){
             UserInfo userInfo = new UserInfo(claims.getSubject());
             userInfo.setId(claims.get(CLAIM_KEY_UID, Long.class));
+            userInfo.setRoleInfo(claims.get(CLAIM_KEY_URG, List.class));
             userInfo.setExpiration(claims.getExpiration());
             userInfo.setName(claims.getAudience());
             userInfo.setToken(token);
@@ -85,6 +84,7 @@ public class AuthUtil implements Serializable {
     public static String generateToken(UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_UID, userInfo.getId());
+        claims.put(CLAIM_KEY_URG, userInfo.getRoleInfo());
         return Jwts.builder().setClaims(claims).setSubject(userInfo.getUsername()).setAudience(userInfo.getName())
                 .setExpiration(generateExpirationDate()).signWith(SignatureAlgorithm.HS512, secret).compact();
     }

@@ -10,7 +10,7 @@ public class UserInfo {
     private String username;
     private String token;
     private Date expiration;
-    private List<String> roleInfo;
+    private List<?> roleInfo;
 
     public UserInfo(String username) {
         this.username = username;
@@ -63,11 +63,11 @@ public class UserInfo {
         this.expiration = expiration;
     }
 
-    public List<String> getRoleInfo() {
+    public List<?> getRoleInfo() {
         return roleInfo;
     }
 
-    public void setRoleInfo(List<String> roleInfo) {
+    public void setRoleInfo(List<?> roleInfo) {
         this.roleInfo = roleInfo;
     }
 }
