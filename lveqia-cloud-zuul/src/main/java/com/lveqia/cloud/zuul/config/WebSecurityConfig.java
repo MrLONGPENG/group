@@ -1,14 +1,17 @@
 package com.lveqia.cloud.zuul.config;
 
-import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.zuul.config.auth.*;
-import com.lveqia.cloud.zuul.config.jwt.JwtAuthenticationEntryPoint;
+import com.lveqia.cloud.zuul.config.jwt.JwtEntryPoint;
+import com.lveqia.cloud.zuul.config.jwt.JwtProvider;
 import com.lveqia.cloud.zuul.config.jwt.JwtTokenFilter;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -30,32 +33,42 @@ import org.springframework.web.cors.CorsUtils;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    private final JwtProvider jwtProvider;
     private final ConfigSource configSource;
-    private final JwtTokenFilter jwtTokenFilter;
     private final SysUserService sysUserService;
+    private final JwtTokenFilter jwtTokenFilter;
     private final AuthLogoutHandler authLogoutHandler;
     private final AuthSuccessHandler authSuccessHandler;
     private final AuthFailureHandler authFailureHandler;
     ;
     private final UrlAccessDeniedHandler urlAccessDeniedHandler;
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtEntryPoint unauthorizedHandler;
     private final UrlAccessDecisionManager urlAccessDecisionManager;
     private final UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
     private final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
 
 
+    @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 
     @Autowired
-    public WebSecurityConfig(ConfigSource configSource, JwtTokenFilter jwtTokenFilter, SysUserService sysUserService
-            , AuthLogoutHandler authLogoutHandler, AuthSuccessHandler authSuccessHandler, AuthFailureHandler authFailureHandler
-            , UrlAccessDeniedHandler urlAccessDeniedHandler, JwtAuthenticationEntryPoint unauthorizedHandler
+    public WebSecurityConfig(JwtProvider jwtProvider, ConfigSource configSource, SysUserService sysUserService
+            , JwtTokenFilter jwtTokenFilter, AuthLogoutHandler authLogoutHandler
+            , AuthSuccessHandler authSuccessHandler, AuthFailureHandler authFailureHandler
+            , UrlAccessDeniedHandler urlAccessDeniedHandler, JwtEntryPoint unauthorizedHandler
             , UrlAccessDecisionManager urlAccessDecisionManager
             , UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource) {
-        this.authLogoutHandler = authLogoutHandler;
         logger.debug("WebSecurityConfig");
+        this.jwtProvider = jwtProvider;
         this.configSource = configSource;
-        this.jwtTokenFilter = jwtTokenFilter;
         this.sysUserService = sysUserService;
+        this.jwtTokenFilter = jwtTokenFilter;
+        this.authLogoutHandler = authLogoutHandler;
         this.authSuccessHandler = authSuccessHandler;
         this.authFailureHandler = authFailureHandler;
         this.unauthorizedHandler = unauthorizedHandler;
@@ -67,8 +80,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        logger.debug("WebSecurityConfig--jwt");
-        auth.userDetailsService(sysUserService).passwordEncoder(new BCryptPasswordEncoder());
+        logger.debug("AuthenticationManagerBuilder");
+        auth.authenticationProvider(jwtProvider)
+            .userDetailsService(sysUserService)
+            .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override

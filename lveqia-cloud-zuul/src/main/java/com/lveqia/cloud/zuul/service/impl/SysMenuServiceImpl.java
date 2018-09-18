@@ -35,7 +35,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
-    public List<MenuVO> getMenusByUserId(Integer id) {
+    public List<MenuVO> getMenusByUserId(Long id) {
         MenuVO tree;
         List<MenuVO> children;
         List<MenuVO> trees = new ArrayList<>();

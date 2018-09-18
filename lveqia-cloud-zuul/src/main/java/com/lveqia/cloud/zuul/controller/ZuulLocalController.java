@@ -30,12 +30,12 @@ public class ZuulLocalController implements ErrorController {
     public String authority(@RequestParam(value = "error", required = false) String error
             , @RequestParam(value = "logout", required = false) String logout){
         if (error != null) {
-            return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY, "登陆错误!");
+            return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID, "登陆错误!");
         }
         if (logout != null) {
             return ResultUtil.success("成功退出!");
         }
-        return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
+        return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
     }
 
 

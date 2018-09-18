@@ -1,5 +1,6 @@
 package com.lveqia.cloud.zuul.service.impl;
 
+import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
@@ -45,12 +46,16 @@ public class SysUserServiceImpl implements SysUserService {
 
 
     @Override
-    public SysUser getCurrInfo() {
+    public UserInfo getCurrInfo() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            logger.debug(((UserDetails) principal).getUsername());
-            return (SysUser) principal;
+        if (principal instanceof UserInfo) {
+            logger.debug(((UserInfo) principal).getUsername());
+            return (UserInfo) principal;
         }
+//        if (principal instanceof UserDetails) {
+//            logger.debug(((UserDetails) principal).getUsername());
+//            return (SysUser) principal;
+//        }
         return null; // anonymousUser
     }
 
@@ -76,18 +81,20 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public boolean modify(SysUser sysUser, String oldPassword, String newPassword) throws BaseException {
-        UserDetails user = loadUserByUsername(sysUser.getUsername());
+    public boolean modify(UserInfo userInfo, String oldPassword, String newPassword) throws BaseException {
+        SysUser user = (SysUser) loadUserByUsername(userInfo.getUsername());
         if(!encoder.matches(oldPassword, user.getPassword())){
             throw new BaseException(ResultUtil.CODE_VALIDATION_FAIL, "原始密码错误，无法修改");
         }
-        sysUser.setPassword(encoder.encode(newPassword));
-        return sysUserMapper.update(sysUser);
+
+        user.setPassword(encoder.encode(newPassword));
+        return sysUserMapper.update(user);
     }
 
 
     @Override
-    public boolean update(SysUser sysUser, String name, String email, String address, String password){
+    public boolean update(UserInfo userInfo, String name, String email, String address, String password){
+        SysUser sysUser = (SysUser) loadUserByUsername(userInfo.getUsername());
         if(!StringUtil.isEmpty(name)) sysUser.setName(name);
         if(!StringUtil.isEmpty(email)) sysUser.setEmail(email);
         if(!StringUtil.isEmpty(address)) sysUser.setAddress(address);

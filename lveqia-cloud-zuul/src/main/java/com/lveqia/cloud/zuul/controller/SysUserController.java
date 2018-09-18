@@ -1,6 +1,7 @@
 package com.lveqia.cloud.zuul.controller;
 
 
+import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.model.SysUser;
@@ -31,9 +32,9 @@ public class SysUserController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ApiOperation(value="用户信息查询接口", notes="查询当前用户的基本信息")
     public String info(){
-        SysUser sysUser = sysUserService.getCurrInfo();
-        if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
-        return ResultUtil.success(sysUser);
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return ResultUtil.success(userInfo);
     }
 
 
@@ -51,10 +52,10 @@ public class SysUserController {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ApiOperation(value="用户密码修改接口", notes="在已登录的情况下，通过验证旧密码，更新新密码")
     public String modify(String oldPassword,  String newPassword){
-        SysUser sysUser = sysUserService.getCurrInfo();
-        if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         try {
-            sysUserService.modify(sysUser, oldPassword, newPassword);
+            sysUserService.modify(userInfo, oldPassword, newPassword);
         } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
@@ -65,9 +66,9 @@ public class SysUserController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ApiOperation(value="系统用户更新接口", notes="可以更换用户昵称、住宅电话、地址以及密码相关信息")
     public String update(String name,  String telephone, String address, String password) {
-        SysUser sysUser = sysUserService.getCurrInfo();
-        if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
-        return sysUserService.update(sysUser, name, telephone, address, password)
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return sysUserService.update(userInfo, name, telephone, address, password)
                 ? ResultUtil.success("更新成功!")
                 : ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR,"更新失败!");
 

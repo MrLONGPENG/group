@@ -14,5 +14,5 @@ public interface SysMenuService {
 
     List<SysMenu> getAllMenuByLength();
 
-    List<MenuVO> getMenusByUserId(Integer id);
+    List<MenuVO> getMenusByUserId(Long id);
 }

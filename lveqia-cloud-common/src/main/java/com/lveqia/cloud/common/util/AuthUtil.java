@@ -3,13 +3,12 @@ package com.lveqia.cloud.common.util;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class AuthUtil implements Serializable {
@@ -18,14 +17,13 @@ public class AuthUtil implements Serializable {
     private final static String TOKEN_HEADER = "Authorization";
     private static final String CLAIM_KEY_UID = "uid" ;
     private static byte[] secret = "cloud_auth".getBytes();
+    private static final long EXPIRATION_TOKEN = Constant.TIMESTAMP_DAYS_1 * 1000;
+    public static final long EXPIRATION_REDIS = Constant.TIMESTAMP_HOUR_3 * 1000;
+
     //private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
 
-    public static long getUidByRequest(HttpServletRequest request) {
-        return getUidFromToken(getToken(request));
-    }
 
-
-    public static String getToken(HttpServletRequest request) {
+    private static String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader(TOKEN_HEADER);
         if (authHeader != null && authHeader.startsWith(TOKEN_HEAD)) {
             return authHeader.substring(TOKEN_HEAD.length()); // The part after "Bearer "
@@ -33,75 +31,77 @@ public class AuthUtil implements Serializable {
         return null;
     }
 
-    public static String getUsernameFromToken(String token) {
-        String username;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
-        }
-        return username;
+    /**
+     * 根据jwt token 获取用户信息
+     */
+    public static UserInfo getUserInfo(HttpServletRequest request){
+        return getUserInfo(getToken(request));
     }
 
-
-
-    private static long getUidFromToken(String token) {
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            return  claims.get(CLAIM_KEY_UID, Long.class);
-        } catch (Exception e) {
-            System.out.println("token");
-        }
-        return 0L;
+    /**
+     * 获取Redis中的Key; 后面增加token:app:xxx格式
+     */
+    public static String getKey(UserInfo userInfo) {
+        return Optional.ofNullable(userInfo).map(info-> "token:vue:"+info.getId()).orElse("token:vue:0");
     }
 
-
-    private static Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
-        } catch (Exception e) {
-            expiration = null;
+    private static UserInfo getUserInfo(String token){
+        if(StringUtil.isEmpty(token)) return null;
+        final Claims claims = getClaimsFromToken(token);
+        if(claims != null){
+            UserInfo userInfo = new UserInfo(claims.getSubject());
+            userInfo.setId(claims.get(CLAIM_KEY_UID, Long.class));
+            userInfo.setExpiration(claims.getExpiration());
+            userInfo.setName(claims.getAudience());
+            userInfo.setToken(token);
+            return userInfo;
         }
-        return expiration;
+        return null;
     }
 
+    /**
+     * 判断用户信息是否过期
+     */
+    public static Boolean isTokenExpired(UserInfo userInfo) {
+        return Optional.ofNullable(userInfo).map(UserInfo::getExpiration)
+                .map(date -> date.before(new Date())).orElse(true);
+    }
+
+    /**
+     * Token字符串转Claims
+     */
     private static Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        } catch (Exception e) {
-            claims = null;
+        } catch (ClaimJwtException e) {
+            claims = e.getClaims();
         }
         return claims;
     }
 
-    /**
-     * 生成过期时间
-     */
-    private static Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + Constant.TIMESTAMP_HOUR_3 * 1000);
-    }
-
-    private static Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
 
 
     public static String generateToken(UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_UID, userInfo.getId());
-        return Jwts.builder().setClaims(claims).setSubject(userInfo.getUsername())
-                .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
+        return Jwts.builder().setClaims(claims).setSubject(userInfo.getUsername()).setAudience(userInfo.getName())
+                .setExpiration(generateExpirationDate()).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    public static boolean validateToken(String authToken, UserInfo userInfo) {
-        final String username = getUsernameFromToken(authToken);
-        return username.equals(userInfo.getUsername()) && !isTokenExpired(authToken);
+
+    /**
+     * 生成过期时间
+     */
+    private static Date generateExpirationDate() {
+        return generateExpirationDate(EXPIRATION_TOKEN);
     }
+    /**
+     * 生成过期时间
+     */
+    public static Date generateExpirationDate(long time) {
+        return new Date(System.currentTimeMillis() + time);
+    }
+
+
 }

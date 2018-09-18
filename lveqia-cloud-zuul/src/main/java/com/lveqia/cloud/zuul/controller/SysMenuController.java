@@ -1,8 +1,8 @@
 package com.lveqia.cloud.zuul.controller;
 
 
+import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,9 @@ public class SysMenuController {
 
     @RequestMapping(value = "/list")
     public String list(){
-        SysUser sysUser = sysUserService.getCurrInfo();
-        if(sysUser == null) return ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY);
-        return ResultUtil.success(sysMenuService.getMenusByUserId(sysUser.getId()));
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return ResultUtil.success(sysMenuService.getMenusByUserId(userInfo.getId()));
     }
 
 }

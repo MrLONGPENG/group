@@ -4,6 +4,8 @@ import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -15,14 +17,19 @@ import java.io.PrintWriter;
 
 @Component
 public class AuthLogoutHandler implements LogoutHandler {
-
+    private final StringRedisTemplate stringRedisTemplate;
     private final Logger logger = LoggerFactory.getLogger(AuthLogoutHandler.class);
+
+    @Autowired
+    public AuthLogoutHandler(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response
             , Authentication authentication) {
-        logger.debug("AuthLogoutHandler uid:{} {}", AuthUtil.getUidByRequest(request), authentication);
-        // TODO 此处应该需要清理Token缓存
+        logger.debug("AuthLogoutHandler uid:{} {}", AuthUtil.getUserInfo(request));
+        stringRedisTemplate.delete(AuthUtil.getKey(AuthUtil.getUserInfo(request)));
         response.setContentType("application/json;charset=utf-8");
         try {
             PrintWriter  out = response.getWriter();

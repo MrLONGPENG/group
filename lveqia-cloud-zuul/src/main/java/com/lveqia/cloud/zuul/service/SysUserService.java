@@ -1,7 +1,7 @@
 package com.lveqia.cloud.zuul.service;
 
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.zuul.model.SysUser;
+import com.lveqia.cloud.common.objeck.info.UserInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface SysUserService extends UserDetailsService {
 
-    SysUser getCurrInfo();
+    UserInfo getCurrInfo();
 
     boolean register(String username, String password, String phone) throws BaseException;
 
-    boolean update(SysUser sysUser, String name, String telephone, String address, String password);
+    boolean update(UserInfo userInfo, String name, String telephone, String address, String password);
 
-    boolean modify(SysUser sysUser, String oldPassword, String newPassword) throws BaseException;
+    boolean modify(UserInfo userInfo, String oldPassword, String newPassword) throws BaseException;
 }
