@@ -84,7 +84,7 @@ public class StatisticsController {
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
             , defaultValue="1") int grain, HttpServletRequest request){
         logger.debug("session id {}", request.getSession().getId());
-        logger.debug("uid id {}", AuthUtil.getUidByRequest(request));
+        logger.debug("uid id {}", AuthUtil.getUserInfo(request));
         logger.debug("table {} {} {} {} {}", aid, hid, pid, cid, grain);
         return ResultUtil.success(excelService.getExcelDataList(aid, hid, grain, startTime, stopTime));
     }
