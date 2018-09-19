@@ -16,7 +16,7 @@ public class SysRoleSqlProvider {
             INSERT_INTO("t_sys_role");
             if(sysRole.getId()!= null) VALUES("`id`", "#{id}");
             if(sysRole.getName()!= null) VALUES("`name`", "#{name}");
-            if(sysRole.getRemark()!= null) VALUES("`remark`", "#{remark}");
+            if(sysRole.getDesc()!= null) VALUES("`desc`", "#{desc}");
         }}.toString();
     }
 
@@ -27,7 +27,7 @@ public class SysRoleSqlProvider {
             UPDATE("t_sys_role");
             if(sysRole.getId()!= null) SET("`id` = #{id}");
             if(sysRole.getName()!= null) SET("`name` = #{name}");
-            if(sysRole.getRemark()!= null) SET("`remark` = #{remark}");
+            if(sysRole.getDesc()!= null) SET("`desc` = #{desc}");
             WHERE("id = #{id}");
         }}.toString();
     }

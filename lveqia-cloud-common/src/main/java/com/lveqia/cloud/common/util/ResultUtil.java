@@ -15,8 +15,9 @@ public class ResultUtil {
     public final static int CODE_REQUEST_FORMAT = 203;
     public final static int CODE_VALIDATION_FAIL = 204;
     public final static int CODE_DB_STORAGE_FAIL = 205;
-    public final static int CODE_REMOTE_CALL_FAIL = 206;
-    public final static int CODE_DATA_DUPLICATION = 207;
+    public final static int CODE_REMOTE_CALL_FAIL = 207;
+    public final static int CODE_DATA_DUPLICATION = 208;
+
     public final static int CODE_THIRD_DATA_ERROR  = 210;
 
     public final static int CODE_PASSWORD_ERROR  = 401;

@@ -19,6 +19,7 @@ import java.util.List;
 public interface SysRoleMapper {
 
     @InsertProvider(type = SysRoleSqlProvider.class, method = "insert")
+    @Options(useGeneratedKeys = true, keyColumn = "id")
     boolean insert(SysRole sysRole);
 
     @UpdateProvider(type = SysRoleSqlProvider.class, method = "update")
@@ -31,7 +32,7 @@ public interface SysRoleMapper {
     @Results(id = "sysRole", value = {
          @Result(id=true, column="id",property="id",javaType=Integer.class)
              ,@Result(column="name",property="name",javaType=String.class)
-             ,@Result(column="remark",property="remark",javaType=String.class)
+             ,@Result(column="desc",property="desc",javaType=String.class)
     })
     SysRole findById(Integer id);
 
@@ -41,12 +42,19 @@ public interface SysRoleMapper {
 
 
     @ResultMap("sysRole")
+    @Select("SELECT * FROM t_sys_role WHERE id <> 1")
+    List<SysRole> getRoleListByAdmin();
+
+    @ResultMap("sysRole")
     @Select("SELECT r.* FROM t_sys_user_role u,t_sys_role r WHERE u.rid=r.id AND u.uid=#{id}")
-    List<SysRole> findListByUid(Integer id);
+    List<SysRole> getRoleListByUid(long id);
 
 
     @ResultMap("sysRole")
     @Select("SELECT r.* FROM t_sys_menu_role m,t_sys_role r WHERE m.rid=r.id AND m.mid=#{id}")
-    List<SysRole> findListByMid(Integer id);
+    List<SysRole> getRoleListByMid(Integer id);
 
+    @ResultType(Boolean.class)
+    @Select("SELECT COUNT(`name`) FROM t_sys_role WHERE `name`=#{name} OR `desc`=#{desc} limit 1")
+    boolean exist(@Param("name") String name, @Param("desc")String desc);
 }

@@ -37,6 +37,23 @@ public class StringUtil {
         return true;
     }
 
+
+    /**
+     *  检查字符串是否是字母， null/空字符串 皆为false
+     * @param str  the String to check, may be null
+     * @return <code>true</code> if only contains digits, and is non-null
+     */
+    public static boolean isLetter(String str) {
+        if (isEmpty(str)) return false;
+        int sz = str.length();
+        for (int i = 0; i < sz; i++) {
+            if (!Character.isLetter(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String autoFillDid(String did) {
         return autoFillDid(Long.parseLong(did));
     }

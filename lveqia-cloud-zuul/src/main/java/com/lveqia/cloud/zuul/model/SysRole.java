@@ -1,7 +1,6 @@
 package com.lveqia.cloud.zuul.model;
 
 
-import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -34,10 +33,10 @@ public class SysRole implements Serializable {
 
     /**
      * 角色名称
-     * 表字段 : t_sys_role.remark
+     * 表字段 : t_sys_role.desc
      */
-    @Column(name = "remark")
-    private String remark;
+    @Column(name = "desc")
+    private String desc;
 
 
 
@@ -57,12 +56,12 @@ public class SysRole implements Serializable {
 		this.name = name;
 	}
 
-    public String getRemark() {
-		return remark;
+	public String getDesc() {
+		return desc;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 }

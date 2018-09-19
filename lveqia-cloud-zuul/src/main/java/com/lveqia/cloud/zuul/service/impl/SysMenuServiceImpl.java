@@ -25,11 +25,6 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 
     @Override
-    public List<SysMenu> getAllMenu() {
-        return sysMenuMapper.findListAll();
-    }
-
-    @Override
     public List<SysMenu> getAllMenuByLength() {
         return sysMenuMapper.getAllMenuByLength();
     }
@@ -39,25 +34,26 @@ public class SysMenuServiceImpl implements SysMenuService {
         MenuVO tree;
         List<MenuVO> children;
         List<MenuVO> trees = new ArrayList<>();
+        List<SysMenu> main = sysMenuMapper.getMainMenus(); // 获取一级菜单
         List<SysMenu> list = id == 1 ? sysMenuMapper.getMenusByAdmin() : sysMenuMapper.getMenusByUserId(id);
-        for (SysMenu sysMenu : list){
-            if (sysMenu.getParentId() == null){
-                tree = new MenuVO();
-                children = getChildren(list, sysMenu.getId());
-                if (children != null && children.size() > 0) {
-                    tree.setId(sysMenu.getId());
-                    tree.setPath(sysMenu.getPath());
-                    tree.setName(sysMenu.getName());
-                    tree.setIconCls(sysMenu.getIconCls());
-                    tree.setComponent(sysMenu.getComponent());
-                    tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
-                    tree.setChildren(children);
-                    trees.add(tree);
-                }
+        for (SysMenu sysMenu : main){
+            tree = new MenuVO(); // 当一级菜单拥有有权限的子菜单时候，放出一级菜单
+            children = getChildren(list, sysMenu.getId());
+            if (children != null && children.size() > 0) {
+                tree.setId(sysMenu.getId());
+                tree.setPath(sysMenu.getPath());
+                tree.setName(sysMenu.getName());
+                tree.setIconCls(sysMenu.getIconCls());
+                tree.setComponent(sysMenu.getComponent());
+                tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
+                tree.setChildren(children);
+                trees.add(tree);
             }
+
         }
         return trees;
     }
+
     private List<MenuVO> getChildren(List<SysMenu> list, Integer parentId) {
         MenuVO tree;
         List<MenuVO> trees = new ArrayList<>();

@@ -10,8 +10,6 @@ import java.util.List;
  */
 public interface SysMenuService {
 
-    List<SysMenu> getAllMenu();
-
     List<SysMenu> getAllMenuByLength();
 
     List<MenuVO> getMenusByUserId(Long id);

@@ -45,7 +45,7 @@ public interface SysUserMapper {
              ,@Result(column="crt_time",property="crtTime",javaType=Date.class)
              ,@Result(column="id",property="roles",
                 many=@Many(
-                        select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.findListByUid",
+                        select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.getRoleListByUid",
                         fetchType=FetchType.EAGER
                 ))
     })

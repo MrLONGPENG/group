@@ -21,9 +21,5 @@ public class SysUserRoleController {
         this.sysUserRoleService = sysUserRoleService;
     }
 
-    @RequestMapping(value = "/test")
-    public String test(){
-        return sysUserRoleService.test();
-    }
 
 }

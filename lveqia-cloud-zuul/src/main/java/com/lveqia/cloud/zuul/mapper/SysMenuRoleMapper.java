@@ -39,4 +39,15 @@ public interface SysMenuRoleMapper {
     @ResultMap("sysMenuRole")
     List<SysMenuRole> findListAll();
 
+
+    @Select("SELECT `mid` FROM t_sys_menu_role WHERE rid = #{rid}")
+    @Results(@Result(column="mid",property="mid",javaType=Integer.class))
+    List<Integer> getMidByRid(@Param("rid") int rid);
+
+    @Delete("DELETE FROM t_sys_menu_role WHERE `rid`= #{rid}")
+    int delMidByRid(@Param("rid") int rid);
+
+
+    @InsertProvider(type = SysMenuRoleSqlProvider.class, method = "addMidRid")
+    int addMidRid(@Param("rid")int rid, @Param("ids") int[] ids);
 }

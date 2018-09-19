@@ -32,8 +32,7 @@ public class Generate {
 
 	private static List<String> getTables() {
 		List<String> tableNames = new LinkedList<>();
-		tableNames.add("t_sys_manager");
-		tableNames.add("t_country_province_city");
+		tableNames.add("t_sys_user");
 		return tableNames.size()==0 ? UtilDB.getTableNames():tableNames;
 	}
 
@@ -45,9 +44,9 @@ public class Generate {
 		generateModel(basePath, map, info);
 		generateSqlProvider(basePath, map, info);
 		generateMapper(basePath, map, info);
-		generateService(basePath, map, info);
-		generateServiceImpl(basePath, map, info);
-		generateController(basePath, map, info);
+		//generateService(basePath, map, info);
+		//generateServiceImpl(basePath, map, info);
+		//generateController(basePath, map, info);
 	}
 	private static void generateModel(String basePath, Map<Object, Object> map, TableInfo info) {
 		String modelName = rootPath + FS + basePath+ FS +"model" + FS + info.getClassName() + ".java";

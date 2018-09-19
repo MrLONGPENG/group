@@ -1,6 +1,7 @@
 package com.lveqia.cloud.zuul.sql;
 
 import com.lveqia.cloud.zuul.model.SysMenuRole;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -31,4 +32,19 @@ public class SysMenuRoleSqlProvider {
             WHERE("id = #{id}");
         }}.toString();
     }
+
+    public String addMidRid(@Param("rid")int rid, @Param("ids") int[] ids){
+        return new SQL(){{
+            INSERT_INTO("t_sys_menu_role");
+            INTO_COLUMNS("`mid`","`rid`");
+
+            StringBuffer sb = new StringBuffer();
+            for (int mid:ids) {
+                if(sb.length() != 0) sb.append("), (");
+                sb.append(mid).append(", ").append(rid);
+            }
+            INTO_VALUES(new String(sb));
+        }}.toString();
+    }
+
 }

@@ -43,28 +43,39 @@ public interface SysMenuMapper {
              ,@Result(column="enabled",property="enabled",javaType=Boolean.class)
              ,@Result(column="id",property="roles",
                 many=@Many(
-                    select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.findListByMid",
+                    select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.getRoleListByMid",
                     fetchType=FetchType.LAZY
              ))
     })
     SysMenu findById(Integer id);
 
-    @Select("SELECT * FROM t_sys_menu limit 1000")
     @ResultMap("sysMenu")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true")
     List<SysMenu> findListAll();
 
     @ResultMap("sysMenu")
-    @Select("SELECT * FROM t_sys_menu ORDER BY LENGTH(url) DESC")
-    List<SysMenu> getAllMenuByLength();
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NULL")
+    List<SysMenu> getMainMenus();
 
     @ResultMap("sysMenu")
-    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL")
     List<SysMenu> getMenusByAdmin();
 
     @ResultMap("sysMenu")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL ORDER BY LENGTH(url) DESC")
+    List<SysMenu> getAllMenuByLength();
+
+    @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
-            " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{id}) AND `enabled`=true")
-    List<SysMenu> getMenusByUserId(@Param("id") Long id);
+            " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{uid}) AND `enabled`=true AND `parentId` IS NOT NULL")
+    List<SysMenu> getMenusByUserId(@Param("uid") Long uid);
+
+
+    @ResultMap("sysMenu")
+    @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
+            " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{rid}) AND `enabled`=true AND `parentId` IS NOT NULL")
+    List<SysMenu> getMenusByRoleId(@Param("rid") Long rid);
+
 
 
 }
