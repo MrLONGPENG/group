@@ -9,19 +9,21 @@ CREATE TABLE `t_sys_user` (
   `phone` varchar(16) DEFAULT NULL COMMENT '手机号码',
   `email` varchar(32) DEFAULT NULL COMMENT '电子邮箱',
   `address` varchar(64) DEFAULT NULL COMMENT '联系地址',
-  `enabled` tinyint(1) DEFAULT '1',
+  `enabled` tinyint(1) DEFAULT '1' COMMENT '是否启用',
   `username` varchar(64) DEFAULT NULL COMMENT '用户名',
-  `password` varchar(255) DEFAULT NULL COMMENT '密码',
-  `avatar_url` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL COMMENT '加盐密码',
+  `avatar_url` varchar(255) DEFAULT NULL COMMENT '头像地址',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `crt_id` int(11) DEFAULT NULL COMMENT '创建者',
+  `crt_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_user
 -- ----------------------------
-INSERT INTO `t_sys_user` VALUES ('1', '系统管理员', '18521308791', 'admin@muju.com', '上海浦东金桥', '1', 'admin', '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm', 'http://cdn.duitang.com/uploads/item/201508/30/20150830105732_nZCLV.jpeg', null);
-INSERT INTO `t_sys_user` VALUES ('2', '木巨开发者', '18508429187', '021-11112233', '上海浦东张江', '1', 'developer', '$2a$10$GGTGc.50tOA6VsHUstz9EeVD2WDnH68g3IHJIPLrb12.5B4tSurny', null, null);
+INSERT INTO `t_sys_user` VALUES ('1', '系统管理员', '18521308791', 'admin@muju.com', '上海浦东金桥', '1', 'admin', '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm', 'http://cdn.duitang.com/uploads/item/201508/30/20150830105732_nZCLV.jpeg', null, null, now() );
+INSERT INTO `t_sys_user` VALUES ('2', '木巨开发者', '18508429187', '021-11112233', '上海浦东张江', '1', 'developer', '$2a$10$GGTGc.50tOA6VsHUstz9EeVD2WDnH68g3IHJIPLrb12.5B4tSurny', null, null, null, now());
 
 
 
@@ -56,10 +58,10 @@ INSERT INTO `t_sys_menu` VALUES ('3', '/', '/home', 'Home', '系统管理', 'fa 
 INSERT INTO `t_sys_menu` VALUES ('4', '/', '/home', 'Home', '医院管理', 'fa fa-money', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '消息管理', 'fa fa-bar-chart', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '运营管理', 'fa fa-windows', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('7', '/data1/*', '/data/usage', 'DataUsage', '使用数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('8', '/data1/*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('9', '/data1/*', '/data/export', 'DataExport', '数据下载', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('10', '/order/*', '/order/list', 'OrderList', '订单统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('7', '/data/overview/*', '/data/usage', 'DataUsage', '使用数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('8', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('9', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('10', '/data/order/*', '/order/list', 'OrderList', '订单统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
 
 
 -- ----------------------------

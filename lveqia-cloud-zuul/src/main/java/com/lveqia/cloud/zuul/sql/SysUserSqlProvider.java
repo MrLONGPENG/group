@@ -24,6 +24,8 @@ public class SysUserSqlProvider {
             if(sysUser.getPassword()!= null) VALUES("`password`", "#{password}");
             if(sysUser.getAvatarUrl()!= null) VALUES("`avatar_url`", "#{avatarUrl}");
             if(sysUser.getRemark()!= null) VALUES("`remark`", "#{remark}");
+            if(sysUser.getCrtId()!= null) VALUES("`crt_id`", "#{crtId}");
+            if(sysUser.getCrtTime()!= null) VALUES("`crt_time`", "#{crtTime}");
         }}.toString();
     }
 
@@ -42,6 +44,8 @@ public class SysUserSqlProvider {
             if(sysUser.getPassword()!= null) SET("`password` = #{password}");
             if(sysUser.getAvatarUrl()!= null) SET("`avatar_url` = #{avatarUrl}");
             if(sysUser.getRemark()!= null) SET("`remark` = #{remark}");
+            if(sysUser.getCrtId()!= null) SET("`crt_id` = #{crtId}");
+            if(sysUser.getCrtTime()!= null) SET("`crt_time` = #{crtTime}");
             WHERE("id = #{id}");
         }}.toString();
     }

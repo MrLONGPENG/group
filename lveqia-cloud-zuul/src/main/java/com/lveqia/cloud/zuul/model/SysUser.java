@@ -95,6 +95,21 @@ public class SysUser implements UserDetails {
     @Column(name = "remark")
     private String remark;
 
+	/**
+	 * 创建者
+	 * 表字段 : t_sys_user.crt_id
+	 */
+	@Column(name = "crt_id")
+	private Integer crtId;
+
+	/**
+	 * 创建时间
+	 * 表字段 : t_sys_user.crt_time
+	 */
+	@Column(name = "crt_time")
+	private Date crtTime;
+
+
 	private List<SysRole> roles;
 
     public Integer getId() {
@@ -210,5 +225,21 @@ public class SysUser implements UserDetails {
 
 	public void setRoles(List<SysRole> roles) {
 		this.roles = roles;
+	}
+
+	public Integer getCrtId() {
+		return crtId;
+	}
+
+	public void setCrtId(Integer crtId) {
+		this.crtId = crtId;
+	}
+
+	public Date getCrtTime() {
+		return crtTime;
+	}
+
+	public void setCrtTime(Date crtTime) {
+		this.crtTime = crtTime;
 	}
 }

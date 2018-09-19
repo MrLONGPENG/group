@@ -40,7 +40,8 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (GrantedAuthority authority : authorities) {
                 logger.debug("authority->{}", authority.getAuthority());
-                if (authority.getAuthority().equals(needRole)) {
+                if ("ROLE_admin".equals(authority.getAuthority())  // admin权限全部放行
+                        || authority.getAuthority().equals(needRole)) {
                     return;
                 }
             }

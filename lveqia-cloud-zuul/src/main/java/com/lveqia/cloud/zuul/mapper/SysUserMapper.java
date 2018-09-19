@@ -41,6 +41,8 @@ public interface SysUserMapper {
              ,@Result(column="password",property="password",javaType=String.class)
              ,@Result(column="avatar_url",property="avatarUrl",javaType=String.class)
              ,@Result(column="remark",property="remark",javaType=String.class)
+             ,@Result(column="crt_id",property="crtId",javaType=Integer.class)
+             ,@Result(column="crt_time",property="crtTime",javaType=Date.class)
              ,@Result(column="id",property="roles",
                 many=@Many(
                         select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.findListByUid",

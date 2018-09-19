@@ -58,7 +58,13 @@ public interface SysMenuMapper {
     List<SysMenu> getAllMenuByLength();
 
     @ResultMap("sysMenu")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true")
+    List<SysMenu> getMenusByAdmin();
+
+    @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
             " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{id}) AND `enabled`=true")
     List<SysMenu> getMenusByUserId(@Param("id") Long id);
+
+
 }

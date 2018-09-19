@@ -39,7 +39,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         MenuVO tree;
         List<MenuVO> children;
         List<MenuVO> trees = new ArrayList<>();
-        List<SysMenu> list = sysMenuMapper.getMenusByUserId(id);
+        List<SysMenu> list = id == 1 ? sysMenuMapper.getMenusByAdmin() : sysMenuMapper.getMenusByUserId(id);
         for (SysMenu sysMenu : list){
             if (sysMenu.getParentId() == null){
                 tree = new MenuVO();
