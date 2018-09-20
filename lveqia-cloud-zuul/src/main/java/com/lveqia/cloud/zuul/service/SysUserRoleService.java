@@ -13,6 +13,5 @@ public interface SysUserRoleService {
 
     int getUserCountByRid(int rid);
 
-
-
+    int putRidToUid(int uid, int[] rid);
 }

@@ -4,8 +4,6 @@ import com.lveqia.cloud.zuul.model.SysUserRole;
 import com.lveqia.cloud.zuul.sql.SysUserRoleSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,4 +50,6 @@ public interface SysUserRoleMapper {
     int getUserCountByRid(@Param("rid") int rid);
 
 
+    @InsertProvider(type = SysUserRoleSqlProvider.class, method = "addUidRid")
+    int addUidRid(@Param("uid")int uid, @Param("ids") int[] rid);
 }

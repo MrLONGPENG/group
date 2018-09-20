@@ -5,6 +5,7 @@ import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.zuul.service.SysMenuRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/sys/menuRole")
+@Api(description="菜单与角色关系相关接口")
 public class SysMenuRoleController {
 
     private final SysUserService sysUserService;
     private final SysMenuRoleService sysMenuRoleService;
-    private final Logger logger = LoggerFactory.getLogger(SysMenuController.class);
+    private final Logger logger = LoggerFactory.getLogger(SysMenuRoleController.class);
 
     @Autowired
     public SysMenuRoleController(SysUserService sysUserService, SysMenuRoleService sysMenuRoleService) {

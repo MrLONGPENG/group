@@ -3,8 +3,11 @@ package com.lveqia.cloud.zuul.service.impl;
 import com.lveqia.cloud.zuul.mapper.SysUserRoleMapper;
 import com.lveqia.cloud.zuul.model.SysUserRole;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author leolaurel
@@ -14,7 +17,7 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
 
 
     private final SysUserRoleMapper sysUserRoleMapper;
-
+    private final Logger logger = LoggerFactory.getLogger(SysUserRoleServiceImpl.class);
     @Autowired
     public SysUserRoleServiceImpl(SysUserRoleMapper sysUserRoleMapper) {
         this.sysUserRoleMapper = sysUserRoleMapper;
@@ -47,6 +50,15 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
     @Override
     public int getUserCountByRid(int rid) {
         return sysUserRoleMapper.getUserCountByRid(rid);
+    }
+
+    @Override
+    @Transactional
+    public int putRidToUid(int uid, int[] rid) {
+        int count = sysUserRoleMapper.delUserRoleByUid(uid);
+        logger.debug("putRidToUid del count:{}", count);
+        if(rid.length == 0) return 0;
+        return sysUserRoleMapper.addUidRid(uid, rid);
     }
 
     /**
