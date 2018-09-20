@@ -41,10 +41,15 @@ public interface SysUserRoleMapper {
 
 
     @Delete("DELETE FROM t_sys_user_role WHERE `uid`= #{uid} AND `rid`= #{rid}")
-    boolean delUserRole(@Param("uid") long uid, @Param("rid") int rid);
+    int delUserRole(@Param("uid") long uid, @Param("rid") int rid);
+
+    @Delete("DELETE FROM t_sys_user_role WHERE `uid`= #{uid}")
+    int delUserRoleByUid(@Param("uid") int uid);
 
 
     @ResultType(Integer.class)
     @Select("SELECT count(*) FROM t_sys_user_role WHERE `rid`=#{rid}")
     int getUserCountByRid(@Param("rid") int rid);
+
+
 }

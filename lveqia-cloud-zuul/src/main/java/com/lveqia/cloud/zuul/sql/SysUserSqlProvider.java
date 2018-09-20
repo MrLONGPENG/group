@@ -1,6 +1,8 @@
 package com.lveqia.cloud.zuul.sql;
 
+import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.zuul.model.SysUser;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -47,6 +49,32 @@ public class SysUserSqlProvider {
             if(sysUser.getCrtId()!= null) SET("`crt_id` = #{crtId}");
             if(sysUser.getCrtTime()!= null) SET("`crt_time` = #{crtTime}");
             WHERE("id = #{id}");
+        }}.toString();
+    }
+
+    /**
+     * 关键字查询系统用户
+     */
+    @SuppressWarnings("unused")
+    public String  getSysUserList(boolean fuzzy,@Param("name") String name, @Param("username") String username){
+        return new SQL(){{
+            SELECT("*");
+            FROM("t_sys_user");
+            WHERE("id <> 1"); // 过滤系统管理员
+            if(!StringUtil.isEmpty(name) && !"all".equals(name)){
+                if(fuzzy){
+                    AND().WHERE("`name` like concat('%',#{name},'%')");
+                }else{
+                    AND().WHERE("`name` = #{name}");
+                }
+            }
+            if(!StringUtil.isEmpty(username) && !"all".equals(username)){
+                if(fuzzy){
+                    AND().WHERE("`username` like concat('%',#{username},'%')");
+                }else{
+                    AND().WHERE("`username` = #{username}");
+                }
+            }
         }}.toString();
     }
 }

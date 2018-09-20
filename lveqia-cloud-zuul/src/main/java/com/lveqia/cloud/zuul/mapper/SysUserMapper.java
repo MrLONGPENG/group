@@ -21,13 +21,13 @@ import java.util.List;
 public interface SysUserMapper {
 
     @InsertProvider(type = SysUserSqlProvider.class, method = "insert")
-    boolean insert(SysUser sysUser);
+    int insert(SysUser sysUser);
 
     @UpdateProvider(type = SysUserSqlProvider.class, method = "update")
-    boolean update(SysUser sysUser);
+    int update(SysUser sysUser);
 
     @Delete("delete from t_sys_user where id= #{id}")
-    boolean deleteById(int id);
+    int deleteById(int id);
 
     @Select("SELECT * FROM t_sys_user WHERE id = #{id}")
     @Results(id = "sysUser", value = {
@@ -64,4 +64,7 @@ public interface SysUserMapper {
     SysUser loadUserByUsername(@Param("username") String username);
 
 
+    @ResultMap("sysUser")
+    @SelectProvider(type = SysUserSqlProvider.class, method = "getSysUserList")
+    List<SysUser> getSysUserList(boolean fuzzy,@Param("name") String name, @Param("username") String username);
 }

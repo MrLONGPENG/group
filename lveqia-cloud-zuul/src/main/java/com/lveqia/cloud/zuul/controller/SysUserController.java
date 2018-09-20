@@ -4,14 +4,14 @@ package com.lveqia.cloud.zuul.controller;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysUserController {
 
     private final SysUserService sysUserService;
-
+    private final Logger logger = LoggerFactory.getLogger(SysUserController.class);
     @Autowired
     public SysUserController(SysUserService sysUserService) {
         this.sysUserService = sysUserService;
@@ -38,14 +38,53 @@ public class SysUserController {
     }
 
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ApiOperation(value="系统用户查询接口", notes="可根据用户名、账号模糊查询全部用户")
+    public String list(@RequestParam(value = "fuzzy", required = false) boolean fuzzy
+            , @RequestParam(value = "name", required = false) String name
+            , @RequestParam(value = "username", required = false) String username
+          ) {
+        logger.debug("/sys/user/list name:{} username:{}", name, username);
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return ResultUtil.success(sysUserService.getSysUserList(fuzzy, name, username));
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value="系统用户注册接口", notes="根据用户名、手机号以及密码注册系统用户")
-    public String register(String username, String password, String phone) {
+    public String add(@ApiParam(value = "账号", required = true) @RequestParam(value = "username") String username
+            , @ApiParam(value = "姓名(昵称)", required = true) @RequestParam(value = "name") String name
+            , @ApiParam(value = "手机号(可登陆)", required = true) @RequestParam(value = "phone")String phone
+            , @ApiParam(value = "电子邮箱(找密码)", required = true) @RequestParam(value = "email")String email
+            , @ApiParam(value = "账户密码", required = true) @RequestParam(value = "password") String password
+            , @ApiParam(value = "家庭住址") @RequestParam(value = "address", required = false) String address
+            , @ApiParam(value = "头像地址") @RequestParam(value = "avatarUrl", required = false) String avatarUrl
+            , @ApiParam(value = "账户备注") @RequestParam(value = "remark", required = false) String remark
+            , @ApiParam(value = "角色组") @RequestParam(value = "roles", required = false) int[] roles ) {
         try {
-            return sysUserService.register(username, password, phone) ? ResultUtil.success("注册成功!")
-                    : ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR,"注册失败!");
+            UserInfo userInfo = sysUserService.getCurrInfo();
+            if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+            if(sysUserService.addUser(userInfo.getId(), username, name, phone, email, password
+                    , address, avatarUrl, remark, roles) == 1){
+                return ResultUtil.success("注册成功!");
+            }else{
+                return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR,"注册失败!");
+            }
         } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/del/{uid}", method = RequestMethod.DELETE)
+    @ApiOperation(value="删除用户接口", notes="删除用户,需要删除用户关联的角色")
+    public String del(@ApiParam(value="用户ID", required = true) @PathVariable(name="uid") int uid){
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if(uid == userInfo.getId()) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "无法自己删除自己");
+        if(sysUserService.delUser(uid) == 1){
+            return ResultUtil.success("删除成功");
+        }else{
+            return ResultUtil.code(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 

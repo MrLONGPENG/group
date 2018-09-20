@@ -66,7 +66,10 @@ INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataU
 INSERT INTO `t_sys_menu` VALUES ('11', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('12', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/*', '/order/list', 'OrderList', '订单统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('14', '/sys/*', '/sys/role', 'SysRole', '角色管理', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('14', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/operate', 'SysOperate', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role
@@ -84,9 +87,10 @@ CREATE TABLE `t_sys_role` (
 -- ----------------------------
 INSERT INTO `t_sys_role` VALUES ('1', 'ROLE_admin', '系统管理员');
 INSERT INTO `t_sys_role` VALUES ('2', 'ROLE_developer', '木巨开发者');
-INSERT INTO `t_sys_role` VALUES ('3', 'ROLE_manager', '木巨管理员');
-INSERT INTO `t_sys_role` VALUES ('4', 'ROLE_operate', '木巨运营者');
-INSERT INTO `t_sys_role` VALUES ('5', 'ROLE_agent', '代理商');
+INSERT INTO `t_sys_role` VALUES ('3', 'ROLE_manager', '木巨管理');
+INSERT INTO `t_sys_role` VALUES ('4', 'ROLE_captain', '运营主管');
+INSERT INTO `t_sys_role` VALUES ('5', 'ROLE_operate', '普通运营');
+INSERT INTO `t_sys_role` VALUES ('6', 'ROLE_readers', '普通账号');
 
 
 -- ----------------------------

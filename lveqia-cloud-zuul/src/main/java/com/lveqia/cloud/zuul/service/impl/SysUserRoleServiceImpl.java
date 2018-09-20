@@ -29,8 +29,16 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
      * 根据用户ID和角色ID删除关联数据
      */
     @Override
-    public boolean delUserRole(long uid, int rid) {
+    public int delUserRole(long uid, int rid) {
         return sysUserRoleMapper.delUserRole(uid, rid);
+    }
+
+    /**
+     * 根据用户ID删除关联数据
+     */
+    @Override
+    public int delUserRoleByUid(int uid) {
+        return sysUserRoleMapper.delUserRoleByUid(uid);
     }
 
     /**

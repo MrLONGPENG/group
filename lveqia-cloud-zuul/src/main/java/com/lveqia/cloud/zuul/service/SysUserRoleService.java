@@ -7,9 +7,12 @@ public interface SysUserRoleService {
 
     boolean addUserRole(long uid, Integer rid);
 
-    boolean delUserRole(long uid, int rid);
+    int delUserRole(long uid, int rid);
+
+    int delUserRoleByUid(int uid);
 
     int getUserCountByRid(int rid);
+
 
 
 }

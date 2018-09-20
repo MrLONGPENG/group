@@ -57,13 +57,13 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional
     public boolean delRole(long id, int rid){
-        boolean result = sysUserRoleService.delUserRole(id, rid);
+        int result = sysUserRoleService.delUserRole(id, rid);
         int userCount = sysUserRoleService.getUserCountByRid(rid);
         if(userCount == 0) {
-            result |= sysMenuRoleService.delMidByRid(rid) >0 ;
-            result |= sysRoleMapper.deleteById(rid);
+            result += sysMenuRoleService.delMidByRid(rid)  ;
+            result += sysRoleMapper.deleteById(rid);
         }
-        return result;
+        return result>0;
     }
 
     /**

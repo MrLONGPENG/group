@@ -26,7 +26,7 @@ public interface SysRoleMapper {
     boolean update(SysRole sysRole);
 
     @Delete("delete from t_sys_role where id= #{id}")
-    boolean deleteById(int id);
+    int deleteById(int id);
 
     @Select("SELECT * FROM t_sys_role WHERE id = #{id}")
     @Results(id = "sysRole", value = {
