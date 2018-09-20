@@ -4,6 +4,7 @@ package com.lveqia.cloud.zuul.controller;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -74,6 +75,33 @@ public class SysUserController {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
     }
+
+    @RequestMapping(value = "/put", method = RequestMethod.PUT)
+    @ApiOperation(value="用户信息更新接口", notes="可以按条件更新指定用户新")
+    public String put(SysUser sysUser){
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if(sysUserService.putUser(sysUser) == 1){
+            return ResultUtil.success();
+        }else{
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+        }
+    }
+
+
+    @RequestMapping(value = "/get/{uid}", method = RequestMethod.GET)
+    @ApiOperation(value="获取单个用户接口", notes="根据ID获取指定用户信息")
+    public String get(@ApiParam(value="用户ID", required = true) @PathVariable(name="uid") int uid){
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        SysUser sysUser = sysUserService.getUser(uid);
+        if(sysUser!= null ){
+            return ResultUtil.success(sysUser);
+        }else{
+            return ResultUtil.code(ResultUtil.CODE_DB_STORAGE_FAIL);
+        }
+    }
+
 
     @RequestMapping(value = "/del/{uid}", method = RequestMethod.DELETE)
     @ApiOperation(value="删除用户接口", notes="删除用户,需要删除用户关联的角色")

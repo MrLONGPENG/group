@@ -36,12 +36,11 @@ public class SysUserSqlProvider {
     public String update(SysUser sysUser){
         return new SQL(){{
             UPDATE("t_sys_user");
-            if(sysUser.getId()!= null) SET("`id` = #{id}");
+            SET("`enabled` = #{enabled}");
             if(sysUser.getName()!= null) SET("`name` = #{name}");
             if(sysUser.getPhone()!= null) SET("`phone` = #{phone}");
             if(sysUser.getEmail()!= null) SET("`email` = #{email}");
             if(sysUser.getAddress()!= null) SET("`address` = #{address}");
-            if(sysUser.isEnabled()) SET("`enabled` = #{enabled}");
             if(sysUser.getUsername()!= null) SET("`username` = #{username}");
             if(sysUser.getPassword()!= null) SET("`password` = #{password}");
             if(sysUser.getAvatarUrl()!= null) SET("`avatar_url` = #{avatarUrl}");

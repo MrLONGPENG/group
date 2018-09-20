@@ -24,4 +24,8 @@ public interface SysUserService extends UserDetailsService {
             , String address, String avatarUrl, String remark, int[] roles) throws BaseException;
 
     int delUser(int uid);
+
+    int putUser(SysUser sysUser);
+
+    SysUser getUser(int uid);
 }

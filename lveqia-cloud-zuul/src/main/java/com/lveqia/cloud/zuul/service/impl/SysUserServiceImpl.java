@@ -116,6 +116,16 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserMapper.deleteById(uid);
     }
 
+    @Override
+    public int putUser(SysUser sysUser) {
+        return sysUserMapper.update(sysUser);
+    }
+
+    @Override
+    public SysUser getUser(int uid) {
+        return sysUserMapper.findById(uid);
+    }
+
 
     @Override
     public boolean update(UserInfo userInfo, String name, String email, String address, String password){
