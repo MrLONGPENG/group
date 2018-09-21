@@ -61,6 +61,15 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
         return sysUserRoleMapper.addUidRid(uid, rid);
     }
 
+    @Override
+    public int change(int uid, int rid, boolean isChecked) {
+        if(isChecked){
+            return sysUserRoleMapper.addUidRid(uid, new int[]{rid});
+        }else{
+            return sysUserRoleMapper.delUserRole(uid, rid);
+        }
+    }
+
     /**
      * 构建对象
      */

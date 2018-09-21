@@ -37,6 +37,11 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     @Override
+    public List<SysRole> getRoleMenuByUid(long id) {
+        return id == 1 ? sysRoleMapper.getRoleMenuByAdmin() : sysRoleMapper.getRoleMenuByUid(id);
+    }
+
+    @Override
     @Transactional
     public boolean addRole(long id, String name, String desc) throws ExistException, ParamException {
         String role = name;

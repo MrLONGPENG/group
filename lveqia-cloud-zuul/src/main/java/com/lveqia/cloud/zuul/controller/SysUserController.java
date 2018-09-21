@@ -78,9 +78,12 @@ public class SysUserController {
 
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
     @ApiOperation(value="用户信息更新接口", notes="可以按条件更新指定用户新")
-    public String put(SysUser sysUser){
+    public String put(@RequestParam(value = "id", required = false) int id
+            , @RequestParam(value = "enabled", required = false) boolean enabled){
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        SysUser sysUser = new SysUser();
+        sysUser.setId(id); sysUser.setEnabled(enabled);
         if(sysUserService.putUser(sysUser) == 1){
             return ResultUtil.success();
         }else{

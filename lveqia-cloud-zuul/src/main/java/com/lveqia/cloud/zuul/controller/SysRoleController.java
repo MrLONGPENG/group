@@ -69,4 +69,12 @@ public class SysRoleController {
         return ResultUtil.success(sysRoleService.getRoleListByUid(userInfo.getId()));
     }
 
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    @ApiOperation(value="角色列表(包括菜单信息)查询接口", notes="查询当前用户角色列表,以及每个角色拥有的菜单")
+    public String menu(){
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return ResultUtil.success(sysRoleService.getRoleMenuByUid(userInfo.getId()));
+    }
+
 }

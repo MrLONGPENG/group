@@ -53,27 +53,44 @@ public interface SysMenuMapper {
     @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true")
     List<SysMenu> findListAll();
 
+    /**
+     * 查询主菜单
+     */
     @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NULL")
     List<SysMenu> getMainMenus();
 
+    /**
+     * 查询二级菜单（admin）
+     */
     @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL")
     List<SysMenu> getMenusByAdmin();
 
-    @ResultMap("sysMenu")
-    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL ORDER BY LENGTH(url) DESC")
-    List<SysMenu> getAllMenuByLength();
-
+    /**
+     * 查询二级菜单（user）
+     */
     @ResultMap("sysMenu")
     @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
             " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{uid}) AND `enabled`=true AND `parentId` IS NOT NULL")
     List<SysMenu> getMenusByUserId(@Param("uid") Long uid);
 
 
+    /**
+     * 权限验证根据url长度安排下效验
+     */
     @ResultMap("sysMenu")
-    @Select("SELECT * FROM t_sys_menu WHERE `id` IN(SELECT mr.`mid` FROM t_sys_user_role ur,t_sys_menu_role mr " +
-            " WHERE ur.`rid`=mr.`rid` AND ur.`uid` =#{rid}) AND `enabled`=true AND `parentId` IS NOT NULL")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL ORDER BY LENGTH(url) DESC")
+    List<SysMenu> getAllMenuByLength();
+
+
+    /**
+     * 采用新的Results，避免连表死循环
+     */
+    @Results({@Result(id=true, column="id",property="id",javaType=Integer.class)
+            ,@Result(column="name",property="name",javaType=String.class) })
+    @Select("SELECT m.`id`, m.`name` FROM t_sys_menu_role r,t_sys_menu m WHERE r.`mid`=m.`id` " +
+            " AND r.`rid` = #{rid} AND `enabled`=true AND `parentId` IS NOT NULL")
     List<SysMenu> getMenusByRoleId(@Param("rid") Long rid);
 
 

@@ -68,8 +68,6 @@ public class StatisticsController {
             return ResultUtil.success(staVOService.getStaVOList(action, ids, aid, hid, oid, grain, start, stop));
         } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
         }
     }
 

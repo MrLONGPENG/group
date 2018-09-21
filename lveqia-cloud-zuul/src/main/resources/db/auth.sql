@@ -15,7 +15,7 @@ CREATE TABLE `t_sys_user` (
   `avatar_url` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `crt_id` int(11) DEFAULT NULL COMMENT '创建者',
-  `crt_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `crt_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -145,5 +145,8 @@ INSERT INTO `t_sys_menu_role` VALUES (null, '11', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '12', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '13', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '14', '3');
+INSERT INTO `t_sys_menu_role` VALUES (null, '15', '3');
+INSERT INTO `t_sys_menu_role` VALUES (null, '16', '3');
+INSERT INTO `t_sys_menu_role` VALUES (null, '17', '3');
 
 

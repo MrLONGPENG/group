@@ -35,10 +35,24 @@ public class SysUserRoleController {
     }
 
 
+    @RequestMapping(value = "/change", method = RequestMethod.PUT)
+    @ApiOperation(value="修改用户的角色信息", notes="根据用户UID、角色RID以及当前状态更新的角色信息")
+    public String change(@ApiParam(value="用户ID", required = true) @RequestParam(name="uid") int uid
+            , @ApiParam(value="角色ID", required = true) @RequestParam(name="rid") int rid
+            , @ApiParam(value="授权或取消,默认取消") @RequestParam(name="isChecked"
+            , defaultValue = "false") boolean isChecked){
+        logger.debug("change put uid:{} rid:{}", uid, rid);
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if(sysUserRoleService.change(uid, rid, isChecked) == 1) return ResultUtil.success();
+        return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
+    }
+
+
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
     @ApiOperation(value="修改用户的角色信息", notes="根据用户更新的角色信息")
-    public String putRidToUid(@ApiParam(value="角色ID", required = true) @RequestParam(name="uid") int uid
-            , @ApiParam(value="菜单ID组", required = true) @RequestParam(name="rid") int[] rid){
+    public String putRidToUid(@ApiParam(value="用户ID", required = true) @RequestParam(name="uid") int uid
+            , @ApiParam(value="角色ID组", required = true) @RequestParam(name="rid") int[] rid){
         logger.debug("put uid:{} rid:{}", uid, rid);
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);

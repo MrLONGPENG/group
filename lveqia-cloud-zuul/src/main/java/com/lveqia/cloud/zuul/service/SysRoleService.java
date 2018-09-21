@@ -13,7 +13,10 @@ public interface SysRoleService {
 
     List<SysRole> getRoleListByUid(long id);
 
+    List<SysRole> getRoleMenuByUid(long id);
+
     boolean addRole(long id, String name, String desc) throws ExistException, ParamException;
 
     boolean delRole(long id, int rid);
+
 }

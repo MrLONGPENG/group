@@ -3,9 +3,8 @@ package com.lveqia.cloud.zuul.mapper;
 import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.sql.SysRoleSqlProvider;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,4 +56,24 @@ public interface SysRoleMapper {
     @ResultType(Boolean.class)
     @Select("SELECT COUNT(`name`) FROM t_sys_role WHERE `name`=#{name} OR `desc`=#{desc} limit 1")
     boolean exist(@Param("name") String name, @Param("desc")String desc);
+
+
+    @Results(id = "sysRoleMenu", value = {
+            @Result(id=true, column="id",property="id",javaType=Integer.class)
+            ,@Result(column="name",property="name",javaType=String.class)
+            ,@Result(column="desc",property="desc",javaType=String.class)
+            ,@Result(column="id",property="menus", javaType=List.class,
+                many=@Many(
+                    select="com.lveqia.cloud.zuul.mapper.SysMenuMapper.getMenusByRoleId",
+                    fetchType=FetchType.EAGER
+            ))
+    })
+    @Select("SELECT * FROM t_sys_role WHERE id <> 1")
+    List<SysRole> getRoleMenuByAdmin();
+
+    @ResultMap("sysRoleMenu")
+    @Select("SELECT r.* FROM t_sys_user_role u,t_sys_role r WHERE u.rid=r.id AND u.uid=#{id}")
+    List<SysRole> getRoleMenuByUid(long id);
+
+
 }

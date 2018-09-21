@@ -2,6 +2,7 @@ package com.lveqia.cloud.zuul.model;
 
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -39,6 +40,7 @@ public class SysRole implements Serializable {
     private String desc;
 
 
+    private List<SysMenu> menus;
 
     public Integer getId() {
 		return id;
@@ -64,4 +66,11 @@ public class SysRole implements Serializable {
 		this.desc = desc;
 	}
 
+	public List<SysMenu> getMenus() {
+		return menus;
+	}
+
+	public void setMenus(List<SysMenu> menus) {
+		this.menus = menus;
+	}
 }

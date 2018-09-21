@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.Type;
+
 public class ResultUtil {
 
     private final static String VERSION = "20180725";
@@ -25,13 +27,14 @@ public class ResultUtil {
     public final static int CODE_NOT_FIND_DATA = 403;
     public final static int CODE_NOT_FIND_PATH = 404;
     public final static int CODE_NOT_AUTHORITY = 405;
-
-
-
+    
     public final static int CODE_UNKNOWN_ERROR = 500;
 
-    private final static Gson gson = new GsonBuilder().setExclusionStrategies().create();
+    private static Gson gson = new GsonBuilder().setExclusionStrategies().create();
 
+    public static void register(Type type, Object typeAdapter){
+        gson = new GsonBuilder().registerTypeAdapter(type,typeAdapter).setExclusionStrategies().create();
+    }
     /**
      * 根据CODE返回结果
      */
