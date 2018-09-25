@@ -256,7 +256,7 @@ public class UsingApiServiceImpl implements UsingApiService {
         if (arr == null) throw new TokenException();
         QueryBean queryBean = new QueryBean();
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000
-                , getCount(sessionThirdKey)%5==4 || isSync);
+                , getCount(sessionThirdKey)%3==2 || isSync);
         if(wxUsing!=null) {
             queryBean.setWxUsing(wxUsing);
         }else{
