@@ -73,6 +73,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public List<SysUser> getSysUserListByPid(int uid) {
+       return sysUserMapper.getSysUserListByPid(uid);
+    }
+
+    @Override
     public List<SysUser> getSysUserList(boolean fuzzy, String name, String username) {
         return sysUserMapper.getSysUserList(fuzzy, name, username);
     }

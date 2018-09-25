@@ -69,7 +69,7 @@ INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/*', '/order/list', 'OrderLis
 INSERT INTO `t_sys_menu` VALUES ('14', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/operate', 'SysOperate', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role

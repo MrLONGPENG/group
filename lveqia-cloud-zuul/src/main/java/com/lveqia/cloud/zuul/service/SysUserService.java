@@ -18,6 +18,8 @@ public interface SysUserService extends UserDetailsService {
 
     boolean modify(UserInfo userInfo, String oldPassword, String newPassword) throws BaseException;
 
+    List<SysUser> getSysUserListByPid(int uid);
+
     List<SysUser> getSysUserList(boolean fuzzy, String name, String username);
 
     int addUser(long id, String username, String name, String phone, String email, String password
@@ -28,4 +30,5 @@ public interface SysUserService extends UserDetailsService {
     int putUser(SysUser sysUser);
 
     SysUser getUser(int uid);
+
 }

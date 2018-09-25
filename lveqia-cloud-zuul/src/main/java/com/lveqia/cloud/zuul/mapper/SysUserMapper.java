@@ -63,8 +63,12 @@ public interface SysUserMapper {
     @Select("SELECT * FROM t_sys_user WHERE username = #{username}")
     SysUser loadUserByUsername(@Param("username") String username);
 
+    @ResultMap("sysUser")
+    @Select("SELECT * FROM t_sys_user WHERE `crt_id` = #{uid}")
+    List<SysUser> getSysUserListByPid(@Param("uid") int uid);
 
     @ResultMap("sysUser")
     @SelectProvider(type = SysUserSqlProvider.class, method = "getSysUserList")
-    List<SysUser> getSysUserList(boolean fuzzy,@Param("name") String name, @Param("username") String username);
+    List<SysUser> getSysUserList(boolean fuzzy, @Param("name") String name, @Param("username") String username);
+
 }

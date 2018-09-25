@@ -51,6 +51,15 @@ public class SysUserController {
         return ResultUtil.success(sysUserService.getSysUserList(fuzzy, name, username));
     }
 
+    @RequestMapping(value = "/sub", method = RequestMethod.GET)
+    @ApiOperation(value="子用户查询接口", notes="可根据用户ID，查询其所有子账号列表")
+    public String sub(@ApiParam(value = "用户ID,即父ID", required = true) @RequestParam(value = "uid") int uid) {
+        logger.debug("/sys/user/sub uid:{}", uid);
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        return ResultUtil.success(sysUserService.getSysUserListByPid(uid));
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value="系统用户注册接口", notes="根据用户名、手机号以及密码注册系统用户")
     public String add(@ApiParam(value = "账号", required = true) @RequestParam(value = "username") String username
