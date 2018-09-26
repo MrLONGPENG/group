@@ -7,6 +7,8 @@ public class Constant {
     public static final String SIGN_PERCENT = "%";
     /** 符号--逗号（,） */
     public static final String SIGN_COMMA = ",";
+    /** 符号--冒号（:） */
+    public static final String SIGN_COLON= ":";
     /** 符号--分号（;） */
     public static final String SIGN_SEMICOLON = ";";
     /** 符号--井号（#）  */

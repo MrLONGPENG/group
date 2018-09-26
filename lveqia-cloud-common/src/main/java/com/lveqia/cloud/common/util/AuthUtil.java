@@ -9,11 +9,14 @@ import java.util.*;
 
 
 public class AuthUtil implements Serializable {
-
+    private static final String AUTH_TAG_APP = "app" ;
+    private static final String AUTH_TAG_VUE = "vue" ;
     private final static String TOKEN_HEAD = "Bearer "; //注意空隔
     private final static String TOKEN_HEADER = "Authorization";
     private static final String CLAIM_KEY_UID = "uid" ;
     private static final String CLAIM_KEY_URG = "urg" ;
+    private static final String CLAIM_KEY_TAG = "tag" ;
+
     private static byte[] secret = "cloud_auth".getBytes();
     private static final long EXPIRATION_TOKEN = Constant.TIMESTAMP_DAYS_1 * 1000;
     public static final long EXPIRATION_REDIS = Constant.TIMESTAMP_HOUR_3 * 1000;
@@ -40,7 +43,17 @@ public class AuthUtil implements Serializable {
      * 获取Redis中的Key; 后面增加token:app:xxx格式
      */
     public static String getKey(UserInfo userInfo) {
-        return Optional.ofNullable(userInfo).map(info-> "token:vue:"+info.getId()).orElse("token:vue:0");
+        return Optional.ofNullable(userInfo).map(info->  StringUtil.join(Constant.SIGN_COLON
+                , "token", info.getTag(), info.getId())).orElse("token:vue:0");
+    }
+
+    /**
+     * 获取去登陆路径 客户端或网页
+     * @param request app/vue
+     */
+    public static String getTag(HttpServletRequest request) {
+        String tag = request.getParameter("client");
+        return StringUtil.isEmpty(tag) ? AUTH_TAG_VUE : tag;
     }
 
     private static UserInfo getUserInfo(String token){
@@ -49,6 +62,7 @@ public class AuthUtil implements Serializable {
         if(claims != null){
             UserInfo userInfo = new UserInfo(claims.getSubject());
             userInfo.setId(claims.get(CLAIM_KEY_UID, Long.class));
+            userInfo.setTag(claims.get(CLAIM_KEY_TAG, String.class));
             userInfo.setRoleInfo(claims.get(CLAIM_KEY_URG, List.class));
             userInfo.setExpiration(claims.getExpiration());
             userInfo.setName(claims.getAudience());
@@ -84,6 +98,7 @@ public class AuthUtil implements Serializable {
     public static String generateToken(UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_UID, userInfo.getId());
+        claims.put(CLAIM_KEY_TAG, userInfo.getTag());
         claims.put(CLAIM_KEY_URG, userInfo.getRoleInfo());
         return Jwts.builder().setClaims(claims).setSubject(userInfo.getUsername()).setAudience(userInfo.getName())
                 .setExpiration(generateExpirationDate()).signWith(SignatureAlgorithm.HS512, secret).compact();
@@ -102,6 +117,7 @@ public class AuthUtil implements Serializable {
     public static Date generateExpirationDate(long time) {
         return new Date(System.currentTimeMillis() + time);
     }
+
 
 
 }

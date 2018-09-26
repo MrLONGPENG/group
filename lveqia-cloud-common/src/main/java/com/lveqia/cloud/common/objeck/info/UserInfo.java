@@ -6,6 +6,7 @@ import java.util.List;
 public class UserInfo {
 
     private long id;
+    private String tag;  // 安卓、苹果登陆为app;网页登陆为vue
     private String name;
     private String username;
     private String token;
@@ -33,6 +34,14 @@ public class UserInfo {
 
     public String getName() {
         return name;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public void setName(String name) {

@@ -36,6 +36,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         response.setContentType("application/json;charset=utf-8");
         logger.debug("getPrincipal {}", authentication.getPrincipal());
         UserInfo userInfo = getUserInfo((SysUser) authentication.getPrincipal());
+        userInfo.setTag(AuthUtil.getTag(request)); // 设置登陆来源，app与vue
         PrintWriter out = response.getWriter();
         String key = AuthUtil.getKey(userInfo);
         String token = stringRedisTemplate.boundValueOps(key).get();
