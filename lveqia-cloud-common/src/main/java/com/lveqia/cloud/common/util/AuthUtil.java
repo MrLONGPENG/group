@@ -44,7 +44,8 @@ public class AuthUtil implements Serializable {
      */
     public static String getKey(UserInfo userInfo) {
         return Optional.ofNullable(userInfo).map(info->  StringUtil.join(Constant.SIGN_COLON
-                , "token", info.getTag(), info.getId())).orElse("token:vue:0");
+                , "token", info.getTag()==null ? AUTH_TAG_VUE: info.getTag()
+                , info.getId())).orElse("token:vue:0");
     }
 
     /**

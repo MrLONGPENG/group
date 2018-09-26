@@ -28,8 +28,9 @@ public class AuthLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response
             , Authentication authentication) {
-        logger.debug("AuthLogoutHandler uid:{} {}", AuthUtil.getUserInfo(request));
-        stringRedisTemplate.delete(AuthUtil.getKey(AuthUtil.getUserInfo(request)));
+        String key = AuthUtil.getKey(AuthUtil.getUserInfo(request));
+        logger.debug("AuthLogoutHandler uid:{} {}", key);
+        stringRedisTemplate.delete(key);
         response.setContentType("application/json;charset=utf-8");
         try {
             PrintWriter  out = response.getWriter();
