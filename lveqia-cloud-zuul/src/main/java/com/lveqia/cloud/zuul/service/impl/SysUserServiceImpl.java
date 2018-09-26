@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,6 +30,8 @@ public class SysUserServiceImpl implements SysUserService {
     private final SysUserRoleService sysUserRoleService;
     private final BCryptPasswordEncoder encoder=  new BCryptPasswordEncoder();
     private final Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
+    private  List<SysUser> childUserList=new ArrayList<SysUser>();
+
     @Autowired
     public SysUserServiceImpl(SysUserMapper sysUserMapper, SysUserRoleService sysUserRoleService) {
         this.sysUserMapper = sysUserMapper;
@@ -73,8 +76,8 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public List<SysUser> getSysUserListByPid(int uid) {
-       return sysUserMapper.getSysUserListByPid(uid);
+    public List<SysUser> getSysUserListByPid() {
+       return sysUserMapper.getSysUserListByPid();
     }
 
     @Override
@@ -141,7 +144,17 @@ public class SysUserServiceImpl implements SysUserService {
         if(!StringUtil.isEmpty(password)) sysUser.setPassword(encoder.encode(password));
         return sysUserMapper.update(sysUser) ==1;
     }
-
+     // TODO: 2018-09-26
+    @Override
+   public List<SysUser> getUserTreeList(List<SysUser> userList,long pid){
+        for(SysUser user:userList){
+            if (user.getCrtId()==pid){
+                getUserTreeList(userList,Integer.valueOf(user.getId()));
+                childUserList.add(user);
+            }
+        }
+        return  childUserList;
+    }
 
 
 }

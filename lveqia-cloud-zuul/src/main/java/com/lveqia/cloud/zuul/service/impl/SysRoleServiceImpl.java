@@ -71,6 +71,11 @@ public class SysRoleServiceImpl implements SysRoleService {
         return result>0;
     }
 
+    @Override
+    public List<SysRole> getUserRoleByUid(Integer id) {
+        return id==1? sysRoleMapper.getRoleListByAdmin() :sysRoleMapper.getUserRoleByUid(id);
+    }
+
     /**
      * 构建Role对象
      */

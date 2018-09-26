@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author leolaurel
@@ -29,7 +32,6 @@ public class SysUserController {
     public SysUserController(SysUserService sysUserService) {
         this.sysUserService = sysUserService;
     }
-
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ApiOperation(value="用户信息查询接口", notes="查询当前用户的基本信息")
     public String info(){
@@ -50,14 +52,17 @@ public class SysUserController {
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         return ResultUtil.success(sysUserService.getSysUserList(fuzzy, name, username));
     }
-
+    // TODO: 2018-09-26
     @RequestMapping(value = "/sub", method = RequestMethod.GET)
-    @ApiOperation(value="子用户查询接口", notes="可根据用户ID，查询其所有子账号列表")
-    public String sub(@ApiParam(value = "用户ID,即父ID", required = true) @RequestParam(value = "uid") int uid) {
-        logger.debug("/sys/user/sub uid:{}", uid);
+    @ApiOperation(value="子用户查询接口")
+    public String sub() {
+        logger.debug("/sys/user/sub uid:{}");
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        return ResultUtil.success(sysUserService.getSysUserListByPid(uid));
+        List<SysUser> userList =sysUserService.getSysUserListByPid();
+        List<SysUser> list=sysUserService.getUserTreeList(userList,userInfo.getId());
+
+        return ResultUtil.success(list);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)

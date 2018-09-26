@@ -35,7 +35,7 @@ public interface SysRoleMapper {
     })
     SysRole findById(Integer id);
 
-    @Select("SELECT * FROM t_sys_role limit 1000")
+    @Select("SELECT * FROM t_sys_role")
     @ResultMap("sysRole")
     List<SysRole> findListAll();
 
@@ -75,5 +75,8 @@ public interface SysRoleMapper {
     @Select("SELECT r.* FROM t_sys_user_role u,t_sys_role r WHERE u.rid=r.id AND u.uid=#{id}")
     List<SysRole> getRoleMenuByUid(long id);
 
+    @ResultMap("sysRole")
+    @Select("SELECT r.* FROM t_sys_user_role u,t_sys_role r WHERE u.rid=r.id AND u.uid=#{id}")
+   List<SysRole> getUserRoleByUid(Integer id);
 
 }

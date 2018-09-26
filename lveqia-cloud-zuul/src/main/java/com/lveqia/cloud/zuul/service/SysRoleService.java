@@ -18,5 +18,5 @@ public interface SysRoleService {
     boolean addRole(long id, String name, String desc) throws ExistException, ParamException;
 
     boolean delRole(long id, int rid);
-
+     List<SysRole> getUserRoleByUid(Integer id);
 }

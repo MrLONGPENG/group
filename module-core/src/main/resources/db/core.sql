@@ -22,7 +22,7 @@ CREATE TABLE `t_device` (
   `station_id` int(11) DEFAULT '0' COMMENT '护士站Id',
   `is_station` int(11) DEFAULT '0' COMMENT '是否为护士站 0 否 1 是',
   `update_id` int(11) DEFAULT NULL COMMENT '修改人ID',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
   `issync` int(1) DEFAULT '1' COMMENT '是否与子服务器同步，0：已同步，1：未同步',
   PRIMARY KEY (`id`),
   KEY `index_run` (`run`)

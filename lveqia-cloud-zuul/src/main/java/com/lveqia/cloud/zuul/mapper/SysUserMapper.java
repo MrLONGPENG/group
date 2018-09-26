@@ -65,7 +65,7 @@ public interface SysUserMapper {
 
     @ResultMap("sysUser")
     @Select("SELECT * FROM t_sys_user WHERE `crt_id` = #{uid}")
-    List<SysUser> getSysUserListByPid(@Param("uid") int uid);
+    List<SysUser> getSysUserListByPid();
 
     @ResultMap("sysUser")
     @SelectProvider(type = SysUserSqlProvider.class, method = "getSysUserList")

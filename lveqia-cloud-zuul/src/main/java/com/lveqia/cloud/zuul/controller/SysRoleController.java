@@ -5,6 +5,7 @@ import com.lveqia.cloud.common.exception.ExistException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.service.SysRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -12,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -75,6 +78,20 @@ public class SysRoleController {
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         return ResultUtil.success(sysRoleService.getRoleMenuByUid(userInfo.getId()));
+    }
+    @RequestMapping(value="/list/{uid}",method = RequestMethod.GET)
+    @ApiOperation(value="通过用户的父ID获取对应的角色的查询接口",notes = "查询当前用户角色")
+    public  String getUserRoleByUid(@ApiParam(value = "用户ID",required = true) @PathVariable(name="uid") int uid){
+        UserInfo userInfo=sysUserService.getCurrInfo();
+        if (userInfo==null){
+            return  ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        }
+        List<SysRole> userRoleList=sysRoleService.getUserRoleByUid(uid);
+        if (userRoleList==null||userRoleList.size()<=0){
+            return  ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+        }
+
+       return  ResultUtil.success(userRoleList);
     }
 
 }
