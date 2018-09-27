@@ -1,18 +1,23 @@
 package com.mujugroup.core.service.impl;
 
-import com.lveqia.cloud.common.util.StringUtil;
+import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
+import com.mujugroup.core.objeck.bo.TreeBO;
+import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.MergeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +28,17 @@ public class MergeServiceImpl implements MergeService {
     private final DeviceMapper deviceMapper;
     private final HospitalMapper hospitalMapper;
     private final DepartmentMapper departmentMapper;
+    private final AuthDataService authDataService;
     ;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
     public MergeServiceImpl(AgentMapper agentMapper, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
-            , DepartmentMapper departmentMapper) {
+            , DepartmentMapper departmentMapper, AuthDataService authDataService) {
         this.agentMapper = agentMapper;
         this.deviceMapper = deviceMapper;
         this.hospitalMapper = hospitalMapper;
         this.departmentMapper = departmentMapper;
+        this.authDataService = authDataService;
     }
 
 
@@ -148,4 +155,34 @@ public class MergeServiceImpl implements MergeService {
         }
         return hashMap;
     }
+
+    @Override
+    public Map<String, String> getAuthTree(String param) {
+        logger.debug("getAuthTree {}", param);
+        HashMap<String, String> map = new HashMap<>();
+        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        for (String key:array){
+            map.put(key, toJsonString(getAuthTreeById(key)));
+        }
+        return map;
+    }
+
+    /**
+     * 根据AID或OID查询树结构
+     */
+    private List<TreeBO> getAuthTreeById(String key) {
+        if(key.startsWith("AID")) return authDataService.getAuthTreeByAid(key.substring(3));
+        // TODO 此处暂时只支持到医院。无需医院再去查询科室
+        //if(key.startsWith("HID")) return authDataService.getAuthTreeByHid(key.substring(3));
+        return new ArrayList<>();
+    }
+
+    /**
+     * List转String
+     */
+    private String toJsonString(List<TreeBO> list) {
+        return new GsonBuilder().create().toJson(list);
+    }
+
+
 }

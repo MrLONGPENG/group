@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 
@@ -37,6 +36,7 @@ public class AgentController {
         if(list != null) return ResultUtil.success(list);
         return  ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
+    
 
 
 }

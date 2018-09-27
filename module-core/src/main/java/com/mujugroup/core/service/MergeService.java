@@ -25,5 +25,7 @@ public interface MergeService {
 
     Map<String,String> getBedInfoByDid(String param);
 
+    Map<String, String> getAuthTree(String param);
+
 
 }
