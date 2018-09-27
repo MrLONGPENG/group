@@ -18,7 +18,7 @@ public interface SysUserService extends UserDetailsService {
 
     boolean modify(UserInfo userInfo, String oldPassword, String newPassword) throws BaseException;
 
-    List<SysUser> getSysUserListByPid();
+    List<SysUser> getSysUserListByPid(int id);
 
     List<SysUser> getSysUserList(boolean fuzzy, String name, String username);
 

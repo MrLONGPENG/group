@@ -59,7 +59,7 @@ public class SysUserController {
         logger.debug("/sys/user/sub uid:{}");
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        List<SysUser> userList =sysUserService.getSysUserListByPid();
+        List<SysUser> userList =sysUserService.getSysUserListByPid((int) userInfo.getId());
         List<SysUser> list=sysUserService.getUserTreeList(userList,userInfo.getId());
 
         return ResultUtil.success(list);
@@ -79,6 +79,10 @@ public class SysUserController {
         try {
             UserInfo userInfo = sysUserService.getCurrInfo();
             if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+
+
+
+
             if(sysUserService.addUser(userInfo.getId(), username, name, phone, email, password
                     , address, avatarUrl, remark, roles) == 1){
                 return ResultUtil.success("注册成功!");
