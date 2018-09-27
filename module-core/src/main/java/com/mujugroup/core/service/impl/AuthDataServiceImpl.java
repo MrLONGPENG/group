@@ -1,6 +1,8 @@
 package com.mujugroup.core.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mujugroup.core.mapper.AuthDataMapper;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.objeck.vo.TreeVO;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
@@ -23,6 +24,8 @@ public class AuthDataServiceImpl implements AuthDataService {
     private final AuthDataMapper authDataMapper;
     private final MapperFactory mapperFactory;
     private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
+    private Gson gson = new GsonBuilder().create();
+
     @Autowired
     public AuthDataServiceImpl(AuthDataMapper authDataMapper, MapperFactory mapperFactory) {
         this.authDataMapper = authDataMapper;
@@ -71,6 +74,10 @@ public class AuthDataServiceImpl implements AuthDataService {
         return mapperFactory.getMapperFacade().mapAsList(list, TreeVO.class);
     }
 
+    @Override
+    public String toJsonString(List<TreeBO> list) {
+        return gson.toJson(treeBoToVo(list));
+    }
 
 
 }

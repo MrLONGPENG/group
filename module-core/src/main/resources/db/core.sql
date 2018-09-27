@@ -30,6 +30,19 @@ CREATE TABLE `t_device` (
 
 
 -- ----------------------------
+-- Table structure for t_agent
+-- ----------------------------
+DROP TABLE IF EXISTS `t_agent`;
+CREATE TABLE `t_agent` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL COMMENT '名称',
+  `crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `enable` tinyint(4) DEFAULT '1' COMMENT '代理商状态 1 启用 2 禁用 0 删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=360 DEFAULT CHARSET=utf8 COMMENT='代理商信息表';
+
+
+-- ----------------------------
 -- Table structure for t_hospital
 -- ----------------------------
 DROP TABLE IF EXISTS `t_hospital`;
@@ -72,3 +85,38 @@ CREATE TABLE `t_department` (
   `issync` int(11) DEFAULT '1' COMMENT '是否与子服务器同步，0：已同步，1：未同步',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=601 DEFAULT CHARSET=utf8 COMMENT='科室表';
+
+
+-- ----------------------------
+-- Table structure for t_country_province_city
+-- ----------------------------
+DROP TABLE IF EXISTS `t_country_province_city`;
+CREATE TABLE `t_country_province_city` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL COMMENT '国家省份城市名称',
+  `pid` int(11) DEFAULT NULL COMMENT 'pid 0 国家',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `key` varchar(10) DEFAULT NULL COMMENT '备用字段',
+  `status` int(2) DEFAULT NULL COMMENT '状态 0 禁用 1 启用',
+  `ord` int(5) DEFAULT NULL COMMENT '排序',
+  `longitude` double DEFAULT NULL COMMENT '经度',
+  `latitude` double DEFAULT NULL COMMENT '纬度',
+  PRIMARY KEY (`id`),
+  KEY `index_pid` (`pid`) USING BTREE,
+  KEY `index_name` (`name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=560 DEFAULT CHARSET=utf8 COMMENT='国家省份城市表';
+
+
+
+
+-- ----------------------------
+-- Table structure for t_auth_data
+-- ----------------------------
+DROP TABLE IF EXISTS `t_auth_data`;
+CREATE TABLE `t_auth_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL COMMENT '用户ID',
+  `rid` int(11) DEFAULT NULL COMMENT '关系ID [aid, hid, oid]',
+  `type` tinyint(4) DEFAULT '0' COMMENT '关系类型 AID 1; HID 2; OID: 3',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据权限关系表';

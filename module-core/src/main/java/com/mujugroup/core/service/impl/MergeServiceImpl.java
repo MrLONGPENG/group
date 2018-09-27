@@ -13,10 +13,10 @@ import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.MergeService;
+import ma.glasnost.orika.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,16 +29,17 @@ public class MergeServiceImpl implements MergeService {
     private final HospitalMapper hospitalMapper;
     private final DepartmentMapper departmentMapper;
     private final AuthDataService authDataService;
-    ;
+    private final MapperFactory mapperFactory;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
     public MergeServiceImpl(AgentMapper agentMapper, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
-            , DepartmentMapper departmentMapper, AuthDataService authDataService) {
+            , DepartmentMapper departmentMapper, AuthDataService authDataService, MapperFactory mapperFactory) {
         this.agentMapper = agentMapper;
         this.deviceMapper = deviceMapper;
         this.hospitalMapper = hospitalMapper;
         this.departmentMapper = departmentMapper;
         this.authDataService = authDataService;
+        this.mapperFactory = mapperFactory;
     }
 
 
@@ -162,7 +163,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
-            map.put(key, toJsonString(getAuthTreeById(key)));
+            map.put(key, getAuthTreeById(key));
         }
         return map;
     }
@@ -170,18 +171,11 @@ public class MergeServiceImpl implements MergeService {
     /**
      * 根据AID或OID查询树结构
      */
-    private List<TreeBO> getAuthTreeById(String key) {
-        if(key.startsWith("AID")) return authDataService.getAuthTreeByAid(key.substring(3));
-        // TODO 此处暂时只支持到医院。无需医院再去查询科室
-        //if(key.startsWith("HID")) return authDataService.getAuthTreeByHid(key.substring(3));
-        return new ArrayList<>();
-    }
-
-    /**
-     * List转String
-     */
-    private String toJsonString(List<TreeBO> list) {
-        return new GsonBuilder().create().toJson(list);
+    private String getAuthTreeById(String key) {
+        List<TreeBO> list = new ArrayList<>();
+        if(key.startsWith("AID")) list =  authDataService.getAuthTreeByAid(key.substring(3));
+        if(key.startsWith("HID")) list = authDataService.getAuthTreeByHid(key.substring(3));
+        return authDataService.toJsonString(list);
     }
 
 

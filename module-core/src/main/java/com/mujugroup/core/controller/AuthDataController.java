@@ -47,7 +47,7 @@ public class AuthDataController {
             treeBO.setId("AID0");
             treeBO.setName("其他可选医院");
             treeBO.setDisabled(true);
-            treeBO.setChildren(new GsonBuilder().create().toJson(hidList));
+            treeBO.setChildren(authDataService.toJsonString(hidList));
             aidList.add(treeBO);
         }
 

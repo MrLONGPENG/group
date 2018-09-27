@@ -21,4 +21,6 @@ public interface AuthDataService {
     List<TreeBO> getAuthTreeByHid(String hid);
 
     List<TreeVO> treeBoToVo(List<TreeBO> list);
+
+    String toJsonString(List<TreeBO> list);
 }
