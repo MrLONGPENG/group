@@ -5,6 +5,7 @@ import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.model.SysUser;
+import com.lveqia.cloud.zuul.objeck.vo.UserVO;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,16 +53,14 @@ public class SysUserController {
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         return ResultUtil.success(sysUserService.getSysUserList(fuzzy, name, username));
     }
-    // TODO: 2018-09-26
+    // TODO: 2018-09-27
     @RequestMapping(value = "/sub", method = RequestMethod.GET)
     @ApiOperation(value="子用户查询接口")
     public String sub() {
         logger.debug("/sys/user/sub uid:{}");
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        List<SysUser> userList =sysUserService.getSysUserListByPid((int) userInfo.getId());
-        List<SysUser> list=sysUserService.getUserTreeList(userList,userInfo.getId());
-
+        List<UserVO> list=sysUserService.getUserTreeList((int)userInfo.getId());
         return ResultUtil.success(list);
     }
 

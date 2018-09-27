@@ -2,6 +2,7 @@ package com.lveqia.cloud.zuul.objeck.vo;
 
 
 import com.lveqia.cloud.zuul.model.SysRole;
+import com.lveqia.cloud.zuul.model.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +31,53 @@ public class UserVO implements Serializable {
     private String username;
     private String avatarUrl;
     private String remark;
+    private  Boolean enabled;
+	private Integer crtId;
+	private Date crtTime;
+	private String password;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getCrtTime() {
+		return crtTime;
+	}
+
+	public void setCrtTime(Date crtTime) {
+		this.crtTime = crtTime;
+	}
+
+	public Integer getCrtId() {
+		return crtId;
+	}
+
+	public void setCrtId(Integer crtId) {
+		this.crtId = crtId;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	private List<SysRole> roles;
+	private List<UserVO> children;
+
+	public List<UserVO> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<UserVO> children) {
+		this.children = children;
+	}
 
 	public Integer getId() {
 		return id;

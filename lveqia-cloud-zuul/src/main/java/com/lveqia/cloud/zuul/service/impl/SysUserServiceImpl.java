@@ -6,6 +6,7 @@ import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
+import com.lveqia.cloud.zuul.objeck.vo.UserVO;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class SysUserServiceImpl implements SysUserService {
     private final SysUserRoleService sysUserRoleService;
     private final BCryptPasswordEncoder encoder=  new BCryptPasswordEncoder();
     private final Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
-    private  List<SysUser> childUserList=new ArrayList<SysUser>();
+   // private  List<SysUser> childUserList=new ArrayList<SysUser>();
 
     @Autowired
     public SysUserServiceImpl(SysUserMapper sysUserMapper, SysUserRoleService sysUserRoleService) {
@@ -144,17 +145,29 @@ public class SysUserServiceImpl implements SysUserService {
         if(!StringUtil.isEmpty(password)) sysUser.setPassword(encoder.encode(password));
         return sysUserMapper.update(sysUser) ==1;
     }
-     // TODO: 2018-09-26
-    @Override
-   public List<SysUser> getUserTreeList(List<SysUser> userList,long pid){
-        for(SysUser user:userList){
-            if (user.getCrtId()==pid){
-                getUserTreeList(userList,Integer.valueOf(user.getId()));
-                childUserList.add(user);
-            }
+     // TODO: 2018-09-27
+  public List<UserVO> getUserTreeList(int pid){
+        UserVO tree;
+        List<UserVO> trees = new ArrayList<UserVO>();
+        List<SysUser> list = sysUserMapper.getSysUserListByPid(pid);
+        for (SysUser sysUser : list){
+            tree = new UserVO();
+            tree.setId(sysUser.getId());
+            tree.setName(sysUser.getName());
+            tree.setPhone(sysUser.getPhone());
+            tree.setAddress(sysUser.getAddress());
+            tree.setAvatarUrl(sysUser.getAvatarUrl());
+            tree.setRemark(sysUser.getRemark());
+            tree.setRoles(sysUser.getRoles());
+            tree.setUsername(sysUser.getUsername());
+            tree.setCrtId(sysUser.getCrtId());
+            tree.setCrtTime(sysUser.getCrtTime());
+            tree.setChildren(getUserTreeList(sysUser.getId()));
+            trees.add(tree);
         }
-        return  childUserList;
+        return trees;
     }
+
 
 
 }
