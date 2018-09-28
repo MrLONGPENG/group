@@ -69,6 +69,7 @@ public class MergeServiceImpl implements MergeService {
         WxOrder wxOrder;
         StringBuilder sb;
         for (String did: array) {
+            if(StringUtil.isEmpty(did)) continue;
             wxOrder = wxOrderService.findLastOrderByDid(did);
             if(wxOrder!=null){
                 // DID;订单号;支付金额(分);支付时间;到期时间(秒)
@@ -95,6 +96,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
+            if(StringUtil.isEmpty(key)) continue;
             String[] keys = key.split(Constant.SIGN_COMMA);
             keys[1] = StringUtil.formatIds(keys[1]);
             if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
@@ -118,6 +120,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
+            if(StringUtil.isEmpty(key)) continue;
             keys = key.split(Constant.SIGN_COMMA);
             map.put(key, wxOrderService.getUsageRate(keys[0], StringUtil.formatIds(keys[1]), keys[2], keys[3]));
         }
@@ -137,6 +140,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] keys, array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
+            if(StringUtil.isEmpty(key)) continue;
             keys = key.split(Constant.SIGN_COMMA);
             keys[1] = StringUtil.formatIds(keys[1]);
             if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
@@ -157,6 +161,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
+            if(StringUtil.isEmpty(key)) continue;
             map.put(key, wxGoodsService.findById(Integer.parseInt(key)).getType()==WxGoods.TYPE_MIDDAY ? "午休":"晚休");
         }
         return map;
@@ -176,6 +181,7 @@ public class MergeServiceImpl implements MergeService {
         Map<String,String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key :array) {
+            if(StringUtil.isEmpty(key)) continue;
             String[] keys = key.split(Constant.SIGN_COMMA);
             map.put(key, wxUserService.getTotalUserCount(keys[0], keys[1]));
         }

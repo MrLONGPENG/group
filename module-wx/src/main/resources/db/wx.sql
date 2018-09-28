@@ -15,8 +15,8 @@ CREATE TABLE `t_wx_user` (
 `city` varchar(64) DEFAULT NULL COMMENT '用户城市',
 `avatar_url` varchar(255) DEFAULT NULL COMMENT '微信头像地址',
 `session_key` varchar(32) DEFAULT NULL COMMENT '微信临时凭证',
-`crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-`update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`update_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
 UNIQUE KEY `index_id` (`open_id`, `union_id`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信用户基础信息表';
@@ -34,7 +34,7 @@ CREATE TABLE `t_wx_using` (
 `pay_cost` int(11) DEFAULT NULL COMMENT '支付金额',
 `pay_time` bigint(20) DEFAULT NULL COMMENT '支付时10位时间戳',
 `end_time` bigint(20) DEFAULT NULL COMMENT '结束时10位时间戳',
-`unlock_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '开锁时间',
+`unlock_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '开锁时间',
 `using` tinyint(1) default 0 COMMENT '是否使用中',
 `deleted` tinyint(1) default 0 COMMENT '软删除标记',
 INDEX `index_did` (`did`) COMMENT '按设备索引',
@@ -81,8 +81,8 @@ CREATE TABLE `t_wx_repair` (
 `fault_describe` text DEFAULT NULL COMMENT '损坏的描述',
 `restorer` varchar(128) DEFAULT NULL COMMENT '修复人信息',
 `repair_status` tinyint(4) DEFAULT NULL COMMENT '报修状态 1.待修复 2.修复中 3.修复完',
-`crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-`updTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`updTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保修信息表';
 
@@ -96,7 +96,7 @@ CREATE TABLE `t_wx_images` (
 `pid` int(11) DEFAULT NULL COMMENT '图片类型主键',
 `type` tinyint(4) DEFAULT NULL COMMENT '图片类型 1.保修图片 2.待定',
 `image_url` varchar(255) DEFAULT NULL COMMENT '图片地址',
-`crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保修图片表';
 
@@ -172,7 +172,7 @@ CREATE TABLE `t_wx_opinion`(
 `content` text DEFAULT NULL COMMENT '反馈的内容',
 `reader` varchar(128) DEFAULT NULL COMMENT '阅读人信息',
 `read_status` tinyint(4) DEFAULT NULL COMMENT '建议处理状态 1.待读阅 2.已查看 3.待采用 4.已收集',
-`crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-`updTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`crtTime` timestamp DEFAULT NOW() COMMENT '创建时间',
+`updTime` timestamp DEFAULT NOW() COMMENT '更新时间',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='意见反馈表';
