@@ -20,7 +20,9 @@ public class ConfigSource implements CorsConfigurationSource {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://data.mujugroup.com");
+        config.addAllowedOrigin("http://test.mujugroup.com");
         config.addAllowedOrigin("http://dev.mujugroup.com");
+        config.addAllowedOrigin("http://leo.mujugroup.com");
         config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
