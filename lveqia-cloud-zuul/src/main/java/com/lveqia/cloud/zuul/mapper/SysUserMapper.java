@@ -21,6 +21,7 @@ import java.util.List;
 public interface SysUserMapper {
 
     @InsertProvider(type = SysUserSqlProvider.class, method = "insert")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(SysUser sysUser);
 
     @UpdateProvider(type = SysUserSqlProvider.class, method = "update")

@@ -1,0 +1,17 @@
+package com.lveqia.cloud.zuul.service.feign.error;
+
+import com.lveqia.cloud.zuul.service.feign.ModuleCoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ModuleCoreServiceError implements ModuleCoreService {
+    private final Logger logger = LoggerFactory.getLogger(ModuleCoreServiceError.class);
+
+    @Override
+    public int addAuthData(int uid, String[] authDatas) {
+        logger.debug("sdfsdfsadfsa");
+        return 0;
+    }
+}

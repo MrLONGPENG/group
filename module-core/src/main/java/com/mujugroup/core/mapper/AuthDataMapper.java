@@ -19,6 +19,8 @@ public interface AuthDataMapper {
 
     @InsertProvider(type = AuthDataSqlProvider.class, method = "insert")
     boolean insert(AuthData authData);
+    @InsertProvider(type=AuthDataSqlProvider.class,method = "addAuthData")
+    int addAuthData(@Param("uid")int uid, @Param("ids") int[] rid,@Param("types") int[] types);
 
     @UpdateProvider(type = AuthDataSqlProvider.class, method = "update")
     boolean update(AuthData authData);
@@ -67,4 +69,6 @@ public interface AuthDataMapper {
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('OID',id) as id, name FROM t_department WHERE `hospital_id` = #{hid}")
     List<TreeBO> getAuthTreeByHid(@Param("hid") String hid);
+
+
 }

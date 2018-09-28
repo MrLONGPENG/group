@@ -32,7 +32,10 @@ public class AuthDataServiceImpl implements AuthDataService {
         this.mapperFactory = mapperFactory;
     }
 
-
+    @Override
+    public int addAuthData(int uid, int[] ids, int[] types) {
+        return authDataMapper.addAuthData(uid,ids,types);
+    }
 
     @Override
     @MergeResult
@@ -78,6 +81,8 @@ public class AuthDataServiceImpl implements AuthDataService {
     public String toJsonString(List<TreeBO> list) {
         return gson.toJson(treeBoToVo(list));
     }
+
+
 
 
 }

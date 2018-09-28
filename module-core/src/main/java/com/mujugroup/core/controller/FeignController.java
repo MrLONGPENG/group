@@ -47,4 +47,8 @@ public class FeignController {
         return feignService.getHospitalByRegion(pid, cid);
     }
 
+    @RequestMapping(value = "/addAuthData",method = RequestMethod.POST)
+    public int addAuthData(int uid, String[] authDatas){
+       return feignService.addAuthData(uid,authDatas);
+    }
 }

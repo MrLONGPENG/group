@@ -23,4 +23,6 @@ public interface AuthDataService {
     List<TreeVO> treeBoToVo(List<TreeBO> list);
 
     String toJsonString(List<TreeBO> list);
+
+    int addAuthData(int uid,int[] ids,int[] types);
 }

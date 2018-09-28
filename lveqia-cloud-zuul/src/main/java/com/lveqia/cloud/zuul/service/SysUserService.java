@@ -24,7 +24,7 @@ public interface SysUserService extends UserDetailsService {
     List<SysUser> getSysUserList(boolean fuzzy, String name, String username);
 
     int addUser(long id, String username, String name, String phone, String email, String password
-            , String address, String avatarUrl, String remark, int[] roles) throws BaseException;
+            , String address, String avatarUrl, String remark, int[] roles,String[] authDatas) throws BaseException;
 
     int delUser(int uid);
 

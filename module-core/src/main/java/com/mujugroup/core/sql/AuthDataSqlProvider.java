@@ -1,6 +1,7 @@
 package com.mujugroup.core.sql;
 
 import com.mujugroup.core.model.AuthData;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -32,5 +33,22 @@ public class AuthDataSqlProvider {
             if(authData.getType()!= null) SET("`type` = #{type}");
             WHERE("id = #{id}");
         }}.toString();
+    }
+
+    public  String  addAuthData(@Param("uid") int uid, @Param("ids") int[] ids,@Param("types") int[] types){
+        return new SQL(){
+            {
+                INSERT_INTO("t_auth_data");
+                INTO_COLUMNS("`uid`","`rid`","`type`");
+                StringBuffer sb = new StringBuffer();
+                for (int i=0;i<ids.length;i++) {
+                    if(sb.length() != 0) sb.append("), (");
+                    sb.append(uid).append(", ").append(ids[i]).append(", ").append(types[i]);
+                }
+
+
+                INTO_VALUES(new String(sb));
+            }
+        }.toString();
     }
 }
