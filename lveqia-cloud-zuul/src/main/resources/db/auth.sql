@@ -15,7 +15,7 @@ CREATE TABLE `t_sys_user` (
   `avatar_url` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `crt_id` int(11) DEFAULT NULL COMMENT '创建者',
-  `crt_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `crt_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

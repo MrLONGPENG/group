@@ -8,7 +8,7 @@ CREATE TABLE `t_lock_did` (
 `brand` tinyint(4) DEFAULT NULL COMMENT '设备锁厂商品牌(1:连旅；2:待定)',
 `lock_id` bigint(20) DEFAULT NULL COMMENT '设备锁十进制ID',
 `lock_hex` varchar(32) DEFAULT NULL COMMENT '设备锁十六进制ID',
-`update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`update_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
 UNIQUE KEY `index_did` (`did`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='柜子业务编号与锁编号关系表';
@@ -45,7 +45,7 @@ CREATE TABLE `t_lock_info` (
 `upgrade` tinyint(4)  DEFAULT NULL COMMENT '升级标识(原值:upgradeFlag)',
 `battery_stat` tinyint(4) DEFAULT NULL COMMENT '剩余电量',
 `lock_status` tinyint(4)  DEFAULT NULL COMMENT '锁状态 1:关 2:开 (助力车 3:中间态 ) 4代表开锁机械故障、5代表关锁机械故障，6代表锁端本地时间不在限制时间范围内',
-`last_refresh` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '最后上报时间',
+`last_refresh` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '最后上报时间',
 UNIQUE KEY `index_did` (`did`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁设备信息表';

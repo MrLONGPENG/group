@@ -8,11 +8,11 @@ CREATE TABLE `t_device` (
   `agentId` int(11) DEFAULT NULL COMMENT '代理商id',
   `hospitalId` int(11) DEFAULT NULL COMMENT '医院id',
   `hospitalBed` varchar(100) DEFAULT NULL COMMENT '医院床位信息',
-  `crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `crtTime` datetime NOT NULL DEFAULT '2018-08-08 00:00:00' COMMENT '创建时间',
   `crtId` int(11) DEFAULT NULL COMMENT '创建人',
   `status` int(2) DEFAULT NULL COMMENT '状态 14 启用 15禁用 16 借出 17 删除',
   `useflag` int(2) DEFAULT '20' COMMENT '使用状态 19 使用 20 闲置',
-  `reserve_date` timestamp NULL DEFAULT NULL COMMENT '预约时间(只针对预约状态或历史预约过)',
+  `reserve_date` datetime DEFAULT NULL COMMENT '预约时间(只针对预约状态或历史预约过)',
   `imgUrl` varchar(100) DEFAULT NULL,
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',
   `depart` int(11) DEFAULT NULL COMMENT '科室（t_department）ID',
@@ -22,7 +22,7 @@ CREATE TABLE `t_device` (
   `station_id` int(11) DEFAULT '0' COMMENT '护士站Id',
   `is_station` int(11) DEFAULT '0' COMMENT '是否为护士站 0 否 1 是',
   `update_id` int(11) DEFAULT NULL COMMENT '修改人ID',
-  `update_time` datetime DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `issync` int(1) DEFAULT '1' COMMENT '是否与子服务器同步，0：已同步，1：未同步',
   PRIMARY KEY (`id`),
   KEY `index_run` (`run`)
@@ -36,7 +36,7 @@ DROP TABLE IF EXISTS `t_agent`;
 CREATE TABLE `t_agent` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL COMMENT '名称',
-  `crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `enable` tinyint(4) DEFAULT '1' COMMENT '代理商状态 1 启用 2 禁用 0 删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=360 DEFAULT CHARSET=utf8 COMMENT='代理商信息表';
@@ -53,7 +53,7 @@ CREATE TABLE `t_hospital` (
   `tel` varchar(20) DEFAULT NULL COMMENT '电话',
   `person` varchar(50) DEFAULT NULL COMMENT '联系人',
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',
-  `crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `crtId` int(11) DEFAULT NULL COMMENT '创建id',
   `address` varchar(150) DEFAULT NULL,
   `country` int(11) DEFAULT NULL,
