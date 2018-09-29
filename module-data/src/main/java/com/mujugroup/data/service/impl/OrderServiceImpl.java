@@ -32,11 +32,11 @@ public class OrderServiceImpl implements OrderService {
                 .field("aid","agent")
                 .field("hid","hospital")
                 .field("oid","department")
-                .field("gid","orderType")
                 .field("did","bedInfo")
                 .field("did","did")
                 .fieldMap("payTime").converter("timestampConvert").add()
                 .fieldMap("payPrice").converter("rmbPriceConvert").add()
+                .fieldMap("orderType").converter("orderTypeConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, OrderBO.class);
     }

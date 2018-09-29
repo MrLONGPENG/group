@@ -51,13 +51,6 @@ public interface ModuleWxService {
     @RequestMapping(value = "/merge/getTotalProfit",method = RequestMethod.POST)
     Map<String, String> getTotalProfit(@RequestParam(value = "param") String param);
 
-    /**
-     * 获取订单类型：晚修；午休
-     * @param param gid
-     */
-    @RequestMapping(value = "/merge/getOrderTypeById",method = RequestMethod.POST)
-    Map<String, String> getOrderTypeById(@RequestParam(value = "param") String param);
-
 
     @RequestMapping(value = "/feign/getOrderList", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

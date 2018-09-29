@@ -16,7 +16,7 @@ CREATE TABLE `t_wx_user` (
 `avatar_url` varchar(255) DEFAULT NULL COMMENT '微信头像地址',
 `session_key` varchar(32) DEFAULT NULL COMMENT '微信临时凭证',
 `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-`update_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`update_time` datetime DEFAULT NULL COMMENT '更新时间',
 UNIQUE KEY `index_id` (`open_id`, `union_id`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信用户基础信息表';
@@ -57,11 +57,12 @@ CREATE TABLE `t_wx_order` (
 `open_id` varchar(128) DEFAULT NULL COMMENT '微信对外唯一ID',
 `trade_no` varchar(32) DEFAULT NULL COMMENT '内部订单号，如20180626123456',
 `transaction_id` varchar(32) DEFAULT NULL COMMENT '微信订单号，如20180626123456',
+`order_type` tinyint(4) DEFAULT NULL COMMENT '支付类型 1:晚休 2:午休',
 `pay_price` int(11) DEFAULT NULL COMMENT '实际支付价格',
 `pay_status`  tinyint(4) DEFAULT NULL COMMENT '实际支付状态 1.统一下单 2.支付完成',
 `pay_time` bigint(20) DEFAULT NULL COMMENT '支付时10位时间戳',
 `end_time` bigint(20) DEFAULT NULL COMMENT '结束时10位时间戳',
-`crtTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 INDEX `index_union` (`aid`,`hid`,`oid`) COMMENT '订单索引',
 INDEX `index_order` (`trade_no`) COMMENT '订单索引',
 PRIMARY KEY (`id`)
@@ -82,7 +83,7 @@ CREATE TABLE `t_wx_repair` (
 `restorer` varchar(128) DEFAULT NULL COMMENT '修复人信息',
 `repair_status` tinyint(4) DEFAULT NULL COMMENT '报修状态 1.待修复 2.修复中 3.修复完',
 `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-`updTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+`updTime` datetime DEFAULT NULL COMMENT '更新时间',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保修信息表';
 
@@ -172,7 +173,7 @@ CREATE TABLE `t_wx_opinion`(
 `content` text DEFAULT NULL COMMENT '反馈的内容',
 `reader` varchar(128) DEFAULT NULL COMMENT '阅读人信息',
 `read_status` tinyint(4) DEFAULT NULL COMMENT '建议处理状态 1.待读阅 2.已查看 3.待采用 4.已收集',
-`crtTime` timestamp DEFAULT NOW() COMMENT '创建时间',
-`updTime` timestamp DEFAULT NOW() COMMENT '更新时间',
+`crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`updTime` datetime DEFAULT NULL COMMENT '更新时间',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='意见反馈表';

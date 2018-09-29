@@ -51,7 +51,19 @@ public class WxOrderServiceImpl implements WxOrderService {
         wxOrder.setGid(wxGoods.getId());
         wxOrder.setPayPrice(wxGoods.getPrice());
         wxOrder.setPayStatus(WxOrder.TYPE_PAY_WAITING);
+        wxOrder.setOrderType(getOrderType(wxGoods.getType()));
         return wxOrderMapper.insert(wxOrder)? wxOrder:null;
+    }
+
+    /**
+     * 根据商品类型，转换成订单类型
+     */
+    private Integer getOrderType(Integer type) {
+        switch (type){
+            case WxGoods.TYPE_MIDDAY : return WxOrder.ORDER_TYPE_MIDDAY ;
+            case WxGoods.TYPE_NIGHT  : return WxOrder.ORDER_TYPE_NIGHT;
+        }
+        return 0;
     }
 
     @Override
@@ -209,13 +221,14 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
-    public List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo) {
-        return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo);
+    public List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo, int orderType) {
+        return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType);
     }
 
     @Override
     public List<WxOrder> findList(AidHidOidTO dto) {
-        return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd(), dto.getTradeNo());
+        return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd()
+                , dto.getTradeNo(), dto.getOrderType());
     }
 
     /**

@@ -26,6 +26,7 @@ public class WxOrderSqlProvider {
             if(wxOrder.getOpenId()!= null) VALUES("`open_id`", "#{openId}");
             if(wxOrder.getTradeNo()!= null) VALUES("`trade_no`", "#{tradeNo}");
             if(wxOrder.getTransactionId()!= null) VALUES("`transaction_id`", "#{transactionId}");
+            if(wxOrder.getOrderType()!= null) VALUES("`order_type`", "#{orderType}");
             if(wxOrder.getPayPrice()!= null) VALUES("`pay_price`", "#{payPrice}");
             if(wxOrder.getPayStatus()!= null) VALUES("`pay_status`", "#{payStatus}");
             if(wxOrder.getPayTime()!= null) VALUES("`pay_time`", "#{payTime}");
@@ -48,6 +49,7 @@ public class WxOrderSqlProvider {
             if(wxOrder.getOpenId()!= null) SET("`open_id` = #{openId}");
             if(wxOrder.getTradeNo()!= null) SET("`trade_no` = #{tradeNo}");
             if(wxOrder.getTransactionId()!= null) SET("`transaction_id` = #{transactionId}");
+            if(wxOrder.getOrderType()!= null) SET("`order_type` = #{orderType}");
             if(wxOrder.getPayPrice()!= null) SET("`pay_price` = #{payPrice}");
             if(wxOrder.getPayStatus()!= null) SET("`pay_status` = #{payStatus}");
             if(wxOrder.getPayTime()!= null) SET("`pay_time` = #{payTime}");
@@ -77,15 +79,17 @@ public class WxOrderSqlProvider {
 
 
     public String findList(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
-            , @Param("start")long start, @Param("end")long end, @Param("tradeNo") String tradeNo){
+            , @Param("start")long start, @Param("end")long end, @Param("tradeNo") String tradeNo
+            , @Param("orderType") int orderType){
         return new SQL(){{
             SELECT("*"); FROM("t_wx_order");
             WHERE("pay_status > 1");
             if(aid != 0) AND().WHERE("aid = #{aid}");
             if(hid != 0) AND().WHERE("hid = #{hid}");
             if(oid != 0) AND().WHERE("oid = #{oid}");
-            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
+            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
+            if(orderType!= 0) AND().WHERE("order_type = #{orderType}");
             if(!StringUtil.isEmpty(tradeNo)) AND().WHERE("trade_no = #{tradeNo}");
             ORDER_BY("id desc");
         }}.toString();

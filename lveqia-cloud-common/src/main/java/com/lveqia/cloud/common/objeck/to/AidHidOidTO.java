@@ -8,11 +8,14 @@ package com.lveqia.cloud.common.objeck.to;
  */
 public class AidHidOidTO {
 
+
     private int aid;
     private int hid;
     private int oid;
     private long start;
     private long end;
+    private int orderType;
+
     private String tradeNo;
 
     private int pageNum;
@@ -22,16 +25,24 @@ public class AidHidOidTO {
 
     }
 
-    public AidHidOidTO(int aid, int hid, int oid, long start, long end, int pageNum, int pageSize) {
+    /**
+     * 不分页数据
+     */
+    public AidHidOidTO(int aid, int hid, int oid, int orderType, long start, long end) {
+        this(aid, hid, oid, orderType, start, end, 1, 0 );
+    }
+
+
+    public AidHidOidTO(int aid, int hid, int oid, int orderType, long start, long end, int pageNum, int pageSize) {
         this.aid = aid;
         this.hid = hid;
         this.oid = oid;
-        this.start = start;
         this.end = end;
+        this.start = start;
         this.pageNum = pageNum;
         this.pageSize = pageSize;
+        this.orderType = orderType;
     }
-
     public int getAid() {
         return aid;
     }
@@ -71,6 +82,15 @@ public class AidHidOidTO {
     public void setEnd(long end) {
         this.end = end;
     }
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
+    }
+
 
     public String getTradeNo() {
         return tradeNo;

@@ -64,7 +64,18 @@ public class ModuleDataApplication {
                         return StringUtil.changeY2F(source);
                     }
                 });
-
+        // 订单类型转换
+        defaultMapperFactory.getConverterFactory().registerConverter("orderTypeConvert"
+                , new BidirectionalConverter<Integer, String>(){
+                    @Override
+                    public String convertTo(Integer source, Type<String> destinationType) {
+                        return source==1 ? "晚休": source == 2 ? "午休" :"未知";
+                    }
+                    @Override
+                    public Integer convertFrom(String source, Type<Integer> destinationType) {
+                        return "晚修".equals(source) ? 1 : "午休".equals(source) ? 2 : 0;
+                    }
+                });
         return defaultMapperFactory;
     }
 

@@ -17,6 +17,10 @@ public class WxOrder implements Serializable {
 
 	public static final Integer TYPE_PAY_WAITING = 1;
     public static final Integer TYPE_PAY_SUCCESS = 2;
+	/*** 支付类型-晚休-晚上套餐 */
+	public static final Integer ORDER_TYPE_NIGHT  = 1;
+	/*** 支付类型-午休-中午套餐 */
+	public static final Integer ORDER_TYPE_MIDDAY = 2;
 
 	/**
      * 主键
@@ -83,6 +87,15 @@ public class WxOrder implements Serializable {
      */
     @Column(name = "transaction_id")
     private String transactionId;
+
+
+	/**
+	 * 支付类型 1:晚休 2:午休
+	 * 表字段 : t_wx_order.order_type
+	 */
+	@Column(name = "order_type")
+	private Integer orderType;
+
 
     /**
      * 实际支付价格
@@ -193,7 +206,15 @@ public class WxOrder implements Serializable {
 		this.transactionId = transactionId;
 	}
 
-    public Integer getPayPrice() {
+	public Integer getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
+	}
+
+	public Integer getPayPrice() {
 		return payPrice;
 	}
 

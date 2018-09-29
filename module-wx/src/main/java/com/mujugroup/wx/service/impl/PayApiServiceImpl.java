@@ -71,16 +71,7 @@ public class PayApiServiceImpl implements PayApiService {
             result.put("info", "Code效验失败");
             return result;
         }
-        WxGoods wxGoods = null;
-        try{
-            if(goods.startsWith("{")){
-                wxGoods = new Gson().fromJson(goods, WxGoods.class);
-            }else{
-                wxGoods = wxGoodsService.findById(Integer.parseInt(goods));
-            }
-        }catch (Exception e){
-            logger.warn("find goods error");
-        }
+        WxGoods wxGoods = wxGoodsService.findById(Integer.parseInt(goods));
         if(wxGoods == null){
             result.put("code", "203");
             result.put("info", "商品信息有误");

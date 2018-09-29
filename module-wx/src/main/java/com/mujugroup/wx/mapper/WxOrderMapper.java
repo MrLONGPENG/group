@@ -40,6 +40,7 @@ public interface WxOrderMapper {
             ,@Result(column="open_id",property="openId",javaType=String.class)
             ,@Result(column="trade_no",property="tradeNo",javaType=String.class)
             ,@Result(column="transaction_id",property="transactionId",javaType=String.class)
+            ,@Result(column="order_type",property="orderType",javaType=Integer.class)
             ,@Result(column="pay_price",property="payPrice",javaType=Integer.class)
             ,@Result(column="pay_status",property="payStatus",javaType=Integer.class)
             ,@Result(column="pay_time",property="payTime",javaType=Long.class)
@@ -93,8 +94,9 @@ public interface WxOrderMapper {
 
     @ResultMap("wxOrder")
     @SelectProvider(type = WxOrderSqlProvider.class, method = "findList")
-    List<WxOrder> findList(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
-            , @Param("start") long start, @Param("end") long end, @Param("tradeNo") String tradeNo);
+    List<WxOrder> findList(@Param("aid") int aid, @Param("hid") int hid, @Param("oid") int oid
+            , @Param("start") long start, @Param("end") long end, @Param("tradeNo") String tradeNo
+            , @Param("orderType") int orderType);
 
     @ResultType(String.class)
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getTotalProfit")

@@ -32,13 +32,10 @@ public class OrderBO implements Serializable {
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
     private String bedInfo;
 
-    @MergeField(feign = ModuleWxService.class, method = "getOrderTypeById"
-            , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
-    private String orderType;
-
     private String tradeNo;
     private String payPrice;
     private Integer payStatus;
+    private String orderType;
     private String payTime;
 
     public String getDid() {

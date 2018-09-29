@@ -45,9 +45,11 @@ public class OrderController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="当前页")@RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
-            , @ApiParam(value="每页显示")@RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize){
+            , @ApiParam(value="每页显示")@RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize
+            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="oid"
+            , required=false, defaultValue="1") int orderType){
         logger.debug("order->list {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
-        AidHidOidTO aidHidOidTO = new AidHidOidTO(aid, hid, oid, startTime, stopTime, pageNum, pageSize);
+        AidHidOidTO aidHidOidTO = new AidHidOidTO(aid, hid, oid, orderType, startTime, stopTime, pageNum, pageSize);
         PageTO<OrderTO> pageTO = moduleWxService.getOrderList(aidHidOidTO);
         if(pageTO !=null){
             List<OrderBO> list = orderService.mergeOrderBO(pageTO.getPageList());
@@ -64,9 +66,10 @@ public class OrderController {
             , @ApiParam(value="科室ID") @RequestParam(name="oid", required=false, defaultValue="0") int oid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
-            , HttpServletResponse response) throws Exception {
+            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="oid"
+            , required=false, defaultValue="1") int orderType, HttpServletResponse response) throws Exception {
         logger.debug("order->excel {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
-        AidHidOidTO aidHidOidTO = new AidHidOidTO(aid, hid, oid, startTime, stopTime, 1, 0);
+        AidHidOidTO aidHidOidTO = new AidHidOidTO(aid, hid, oid, orderType, startTime, stopTime);
         PageTO<OrderTO> pageTO = moduleWxService.getOrderList(aidHidOidTO);
         if(pageTO !=null){
             List<OrderBO> list = orderService.mergeOrderBO(pageTO.getPageList());

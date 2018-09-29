@@ -16,6 +16,7 @@ public class OrderTO {
     private String tradeNo;
     private Integer payPrice;
     private Integer payStatus;
+    private Integer orderType;
     private Long payTime;
 
     public String getId() {
@@ -88,6 +89,14 @@ public class OrderTO {
 
     public void setPayPrice(Integer payPrice) {
         this.payPrice = payPrice;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 
     public Long getPayTime() {
