@@ -61,11 +61,11 @@ public class AuthDataController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String updateAuthData(@ApiParam(value = "数据权限") @RequestParam(value = "authDatas", required = false) String[] authDatas,
-                                 @RequestParam("uid") int uid,HttpServletRequest request) {
+    public String updateAuthData(@ApiParam(value = "数据权限") @RequestParam(value = "authData"
+            , required = false) String[] authData, @RequestParam("uid") int uid,HttpServletRequest request) {
         UserInfo userInfo = AuthUtil.getUserInfo(request);
         if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
-        int result = authDataService.updateAuthData(uid, authDatas);
+        int result = authDataService.updateAuthData(uid, authData);
         if (result > 0) {
             return ResultUtil.success("修改权限成功!");
         } else {

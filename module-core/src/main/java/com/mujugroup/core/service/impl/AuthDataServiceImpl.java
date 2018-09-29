@@ -28,34 +28,33 @@ public class AuthDataServiceImpl implements AuthDataService {
     private Gson gson = new GsonBuilder().create();
 
     @Override
-    public int updateAuthData(int uid, String[] authDatas) {
+    public int updateAuthData(int uid, String[] authData) {
         //删除当前用户的所有数据权限
         authDataMapper.deleteByUid(uid);
-        return addAuthData(uid, authDatas);
+        return addAuthData(uid, authData);
     }
 
     @Override
-    public int addAuthData(int uid, String[] authDatas) {
-
-        int[] ridArray = new int[authDatas.length];
-        int[] typeArrary = new int[authDatas.length];
-        if (authDatas != null && authDatas.length > 0) {
-            String str = null;
-            for (int i = 0; i < authDatas.length; i++) {
+    public int addAuthData(int uid, String[] authData) {
+        int[] ridArray = new int[authData.length];
+        int[] typeArray = new int[authData.length];
+        if (authData.length > 0) {
+            String str;
+            for (int i = 0; i < authData.length; i++) {
                 //将关系ID放入关系数组中存储
-                ridArray[i] = Integer.parseInt(authDatas[i].substring(3));
+                ridArray[i] = Integer.parseInt(authData[i].substring(3));
                 //将关系类型加入到类型数组中
-                str = authDatas[i].substring(0, 3);
+                str = authData[i].substring(0, 3);
                 if (str.equalsIgnoreCase("AID")) {
-                    typeArrary[i] = 1;
+                    typeArray[i] = 1;
                 } else if (str.equalsIgnoreCase("HID")) {
-                    typeArrary[i] = 2;
+                    typeArray[i] = 2;
                 } else {
-                    typeArrary[i] = 3;
+                    typeArray[i] = 3;
                 }
             }
         }
-        return authDataMapper.addAuthData(uid, ridArray, typeArrary);
+        return authDataMapper.addAuthData(uid, ridArray, typeArray);
     }
 
     @Override
