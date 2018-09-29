@@ -15,9 +15,10 @@ import javax.persistence.*;
 @Table(name = "t_auth_data")
 public class AuthData implements Serializable {
 
+
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_auth_data.id
      */
     @Id
@@ -47,37 +48,43 @@ public class AuthData implements Serializable {
     private Integer type;
 
 
+    //代理商类型
+    public static final int agentType = 1;
+    //医院类型
+    public static final int hospitalType = 2;
+    //科室类型
+    public static final int departmentType = 3;
 
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getUid() {
-		return uid;
-	}
+        return uid;
+    }
 
-	public void setUid(Integer uid) {
-		this.uid = uid;
-	}
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
 
     public Integer getRid() {
-		return rid;
-	}
+        return rid;
+    }
 
-	public void setRid(Integer rid) {
-		this.rid = rid;
-	}
+    public void setRid(Integer rid) {
+        this.rid = rid;
+    }
 
     public Integer getType() {
-		return type;
-	}
+        return type;
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
 }

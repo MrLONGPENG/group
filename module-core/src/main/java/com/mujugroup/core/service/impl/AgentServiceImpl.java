@@ -24,6 +24,21 @@ public class AgentServiceImpl implements AgentService {
 
 
     @Override
+    public List<SelectVO> getAgenListByUid(long uid) {
+        return agentMapper.getAgentListByUid(uid);
+    }
+
+    @Override
+    public List<SelectVO> getAgentHospitalByUid(long uid) {
+        return agentMapper.getAgentHospitalByUid(uid);
+    }
+
+    @Override
+    public List<SelectVO> getTheAgentList() {
+        return agentMapper.getTheAgentList();
+    }
+
+    @Override
     public List<SelectVO> getAgentList() {
         return agentMapper.getAgentList();
     }

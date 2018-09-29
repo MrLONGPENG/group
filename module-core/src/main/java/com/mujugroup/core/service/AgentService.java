@@ -10,4 +10,10 @@ import java.util.List;
 public interface AgentService {
 
     List<SelectVO> getAgentList();
+
+    List<SelectVO> getTheAgentList();
+
+    List<SelectVO> getAgenListByUid(long uid);
+
+    List<SelectVO> getAgentHospitalByUid(long uid);
 }

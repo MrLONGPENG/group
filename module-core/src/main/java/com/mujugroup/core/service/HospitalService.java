@@ -10,4 +10,8 @@ import java.util.List;
 public interface HospitalService {
 
     List<SelectVO> getHospitalList(int aid, String name);
+
+    List<SelectVO> getHospitalListByUid(int type, long uid);
+
+    List<SelectVO> getAgentHospitalListByUid(int type, long uid);
 }

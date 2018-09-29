@@ -17,6 +17,16 @@ public class HospitalServiceImpl implements HospitalService {
 
     private final HospitalMapper hospitalMapper;
 
+    @Override
+    public List<SelectVO> getAgentHospitalListByUid(int type, long uid) {
+        return hospitalMapper.getAgentHospitalListByUid(type,uid);
+    }
+
+    @Override
+    public List<SelectVO> getHospitalListByUid(int type,long uid) {
+        return hospitalMapper.getHospitalListByUid(type,uid);
+    }
+
     @Autowired
     public HospitalServiceImpl(HospitalMapper hospitalMapper) {
         this.hospitalMapper = hospitalMapper;
