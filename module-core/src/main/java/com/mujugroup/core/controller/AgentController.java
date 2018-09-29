@@ -39,7 +39,7 @@ public class AgentController {
     public String list(HttpServletRequest request) {
         UserInfo userInfo = AuthUtil.getUserInfo(request);
         if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
-        List<SelectVO> userAgentList = agentService.getAgenListByUid(userInfo.getId());
+        List<SelectVO> userAgentList = agentService.getAgentListByUid(userInfo.getId());
         // uid+type=2  count >0
         List<SelectVO> userHospitalAgentList=agentService.getAgentHospitalByUid(userInfo.getId());
         if (userHospitalAgentList!=null&&userHospitalAgentList.size()>0){

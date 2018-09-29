@@ -13,7 +13,7 @@ public interface AgentService {
 
     List<SelectVO> getTheAgentList();
 
-    List<SelectVO> getAgenListByUid(long uid);
+    List<SelectVO> getAgentListByUid(long uid);
 
     List<SelectVO> getAgentHospitalByUid(long uid);
 }
