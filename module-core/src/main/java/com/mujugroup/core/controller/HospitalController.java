@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -43,17 +42,16 @@ public class HospitalController {
         UserInfo userInfo= AuthUtil.getUserInfo(request);
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
         if(aid == -1){
-            // uid  auth+hosot pype =2
-            List<SelectVO> hospitalListFir=hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId());
+            return ResultUtil.success(hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId()));
         }else if(aid == 0){
-            // uid  auht +hos  pype 2\
-            // +  auht +hoso pyoe+1
-            List<SelectVO> hospitalListFir=hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId());
-            List<SelectVO> hospitalListSec=hospitalService.getAgentHospitalListByUid(AuthData.agentType,userInfo.getId());
-            if ((hospitalListFir!=null&&hospitalListFir.size()>0)||(hospitalListSec!=null&&hospitalListSec.size()>0)){
-               hospitalListFir.addAll(hospitalListSec);
-                return  ResultUtil.success(hospitalListFir);
+            List<SelectVO> allList= hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId());
+            List<SelectVO> secList=hospitalService.getAgentHospitalListByUid(AuthData.agentType,userInfo.getId());
+            if (allList!=null){
+                allList.addAll(secList);
+            }else{
+                allList = secList;
             }
+            if(allList !=null && allList.size() > 0) return ResultUtil.success(allList);
         }
         List<SelectVO> list = hospitalService.getHospitalList(aid, name);
         if(list != null) return ResultUtil.success(list);
