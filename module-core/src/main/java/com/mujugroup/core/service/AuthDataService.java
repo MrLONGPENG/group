@@ -24,5 +24,10 @@ public interface AuthDataService {
 
     String toJsonString(List<TreeBO> list);
 
-    int addAuthData(int uid,int[] ids,int[] types);
+    int addAuthData(int uid, String[] authDatas);
+
+    int deleteByUid(int uid);
+
+    int updateAuthData(int uid, String[] authDatas);
+
 }

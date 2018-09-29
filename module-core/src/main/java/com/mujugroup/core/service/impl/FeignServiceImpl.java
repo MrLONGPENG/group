@@ -3,6 +3,7 @@ package com.mujugroup.core.service.impl;
 import com.mujugroup.core.mapper.AuthDataMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.model.Hospital;
+import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,13 @@ import java.util.*;
 public class FeignServiceImpl implements FeignService {
 
     private final HospitalMapper hospitalMapper;
-    private final AuthDataMapper authDataMapper;
-
+    private final AuthDataService authDataService;
     //private final Logger logger = LoggerFactory.getLogger(FeignServiceImpl.class);
 
-    public FeignServiceImpl(HospitalMapper hospitalMapper, AuthDataMapper authDataMapper) {
+    public FeignServiceImpl(HospitalMapper hospitalMapper, AuthDataService authDataService) {
         this.hospitalMapper = hospitalMapper;
-        this.authDataMapper = authDataMapper;
-
+        this.authDataService = authDataService;
     }
-
 
     @Override
     public Map<Integer, String> getHospitalByAid(String aid) {
@@ -43,14 +41,9 @@ public class FeignServiceImpl implements FeignService {
         return set;
     }
 
-    /*@Override
-    public int addAuthData(int uid, int[] ids, int[] types) {
-        return  authDataMapper.addAuthData(uid,ids,types);
-    }*/
-
     @Override
     public int addAuthData(int uid, String[] authDatas) {
-        int[] ridArray = new int[authDatas.length];
+        /*int[] ridArray = new int[authDatas.length];
         int[] typeArrary = new int[authDatas.length];
         if (authDatas != null && authDatas.length > 0) {
             String str=null;
@@ -68,7 +61,8 @@ public class FeignServiceImpl implements FeignService {
                 }
             }
         }
-        return authDataMapper.addAuthData(uid,ridArray,typeArrary);
+        return authDataMapper.addAuthData(uid,ridArray,typeArrary);*/
+        return authDataService.addAuthData(uid, authDatas);
 
     }
 }

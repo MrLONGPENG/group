@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -26,16 +27,48 @@ public class AuthDataServiceImpl implements AuthDataService {
     private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
     private Gson gson = new GsonBuilder().create();
 
+    @Override
+    public int updateAuthData(int uid, String[] authDatas) {
+        //删除当前用户的所有数据权限
+        authDataMapper.deleteByUid(uid);
+        return addAuthData(uid, authDatas);
+    }
+
+    @Override
+    public int addAuthData(int uid, String[] authDatas) {
+
+        int[] ridArray = new int[authDatas.length];
+        int[] typeArrary = new int[authDatas.length];
+        if (authDatas != null && authDatas.length > 0) {
+            String str = null;
+            for (int i = 0; i < authDatas.length; i++) {
+                //将关系ID放入关系数组中存储
+                ridArray[i] = Integer.parseInt(authDatas[i].substring(3));
+                //将关系类型加入到类型数组中
+                str = authDatas[i].substring(0, 3);
+                if (str.equalsIgnoreCase("AID")) {
+                    typeArrary[i] = 1;
+                } else if (str.equalsIgnoreCase("HID")) {
+                    typeArrary[i] = 2;
+                } else {
+                    typeArrary[i] = 3;
+                }
+            }
+        }
+        return authDataMapper.addAuthData(uid, ridArray, typeArrary);
+    }
+
+    @Override
+    public int deleteByUid(int uid) {
+        return authDataMapper.deleteByUid(uid);
+    }
+
     @Autowired
     public AuthDataServiceImpl(AuthDataMapper authDataMapper, MapperFactory mapperFactory) {
         this.authDataMapper = authDataMapper;
         this.mapperFactory = mapperFactory;
     }
 
-    @Override
-    public int addAuthData(int uid, int[] ids, int[] types) {
-        return authDataMapper.addAuthData(uid,ids,types);
-    }
 
     @Override
     @MergeResult
@@ -81,8 +114,6 @@ public class AuthDataServiceImpl implements AuthDataService {
     public String toJsonString(List<TreeBO> list) {
         return gson.toJson(treeBoToVo(list));
     }
-
-
 
 
 }
