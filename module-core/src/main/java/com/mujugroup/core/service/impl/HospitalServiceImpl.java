@@ -1,6 +1,9 @@
 package com.mujugroup.core.service.impl;
 
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.HospitalMapper;
+import com.mujugroup.core.model.Hospital;
+import com.mujugroup.core.objeck.bo.HospitalBO;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.HospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,21 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public List<SelectVO> getAgentHospitalListByUid(int type, long uid) {
         return hospitalMapper.getAgentHospitalListByUid(type,uid);
+    }
+
+    @Override
+    public List<Hospital> findListByAid(String aid) {
+        return hospitalMapper.findListByAid(aid);
+    }
+
+    @Override
+    public List<Hospital> getHospitalByRegion(String pid, String cid) {
+        return hospitalMapper.getHospitalByRegion(pid, cid);
+    }
+
+    @Override
+    public List<HospitalBO> getHospitalBoByIds(String[] array) {
+        return hospitalMapper.getHospitalBoByIds(StringUtil.toLinkByComma((Object[]) array));
     }
 
     @Override

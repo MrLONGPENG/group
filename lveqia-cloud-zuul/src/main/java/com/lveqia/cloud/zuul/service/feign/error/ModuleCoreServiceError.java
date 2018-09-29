@@ -10,8 +10,8 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     private final Logger logger = LoggerFactory.getLogger(ModuleCoreServiceError.class);
 
     @Override
-    public int addAuthData(int uid, String[] authDatas) {
-        logger.debug("sdfsdfsadfsa");
+    public int addAuthData(int uid, String[] authData) {
+        logger.debug("addAuthData");
         return 0;
     }
 }

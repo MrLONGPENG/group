@@ -1,9 +1,9 @@
-package com.mujugroup.data.objeck.bo;
+package com.mujugroup.data.objeck.vo;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.google.gson.JsonObject;
-import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.service.feign.ModuleWxService;
 
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 表格导出数据
  * 总激活数、总用户数、昨日使用数以及使用率
  */
-public class ExcelBO implements Serializable {
+public class ExcelVO implements Serializable {
 
     private String refDate;
 
@@ -26,45 +26,14 @@ public class ExcelBO implements Serializable {
 
     private String city;
 
-    @MergeField(feign = ModuleCoreService.class, method = "getTotalActiveCount"
-            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String active;
 
-    @MergeField(feign = ModuleWxService.class, method = "getUsageCount"
-            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String usage;
 
-    @MergeField(feign = ModuleWxService.class, method = "getUsageRate"
-            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String usageRate;
 
-    @MergeField(feign = ModuleWxService.class, method = "getTotalProfit"
-            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String profit;
 
-    public ExcelBO(String refDate, JsonObject info, long end) {
-        this.refDate = refDate;
-        initInfo(info); // 初始化其信息
-        // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝
-        String aid = info.get("aid").getAsString();
-        String hid = info.get("hid").getAsString();
-        this.active = StringUtil.toLinkByComma(aid, hid, Constant.DIGIT_ZERO, end);
-        this.usage = StringUtil.toLinkByComma(aid, hid, 0, 0, 0, refDate);
-        this.usageRate = StringUtil.toLinkByComma(aid, hid,  0, refDate);
-        this.profit = StringUtil.toLinkByComma(aid, hid,  0, 0, 0, refDate);
-
-    }
-
-    /**
-     * @param info [aid,hid,agent,hospital,province,city]
-     */
-    private void initInfo(JsonObject info) {
-        this.agent = info.get("agent").getAsString();
-        this.hospital = info.get("hospital").getAsString();
-        this.province = info.get("province").getAsString();
-        this.city = info.get("city").getAsString();
-
-    }
 
     public String getRefDate() {
         return refDate;

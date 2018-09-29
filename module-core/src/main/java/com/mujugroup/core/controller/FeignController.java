@@ -1,7 +1,6 @@
 package com.mujugroup.core.controller;
 
 import com.mujugroup.core.service.FeignService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,7 +47,14 @@ public class FeignController {
     }
 
     @RequestMapping(value = "/addAuthData",method = RequestMethod.POST)
-    public int addAuthData(int uid, String[] authDatas){
-       return feignService.addAuthData(uid,authDatas);
+    public int addAuthData(@RequestParam(value = "uid") int uid, @RequestParam(value = "authData") String[] authData){
+       return feignService.addAuthData(uid, authData);
+    }
+
+
+    /** 根据HID获取医院Json对象 */
+    @RequestMapping(value = "/getHospitalJson", method = RequestMethod.POST)
+    public Map<String, String> getHospitalJson(@RequestParam(value = "hid") String hid){
+       return feignService.getHospitalJson(hid);
     }
 }

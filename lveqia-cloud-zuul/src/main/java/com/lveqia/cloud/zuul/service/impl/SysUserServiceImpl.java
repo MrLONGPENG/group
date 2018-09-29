@@ -106,7 +106,7 @@ public class SysUserServiceImpl implements SysUserService {
         //获取当前注册成功后的用户ID
         int id = sysUser.getId();
         if (authDatas != null && authDatas.length > 0) {
-          addAuthData(id,authDatas);
+            addAuthData(id,authDatas);
         }
         addUserRole(id, roles);
 
@@ -135,9 +135,8 @@ public class SysUserServiceImpl implements SysUserService {
         sysUserRoleService.putRidToUid(uid, rid);
     }
 
-    public void addAuthData(int uid,String[] authDatas){
-
-         moduleCoreService.addAuthData(uid,authDatas);
+    private void addAuthData(int uid,String[] authData){
+         moduleCoreService.addAuthData(uid,authData);
     }
 
 

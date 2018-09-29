@@ -29,17 +29,15 @@ public class MergeServiceImpl implements MergeService {
     private final HospitalMapper hospitalMapper;
     private final DepartmentMapper departmentMapper;
     private final AuthDataService authDataService;
-    private final MapperFactory mapperFactory;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
     public MergeServiceImpl(AgentMapper agentMapper, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
-            , DepartmentMapper departmentMapper, AuthDataService authDataService, MapperFactory mapperFactory) {
+            , DepartmentMapper departmentMapper, AuthDataService authDataService) {
         this.agentMapper = agentMapper;
         this.deviceMapper = deviceMapper;
         this.hospitalMapper = hospitalMapper;
         this.departmentMapper = departmentMapper;
         this.authDataService = authDataService;
-        this.mapperFactory = mapperFactory;
     }
 
 
@@ -84,6 +82,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key)) continue;
             String[] keys = key.split(Constant.SIGN_COMMA);
             hashMap.put(key, deviceMapper.getActiveCount(keys[0], StringUtil.formatIds(keys[1]), keys[2]
                     , Constant.DIGIT_ZERO, keys[3]));
@@ -97,6 +96,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, agentMapper.findById(Integer.parseInt(key)).getName());
         }
         return hashMap;
@@ -108,6 +108,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getHospitalById(key));
         }
         return hashMap;
@@ -119,6 +120,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getProvinceByHid(key));
         }
         return hashMap;
@@ -130,6 +132,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key)|| key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getCityByHid(key));
         }
         return hashMap;
@@ -141,6 +144,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key)) continue;
             hashMap.put(key, departmentMapper.getDepartmentNameById(key));
         }
         return hashMap;
@@ -152,6 +156,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap =  new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String did:array){
+            if(StringUtil.isEmpty(did)) continue;
             hashMap.put(did, deviceMapper.getBedInfoByDid(did));
         }
         return hashMap;
@@ -163,6 +168,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> map = new HashMap<>();
         String[] array = param.split(Constant.SIGN_SEMICOLON);
         for (String key:array){
+            if(StringUtil.isEmpty(key)) continue;
             map.put(key, getAuthTreeById(key));
         }
         return map;

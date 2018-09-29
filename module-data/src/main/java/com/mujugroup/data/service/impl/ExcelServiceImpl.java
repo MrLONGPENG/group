@@ -1,6 +1,9 @@
 package com.mujugroup.data.service.impl;
 
+import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.util.JsonUtil;
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.objeck.bo.ExcelBO;
 import com.mujugroup.data.service.ExcelService;
 import com.mujugroup.data.service.StaBOService;
@@ -9,7 +12,6 @@ import com.mujugroup.data.utils.ExcelData;
 import com.mujugroup.data.utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +29,23 @@ public class ExcelServiceImpl implements ExcelService {
         this.staBOService = staBOService;
     }
 
+
     @Override
-    public List<ExcelData> getExcelDataList(int aid, int hid, int grain, int startTime, int stopTime) {
+    public JsonObject getHospitalJson(String hid) {
+        Map<String, String> map = moduleCoreService.getHospitalJson(hid);
+        if(map == null || !map.containsKey(hid)) return null;
+        return JsonUtil.toJsonObject(map.get(hid));
+    }
+
+    @Override
+    public List<ExcelData> getExcelDataList(String[] ids, int grain, int startTime, int stopTime) {
         List<ExcelData> list = new ArrayList<>();
-        if(hid == 0){
-            Map<Integer, String> map = moduleCoreService.getHospitalByAid(aid);
-            for (Integer key : map.keySet()) {
-                list.add(getExcelData(map.get(key), aid , key, grain, startTime, stopTime));
+        if(ids!=null){
+            Map<String, String> map = moduleCoreService.getHospitalJson(StringUtil.toLink((Object[]) ids));
+            for (String hid: ids) {
+                if(StringUtil.isEmpty(hid) || map == null ||!map.containsKey(hid)) continue;
+                list.add(getExcelData(JsonUtil.toJsonObject(map.get(hid)), grain, startTime, stopTime));
             }
-        }else{
-            Map<String, String> map = moduleCoreService.getHospitalById(String.valueOf(hid));
-            list.add(getExcelData(map.get(String.valueOf(hid)), aid , hid, grain, startTime, stopTime));
         }
         return list;
     }
@@ -46,13 +54,13 @@ public class ExcelServiceImpl implements ExcelService {
     /**
      * 构建单个Sheet页面
      */
-    private ExcelData getExcelData(String name, int aid, int hid, int grain, int startTime, int stopTime) {
+    private ExcelData getExcelData(JsonObject info, int grain, int startTime, int stopTime) {
         String[] titles = new String[]{"时间", "代理商", "省份", "地区", "医院", "激活数", "使用数", "使用率", "收益"};
         ExcelData data = new ExcelData();
-        data.setName(name);
+        data.setName(info.get("hospital").getAsString());
         data.setTitles(titles);
         try {
-            List<ExcelBO> list = staBOService.getExcelBO(name, aid, hid, grain, startTime, stopTime);
+            List<ExcelBO> list = staBOService.getExcelBO(info, grain, startTime, stopTime);
             data.setRows(ExcelUtils.toRows(list));
         } catch (ParamException e) {
             e.printStackTrace();

@@ -1,14 +1,13 @@
 package com.lveqia.cloud.zuul.controller;
 
 import com.lveqia.cloud.common.util.ResultUtil;
+import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @RefreshScope
@@ -25,8 +24,8 @@ public class ZuulLocalController implements ErrorController {
 
     @RequestMapping(value = ERROR_PATH)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public String handleError(HttpServletRequest request){
-        logger.debug(request.getRequestURI());
+    public String handleError(RequestContext requestContext){
+        logger.debug(requestContext.getResponseBody());
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_PATH);
     }
 

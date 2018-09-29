@@ -1,10 +1,13 @@
 package com.mujugroup.data.service.impl;
 
+import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.mujugroup.data.objeck.bo.ExcelBO;
 import com.mujugroup.data.objeck.bo.ProfitBO;
 import com.mujugroup.data.objeck.bo.sta.StaProfit;
+import com.mujugroup.data.objeck.vo.ExcelVO;
 import com.mujugroup.data.objeck.vo.ProfitVO;
 import com.mujugroup.data.objeck.vo.StaProfitVO;
 import com.mujugroup.data.service.StaBOService;
@@ -58,5 +61,14 @@ public class StaVOServiceImpl implements StaVOService {
                 .fieldMap("yesterdayProfit").converter("rmbPriceConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().map(profitBO, ProfitVO.class);
+    }
+
+    @Override
+    public List<ExcelVO> getExcelVO(JsonObject info, int grain, int startTime, int stopTime) throws ParamException {
+        mapperFactory.classMap(ExcelBO.class, ExcelVO.class)
+                .fieldMap("profit").converter("rmbPriceConvert").add()
+                .byDefault().register();
+        return mapperFactory.getMapperFacade().mapAsList(staBOService.getExcelBO(info
+                , grain, startTime,stopTime), ExcelVO.class);
     }
 }

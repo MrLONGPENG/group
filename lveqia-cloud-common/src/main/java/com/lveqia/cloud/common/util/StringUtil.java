@@ -158,9 +158,15 @@ public class StringUtil {
      * 计算百分数
      */
     public static String getPercent(String count, String total) {
-        Double c = Double.valueOf(count), t = Double.valueOf(total);
+        return getPercent( Double.valueOf(count),  Double.valueOf(total));
+    }
+
+    /**
+     * 计算百分数
+     */
+    public static String getPercent(Double count, Double total) {
         NumberFormat nf = NumberFormat.getPercentInstance();
         nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点
-        return nf.format( c/t);
+        return nf.format( count/total);
     }
 }

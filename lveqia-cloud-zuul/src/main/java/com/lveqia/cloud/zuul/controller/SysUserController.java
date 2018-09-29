@@ -78,12 +78,12 @@ public class SysUserController {
             , @ApiParam(value = "头像地址") @RequestParam(value = "avatarUrl", required = false) String avatarUrl
             , @ApiParam(value = "账户备注") @RequestParam(value = "remark", required = false) String remark
             , @ApiParam(value = "角色组") @RequestParam(value = "roles", required = false) int[] roles
-           , @ApiParam(value = "数据权限") @RequestParam(value = "authDatas", required = false) String[] authDatas) {
+           , @ApiParam(value = "数据权限") @RequestParam(value = "authData", required = false) String[] authData) {
         try {
             UserInfo userInfo = sysUserService.getCurrInfo();
             if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
             if (sysUserService.addUser(userInfo.getId(), username, name, phone, email, password
-                    , address, avatarUrl, remark, roles,authDatas) == 1) {
+                    , address, avatarUrl, remark, roles, authData) == 1) {
                 return ResultUtil.success("注册成功!");
             } else {
                 return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR, "注册失败!");

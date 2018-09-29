@@ -4,7 +4,6 @@ import com.mujugroup.data.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -72,5 +71,11 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     @Override
     public Set<Integer> getHospitalByRegion(int pid, int cid) {
         return new HashSet<>();
+    }
+
+    @Override
+    public Map<String, String> getHospitalJson(String hid) {
+        logger.debug("data->remote core fail, method:getHospitalJson param:{}",hid);
+        return null;
     }
 }

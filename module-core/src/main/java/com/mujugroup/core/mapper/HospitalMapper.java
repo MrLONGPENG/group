@@ -1,6 +1,7 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.Hospital;
+import com.mujugroup.core.objeck.bo.HospitalBO;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.sql.HospitalSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -98,4 +99,19 @@ public interface HospitalMapper {
             " AND d.`type`=#{type} AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("hospitalList")
     List<SelectVO> getAgentHospitalListByUid(@Param("type") int type,@Param("uid") long uid);
+
+
+
+    @Results(value = {@Result(column = "aid", property = "aid", javaType = String.class)
+            , @Result(column = "hid", property = "hid", javaType = String.class)
+            , @Result(column = "agent", property = "agent", javaType = String.class)
+            , @Result(column = "hospital", property = "hospital", javaType = String.class)
+            , @Result(column = "province", property = "province", javaType = String.class)
+            , @Result(column = "city", property = "city", javaType = String.class)
+    })
+    @Select("SELECT h.agentId as aid, h.id as hid, a.`name` as agent, h.`name` as hospital" +
+            ", p.`name` as province , c.`name` as city FROM t_hospital h, t_agent a " +
+            ", t_country_province_city p, t_country_province_city c WHERE h.agentId " +
+            "= a.id AND h.province = p.id AND h.city = c.id AND h.id in (${ids})")
+    List<HospitalBO> getHospitalBoByIds(@Param("ids") String ids);
 }

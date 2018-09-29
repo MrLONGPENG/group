@@ -1,6 +1,7 @@
 package com.mujugroup.core.service;
 
 
+
 import java.util.Map;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public interface FeignService {
 
     Set<Integer> getHospitalByRegion(String pid, String cid);
 
-    //int addAuthData(int uid,int[] ids,int[] types);
-    int addAuthData(int uid,String[] authDatas);
+    int addAuthData(int uid,String[] authData);
+
+    Map<String,String> getHospitalJson(String param);
 }

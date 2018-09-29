@@ -250,9 +250,7 @@ public class WxOrderServiceImpl implements WxOrderService {
             allCount = Double.parseDouble(map.get(keys[i].toString()));
             if(allCount !=0) avgCount += arrUsage[i] / allCount;
         }
-        NumberFormat numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        return numberFormat.format((avgCount / (float) days * 100));
+        return StringUtil.getPercent(avgCount, Double.valueOf(days));
     }
 
     /**

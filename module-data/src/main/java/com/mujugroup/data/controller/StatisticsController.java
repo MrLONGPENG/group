@@ -1,13 +1,14 @@
 package com.mujugroup.data.controller;
 
-import com.lveqia.cloud.common.util.AuthUtil;
+import com.google.gson.JsonObject;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.data.service.ExcelService;
+import com.mujugroup.data.service.StaBOService;
 import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.utils.ExcelData;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
 
@@ -35,13 +35,15 @@ public class StatisticsController {
 
     private final ExcelService excelService;
     private final StaVOService staVOService;
+    private final StaBOService staBOService;
     private final ModuleCoreService moduleCoreService;
 
     @Autowired
     public StatisticsController(ExcelService excelService, StaVOService staVOService
-            , ModuleCoreService moduleCoreService) {
+            , StaBOService staBOService, ModuleCoreService moduleCoreService) {
         this.excelService = excelService;
         this.staVOService = staVOService;
+        this.staBOService = staBOService;
         this.moduleCoreService = moduleCoreService;
     }
 
@@ -73,36 +75,40 @@ public class StatisticsController {
 
     @ApiOperation(value="按医院标签展示表格数据", notes="根据代理商、医院、科室查询木巨柜使用、收益情况")
     @RequestMapping(value = "/table",method = RequestMethod.POST)
-    public String table(@ApiParam(value="代理商ID", required = true) @RequestParam(name="aid") int aid
-            , @ApiParam(value="医院ID")@RequestParam(name="hid", required=false, defaultValue="0") int hid
-            , @ApiParam(value="省份ID")@RequestParam(name="pid", required=false, defaultValue="0") int pid
-            , @ApiParam(value="城市ID")@RequestParam(name="cid", required=false, defaultValue="0") int cid
+    public String table(@ApiParam(value="医院ID", required = true) @RequestParam(name="hid") String hid
+            //, @ApiParam(value="省份ID")@RequestParam(name="pid", required=false, defaultValue="0") int pid
+            //, @ApiParam(value="城市ID")@RequestParam(name="cid", required=false, defaultValue="0") int cid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain, HttpServletRequest request){
-        logger.debug("session id {}", request.getSession().getId());
-        logger.debug("uid id {}", AuthUtil.getUserInfo(request));
-        logger.debug("table {} {} {} {} {}", aid, hid, pid, cid, grain);
-        return ResultUtil.success(excelService.getExcelDataList(aid, hid, grain, startTime, stopTime));
+            , defaultValue="1") int grain){
+        long time = System.currentTimeMillis();
+        try {
+            JsonObject info = excelService.getHospitalJson(hid);
+            if(info == null) return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
+            return ResultUtil.success(staVOService.getExcelVO(info, grain, startTime, stopTime));
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        } finally {
+            logger.debug("查询Table花费{}毫秒", System.currentTimeMillis() - time);
+        }
     }
 
 
     @ApiOperation(value="导出Excel数据问题", notes="根据代理商、医院、科室查询木巨柜使用、收益情况")
     @RequestMapping(value = "/excel",method = RequestMethod.GET)
-    public void excel(@ApiParam(value="代理商ID", required = true) @RequestParam(name="aid") int aid
-            , @ApiParam(value="医院ID")@RequestParam(name="hid", required=false, defaultValue="0") int hid
-            , @ApiParam(value="省份ID")@RequestParam(name="pid", required=false, defaultValue="0") int pid
-            , @ApiParam(value="城市ID")@RequestParam(name="cid", required=false, defaultValue="0") int cid
+    public void excel(@ApiParam(value="医院ID")@RequestParam(name="hid", required=false) String[] hid
+            //, @ApiParam(value="省份ID")@RequestParam(name="pid", required=false, defaultValue="0") int pid
+            //, @ApiParam(value="城市ID")@RequestParam(name="cid", required=false, defaultValue="0") int cid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
             , defaultValue="1") int grain, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         logger.debug("session id {}", request.getSession());
-        logger.debug("excel {} {} {} {} {}", aid, hid, pid, cid, grain);
+        logger.debug("excel {} {} {} {} {}", hid, grain);
         long time = System.currentTimeMillis();
-        List<ExcelData> list = excelService.getExcelDataList(aid, hid, grain, startTime, stopTime);
+        List<ExcelData> list = excelService.getExcelDataList(hid, grain, startTime, stopTime);
         ExcelUtils.exportExcel(response, StringUtil.join("", DateUtil.timestampToDays(startTime)
                 , "-", DateUtil.timestampToDays(stopTime), ".xlsx"), list);
         logger.debug("导出Excel花费{}毫秒", System.currentTimeMillis() - time);

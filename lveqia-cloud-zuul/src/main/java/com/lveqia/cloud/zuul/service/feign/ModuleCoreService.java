@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "module-core" ,fallback = ModuleCoreServiceError.class)
 public interface ModuleCoreService {
     @RequestMapping(value = "/feign/addAuthData",method = RequestMethod.POST)
-    int addAuthData(@RequestParam(value = "uid") int uid, @RequestParam(value = "authDatas") String[] authDatas);
+    int addAuthData(@RequestParam(value = "uid") int uid, @RequestParam(value = "authData") String[] authData);
 }
