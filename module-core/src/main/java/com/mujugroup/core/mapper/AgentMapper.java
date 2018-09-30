@@ -72,4 +72,8 @@ public interface AgentMapper {
     @Select("Select d.rid as id, a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.id AND d.`type`=2  AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("authAgentList")
     List<SelectVO> getAgentHospitalByUid(@Param("uid") long uid);
+
+    @Select("Select COUNT(*) FROM t_agent a,t_hospital b WHERE a.id=b.agentid AND a.id=#{id} limit 1")
+    @ResultType(boolean.class)
+    boolean exist(@Param("id") int id);
 }
