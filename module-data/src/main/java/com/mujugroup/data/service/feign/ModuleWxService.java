@@ -19,7 +19,7 @@ public interface ModuleWxService {
 
     /**
      * 获取指定时间范围内总用户数
-     * @param param start,end  开始与结束时间戳
+     * @param param start&end  开始与结束时间戳
      * @return key:start,end value:count
      */
     @RequestMapping(value = "/merge/getUserCount",method = RequestMethod.POST)
@@ -28,8 +28,8 @@ public interface ModuleWxService {
 
     /**
      * 根据条件获取指定时间类的使用数量
-     * @param param 代理商ID,医院ID,科室ID,开始时间戳,结束时间戳,日期字符 (ps:日期字符可能为空，多个数据分号分割)
-     * @return  key:aid,hid,oid,start,end,date value:count
+     * @param param 代理商ID&医院ID&科室ID&开始时间戳&结束时间戳&日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid&hid&oid&start&end&date value:count
      */
     @RequestMapping(value = "/merge/getUsageCount",method = RequestMethod.POST)
     Map<String, String> getUsageCount(@RequestParam(value = "param") String param);
@@ -37,16 +37,16 @@ public interface ModuleWxService {
 
     /**
      * 根据条件获取指定时间类的使用率
-     * @param param 代理商ID,医院ID,科室ID,日期字符 (ps:日期字符可能为空，多个数据分号分割)
-     * @return  key:aid,hid,oid,date value:count
+     * @param param 代理商ID&医院ID&科室ID&日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @return  key:aid&hid&oid&date value:count
      */
     @RequestMapping(value = "/merge/getUsageRate",method = RequestMethod.POST)
     Map<String, String> getUsageRate(@RequestParam(value = "param") String param);
 
     /**
      * 获取指定时间内、指定条件下的利润总和
-     * @param param aid,hid,oid,start,end
-     * @return key:aid,hid,oid,start,end value:profit(单位分)
+     * @param param aid&hid&oid&start&end
+     * @return key:aid&hid&oid&start&end value:profit(单位分)
      */
     @RequestMapping(value = "/merge/getTotalProfit",method = RequestMethod.POST)
     Map<String, String> getTotalProfit(@RequestParam(value = "param") String param);

@@ -28,7 +28,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getHardwareInfo(String param) {
         logger.debug("getHardwareInfo-->{}", param);
         Map<String,String> map = new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         StringBuilder sb;
         LockInfo lockInfo;
         for (String bid: array) {
@@ -36,16 +36,16 @@ public class MergeServiceImpl implements MergeService {
             if(lockInfo!=null){
                 // BID;开锁状态;电池电量;最后上报时间;信号;温度;固件版本;硬件版本;充电电压;电池电压;充电电流
                 sb = new StringBuilder(StringUtil.autoFillDid(lockInfo.getDid()));
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getLockStatus());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getBatteryStat());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getLastRefresh().getTime()/1000);
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getCsq());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getTemp());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getFVersion());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getHVersion());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getCharge());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getVoltage());
-                sb.append(Constant.SIGN_SEMICOLON).append(lockInfo.getElectric());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getLockStatus());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getBatteryStat());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getLastRefresh().getTime()/1000);
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getCsq());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getTemp());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getFVersion());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getHVersion());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getCharge());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getVoltage());
+                sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getElectric());
                 map.put(bid, new String(sb));
             }
         }

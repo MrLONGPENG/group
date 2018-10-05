@@ -3,13 +3,12 @@ package com.mujugroup.core.service.impl;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.mapper.AuthDataMapper;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.objeck.vo.TreeVO;
 import com.mujugroup.core.service.AuthDataService;
 import ma.glasnost.orika.MapperFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +23,26 @@ public class AuthDataServiceImpl implements AuthDataService {
 
     private final AuthDataMapper authDataMapper;
     private final MapperFactory mapperFactory;
-    private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
+    //private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
     private Gson gson = new GsonBuilder().create();
+
+
+    @Autowired
+    public AuthDataServiceImpl(AuthDataMapper authDataMapper, MapperFactory mapperFactory) {
+        this.authDataMapper = authDataMapper;
+        this.mapperFactory = mapperFactory;
+    }
 
     @Override
     public int updateAuthData(int uid, String[] authData) {
         //删除当前用户的所有数据权限
         authDataMapper.deleteByUid(uid);
         return addAuthData(uid, authData);
+    }
+
+    @Override
+    public List<DBMap> getAuthData(int uid) {
+        return authDataMapper.getAuthData(uid);
     }
 
     @Override
@@ -60,12 +71,6 @@ public class AuthDataServiceImpl implements AuthDataService {
     @Override
     public int deleteByUid(int uid) {
         return authDataMapper.deleteByUid(uid);
-    }
-
-    @Autowired
-    public AuthDataServiceImpl(AuthDataMapper authDataMapper, MapperFactory mapperFactory) {
-        this.authDataMapper = authDataMapper;
-        this.mapperFactory = mapperFactory;
     }
 
 

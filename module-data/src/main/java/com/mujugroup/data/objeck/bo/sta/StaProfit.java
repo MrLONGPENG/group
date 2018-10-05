@@ -19,14 +19,9 @@ public class StaProfit implements Serializable {
     private String profit;
 
 
-    public StaProfit(String refDate, int aid, int hid, int oid) {
+    public StaProfit(String refDate, String[] ids) {
         this.refDate = refDate;
-        this.profit = StringUtil.toLinkByComma(aid, hid, oid, 0, 0, refDate);
-    }
-
-    public StaProfit(String refDate, String ids) {
-        this.refDate = refDate;
-        this.profit = StringUtil.toLinkByComma(0, ids, 0, 0, 0, refDate);
+        this.profit = StringUtil.toLinkByAnd(ids[0], ids[1], ids[2], 0, 0, refDate);
     }
 
     public String getRefDate() {

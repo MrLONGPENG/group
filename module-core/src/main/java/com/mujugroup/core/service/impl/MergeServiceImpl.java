@@ -56,7 +56,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getOidMapByHid(String param) {
         logger.debug("getOidMapByHid->{}", param);
         Map<String,String> map = new HashMap<>();
-        List<Department> list =  departmentMapper.findListByHid(param.split(Constant.SIGN_COMMA)[1]);
+        List<Department> list =  departmentMapper.findListByHid(param.split(Constant.SIGN_AND)[1]);
         for (Department department: list) {
             map.put(String.valueOf(department.getId()), department.getName());
         }
@@ -66,7 +66,7 @@ public class MergeServiceImpl implements MergeService {
     @Override
     public Map<String, String> getNewlyActiveCount(String param) {
         logger.debug("getNewlyActiveCount->{}", param);
-        String[] params = param.split(Constant.SIGN_COMMA);
+        String[] params = param.split(Constant.SIGN_AND);
         HashMap<String, String> hashMap =  new HashMap<>();
         List<DBMap> list = null;
         if("1,2,3".contains(params[3])){
@@ -80,10 +80,10 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getTotalActiveCount(String param) {
         logger.debug("getTotalActiveCount->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key)) continue;
-            String[] keys = key.split(Constant.SIGN_COMMA);
+            String[] keys = key.split(Constant.SIGN_AND);
             hashMap.put(key, deviceMapper.getActiveCount(keys[0], StringUtil.formatIds(keys[1]), keys[2]
                     , Constant.DIGIT_ZERO, keys[3]));
         }
@@ -94,7 +94,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getAgentById(String param) {
         logger.debug("getAgentById->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, agentMapper.findById(Integer.parseInt(key)).getName());
@@ -106,7 +106,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getHospitalById(String param) {
         logger.debug("getHospitalById->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getHospitalById(key));
@@ -118,7 +118,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getProvinceByHid(String param) {
         logger.debug("getProvinceByHid->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getProvinceByHid(key));
@@ -130,7 +130,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getCityByHid(String param) {
         logger.debug("getCityByHid->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key)|| key.equals(Constant.DIGIT_ZERO)) continue;
             hashMap.put(key, hospitalMapper.getCityByHid(key));
@@ -142,7 +142,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getDepartmentById(String param) {
         logger.debug("getDepartmentById->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key)) continue;
             hashMap.put(key, departmentMapper.getDepartmentNameById(key));
@@ -154,7 +154,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getBedInfoByDid(String param) {
         logger.debug("getBedInfoByDid->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String did:array){
             if(StringUtil.isEmpty(did)) continue;
             hashMap.put(did, deviceMapper.getBedInfoByDid(did));
@@ -166,7 +166,7 @@ public class MergeServiceImpl implements MergeService {
     public Map<String, String> getAuthTree(String param) {
         logger.debug("getAuthTree {}", param);
         HashMap<String, String> map = new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key:array){
             if(StringUtil.isEmpty(key)) continue;
             map.put(key, getAuthTreeById(key));

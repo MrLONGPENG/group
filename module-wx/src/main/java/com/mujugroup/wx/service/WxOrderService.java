@@ -40,7 +40,7 @@ public interface WxOrderService {
 
     String getTotalProfit(String aid, String hid, String oid, String did, String tradeNo, long start, long end);
 
-    List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo, int orderType);
+    List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType);
 
     List<WxOrder> findList(AidHidOidTO dto);
 

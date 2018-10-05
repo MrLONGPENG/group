@@ -48,10 +48,10 @@ public class ExcelBO implements Serializable {
         // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝
         String aid = info.get("aid").getAsString();
         String hid = info.get("hid").getAsString();
-        this.active = StringUtil.toLinkByComma(aid, hid, Constant.DIGIT_ZERO, end);
-        this.usage = StringUtil.toLinkByComma(aid, hid, 0, 0, 0, refDate);
-        this.usageRate = StringUtil.toLinkByComma(aid, hid,  0, refDate);
-        this.profit = StringUtil.toLinkByComma(aid, hid,  0, 0, 0, refDate);
+        this.active = StringUtil.toLinkByAnd(aid, hid, Constant.DIGIT_ZERO, end);
+        this.usage = StringUtil.toLinkByAnd(aid, hid, 0, 0, 0, refDate);
+        this.usageRate = StringUtil.toLinkByAnd(aid, hid,  0, refDate);
+        this.profit = StringUtil.toLinkByAnd(aid, hid,  0, 0, 0, refDate);
 
     }
 

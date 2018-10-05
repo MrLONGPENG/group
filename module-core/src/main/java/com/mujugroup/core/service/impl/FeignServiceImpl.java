@@ -3,6 +3,7 @@ package com.mujugroup.core.service.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
 import com.mujugroup.core.service.AuthDataService;
@@ -56,12 +57,20 @@ public class FeignServiceImpl implements FeignService {
     public Map<String, String> getHospitalJson(String param) {
         logger.debug("getHospitalJson->{}", param);
         HashMap<String, String> hashMap =  new HashMap<>();
-        String[] array = param.split(Constant.SIGN_SEMICOLON);
+        String[] array = param.split(Constant.SIGN_FEN_HAO);
         Gson gson = new GsonBuilder().create();
         List<HospitalBO> list = hospitalService.getHospitalBoByIds(array);
         for (HospitalBO bo:list){
             hashMap.put(bo.getHid(), gson.toJson(bo));
         }
+        return hashMap;
+    }
+
+    @Override
+    public Map<String, String> getAuthData(int uid) {
+        HashMap<String, String> hashMap =  new HashMap<>();
+        List<DBMap> list = authDataService.getAuthData(uid);
+        list.forEach(dbMap -> dbMap.addTo(hashMap));
         return hashMap;
     }
 }

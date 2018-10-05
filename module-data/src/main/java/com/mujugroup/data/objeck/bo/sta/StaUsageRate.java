@@ -19,14 +19,9 @@ public class StaUsageRate implements Serializable {
     private String usageRate;
 
 
-    public StaUsageRate(String refDate, int aid, int hid, int oid) {
+    public StaUsageRate(String refDate, String[] ids) {
         this.refDate = refDate;
-        this.usageRate =  StringUtil.toLinkByComma(aid, hid, oid, refDate);
-    }
-
-    public StaUsageRate(String refDate, String ids) {
-        this.refDate = refDate;
-        this.usageRate =  StringUtil.toLinkByComma(0, ids, 0, refDate);
+        this.usageRate =  StringUtil.toLinkByAnd(ids[0], ids[1], ids[2], refDate);
     }
 
     public String getRefDate() {

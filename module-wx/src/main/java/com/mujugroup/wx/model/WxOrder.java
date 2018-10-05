@@ -1,6 +1,8 @@
 package com.mujugroup.wx.model;
 
 
+import com.lveqia.cloud.common.config.Constant;
+
 import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -255,12 +257,12 @@ public class WxOrder implements Serializable {
 	}
 
 	/**
-	 * 组装订单各个ID  格式：AID;HID;OID;GID
+	 * 组装订单各个ID  格式：AID&HID&OID&GID
 	 */
     public String getKey() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getAid()).append(";").append(getHid()).append(";");
-		sb.append(getOid()).append(";").append(getGid());
+		sb.append(getAid()).append(Constant.SIGN_AND).append(getHid()).append(Constant.SIGN_AND);
+		sb.append(getOid()).append(Constant.SIGN_AND).append(getGid());
 		return new String(sb);
     }
 }

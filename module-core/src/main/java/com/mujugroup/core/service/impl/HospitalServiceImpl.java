@@ -21,7 +21,7 @@ public class HospitalServiceImpl implements HospitalService {
     private final HospitalMapper hospitalMapper;
 
     @Override
-    public List<SelectVO> getAgentHospitalListByUid(int type, long uid) {
+    public List<SelectVO> getAgentHospitalListByUid(String type, long uid) {
         return hospitalMapper.getAgentHospitalListByUid(type,uid);
     }
 
@@ -37,12 +37,12 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public List<HospitalBO> getHospitalBoByIds(String[] array) {
-        return hospitalMapper.getHospitalBoByIds(StringUtil.toLinkByComma((Object[]) array));
+        return hospitalMapper.getHospitalBoByIds(StringUtil.toLinkByDouHao((Object[]) array));
     }
 
     @Override
-    public List<SelectVO> getHospitalListByUid(int type,long uid) {
-        return hospitalMapper.getHospitalListByUid(type,uid);
+    public List<SelectVO> getHospitalListByUid(String type, long uid) {
+        return hospitalMapper.getHospitalListByUid(type, uid);
     }
 
     @Autowired

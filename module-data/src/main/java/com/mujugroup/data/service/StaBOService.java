@@ -16,17 +16,13 @@ public interface StaBOService {
     List<String> getRefDate(int startTime, int stopTime
             , int grain) throws ParamException;
 
-    List<StaUsage>  getUsage(String ids, int aid, int hid, int oid, int grain
-            , int startTime, int stopTime) throws ParamException;
+    List<StaUsage>  getUsage(String[] ids, int grain, int startTime, int stopTime) throws ParamException;
 
-    List<StaProfit> getProfit(String ids, int aid, int hid, int oid, int grain
-            , int startTime, int stopTime) throws ParamException;
+    List<StaProfit> getProfit(String[] ids, int grain, int startTime, int stopTime) throws ParamException;
 
-    List<StaActive> getActive(String ids, int aid, int hid, int oid, int grain
-            , int startTime, int stopTime) throws ParamException;
+    List<StaActive> getActive(String[] ids, int grain, int startTime, int stopTime) throws ParamException;
 
-    List<StaUsageRate> getUsageRate(String ids, int aid, int hid, int oid, int grain
-            , int startTime, int stopTime) throws ParamException;
+    List<StaUsageRate> getUsageRate(String[] ids, int grain, int startTime, int stopTime) throws ParamException;
 
     List<ExcelBO> getExcelBO(JsonObject info, int grain, int startTime, int stopTime) throws ParamException;
 

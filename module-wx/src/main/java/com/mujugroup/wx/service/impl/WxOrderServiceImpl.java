@@ -221,7 +221,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
-    public List<WxOrder> findList(int aid, int hid, int oid, long start, long end, String tradeNo, int orderType) {
+    public List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType) {
         return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType);
     }
 
@@ -242,7 +242,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         for (int i = 0; i < days; i++) {
             start = timestamp + i * Constant.TIMESTAMP_DAYS_1;
             end = timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1;
-            keys[i] = StringUtil.toLinkByComma(aid, hid, oid, end);
+            keys[i] = StringUtil.toLinkByAnd(aid, hid, oid, end);
             arrUsage[i] = wxOrderMapper.getUsageCount(aid, hid, oid, start, end).getCount1();
         }
         Map<String, String> map = moduleCoreService.getTotalActiveCount(StringUtil.toLink(keys));

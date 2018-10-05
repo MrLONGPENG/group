@@ -37,7 +37,7 @@ public class EndTimeCache extends GuavaCache<String, Long> implements ILocalCach
 
     @Override
     protected Long loadData(String key) {
-        String[] keys = key.split(Constant.SIGN_SEMICOLON);
+        String[] keys = key.split(Constant.SIGN_AND);
         if(keys.length< 4) return DateUtil.getTimesNight();
         WxGoods wxGoods = wxGoodsService.findById(Integer.parseInt(keys[3]));
         long endTime = DateUtil.getTimesMorning();

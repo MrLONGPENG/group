@@ -14,4 +14,6 @@ public interface FeignService {
     int addAuthData(int uid,String[] authData);
 
     Map<String,String> getHospitalJson(String param);
+
+    Map<String,String> getAuthData(int uid);
 }

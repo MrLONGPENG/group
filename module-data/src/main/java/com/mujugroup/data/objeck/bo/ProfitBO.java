@@ -23,11 +23,11 @@ public class ProfitBO implements Serializable {
     private String yesterdayProfit;
 
 
-    public ProfitBO(int aid, long timestamp) {
+    public ProfitBO(String aid, long timestamp) {
         // 总收益与昨日收益，差异在于开始时间（即总收益无开始时间，默认O）
-        this.totalProfit = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO
+        this.totalProfit = StringUtil.toLinkByAnd(aid, Constant.DIGIT_ZERO
                 , Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);
-        this.yesterdayProfit = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO
+        this.yesterdayProfit = StringUtil.toLinkByAnd(aid, Constant.DIGIT_ZERO
                 , Constant.DIGIT_ZERO, timestamp - Constant.TIMESTAMP_DAYS_1, timestamp);
     }
 

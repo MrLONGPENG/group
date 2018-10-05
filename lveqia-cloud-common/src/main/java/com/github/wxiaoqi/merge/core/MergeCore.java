@@ -52,7 +52,7 @@ public class MergeCore {
                         Object bean = BeanFactoryUtils.getBean(mergeField.feign());
                         Method method = mergeField.feign().getMethod(mergeField.method(), String.class);
                         String query = key.contains(Constant.SIGN_NUMBER)
-                                ? key.substring(key.indexOf(Constant.SIGN_COMMA)+1) : mergeField.key();
+                                ? key.substring(key.indexOf(Constant.SIGN_AND)+1) : mergeField.key();
                         Map<String, String> invoke = (Map<String, String>) method.invoke(bean,query);
                         return invoke;
                     }
@@ -65,7 +65,7 @@ public class MergeCore {
                             Object bean = BeanFactoryUtils.getBean(mergeField.feign());
                             Method method = mergeField.feign().getMethod(mergeField.method(), String.class);
                             String query = key.contains(Constant.SIGN_NUMBER)
-                                    ? key.substring(key.indexOf(Constant.SIGN_COMMA)+1) : mergeField.key();
+                                    ? key.substring(key.indexOf(Constant.SIGN_AND)+1) : mergeField.key();
                             Map<String, String> invoke = (Map<String, String>) method.invoke(bean,query);
                             return invoke;
                         });
@@ -200,7 +200,7 @@ public class MergeCore {
                 if (o != null) {
                     if (!ids.contains(o)) {
                         ids.add(o.toString());
-                        sb.append(o.toString()).append(Constant.SIGN_SEMICOLON);
+                        sb.append(o.toString()).append(Constant.SIGN_FEN_HAO);
                     }
                 }
             } catch (IllegalAccessException e) {
@@ -238,11 +238,11 @@ public class MergeCore {
     private Map<String, String> getValueByKey(Object[] params, String className, Field field, MergeField annotation)
             throws ExecutionException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String key = className + field.getName();
-        if(annotation.isQueryByParam()){// 采用格式：类名#属性名,参数1,参数n
+        if(annotation.isQueryByParam()){// 采用格式：类名#属性名&参数&参数n
             StringBuffer sb = new StringBuffer(className);
             sb.append(Constant.SIGN_NUMBER).append(field.getName());
             for (Object object:params) {
-                sb.append(Constant.SIGN_COMMA).append(object);
+                sb.append(Constant.SIGN_AND).append(object);
             }
             key = new String(sb);
         }
@@ -254,7 +254,7 @@ public class MergeCore {
             Object bean = BeanFactoryUtils.getBean(annotation.feign());
             Method method = annotation.feign().getMethod(annotation.method(), String.class);
             String query = key.contains(Constant.SIGN_NUMBER) ? key.substring(
-                    key.indexOf(Constant.SIGN_COMMA) + 1 ) : annotation.key();
+                    key.indexOf(Constant.SIGN_AND) + 1 ) : annotation.key();
             value = (Map<String, String>) method.invoke(bean,query);
         }
         return value;

@@ -9,9 +9,9 @@ package com.lveqia.cloud.common.objeck.to;
 public class AidHidOidTO {
 
 
-    private int aid;
-    private int hid;
-    private int oid;
+    private String aid;
+    private String hid;
+    private String oid;
     private long start;
     private long end;
     private int orderType;
@@ -28,12 +28,12 @@ public class AidHidOidTO {
     /**
      * 不分页数据
      */
-    public AidHidOidTO(int aid, int hid, int oid, int orderType, long start, long end) {
+    public AidHidOidTO(String aid, String hid, String oid, int orderType, long start, long end) {
         this(aid, hid, oid, orderType, start, end, 1, 0 );
     }
 
 
-    public AidHidOidTO(int aid, int hid, int oid, int orderType, long start, long end, int pageNum, int pageSize) {
+    public AidHidOidTO(String aid, String hid, String oid, int orderType, long start, long end, int pageNum, int pageSize) {
         this.aid = aid;
         this.hid = hid;
         this.oid = oid;
@@ -43,27 +43,28 @@ public class AidHidOidTO {
         this.pageSize = pageSize;
         this.orderType = orderType;
     }
-    public int getAid() {
+
+    public String getAid() {
         return aid;
     }
 
-    public void setAid(int aid) {
+    public void setAid(String aid) {
         this.aid = aid;
     }
 
-    public int getHid() {
+    public String getHid() {
         return hid;
     }
 
-    public void setHid(int hid) {
+    public void setHid(String hid) {
         this.hid = hid;
     }
 
-    public int getOid() {
+    public String getOid() {
         return oid;
     }
 
-    public void setOid(int oid) {
+    public void setOid(String oid) {
         this.oid = oid;
     }
 

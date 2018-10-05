@@ -64,9 +64,14 @@ public class WxOrderSqlProvider {
         return new SQL(){{
             SELECT("COUNT(DISTINCT `did`) as `count1`, COUNT(`did`) as `count2`");
             FROM("t_wx_order");
-            if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("aid = #{aid}");
-            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)) {
-                AND().WHERE("`hid` in ( #{hid})");
+            if(!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
+                // TODO 此处采用${aid}无效
+                AND().WHERE("`aid` in (" + aid + ")");
+            }else if(!Constant.DIGIT_ZERO.equals(aid)){
+                AND().WHERE("aid = #{aid}");
+            }
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)) {
+                AND().WHERE("`hid` in (" + hid + ")");
             }else if(!Constant.DIGIT_ZERO.equals(hid)){
                 AND().WHERE("`hid` = #{hid}");
             }
@@ -78,15 +83,23 @@ public class WxOrderSqlProvider {
     }
 
 
-    public String findList(@Param("aid")int aid, @Param("hid") int hid, @Param("oid")int oid
+    public String findList(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
             , @Param("start")long start, @Param("end")long end, @Param("tradeNo") String tradeNo
             , @Param("orderType") int orderType){
         return new SQL(){{
             SELECT("*"); FROM("t_wx_order");
             WHERE("pay_status > 1");
-            if(aid != 0) AND().WHERE("aid = #{aid}");
-            if(hid != 0) AND().WHERE("hid = #{hid}");
-            if(oid != 0) AND().WHERE("oid = #{oid}");
+            if(!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
+                AND().WHERE("`aid` in (" + aid + ")");
+            }else if(!Constant.DIGIT_ZERO.equals(aid)){
+                AND().WHERE("aid = #{aid}");
+            }
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)){
+                AND().WHERE("`hid` in (" + hid + ")");
+            }else if(!Constant.DIGIT_ZERO.equals(hid)){
+                AND().WHERE("hid = #{hid}");
+            }
+            if(!StringUtil.isEmpty(oid) && !Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
             if(start != 0 ) AND().WHERE("pay_time >= #{start}");
             if(orderType!= 0) AND().WHERE("order_type = #{orderType}");
@@ -101,9 +114,13 @@ public class WxOrderSqlProvider {
         return new SQL(){{
             SELECT("COALESCE(SUM(`pay_price`),0)"); FROM("t_wx_order");
             WHERE("pay_status > 1");
-            if(!StringUtil.isEmpty(aid) && !Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("aid = #{aid}");
-            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)){
-                AND().WHERE("`hid` in ( #{hid})");
+            if(!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
+                AND().WHERE("`aid` in (" + aid + ")");
+            }else if(!Constant.DIGIT_ZERO.equals(aid)){
+                AND().WHERE("aid = #{aid}");
+            }
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)){
+                AND().WHERE("`hid` in (" + hid + ")");
             }else if(!Constant.DIGIT_ZERO.equals(hid)){
                 AND().WHERE("hid = #{hid}");
             }

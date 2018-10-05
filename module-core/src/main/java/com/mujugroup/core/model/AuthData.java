@@ -1,9 +1,8 @@
 package com.mujugroup.core.model;
 
 
-import java.util.Date;
-import java.io.Serializable;
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 数据权限关系表
@@ -47,13 +46,6 @@ public class AuthData implements Serializable {
     @Column(name = "type")
     private Integer type;
 
-
-    //代理商类型
-    public static final int agentType = 1;
-    //医院类型
-    public static final int hospitalType = 2;
-    //科室类型
-    public static final int departmentType = 3;
 
     public Integer getId() {
         return id;

@@ -1,8 +1,10 @@
 package com.mujugroup.core.mapper;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.model.AuthData;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.sql.AuthDataSqlProvider;
+import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -77,4 +79,9 @@ public interface AuthDataMapper {
     List<TreeBO> getAuthTreeByHid(@Param("hid") String hid);
 
 
+    @Results({@Result(column="key", property="key", javaType=String.class)
+            , @Result(column="value", property="value", javaType=String.class)})
+    @Select("select `type` as `key`,group_concat(`rid`) as `value` from `t_auth_data`" +
+            " WHERE uid=#{uid} group by `type`")
+    List<DBMap> getAuthData(@Param("uid") int uid);
 }

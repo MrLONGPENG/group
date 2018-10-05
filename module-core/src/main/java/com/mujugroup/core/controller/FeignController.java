@@ -46,11 +46,25 @@ public class FeignController {
         return feignService.getHospitalByRegion(pid, cid);
     }
 
+    /**
+     * 给指定用户添加数据权限
+     * @param uid       用户ID
+     * @param authData  数据权限, 格式 AID1,HID1或OID1
+     */
     @RequestMapping(value = "/addAuthData",method = RequestMethod.POST)
     public int addAuthData(@RequestParam(value = "uid") int uid, @RequestParam(value = "authData") String[] authData){
        return feignService.addAuthData(uid, authData);
     }
 
+    /**
+     * 给指定用户查询数据权限
+     * @param uid       用户ID
+     * @return  Map key: 1
+     */
+    @RequestMapping(value = "/getAuthData",method = RequestMethod.POST)
+    public Map<String, String> getAuthData(@RequestParam(value = "uid") int uid){
+        return feignService.getAuthData(uid);
+    }
 
     /** 根据HID获取医院Json对象 */
     @RequestMapping(value = "/getHospitalJson", method = RequestMethod.POST)

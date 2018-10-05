@@ -43,7 +43,7 @@ public class AuthUtil implements Serializable {
      * 获取Redis中的Key; 后面增加token:app:xxx格式
      */
     public static String getKey(UserInfo userInfo) {
-        return Optional.ofNullable(userInfo).map(info->  StringUtil.join(Constant.SIGN_COLON
+        return Optional.ofNullable(userInfo).map(info->  StringUtil.join(Constant.SIGN_MAO_HAO
                 , "token", info.getTag()==null ? AUTH_TAG_VUE: info.getTag()
                 , info.getId())).orElse("token:vue:0");
     }

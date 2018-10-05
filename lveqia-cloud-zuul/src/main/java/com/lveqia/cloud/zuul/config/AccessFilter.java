@@ -1,15 +1,11 @@
 package com.lveqia.cloud.zuul.config;
 
-import com.lveqia.cloud.common.util.AuthUtil;
-import com.lveqia.cloud.common.util.ResultUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 @Component

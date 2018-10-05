@@ -49,9 +49,9 @@ public class StatisticsController {
 
     @ApiOperation(value="查询木巨柜激活、使用和收益情况", notes="根据代理商、医院、科室查询木巨柜使用、收益情况")
     @RequestMapping(value = "/chart",method = RequestMethod.POST)
-    public String chart(@ApiParam(value="代理商ID") @RequestParam(name="aid", defaultValue="0") int aid
-            , @ApiParam(value="医院ID")@RequestParam(name="hid", required=false, defaultValue="0") int hid
-            , @ApiParam(value="科室ID")@RequestParam(name="oid", required=false, defaultValue="0") int oid
+    public String chart(@ApiParam(value="代理商ID") @RequestParam(name="aid", defaultValue="0") String aid
+            , @ApiParam(value="医院ID")@RequestParam(name="hid", required=false, defaultValue="0") String hid
+            , @ApiParam(value="科室ID")@RequestParam(name="oid", required=false, defaultValue="0") String oid
             , @ApiParam(value="省份ID")@RequestParam(name="pid", required=false, defaultValue="0") int pid
             , @ApiParam(value="城市ID")@RequestParam(name="cid", required=false, defaultValue="0") int cid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int start
@@ -59,15 +59,12 @@ public class StatisticsController {
             , @ApiParam(value="查询动作{getStaUsage->使用情况;getStaActive->激活情况;getStaProfit->收益情况;" +
             "getStaUsageRate:使用率情况}", required = true) @RequestParam(name="action") String action
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain) {
+            , defaultValue="1") int grain, @ApiParam(hidden = true) String uid) {
         logger.debug("active {} {} {} {} {}", aid, hid, oid, grain, action);
-        String ids = null ;
-        if(pid != 0 || cid != 0){ // 优先根据城市查询医院ID集合
-            Set<Integer> set =  moduleCoreService.getHospitalByRegion(pid, cid);
-            if(set != null && set.size() > 0 ) ids = StringUtil.join(Constant.SIGN_LINE,  set.toArray());
-        }
         try {
-            return ResultUtil.success(staVOService.getStaVOList(action, ids, aid, hid, oid, grain, start, stop));
+            List<?> list = staVOService.getStaVOList(action, uid, pid, cid, aid, hid, oid, grain, start, stop);
+            if(list == null) return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+            return ResultUtil.success(list);
         } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
@@ -81,13 +78,11 @@ public class StatisticsController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain){
+            , defaultValue="1") int grain, @ApiParam(hidden = true) String uid){
         long time = System.currentTimeMillis();
         try {
-            JsonObject info = excelService.getHospitalJson(hid);
-            if(info == null) return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
-            return ResultUtil.success(staVOService.getExcelVO(info, grain, startTime, stopTime));
-        } catch (ParamException e) {
+            return ResultUtil.success(staVOService.getExcelVO(uid, hid, grain, startTime, stopTime));
+        } catch (BaseException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         } finally {
             logger.debug("查询Table花费{}毫秒", System.currentTimeMillis() - time);

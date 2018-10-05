@@ -1,7 +1,6 @@
 package com.mujugroup.data.service.feign;
 
 
-import com.google.gson.JsonObject;
 import com.mujugroup.data.service.feign.error.ModuleCoreServiceError;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -58,6 +57,10 @@ public interface ModuleCoreService {
     /** 根据AID获取使属医院的ID与名字 */
     @RequestMapping(value = "/feign/getHospitalByRegion",method = RequestMethod.POST)
     Set<Integer> getHospitalByRegion(@RequestParam(value = "pid") int pid, @RequestParam(value = "cid")int cid);
+
+    /** 根据UID获取权限相关信息 */
+    @RequestMapping(value = "/feign/getAuthData", method = RequestMethod.POST)
+    Map<String, String> getAuthData(@RequestParam(value = "uid") String uid);
 
 
     /** 根据HID获取医院Json对象 */

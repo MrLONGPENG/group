@@ -1,5 +1,6 @@
 package com.mujugroup.core.service;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.objeck.vo.TreeVO;
 
@@ -24,10 +25,11 @@ public interface AuthDataService {
 
     String toJsonString(List<TreeBO> list);
 
-    int addAuthData(int uid, String[] authDatas);
+    int addAuthData(int uid, String[] authData);
 
     int deleteByUid(int uid);
 
-    int updateAuthData(int uid, String[] authDatas);
+    int updateAuthData(int uid, String[] authData);
 
+    List<DBMap> getAuthData(int uid);
 }

@@ -94,9 +94,14 @@ public class DeviceSqlProvider {
             }
             FROM("t_device");
             WHERE("status = 14");
+            if(!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)){
+                AND().WHERE("`agentId` in (" + aid + ")");
+            }else if(!Constant.DIGIT_ZERO.equals(aid)){
+                AND().WHERE("agentId = #{aid}");
+            }
             if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("agentId = #{aid}");
-            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_COMMA)){
-                AND().WHERE("`hospitalId` in (#{hid})");
+            if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)){
+                AND().WHERE("`hospitalId` in (" + hid + ")");
             }else if(!Constant.DIGIT_ZERO.equals(hid)){
                 AND().WHERE("`hospitalId` = #{hid}");
             }

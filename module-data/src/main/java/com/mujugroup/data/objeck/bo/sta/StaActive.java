@@ -22,16 +22,10 @@ public class StaActive implements Serializable {
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String totalActive;
 
-    public StaActive(String refDate, int aid, int hid, int oid, long end) {
+    public StaActive(String refDate, String[] ids, long end) {
         this.refDate = refDate;
         this.newlyActive = refDate;
-        this.totalActive = StringUtil.toLinkByComma(aid, hid, oid, end);
-    }
-
-    public StaActive(String refDate, String ids, long end) {
-        this.refDate = refDate;
-        this.newlyActive = refDate;
-        this.totalActive = StringUtil.toLinkByComma(0, ids, 0, end);
+        this.totalActive = StringUtil.toLinkByAnd(ids[0], ids[1], ids[2], end);
     }
 
     public String getRefDate() {

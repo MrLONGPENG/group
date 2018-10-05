@@ -1,16 +1,19 @@
 package com.lveqia.cloud.common.config;
 
 public class Constant {
+    /** 符号--与符号（&） */
+    public static final String SIGN_AND = "&";
     /** 符号--下划线（_）  */
     public static final String SIGN_LINE = "_";
     /** 符号--百分号（%） */
     public static final String SIGN_PERCENT = "%";
+
     /** 符号--逗号（,） */
-    public static final String SIGN_COMMA = ",";
+    public static final String SIGN_DOU_HAO = ",";
     /** 符号--冒号（:） */
-    public static final String SIGN_COLON= ":";
+    public static final String SIGN_MAO_HAO= ":";
     /** 符号--分号（;） */
-    public static final String SIGN_SEMICOLON = ";";
+    public static final String SIGN_FEN_HAO = ";";
     /** 符号--井号（#）  */
     public static final String SIGN_NUMBER = "#";
 //    /** 符号--加号（+）  */

@@ -93,12 +93,12 @@ public interface HospitalMapper {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
             @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getHospitalListByUid(@Param("type") int type,@Param("uid") long uid);
+    List<SelectVO> getHospitalListByUid(@Param("type")String type, @Param("uid") long uid);
 
     @Select("Select a.id as id,a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.agentId" +
             " AND d.`type`=#{type} AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("hospitalList")
-    List<SelectVO> getAgentHospitalListByUid(@Param("type") int type,@Param("uid") long uid);
+    List<SelectVO> getAgentHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
 
 
 

@@ -1,12 +1,15 @@
 package com.mujugroup.core.controller;
 
 
+import com.lveqia.cloud.common.objeck.info.UserInfo;
+import com.lveqia.cloud.common.util.AuthUtil;
 import com.mujugroup.core.service.MergeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -25,7 +28,7 @@ public class MergeController {
 
     /**
      * 获取指定粒度范围 最新增加激活数据
-     * @param param 代理商ID,医院ID,科室ID,粒度类型(1:日 2:周 3:月),开始时间戳,结束时间戳
+     * @param param 代理商ID&医院ID&科室ID&粒度类型(1:日 2:周 3:月)&开始时间戳&结束时间戳
      * @return key:yyyyMMdd/yyyyMMdd-yyyyMMdd/yyyyMM value:count
      */
     @RequestMapping(value = "/getNewlyActiveCount",method = RequestMethod.POST)
@@ -35,9 +38,9 @@ public class MergeController {
 
     /**
      * 获取到指定时间的总激活数(多组数据用“;”分割)
-     * @param param 代理商ID,医院ID,科室ID,结束时间戳{ ps：医院ID支持格式1_2_3}
+     * @param param 代理商ID&医院ID&科室ID&结束时间戳{ ps：医院ID支持格式1_2_3}
      *
-     * @return key:aid,hid,oid,end value:count
+     * @return key:aid&hid&oid&end value:count
      */
     @RequestMapping(value = "/getTotalActiveCount",method = RequestMethod.POST)
     public Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param){

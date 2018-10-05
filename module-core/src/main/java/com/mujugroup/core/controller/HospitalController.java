@@ -1,6 +1,7 @@
 package com.mujugroup.core.controller;
 
 
+import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
@@ -42,10 +43,13 @@ public class HospitalController {
         UserInfo userInfo= AuthUtil.getUserInfo(request);
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
         if(aid == -1){
-            return ResultUtil.success(hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId()));
+            return ResultUtil.success(hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL
+                    , userInfo.getId()));
         }else if(aid == 0){
-            List<SelectVO> allList= hospitalService.getHospitalListByUid(AuthData.hospitalType,userInfo.getId());
-            List<SelectVO> secList=hospitalService.getAgentHospitalListByUid(AuthData.agentType,userInfo.getId());
+            List<SelectVO> allList= hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL
+                    , userInfo.getId());
+            List<SelectVO> secList=hospitalService.getAgentHospitalListByUid(CoreConfig.AUTH_DATA_AGENT
+                    , userInfo.getId());
             if (allList!=null){
                 allList.addAll(secList);
             }else{

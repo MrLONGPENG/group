@@ -33,13 +33,13 @@ public class UsageBO implements Serializable {
     private String yesterdayUsageRate;
 
 
-    public UsageBO(int aid, long timestamp) {
+    public UsageBO(String aid, long timestamp) {
         // 拼接总用户数 ｛开始时间戳,结束时间戳｝
-        this.totalUser = StringUtil.toLinkByComma(Constant.DIGIT_ZERO, timestamp);
+        this.totalUser = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, timestamp);
         // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝
-        this.totalActive = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);
+        this.totalActive = StringUtil.toLinkByAnd(aid, Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);
         // 拼接昨天使用数的查询条件 ｛AID,HID,OID,开始时间戳,结束时间戳｝
-        this.yesterdayUsageCount = StringUtil.toLinkByComma(aid, Constant.DIGIT_ZERO
+        this.yesterdayUsageCount = StringUtil.toLinkByAnd(aid, Constant.DIGIT_ZERO
                 , Constant.DIGIT_ZERO, timestamp - Constant.TIMESTAMP_DAYS_1, timestamp);
     }
 

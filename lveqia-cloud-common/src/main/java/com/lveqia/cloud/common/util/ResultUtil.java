@@ -15,10 +15,12 @@ public class ResultUtil {
     public final static int CODE_TOKEN_INVALID = 201;
     public final static int CODE_PARAMETER_MISS = 202;
     public final static int CODE_REQUEST_FORMAT = 203;
-    public final static int CODE_VALIDATION_FAIL = 204;
-    public final static int CODE_DB_STORAGE_FAIL = 205;
+    public final static int CODE_DATA_AUTHORITY = 204;
+    public final static int CODE_VALIDATION_FAIL = 205;
+    public final static int CODE_DB_STORAGE_FAIL = 206;
     public final static int CODE_REMOTE_CALL_FAIL = 207;
     public final static int CODE_DATA_DUPLICATION = 208;
+
 
     public final static int CODE_THIRD_DATA_ERROR  = 210;
 
@@ -94,6 +96,7 @@ public class ResultUtil {
             case CODE_TOKEN_INVALID:    return error(code,"登陆凭证无效");
             case CODE_PARAMETER_MISS:   return error(code,"必要参数缺失");
             case CODE_REQUEST_FORMAT:   return error(code,"请求参数格式错误");
+            case CODE_DATA_AUTHORITY:   return error(code,"无此数据权限");
             case CODE_VALIDATION_FAIL:  return error(code,"效验数据失败");
             case CODE_DB_STORAGE_FAIL:  return error(code,"数据存储失败");
             case CODE_REMOTE_CALL_FAIL: return error(code,"远程调用服务失败");
@@ -116,6 +119,7 @@ public class ResultUtil {
      * 返回错误的结果，带错误提示
      */
     public static String error(int code, String info) {
+        if(info == null) return error(code);
         Result<String> result = new Result<>();
         result.setCode(code);
         result.setInfo(info);

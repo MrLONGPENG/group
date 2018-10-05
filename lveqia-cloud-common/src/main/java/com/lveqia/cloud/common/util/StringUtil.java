@@ -107,20 +107,26 @@ public class StringUtil {
 
 
     /**
-     * 采用分号字符串形式拼接
+     * 采用";"形式拼接
      */
     public static String toLink(Object... args) {
-        return join(Constant.SIGN_SEMICOLON, args);
+        return join(Constant.SIGN_FEN_HAO, args);
     }
 
     /**
-     * 采用逗号字符串形式拼接
+     * 采用"&"形式拼接
      */
-    public static String toLinkByComma(Object... args) {
-        return join(Constant.SIGN_COMMA, args);
+    public static String toLinkByAnd(Object... args) {
+        return join(Constant.SIGN_AND, args);
     }
 
 
+    /**
+     * 采用","形式拼接
+     */
+    public static String toLinkByDouHao(Object... args) {
+        return join(Constant.SIGN_DOU_HAO, args);
+    }
     /**
      * 把格式 1_2_3 换成 1,2,3
      * @param key 1_2_3
@@ -128,7 +134,7 @@ public class StringUtil {
      */
     public static String formatIds(String key) {
         if(key!=null && key.contains(Constant.SIGN_LINE)) { // 把格式 1_2_3 换成 1,2,3
-            key = key.replaceAll(Constant.SIGN_LINE, Constant.SIGN_COMMA);
+            key = key.replaceAll(Constant.SIGN_LINE, Constant.SIGN_DOU_HAO);
         }
         return key;
     }
