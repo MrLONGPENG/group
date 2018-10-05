@@ -4,12 +4,12 @@ import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
+import com.lveqia.cloud.zuul.config.RedisCacheManager;
 import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.model.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -22,12 +22,12 @@ import java.util.List;
 
 @Component
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisCacheManager redisCacheManager;
     private final Logger logger = LoggerFactory.getLogger(AuthSuccessHandler.class);
 
     @Autowired
-    public AuthSuccessHandler(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
+    public AuthSuccessHandler(RedisCacheManager redisCacheManager) {
+        this.redisCacheManager = redisCacheManager;
     }
 
     @Override
@@ -39,12 +39,13 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         userInfo.setTag(AuthUtil.getTag(request)); // 设置登陆来源，app与vue
         PrintWriter out = response.getWriter();
         String key = AuthUtil.getKey(userInfo);
-        String token = stringRedisTemplate.boundValueOps(key).get();
+        String token =  redisCacheManager.getToken(key);
         if(StringUtil.isEmpty(token)) { // 如果Redis不存在Token则创建新的，同时
             token = AuthUtil.generateToken(userInfo);
-            stringRedisTemplate.boundValueOps(key).set(token);
+            redisCacheManager.setToken(key , token);
+
         }
-        stringRedisTemplate.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
+        redisCacheManager.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
         userInfo.setToken(token);
         out.write(ResultUtil.success(userInfo));
         out.flush();

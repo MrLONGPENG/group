@@ -2,6 +2,7 @@ package com.lveqia.cloud.zuul.config.jwt;
 
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.AuthUtil;
+import com.lveqia.cloud.zuul.config.RedisCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +23,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisCacheManager redisCacheManager;
     private static Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 
     @Autowired
-    public JwtTokenFilter(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
+    public JwtTokenFilter(RedisCacheManager redisCacheManager) {
+        this.redisCacheManager = redisCacheManager;
     }
 
 
@@ -50,9 +50,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             logger.info("checking authentication " + userInfo);
             if (userInfo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String key = AuthUtil.getKey(userInfo);
-                String redisToken = stringRedisTemplate.boundValueOps(key).get();
+                String redisToken = redisCacheManager.getToken(key);
                 if (!AuthUtil.isTokenExpired(userInfo) && redisToken != null && redisToken.equals(userInfo.getToken())){
-                    stringRedisTemplate.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
+                    redisCacheManager.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
                     logger.debug("Token 有效， username " + userInfo.getUsername() + ", setting security context");
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userInfo, null, getAuthorities(userInfo.getRoleInfo()));

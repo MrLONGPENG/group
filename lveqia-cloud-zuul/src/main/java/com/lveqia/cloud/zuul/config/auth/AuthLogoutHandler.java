@@ -2,10 +2,10 @@ package com.lveqia.cloud.zuul.config.auth;
 
 import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
+import com.lveqia.cloud.zuul.config.RedisCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -17,12 +17,12 @@ import java.io.PrintWriter;
 
 @Component
 public class AuthLogoutHandler implements LogoutHandler {
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisCacheManager redisCacheManager;
     private final Logger logger = LoggerFactory.getLogger(AuthLogoutHandler.class);
 
     @Autowired
-    public AuthLogoutHandler(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
+    public AuthLogoutHandler(RedisCacheManager redisCacheManager) {
+        this.redisCacheManager = redisCacheManager;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AuthLogoutHandler implements LogoutHandler {
             , Authentication authentication) {
         String key = AuthUtil.getKey(AuthUtil.getUserInfo(request));
         logger.debug("AuthLogoutHandler uid:{} {}", key);
-        stringRedisTemplate.delete(key);
+        redisCacheManager.delete(key);
         response.setContentType("application/json;charset=utf-8");
         try {
             PrintWriter  out = response.getWriter();
