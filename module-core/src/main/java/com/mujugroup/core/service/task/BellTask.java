@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.service.DeviceService;
@@ -56,7 +57,7 @@ public class BellTask {
             if(device.getPay()!=0) continue; //TODO 临时增加控制是否开启bell
             // 只在设置的时间内可以警报，其他未知情况全部跳过
             if(isNeedBell(currTime, device.getAgentId(), device.getHospitalId(), device.getDepart())){
-                key.append(device.getCode()).append(",");
+                key.append(device.getCode()).append(Constant.SIGN_FEN_HAO);
             }
         }
         if(key.length()>0){
@@ -64,7 +65,7 @@ public class BellTask {
             Map<String, String> map =  moduleLockService.getHardwareInfo(key.substring(0, key.length()-1));
             for (String info : map.values()) {
                 logger.debug(info);
-                array = info.split(";");
+                array = info.split(Constant.SIGN_FEN_HAO);
                 if(array.length> 2 && "2".equals(array[1])){
                     moduleLockService.deviceBeep(array[0]);
                 }
