@@ -87,8 +87,9 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Transactional
     public int addUser(long crtId, String username, String name, String phone, String email, String password
-            , String address, String avatarUrl, String remark, int[] roles, String[] authDatas) throws BaseException {
+            , String address, String avatarUrl, String remark, int[] roles, String[] authData) throws BaseException {
         if (StringUtil.isNumeric(username)) {
             throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "用户名不能全为数字");
         }
@@ -105,11 +106,15 @@ public class SysUserServiceImpl implements SysUserService {
         int result = sysUserMapper.insert(sysUser);
         //获取当前注册成功后的用户ID
         int id = sysUser.getId();
-        if (authDatas != null && authDatas.length > 0) {
-            addAuthData(id,authDatas);
+        try {
+            if (authData != null && authData.length > 0) {
+                addAuthData(id, authData);
+            }
+            addUserRole(id, roles);
+        }catch (Exception e){
+            logger.debug("add has error, delete");
+            sysUserMapper.deleteById(id);
         }
-        addUserRole(id, roles);
-
         return result;
     }
 

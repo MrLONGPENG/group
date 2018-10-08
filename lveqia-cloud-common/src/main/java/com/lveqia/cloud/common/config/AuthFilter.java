@@ -5,8 +5,6 @@ import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +32,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String uri = httpServletRequest.getRequestURI();
-        if(ALLOWED_PATHS.contains(uri)){ // 放行URL
+        if(ALLOWED_PATHS.contains(uri) || uri.startsWith("/feign") || uri.startsWith("/merge")){ // 放行URL
             logger.debug("AuthFilter->allowed {}", uri);
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
