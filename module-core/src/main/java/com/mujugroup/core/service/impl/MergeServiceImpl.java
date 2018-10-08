@@ -180,7 +180,8 @@ public class MergeServiceImpl implements MergeService {
     private String getAuthTreeById(String key) {
         List<TreeBO> list = new ArrayList<>();
         if(key.startsWith("AID")) list =  authDataService.getAuthTreeByAid(key.substring(3));
-        if(key.startsWith("HID")) list = authDataService.getAuthTreeByHid(key.substring(3));
+        // TODO 暂时只处理到医院，如需要到科室，可放出下面
+        //if(key.startsWith("HID")) list = authDataService.getAuthTreeByHid(key.substring(3));
         return authDataService.toJsonString(list);
     }
 
