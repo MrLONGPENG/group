@@ -66,10 +66,11 @@ INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataU
 INSERT INTO `t_sys_menu` VALUES ('11', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('12', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/*', '/order/list', 'OrderList', '订单统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('14', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('14', '/data/order/*', '/order/midday', 'OrderMidday', '午休统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('18', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role
@@ -144,9 +145,10 @@ INSERT INTO `t_sys_menu_role` VALUES (null, '10', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '11', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '12', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '13', '2');
-INSERT INTO `t_sys_menu_role` VALUES (null, '14', '3');
+INSERT INTO `t_sys_menu_role` VALUES (null, '14', '2');
 INSERT INTO `t_sys_menu_role` VALUES (null, '15', '3');
 INSERT INTO `t_sys_menu_role` VALUES (null, '16', '3');
 INSERT INTO `t_sys_menu_role` VALUES (null, '17', '3');
+INSERT INTO `t_sys_menu_role` VALUES (null, '18', '3');
 
 

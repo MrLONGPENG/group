@@ -50,7 +50,7 @@ public class OrderController {
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="当前页")@RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
             , @ApiParam(value="每页显示")@RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize
-            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="oid"
+            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="orderType"
             , required=false, defaultValue="1") int orderType, @ApiParam(hidden = true) String uid){
         logger.debug("order->list {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
         String[] ids = staVOService.checkIds(uid, aid, hid, oid);
@@ -71,7 +71,7 @@ public class OrderController {
             , @ApiParam(value="科室ID") @RequestParam(name="oid", required=false, defaultValue="0") String oid
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
-            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="oid"
+            , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="orderType"
             , required=false, defaultValue="1") int orderType, @ApiParam(hidden = true) String uid
             , HttpServletResponse response) throws Exception {
         logger.debug("order->excel {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
