@@ -110,7 +110,10 @@ public class SysUserServiceImpl implements SysUserService {
             if (authData != null && authData.length > 0) {
                 addAuthData(id, authData);
             }
-            addUserRole(id, roles);
+            if(roles!=null && roles.length >0){
+                addUserRole(id, roles);
+            }
+
         }catch (Exception e){
             logger.debug("add has error, delete");
             sysUserMapper.deleteById(id);
