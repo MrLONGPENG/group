@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface AgentService {
 
-    int insertAgent(Agent agent);
+    int insertAgent(String name,int enable);
 
-    int updateAgent(Agent agent);
+    int updateAgent(int id,String name,int enable);
 
     boolean exist(int id);
 

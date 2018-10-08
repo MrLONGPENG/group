@@ -17,7 +17,7 @@ public class Agent implements Serializable {
 
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_agent.id
      */
     @Id
@@ -46,38 +46,46 @@ public class Agent implements Serializable {
     @Column(name = "enable")
     private Integer enable;
 
+    public Agent(int id, String name, int enable) {
+        this.id = id;
+        this.name = name;
+        this.enable = enable;
 
+    }
+
+    public Agent() {
+    }
 
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Date getCrtTime() {
-		return crtTime;
-	}
+        return crtTime;
+    }
 
-	public void setCrtTime(Date crtTime) {
-		this.crtTime = crtTime;
-	}
+    public void setCrtTime(Date crtTime) {
+        this.crtTime = crtTime;
+    }
 
     public Integer getEnable() {
-		return enable;
-	}
+        return enable;
+    }
 
-	public void setEnable(Integer enable) {
-		this.enable = enable;
-	}
+    public void setEnable(Integer enable) {
+        this.enable = enable;
+    }
 
 }

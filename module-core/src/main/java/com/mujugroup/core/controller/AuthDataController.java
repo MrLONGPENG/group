@@ -39,11 +39,9 @@ public class AuthDataController {
 
     @ApiOperation(value = "查询查询树结构（代理商、医院、科室）", notes = "组合多表，生成树形结构数据")
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
-    public String tree(HttpServletRequest request) {
-        UserInfo userInfo = AuthUtil.getUserInfo(request);
-        if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
-        List<TreeBO> aidList = authDataService.getAgentAuthData(userInfo.getId());
-        List<TreeBO> hidList = authDataService.getHospitalAuthData(userInfo.getId());
+    public String tree(@ApiParam(hidden = true) int uid) {
+        List<TreeBO> aidList = authDataService.getAgentAuthData(uid);
+        List<TreeBO> hidList = authDataService.getHospitalAuthData(uid);
         if (aidList.size() == 0 && hidList.size() == 0) {
             return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         }
@@ -62,9 +60,7 @@ public class AuthDataController {
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String updateAuthData(@ApiParam(value = "数据权限") @RequestParam(value = "authData"
-            , required = false) String[] authData, @RequestParam("uid") int uid,HttpServletRequest request) {
-        UserInfo userInfo = AuthUtil.getUserInfo(request);
-        if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
+            , required = false) String[] authData, @RequestParam("uid") int uid) {
         int result = authDataService.updateAuthData(uid, authData);
         if (result > 0) {
             return ResultUtil.success("修改权限成功!");

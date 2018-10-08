@@ -22,18 +22,21 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public Agent findById(Integer id) {
-        return  agentMapper.findById(id);
+        return agentMapper.findById(id);
     }
 
     @Override
     public int deleteById(int id) throws ExistException {
-        if(exist(id)==true) throw new ExistException("该代理商下存在相应的医院，无法进行删除!");
-        return  agentMapper.deleteById(id)==true?1:0;
+        if (exist(id) == true) throw new ExistException("该代理商下存在相应的医院，无法进行删除!");
+        return agentMapper.deleteById(id) == true ? 1 : 0;
     }
 
     @Override
-    public int updateAgent(Agent agent) {
-        return  agentMapper.update(agent)==true?1:0;
+    public int updateAgent(int id,String name,int enable) {
+        Agent agent=agentMapper.findById(id);
+        agent.setName(name);
+        agent.setEnable(enable);
+        return agentMapper.update(agent) == true ? 1 : 0;
     }
 
     private final AgentMapper agentMapper;
@@ -60,9 +63,17 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public int insertAgent(Agent agent) {
-        return  agentMapper.insert(agent)==true?1:0;
+    public int insertAgent(String name, int enable) {
+        return agentMapper.insert(getAgent(name,enable)) == true ? 1 : 0;
     }
+
+    private Agent getAgent(String name, int enable) {
+        Agent agent = new Agent();
+        agent.setName(name);
+        agent.setEnable(enable);
+        return  agent;
+    }
+
 
     @Override
     public List<SelectVO> getAgentList() {
