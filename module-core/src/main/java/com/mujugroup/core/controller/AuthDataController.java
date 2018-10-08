@@ -8,6 +8,7 @@ import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.service.AuthDataService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import java.util.List;
 /**
  * @author leolaurel
  */
+@Api(description = "数据权限相关接口")
 @RestController
 @RequestMapping("/auth")
 public class AuthDataController {
@@ -57,7 +59,7 @@ public class AuthDataController {
         return ResultUtil.success(authDataService.treeBoToVo(aidList));
 
     }
-
+    @ApiOperation(value = "更新数据权限",notes = "更新数据权限")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String updateAuthData(@ApiParam(value = "数据权限") @RequestParam(value = "authData"
             , required = false) String[] authData, @RequestParam("uid") int uid) {
