@@ -1,11 +1,7 @@
 package com.mujugroup.core.controller;
 
 
-import com.lveqia.cloud.common.config.AuthFilter;
 import com.lveqia.cloud.common.exception.ExistException;
-import com.lveqia.cloud.common.exception.ParamException;
-import com.lveqia.cloud.common.objeck.info.UserInfo;
-import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.objeck.vo.SelectVO;
@@ -17,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.stream.util.StreamReaderDelegate;
 import java.util.List;
 
 

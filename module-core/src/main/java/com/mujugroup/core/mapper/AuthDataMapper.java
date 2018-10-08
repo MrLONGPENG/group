@@ -53,6 +53,10 @@ public interface AuthDataMapper {
     @Results(id = "treeVO", value = {@Result(id = true, column = "id", property = "id", javaType = String.class)
             , @Result(column = "id", property = "children", javaType = String.class)
             , @Result(column = "name", property = "name", javaType = String.class)})
+    @Select("SELECT CONCAT('AID',a.id) as id, a.name as name FROM t_agent a  WHERE a.`enable`= 1")
+    List<TreeBO> getAllAgentList();
+
+    @ResultMap("treeVO")
     @Select("SELECT CONCAT('AID',d.rid) as id, a.name as name FROM t_auth_data d, t_agent a" +
             " WHERE d.rid = a.id AND d.`type`=1  AND d.uid = #{uid}")
     List<TreeBO> getAgentAuthData(@Param("uid") long uid);
@@ -84,4 +88,6 @@ public interface AuthDataMapper {
     @Select("select `type` as `key`,group_concat(`rid`) as `value` from `t_auth_data`" +
             " WHERE uid=#{uid} group by `type`")
     List<DBMap> getAuthData(@Param("uid") int uid);
+
+
 }

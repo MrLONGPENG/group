@@ -45,6 +45,8 @@ public class AuthDataServiceImpl implements AuthDataService {
         return authDataMapper.getAuthData(uid);
     }
 
+
+
     @Override
     public int addAuthData(int uid, String[] authData) {
         int[] ridArray = new int[authData.length];
@@ -71,6 +73,13 @@ public class AuthDataServiceImpl implements AuthDataService {
     @Override
     public int deleteByUid(int uid) {
         return authDataMapper.deleteByUid(uid);
+    }
+
+
+    @Override
+    @MergeResult
+    public List<TreeBO> getAllAgentList() {
+        return authDataMapper.getAllAgentList();
     }
 
 

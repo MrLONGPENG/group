@@ -38,7 +38,8 @@ public class AuthDataController {
         List<TreeBO> aidList = authDataService.getAgentAuthData(uid);
         List<TreeBO> hidList = authDataService.getHospitalAuthData(uid);
         if (aidList.size() == 0 && hidList.size() == 0) {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+            List<TreeBO> allList = authDataService.getAllAgentList();
+            return ResultUtil.success(authDataService.treeBoToVo(allList));
         }
         if (hidList.size() > 0) {
             TreeBO treeBO = new TreeBO();
@@ -48,7 +49,6 @@ public class AuthDataController {
             treeBO.setChildren(authDataService.toJsonString(hidList));
             aidList.add(treeBO);
         }
-
         return ResultUtil.success(authDataService.treeBoToVo(aidList));
 
     }
