@@ -47,7 +47,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             UserInfo userInfo = AuthUtil.getUserInfo(request);
-            logger.info("checking authentication " + userInfo);
             if (userInfo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String key = AuthUtil.getKey(userInfo);
                 String redisToken = redisCacheManager.getToken(key);
