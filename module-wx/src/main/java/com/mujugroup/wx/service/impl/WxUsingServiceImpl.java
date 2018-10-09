@@ -98,5 +98,10 @@ public class WxUsingServiceImpl implements WxUsingService {
         return wxUsingMapper.deleteByDid(did, time);
     }
 
+    @Override
+    public int getCountByUsingDid(String did, long time) {
+        return wxUsingMapper.getCountByUsingDid(did,time);
+    }
+
 
 }
