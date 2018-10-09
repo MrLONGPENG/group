@@ -1,13 +1,17 @@
 package com.lveqia.cloud.zuul.controller;
 
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.netflix.zuul.context.RequestContext;
+import com.lveqia.cloud.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import java.util.Map;
 
 
 @RefreshScope
@@ -15,7 +19,16 @@ import org.springframework.web.bind.annotation.*;
 public class ZuulLocalController implements ErrorController {
 
     private static final String ERROR_PATH = "/error";
+    private static final String info = "Requested path %s with result %s";
     private final Logger logger = LoggerFactory.getLogger(ZuulLocalController.class);
+    private final ErrorAttributes errorAttributes;
+
+
+    @Autowired
+    public ZuulLocalController(ErrorAttributes errorAttributes) {
+        this.errorAttributes = errorAttributes;
+    }
+
     @Override
     public String getErrorPath() {
         return ERROR_PATH;
@@ -24,9 +37,13 @@ public class ZuulLocalController implements ErrorController {
 
     @RequestMapping(value = ERROR_PATH)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public String handleError(RequestContext requestContext){
-        logger.debug(requestContext.getResponseBody());
-        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_PATH);
+    public String handleError(WebRequest webRequest){
+        Map<String, Object> map =errorAttributes.getErrorAttributes(webRequest, true);
+        String trace = (String) map.get("trace");
+        if(!StringUtil.isEmpty(trace)) {
+            logger.error("status:{} trace:{}",map.get("status") ,trace);
+        }
+        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_PATH, String.format(info, map.get("path"), map.get("message")));
     }
 
     @ResponseBody

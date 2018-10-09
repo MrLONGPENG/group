@@ -88,7 +88,7 @@ public interface WxOrderMapper {
     @Results({@Result(column="count1", property="count1", javaType=Integer.class)
             ,@Result(column="count2", property="count2", javaType=Integer.class)})
     DBObj getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start") long start, @Param("end") long end);
+            , @Param("orderType") int orderType, @Param("start") long start, @Param("end") long end);
 
 
 
@@ -101,6 +101,6 @@ public interface WxOrderMapper {
     @ResultType(String.class)
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getTotalProfit")
     String getTotalProfit(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
-            , @Param("did")String did, @Param("tradeNo") String tradeNo
+            , @Param("did")String did, @Param("tradeNo") String tradeNo, @Param("orderType") int orderType
             , @Param("start") long start, @Param("end") long end);
 }

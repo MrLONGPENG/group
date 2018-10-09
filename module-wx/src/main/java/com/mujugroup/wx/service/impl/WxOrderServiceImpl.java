@@ -135,7 +135,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Cacheable(value = "wx-order-usage-count")
     public String getUsageCount(String aid, String hid, String oid, String start, String end) {
         logger.debug("getUsageCount real-time data");
-        return String.valueOf(wxOrderMapper.getUsageCount(aid, hid, oid
+        return String.valueOf(wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT
                 , Long.parseLong(start), Long.parseLong(end)).getCount1());
     }
 
@@ -217,7 +217,7 @@ public class WxOrderServiceImpl implements WxOrderService {
      */
     @Override
     public String getTotalProfit(String aid, String hid, String oid, String did, String tradeNo, long start, long end) {
-        return wxOrderMapper.getTotalProfit(aid, hid, oid, did, tradeNo, start, end);
+        return wxOrderMapper.getTotalProfit(aid, hid, oid, did, tradeNo, WxOrder.ORDER_TYPE_NIGHT, start, end);
     }
 
     @Override
@@ -243,7 +243,8 @@ public class WxOrderServiceImpl implements WxOrderService {
             start = timestamp + i * Constant.TIMESTAMP_DAYS_1;
             end = timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1;
             keys[i] = StringUtil.toLinkByAnd(aid, hid, oid, end);
-            arrUsage[i] = wxOrderMapper.getUsageCount(aid, hid, oid, start, end).getCount1();
+            // 只查询晚修类型
+            arrUsage[i] = wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT, start, end).getCount1();
         }
         Map<String, String> map = moduleCoreService.getTotalActiveCount(StringUtil.toLink(keys));
         for (int i = 0; i < days; i++) {
@@ -259,7 +260,8 @@ public class WxOrderServiceImpl implements WxOrderService {
     private String appendUsageCount(String aid, String hid, String oid, long timestamp, int days) {
         int avgCount = 0;
         for (int i = 0; i < days; i++) {
-            avgCount += wxOrderMapper.getUsageCount(aid, hid, oid, timestamp + i * Constant.TIMESTAMP_DAYS_1
+            avgCount += wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT
+                    ,timestamp + i * Constant.TIMESTAMP_DAYS_1
                     ,timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1).getCount1();
         }
         return String.valueOf(avgCount);

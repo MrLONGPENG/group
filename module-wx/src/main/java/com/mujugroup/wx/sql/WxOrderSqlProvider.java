@@ -60,7 +60,7 @@ public class WxOrderSqlProvider {
     }
 
     public String getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("start")long start, @Param("end")long end){
+            , @Param("orderType") int orderType, @Param("start")long start, @Param("end")long end){
         return new SQL(){{
             SELECT("COUNT(DISTINCT `did`) as `count1`, COUNT(`did`) as `count2`");
             FROM("t_wx_order");
@@ -76,6 +76,7 @@ public class WxOrderSqlProvider {
                 AND().WHERE("`hid` = #{hid}");
             }
             if(!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
+            if(orderType!= 0) AND().WHERE("order_type = #{orderType}");
             // TODO 当存在支付时间的数据，即为已支付状态,当增加退款等状态时候，此处还需修改
             if(start != 0 ) AND().WHERE("pay_time >= #{start}");
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
@@ -109,7 +110,7 @@ public class WxOrderSqlProvider {
     }
 
     public String getTotalProfit(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
-            , @Param("did")String did, @Param("tradeNo") String tradeNo
+            , @Param("did")String did, @Param("tradeNo") String tradeNo, @Param("orderType") int orderType
             , @Param("start") long start, @Param("end") long end){
         return new SQL(){{
             SELECT("COALESCE(SUM(`pay_price`),0)"); FROM("t_wx_order");
@@ -125,10 +126,11 @@ public class WxOrderSqlProvider {
                 AND().WHERE("hid = #{hid}");
             }
             if(!StringUtil.isEmpty(oid) && !Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
-            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
-            if(end != 0 ) AND().WHERE("pay_time < #{end}");
             if(!StringUtil.isEmpty(did)) AND().WHERE("did = #{did}");
             if(!StringUtil.isEmpty(tradeNo)) AND().WHERE("trade_no = #{tradeNo}");
+            if(orderType!= 0) AND().WHERE("order_type = #{orderType}");
+            if(start != 0 ) AND().WHERE("pay_time >= #{start}");
+            if(end != 0 ) AND().WHERE("pay_time < #{end}");
             ORDER_BY("id desc");
         }}.toString();
     }
