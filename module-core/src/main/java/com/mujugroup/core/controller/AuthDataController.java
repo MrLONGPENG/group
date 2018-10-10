@@ -39,10 +39,8 @@ public class AuthDataController {
     @ApiOperation(value = "查询查询树结构（代理商、医院、科室）", notes = "组合多表，生成树形结构数据")
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     public String tree(@ApiParam(hidden = true) int uid, @ApiParam(value = "userId") @RequestParam(value = "userId"
-
             , required = false, defaultValue = "0") int userId) {
-        String result = userId == 0 ? ResultUtil.success(getTreeBOList(uid)) : ResultUtil.success(getTreeBOList(userId));
-        return result;
+        return ResultUtil.success(getTreeBOList(userId==0 ? uid : userId));
     }
 
     @ApiOperation(value = "更新数据权限", notes = "更新数据权限")
