@@ -58,4 +58,9 @@ public interface WxUsingMapper {
 
     @Update("UPDATE t_wx_using SET `deleted`=1 WHERE did = #{did} and end_time > #{time}")
     boolean deleteByDid(@Param("did") String did, @Param("time") long time);
+
+    @Select("SELECT COUNT(*) FROM t_wx_using WHERE `deleted`=0 AND did = #{did} AND end_time > #{time}")
+    @ResultType(int.class)
+    int getCountByUsingDid(@Param("did") String did, @Param("time") long time);
+
 }

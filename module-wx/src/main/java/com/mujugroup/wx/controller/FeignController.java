@@ -29,4 +29,9 @@ public class FeignController {
         return feignService.getOrderList(aidHidOidDto);
     }
 
+    @RequestMapping(value = "/getCountByUsingDid",method = RequestMethod.GET)
+    public    int  getCountByUsingDid(String did,long time){
+        return  feignService.getCountByUsingDid(did,time);
+    }
+
 }
