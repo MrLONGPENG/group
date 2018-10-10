@@ -99,7 +99,6 @@ public class DeviceSqlProvider {
             }else if(!Constant.DIGIT_ZERO.equals(aid)){
                 AND().WHERE("agentId = #{aid}");
             }
-            if(!Constant.DIGIT_ZERO.equals(aid)) AND().WHERE("agentId = #{aid}");
             if(!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)){
                 AND().WHERE("`hospitalId` in (" + hid + ")");
             }else if(!Constant.DIGIT_ZERO.equals(hid)){
