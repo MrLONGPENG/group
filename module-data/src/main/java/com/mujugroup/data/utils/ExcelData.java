@@ -1,8 +1,9 @@
 package com.mujugroup.data.utils;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ExcelData {
+public class ExcelData implements Serializable {
 
 
     // 表头

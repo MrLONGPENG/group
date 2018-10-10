@@ -85,8 +85,9 @@ public class OrderController {
             excelData.setTitles(new String[]{ "订单时间", "订单号", "代理商", "医院", "科室", "病床"
                     , "二维码", "订单类型", "订单金额", "订单状态"});
             excelData.setRows(ExcelUtils.toRowsByOrderBO(list));
-            ExcelUtils.exportExcel(response, StringUtil.join("", DateUtil.timestampToDays(startTime)
-                    , "-", DateUtil.timestampToDays(stopTime), ".xlsx"), excelData);
+            ExcelUtils.exportExcel(response, StringUtil.getExcelName(startTime, stopTime), excelData);
+        }else {
+            logger.warn("no find order list data");
         }
     }
 

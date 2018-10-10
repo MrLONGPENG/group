@@ -175,4 +175,12 @@ public class StringUtil {
         nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点
         return nf.format( count/total);
     }
+
+    /**
+     * 获取按时间的Excel文件名字
+     */
+    public static String getExcelName(int startTime, int stopTime) {
+       return StringUtil.join("", DateUtil.timestampToDays(startTime)
+                , "-", DateUtil.timestampToDays(stopTime), ".xlsx");
+    }
 }

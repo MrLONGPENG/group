@@ -12,7 +12,6 @@ import java.util.HashSet;
 public class DataAuthFilter extends AuthFilter {
 
     public DataAuthFilter() { // 指定放行Url
-        super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs", "/order/excel"
-                , "/statistics/excel"))));
+        super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs", "/statistics/excel"))));
     }
 }

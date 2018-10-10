@@ -20,11 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -35,16 +32,11 @@ public class StatisticsController {
 
     private final ExcelService excelService;
     private final StaVOService staVOService;
-    private final StaBOService staBOService;
-    private final ModuleCoreService moduleCoreService;
 
     @Autowired
-    public StatisticsController(ExcelService excelService, StaVOService staVOService
-            , StaBOService staBOService, ModuleCoreService moduleCoreService) {
+    public StatisticsController(ExcelService excelService, StaVOService staVOService) {
         this.excelService = excelService;
         this.staVOService = staVOService;
-        this.staBOService = staBOService;
-        this.moduleCoreService = moduleCoreService;
     }
 
     @ApiOperation(value="查询木巨柜激活、使用和收益情况", notes="根据代理商、医院、科室查询木巨柜使用、收益情况")
@@ -98,15 +90,13 @@ public class StatisticsController {
             , @ApiParam(value="开始时间戳(秒)", required = true) @RequestParam(name="startTime") int startTime
             , @ApiParam(value="结束时间戳(秒)", required = true) @RequestParam(name="stopTime") int stopTime
             , @ApiParam(value="粒度类型(1:日 2:周 3:月) 默认日") @RequestParam(name="grain", required=false
-            , defaultValue="1") int grain, HttpServletResponse response, HttpServletRequest request) throws Exception {
-
-        logger.debug("session id {}", request.getSession());
+            , defaultValue="1") int grain, HttpServletResponse response) throws Exception {
         logger.debug("excel {} {} {} {} {}", hid, grain);
         long time = System.currentTimeMillis();
         List<ExcelData> list = excelService.getExcelDataList(hid, grain, startTime, stopTime);
-        ExcelUtils.exportExcel(response, StringUtil.join("", DateUtil.timestampToDays(startTime)
-                , "-", DateUtil.timestampToDays(stopTime), ".xlsx"), list);
-        logger.debug("导出Excel花费{}毫秒", System.currentTimeMillis() - time);
+        ExcelUtils.exportExcel(response, StringUtil.getExcelName(startTime, stopTime), list);
+        logger.debug("导出Excel花费{}毫秒 数据长度:{}", System.currentTimeMillis() - time, list.size());
+
     }
 
 

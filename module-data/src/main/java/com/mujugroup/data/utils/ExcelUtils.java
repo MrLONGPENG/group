@@ -25,8 +25,14 @@ public class ExcelUtils {
             throws Exception {
         // 告诉浏览器用什么软件可以打开此文件. 且设置下载默认名称
         String encodeName = URLEncoder.encode(fileName , "utf-8");
-        response.setHeader("content-Type","application/vnd.ms-excel");
+        response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition","attachment;filename=" + encodeName);
+        response.setCharacterEncoding("utf-8");
+        /*byte[] bytes = getExcelBytes(data);
+        response.setContentLength(bytes.length);
+        response.getOutputStream().write(bytes);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();*/
         exportExcel(data, response.getOutputStream());
     }
 
@@ -46,8 +52,29 @@ public class ExcelUtils {
                 writeExcel(wb, sheet, data);
             }
             wb.write(out);
+            out.flush();
+            out.close();
         }
     }
+
+//   private static byte[] getExcelBytes(List<ExcelData> list) throws Exception{
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        try (XSSFWorkbook wb = new XSSFWorkbook()) {
+//            int count = 1;
+//            for (ExcelData data : list) {
+//                String sheetName = data.getName();
+//                if (StringUtil.isEmpty(sheetName)) {
+//                    sheetName = "Sheet"+ count++;
+//                }
+//                XSSFSheet sheet = wb.createSheet(sheetName);
+//                writeExcel(wb, sheet, data);
+//            }
+//            wb.write(bos);
+//
+//        }
+//        return bos.toByteArray();
+//    }
+
 
     /**
      * 写单个Sheet页面-- 包括标题以及内容
@@ -142,4 +169,6 @@ public class ExcelUtils {
         }
         return result;
     }
+
+
 }
