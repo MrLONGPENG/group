@@ -31,7 +31,7 @@ public class UserVO implements Serializable {
     private String username;
     private String avatarUrl;
     private String remark;
-    private  Boolean enabled;
+    private Boolean enabled;
 	private Integer crtId;
 	private Date crtTime;
 	private String password;
@@ -149,5 +149,19 @@ public class UserVO implements Serializable {
 
 	public void setRoles(List<SysRole> roles) {
 		this.roles = roles;
+	}
+
+	public void setSysUser(SysUser sysUser) {
+		setId(sysUser.getId());
+		setName(sysUser.getName());
+		setPhone(sysUser.getPhone());
+		setEnabled(sysUser.isEnabled());
+		setAddress(sysUser.getAddress());
+		setAvatarUrl(sysUser.getAvatarUrl());
+		setRemark(sysUser.getRemark());
+		setRoles(sysUser.getRoles());
+		setUsername(sysUser.getUsername());
+		setCrtId(sysUser.getCrtId());
+		setCrtTime(sysUser.getCrtTime());
 	}
 }

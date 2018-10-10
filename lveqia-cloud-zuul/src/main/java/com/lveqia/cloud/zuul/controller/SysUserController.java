@@ -60,7 +60,7 @@ public class SysUserController {
     @RequestMapping(value = "/sub", method = RequestMethod.GET)
     @ApiOperation(value = "子用户查询接口")
     public String sub() {
-        logger.debug("/sys/user/sub uid:{}");
+        logger.debug("/sys/user/sub");
         UserInfo userInfo = sysUserService.getCurrInfo();
         if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         List<UserVO> list = sysUserService.getUserTreeList((int) userInfo.getId());

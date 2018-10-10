@@ -184,16 +184,7 @@ public class SysUserServiceImpl implements SysUserService {
         List<SysUser> list = sysUserMapper.getSysUserListByPid(pid);
         for (SysUser sysUser : list) {
             tree = new UserVO();
-            tree.setId(sysUser.getId());
-            tree.setName(sysUser.getName());
-            tree.setPhone(sysUser.getPhone());
-            tree.setAddress(sysUser.getAddress());
-            tree.setAvatarUrl(sysUser.getAvatarUrl());
-            tree.setRemark(sysUser.getRemark());
-            tree.setRoles(sysUser.getRoles());
-            tree.setUsername(sysUser.getUsername());
-            tree.setCrtId(sysUser.getCrtId());
-            tree.setCrtTime(sysUser.getCrtTime());
+            tree.setSysUser(sysUser);
             tree.setChildren(getUserTreeList(sysUser.getId()));
             trees.add(tree);
         }
