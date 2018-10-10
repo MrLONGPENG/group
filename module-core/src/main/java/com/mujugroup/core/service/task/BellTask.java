@@ -26,7 +26,7 @@ import java.util.Map;
 public class BellTask {
 
     private final static int DELAY_TIME = 15 * 60;    // 到时延迟十五分钟
-    private final static int INTERVAL_TIME = 10 * 60; // 十分钟
+    private final static int INTERVAL_TIME =  10 * 60; // 十分钟
     private final DeviceService deviceService;
     private final ModuleWxService moduleWxService;
     private final ModuleLockService moduleLockService;
@@ -83,21 +83,17 @@ public class BellTask {
      */
     private boolean isNeedBell(int currTime, Integer agentId, Integer hospitalId, Integer depart, String did) {
         Uptime midday = getUptime(3, agentId, hospitalId, depart); // 午休时间
+        boolean isTrue = false, isTime = false;
         if (midday != null && !midday.isEmpty) {
-            if (currTime > midday.start && currTime < midday.stop) return false;
+            isTrue = currTime > midday.start && currTime < midday.stop;
         }
-
         Uptime uptime = getUptime(2, agentId, hospitalId, depart); // 运行时间
         if (uptime != null && !uptime.isEmpty) {
-            //logger.debug("hh{}： mm:{}", uptime.stop/3600, uptime.stop%3600/60);
-            //logger.debug("时间{}： 余数:{}", currTime - uptime.stop, (currTime - uptime.stop) % INTERVAL_TIME);
-            return currTime > uptime.stop && currTime < uptime.start && (currTime - uptime.stop) % INTERVAL_TIME == 0;
+            isTrue |=  (currTime >= uptime.start || currTime <= uptime.stop);
+            isTime = !isTrue && (currTime - uptime.stop) % INTERVAL_TIME == 0;
         }
-
-        if (getUsingCount(did, currTime) <= 0) {
-            return true;
-        }
-        return false;
+        logger.debug("did: isTrue=>{} isTime=>{}", isTrue, isTime);
+        return isTime || (isTrue && getUsingCount(did, System.currentTimeMillis()/1000) <= 0);
     }
 
     private Uptime getUptime(int type, int agentId, int hospitalId, int depart) {
