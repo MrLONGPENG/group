@@ -13,11 +13,12 @@ import java.util.List;
 /**
  * ,数据库操作接口类
  * 类名:SysUserMapper
+ *
  * @author leolaurel
  * 创建时间:20180725
  */
 @Mapper
-@Component(value ="sysUserMapper")
+@Component(value = "sysUserMapper")
 public interface SysUserMapper {
 
     @InsertProvider(type = SysUserSqlProvider.class, method = "insert")
@@ -32,23 +33,24 @@ public interface SysUserMapper {
 
     @Select("SELECT * FROM t_sys_user WHERE id = #{id}")
     @Results(id = "sysUser", value = {
-         @Result(id=true, column="id",property="id",javaType=Integer.class)
-             ,@Result(column="name",property="name",javaType=String.class)
-             ,@Result(column="phone",property="phone",javaType=String.class)
-             ,@Result(column="telephone",property="telephone",javaType=String.class)
-             ,@Result(column="address",property="address",javaType=String.class)
-             ,@Result(column="enabled",property="enabled",javaType=Boolean.class)
-             ,@Result(column="username",property="username",javaType=String.class)
-             ,@Result(column="password",property="password",javaType=String.class)
-             ,@Result(column="avatar_url",property="avatarUrl",javaType=String.class)
-             ,@Result(column="remark",property="remark",javaType=String.class)
-             ,@Result(column="crt_id",property="crtId",javaType=Integer.class)
-             ,@Result(column="crt_time",property="crtTime",javaType=Date.class)
-             ,@Result(column="id",property="roles",
-                many=@Many(
-                        select="com.lveqia.cloud.zuul.mapper.SysRoleMapper.getRoleListByUid",
-                        fetchType=FetchType.EAGER
-                ))
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "phone", property = "phone", javaType = String.class)
+            , @Result(column = "telephone", property = "telephone", javaType = String.class)
+            , @Result(column = "address", property = "address", javaType = String.class)
+            , @Result(column = "enabled", property = "enabled", javaType = Boolean.class)
+            , @Result(column = "username", property = "username", javaType = String.class)
+            , @Result(column = "password", property = "password", javaType = String.class)
+            , @Result(column = "avatar_url", property = "avatarUrl", javaType = String.class)
+            , @Result(column = "remark", property = "remark", javaType = String.class)
+            , @Result(column = "crt_id", property = "crtId", javaType = Integer.class)
+            , @Result(column = "crt_time", property = "crtTime", javaType = Date.class)
+            , @Result(column = "email", property = "email", javaType = String.class)
+            , @Result(column = "id", property = "roles",
+            many = @Many(
+                    select = "com.lveqia.cloud.zuul.mapper.SysRoleMapper.getRoleListByUid",
+                    fetchType = FetchType.EAGER
+            ))
     })
     SysUser findById(Integer id);
 
@@ -66,7 +68,7 @@ public interface SysUserMapper {
 
     @ResultMap("sysUser")
     @Select("SELECT * FROM t_sys_user WHERE `crt_id` = #{uid}")
-    List<SysUser> getSysUserListByPid(@Param("uid")int uid);
+    List<SysUser> getSysUserListByPid(@Param("uid") int uid);
 
     @ResultMap("sysUser")
     @SelectProvider(type = SysUserSqlProvider.class, method = "getSysUserList")
