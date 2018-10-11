@@ -47,30 +47,31 @@ CREATE TABLE `t_sys_menu` (
   PRIMARY KEY (`id`),
   KEY `parentId` (`parentId`),
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `t_sys_menu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_menu
 -- ----------------------------
-INSERT INTO `t_sys_menu` VALUES ('1', '/', '/home', 'Home', '数据概览', 'fa fa-user-circle-o', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('2', '/', '/home', 'Home', '订单管理', 'fa fa-user-circle-o', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('3', '/', '/home', 'Home', '系统管理', 'fa fa-address-card-o', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('4', '/', '/home', 'Home', '运维管理', 'fa fa-money', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '消息管理', 'fa fa-bar-chart', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '医院管理', 'fa fa-windows', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('1', '/', '/home', 'Home', '数据概览', 'fa fa-dashboard fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('2', '/', '/home', 'Home', '订单管理', 'fa fa-th-list fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('3', '/', '/home', 'Home', '系统管理', 'fa fa-cog fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('4', '/', '/home', 'Home', '运维管理', 'fa fa-cogs fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '消息管理', 'fa  fa-commenting fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '医院管理', 'fa fa-hospital-o fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('7', '/', '/home', 'Home', '预留管理1', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('8', '/', '/home', 'Home', '预留管理2', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('9', '/', '/home', 'Home', '预留管理3', 'fa fa-user-circle-o', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataUsage', '使用数据', 'fa fa-bar-chart fa-fw', null, '1', '1', '1', '0');
 -- 预留十个一次菜单（其实没有作用，后面照样可以加一次菜单，只是完美主义作怪）
-INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataUsage', '使用数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('11', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('12', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-user-circle-o', null, '1', '1', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/*', '/order/list', 'OrderList', '订单统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('14', '/data/order/*', '/order/midday', 'OrderMidday', '午休统计', 'fa fa-user-circle-o', null, '1', '2', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('18', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-circle-o', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('11', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-line-chart fa-fw', null, '1', '1', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('12', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-download fa-fw', null, '1', '1', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/list', '/order/list', 'OrderList', '订单统计', 'fa fa-moon-o fa-fw', null, '1', '2', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('14', '/data/order/list', '/order/midday', 'OrderMidday', '午休统计', 'fa fa-sun-o fa-fw', null, '1', '2', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o fa-fw', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-users fa-fw', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-tasks fa-fw', null, '1', '3', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('18', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-md fa-fw', null, '1', '3', '1', '0');
+
 
 -- ----------------------------
 -- Table structure for t_sys_role

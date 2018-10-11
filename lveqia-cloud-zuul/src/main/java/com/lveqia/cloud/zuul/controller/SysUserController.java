@@ -99,6 +99,7 @@ public class SysUserController {
             , @RequestParam(value = "enabled", required = false) boolean enabled) {
         UserInfo userInfo = sysUserService.getCurrInfo();
         if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if (id == userInfo.getId()) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, "无法自己禁用自己");
         SysUser sysUser = new SysUser();
         sysUser.setId(id);
         sysUser.setEnabled(enabled);
