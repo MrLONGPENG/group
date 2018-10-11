@@ -86,7 +86,7 @@ public class FeignController {
      * @return
      */
     @RequestMapping(value = "/findList",method = RequestMethod.POST)
-    public List<Department> findListByHid(String hid) {
-        return feignService.findListByHid(hid);
+    Set<Integer> findOidByHid(String hid){
+        return  feignService.findOidByHid(hid);
     }
 }
