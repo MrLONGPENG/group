@@ -1,13 +1,13 @@
 package com.mujugroup.wx.service.feign.error;
 
 
+import com.mujugroup.core.model.Department;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ModuleCoreServiceError implements ModuleCoreService {
@@ -30,5 +30,10 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     public Map<String, String> getTotalActiveCount(String param) {
         logger.warn("Remote call module-core failure->param:{}", param);
         return new HashMap<>();
+    }
+
+    @Override
+    public Set<Integer> findOidByHid(String hid) {
+        return new HashSet<>();
     }
 }

@@ -2,6 +2,7 @@ package com.mujugroup.wx.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxUptime;
+import com.mujugroup.wx.objeck.vo.WXUptimeVo;
 
 
 /**
@@ -23,6 +24,7 @@ public interface WxUptimeService {
 
     boolean delete(int type, int key, int kid) throws ParamException;
 
+    WXUptimeVo getWXUptimeVo(int aid,int hid);
 
 
 }

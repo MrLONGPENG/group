@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 科室表,数据库操作接口类
@@ -15,7 +16,7 @@ import java.util.List;
  * 创建时间:20180627
  */
 @Mapper
-@Component(value ="departmentMapper")
+@Component(value = "departmentMapper")
 public interface DepartmentMapper {
 
     @InsertProvider(type = DepartmentSqlProvider.class, method = "insert")
@@ -29,14 +30,14 @@ public interface DepartmentMapper {
 
     @Select("SELECT * FROM t_department WHERE id = #{id}")
     @Results(id = "department", value = {
-         @Result(id=true, column="id",property="id",javaType=Integer.class)
-             ,@Result(column="status",property="status",javaType=Integer.class)
-             ,@Result(column="hospital_id",property="hospitalId",javaType=Integer.class)
-             ,@Result(column="name",property="name",javaType=String.class)
-             ,@Result(column="aihui_depart_id",property="aihuiDepartId",javaType=Integer.class)
-             ,@Result(column="remark",property="remark",javaType=String.class)
-             ,@Result(column="sort",property="sort",javaType=Integer.class)
-             ,@Result(column="create_date",property="createDate",javaType=Date.class)
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "status", property = "status", javaType = Integer.class)
+            , @Result(column = "hospital_id", property = "hospitalId", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "aihui_depart_id", property = "aihuiDepartId", javaType = Integer.class)
+            , @Result(column = "remark", property = "remark", javaType = String.class)
+            , @Result(column = "sort", property = "sort", javaType = Integer.class)
+            , @Result(column = "create_date", property = "createDate", javaType = Date.class)
     })
     Department findById(Integer id);
 
@@ -48,6 +49,12 @@ public interface DepartmentMapper {
     @ResultMap("department")
     @Select("SELECT * FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
     List<Department> findListByHid(String hid);
+
+    @Select("SELECT id FROM t_department WHERE `status`= 1 AND hospital_id = #{hid} ")
+    @Results(id = "departmentID", value = {
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+    })
+    Set<Integer> findOidByHid(String hid);
 
 
     @ResultType(String.class)

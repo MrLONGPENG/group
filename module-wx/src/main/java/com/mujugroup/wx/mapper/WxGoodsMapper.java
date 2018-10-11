@@ -1,19 +1,22 @@
 package com.mujugroup.wx.mapper;
 
 import com.mujugroup.wx.model.WxGoods;
+import com.mujugroup.wx.objeck.vo.GoodsVo;
 import com.mujugroup.wx.sql.WxGoodsSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 /**
  * 商品套餐详情表,数据库操作接口类
  * 类名:WxGoodsMapper
+ *
  * @author leolaurel
  * 创建时间:20180712
  */
 @Mapper
-@Component(value ="wxGoodsMapper")
+@Component(value = "wxGoodsMapper")
 public interface WxGoodsMapper {
 
     @InsertProvider(type = WxGoodsSqlProvider.class, method = "insert")
@@ -28,14 +31,14 @@ public interface WxGoodsMapper {
 
     @Select("SELECT * FROM t_wx_goods WHERE id = #{id}")
     @Results(id = "wxGoods", value = {
-         @Result(id=true, column="id",property="id",javaType=Integer.class)
-             ,@Result(column="name",property="name",javaType=String.class)
-             ,@Result(column="price",property="price",javaType=Integer.class)
-             ,@Result(column="fee_type",property="feeType",javaType=String.class)
-             ,@Result(column="days",property="days",javaType=Integer.class)
-             ,@Result(column="type",property="type",javaType=Integer.class)
-             ,@Result(column="state",property="state",javaType=Integer.class)
-             ,@Result(column="explain",property="explain",javaType=String.class)
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "price", property = "price", javaType = Integer.class)
+            , @Result(column = "fee_type", property = "feeType", javaType = String.class)
+            , @Result(column = "days", property = "days", javaType = Integer.class)
+            , @Result(column = "type", property = "type", javaType = Integer.class)
+            , @Result(column = "state", property = "state", javaType = Integer.class)
+            , @Result(column = "explain", property = "explain", javaType = String.class)
     })
     WxGoods findById(Integer id);
 
@@ -46,6 +49,22 @@ public interface WxGoodsMapper {
 
     @ResultMap("wxGoods")
     @SelectProvider(type = WxGoodsSqlProvider.class, method = "findListByRelation")
-    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type") Integer type);
+    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type")Integer type);
 
+    @Results(id = "GoodVos", value = {
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "price", property = "price", javaType = Integer.class)
+            , @Result(column = "fee_type", property = "feeType", javaType = String.class)
+            , @Result(column = "days", property = "days", javaType = Integer.class)
+            , @Result(column = "type", property = "type", javaType = Integer.class)
+            , @Result(column = "state", property = "state", javaType = Integer.class)
+            , @Result(column = "explain", property = "explain", javaType = String.class)
+            , @Result(column ="rid",property = "rid",javaType = Integer.class)
+            , @Result(column = "kid",property = "kid",javaType = Integer.class)
+            , @Result(column = "key",property = "key",javaType = Integer.class)
+            , @Result(column = "relationType",property = "relationType",javaType = Integer.class)
+    })
+    @SelectProvider(type = WxGoodsSqlProvider.class, method = "findRelationListByKid")
+    List<GoodsVo> findRelationListByKid(@Param("kid") Integer kid, @Param("key") Integer key);
 }

@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
 import com.mujugroup.core.service.AuthDataService;
+import com.mujugroup.core.service.DepartmentService;
 import com.mujugroup.core.service.FeignService;
 import com.mujugroup.core.service.HospitalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,11 +23,15 @@ public class FeignServiceImpl implements FeignService {
 
     private final HospitalService hospitalService;
     private final AuthDataService authDataService;
+    private final DepartmentService departmentService;
     private final Logger logger = LoggerFactory.getLogger(FeignServiceImpl.class);
 
-    public FeignServiceImpl(HospitalService hospitalService, AuthDataService authDataService) {
+    @Autowired
+    public FeignServiceImpl(HospitalService hospitalService, AuthDataService authDataService
+            , DepartmentService departmentService) {
         this.hospitalService = hospitalService;
         this.authDataService = authDataService;
+        this.departmentService=departmentService;
     }
 
     @Override
@@ -72,6 +79,11 @@ public class FeignServiceImpl implements FeignService {
         List<DBMap> list = authDataService.getAuthData(uid);
         list.forEach(dbMap -> dbMap.addTo(hashMap));
         return hashMap;
+    }
+
+    @Override
+    public Set<Integer> findOidByHid(String hid) {
+        return departmentService.findOidByHid(hid);
     }
 }
 
