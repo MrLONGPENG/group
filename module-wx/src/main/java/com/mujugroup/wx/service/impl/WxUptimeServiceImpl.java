@@ -3,12 +3,11 @@ package com.mujugroup.wx.service.impl;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.ParamException;
-import com.mujugroup.core.model.Department;
 import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.mapper.WxUptimeMapper;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.objeck.vo.WXUptimeVo;
+import com.mujugroup.wx.objeck.vo.UptimeVo;
 import com.mujugroup.wx.service.WxUptimeService;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
@@ -150,44 +149,44 @@ public class WxUptimeServiceImpl implements WxUptimeService {
     }
 
     @Override
-    public WXUptimeVo getWXUptimeVo(int aid,int hid) {
-        WxUptime wxEveUptime = query(2, 1, hid);
-        WXUptimeVo wxEveUptimeVo = new WXUptimeVo();
+    public UptimeVo getWXUptimeVo(int aid, int hid) {
+        WxUptime wxEveUptime = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_HOSPITAL, hid);
+        UptimeVo wxEveUptimeVo = new UptimeVo();
         if (wxEveUptime != null) {
             //当前时间类型为自定义时间类型
             wxEveUptimeVo.setTimeType(1);
             wxEveUptimeVo.setEveningTime(wxEveUptime.getStartDesc() + "-" + wxEveUptime.getStopDesc());
         } else {
-            wxEveUptime = findByXid(new int[]{0, aid}, 2);
+            wxEveUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_UPTIME);
             //默认时间类型
             wxEveUptimeVo.setTimeType(0);
             wxEveUptimeVo.setEveningTime(wxEveUptime.getStartDesc() + "-" + wxEveUptime.getStopDesc());
         }
         //获取午休时间
-        WxUptime wxNoonUptime = query(3, 1, hid);
+        WxUptime wxNoonUptime = query(WxRelation.TYPE_MIDDAY,  WxRelation.KEY_HOSPITAL, hid);
         if (wxNoonUptime != null) {
             //当前休息类型午休时间
             wxEveUptimeVo.setRestType(1);
             wxEveUptimeVo.setNoonTime(wxNoonUptime.getStartDesc() + "-" + wxNoonUptime.getStopDesc());
         } else {
-            wxNoonUptime = findByXid(new int[]{0, aid}, 3);
+            wxNoonUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_MIDDAY);
             //当前休息类型为午休类型
             wxEveUptimeVo.setRestType(0);
             wxEveUptimeVo.setNoonTime(wxNoonUptime.getStartDesc() + "-" + wxNoonUptime.getStopDesc());
         }
-        List<WXUptimeVo> wxUptimeVos = new ArrayList<>();
+        List<UptimeVo> wxUptimeVos = new ArrayList<>();
         //跨服务调用,获取当前医院下的所有科室
-       Set<Integer> departmentIdList = moduleCoreService.findOidByHid(Integer.toString(hid));
+        Set<Integer> departmentIdList = moduleCoreService.findOidByHid(Integer.toString(hid));
         for (Integer item : departmentIdList) {
-            wxUptimeVos.add(getDepartmentTime(aid, hid, item, wxEveUptime, wxNoonUptime));
+            wxUptimeVos.add(getDepartmentTime(item, wxEveUptime, wxNoonUptime));
         }
-        wxEveUptimeVo.setWxUptimeVoList(wxUptimeVos);
+        wxEveUptimeVo.setChildren(wxUptimeVos);
        return wxEveUptimeVo;
     }
-    private WXUptimeVo getDepartmentTime(int aid, int hid, Integer id, WxUptime eveUptime, WxUptime noonUptime) {
-        WxUptime wxUptimeEve = find(2, aid, hid, id);
-        WxUptime wxUptimeNoon = find(3, aid, hid, id);
-        WXUptimeVo wxUptimeVo = new WXUptimeVo();
+    private UptimeVo getDepartmentTime(Integer id, WxUptime eveUptime, WxUptime noonUptime) {
+        WxUptime wxUptimeEve = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_DEPARTMENT, id);
+        WxUptime wxUptimeNoon = query(WxRelation.TYPE_MIDDAY, WxRelation.KEY_DEPARTMENT, id);
+        UptimeVo wxUptimeVo = new UptimeVo();
         if (wxUptimeEve == null) {
             //运行时间类型为默认时间类型的运行时间
             wxUptimeVo.setTimeType(0);

@@ -58,7 +58,7 @@ INSERT INTO `t_sys_menu` VALUES ('3', '/', '/home', 'Home', '系统管理', 'fa 
 INSERT INTO `t_sys_menu` VALUES ('4', '/', '/home', 'Home', '运维管理', 'fa fa-cogs fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '消息管理', 'fa  fa-commenting fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '医院管理', 'fa fa-hospital-o fa-fw fa-lg', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('7', '/', '/home', 'Home', '预留管理1', 'fa fa-user-circle-o', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('7', '/', '/home', 'Home', '业务配置', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('8', '/', '/home', 'Home', '预留管理2', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('9', '/', '/home', 'Home', '预留管理3', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataUsage', '使用数据', 'fa fa-bar-chart fa-fw', null, '1', '1', '1', '0');
@@ -71,7 +71,8 @@ INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/user', 'SysUser', '系统
 INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-users fa-fw', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-tasks fa-fw', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('18', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-md fa-fw', null, '1', '3', '1', '0');
-
+INSERT INTO `t_sys_menu` VALUES ('19', '/core/*', '/core/data', 'SysData', '时间配置', 'fa fa-clock-o fa-fw', null, '1', '7', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('20', '/core/*', '/core/data', 'SysData', '商品配置', 'fa fa-clock-o fa-fw', null, '1', '7', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role

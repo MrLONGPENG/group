@@ -1,11 +1,9 @@
 package com.mujugroup.wx.objeck.vo;
 
-import com.mujugroup.wx.model.WxUptime;
-
 import java.io.Serializable;
 import java.util.List;
 
-public class WXUptimeVo implements Serializable {
+public class UptimeVo implements Serializable {
     //休息类型
     private int restType;
     //时间类型
@@ -15,14 +13,14 @@ public class WXUptimeVo implements Serializable {
     //晚间休息时间
     private String eveningTime;
     //封装科室集合
-    private List<WXUptimeVo> wxUptimeVoList;
+    private List<UptimeVo> children;
 
-    public List<WXUptimeVo> getWxUptimeVoList() {
-        return wxUptimeVoList;
+    public List<UptimeVo> getChildren() {
+        return children;
     }
 
-    public void setWxUptimeVoList(List<WXUptimeVo> wxUptimeVoList) {
-        this.wxUptimeVoList = wxUptimeVoList;
+    public void setChildren(List<UptimeVo> children) {
+        this.children = children;
     }
 
     public int getRestType() {

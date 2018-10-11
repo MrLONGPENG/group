@@ -85,8 +85,8 @@ public class FeignController {
      * @param hid 医院ID
      * @return
      */
-    @RequestMapping(value = "/findList",method = RequestMethod.POST)
-    Set<Integer> findOidByHid(String hid){
+    @RequestMapping(value = "/findOidByHid",method = RequestMethod.POST)
+    Set<Integer> findOidByHid(@RequestParam(value = "hid") String hid){
         return  feignService.findOidByHid(hid);
     }
 }

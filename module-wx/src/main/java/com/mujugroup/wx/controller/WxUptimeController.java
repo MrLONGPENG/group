@@ -3,10 +3,8 @@ package com.mujugroup.wx.controller;
 
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.ParamException;
-import com.mujugroup.core.model.Department;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.objeck.vo.WXUptimeVo;
 import com.mujugroup.wx.service.WxUptimeService;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import io.swagger.annotations.Api;
@@ -19,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -120,11 +115,8 @@ public class WxUptimeController {
     @ApiOperation(value = "获取医院使用时间接口", notes = "根据类型(代理商;医院)获取医院使用时间")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String getUseUpTime(@ApiParam(value = "代理商ID") @RequestParam(name = "aid", defaultValue = "0") int aid
-            , @ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid
-    ) {
-
-        WXUptimeVo wxUptimeVo = wxUptimeService.getWXUptimeVo(aid, hid);
-        return ResultUtil.success(wxUptimeVo);
+            , @ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid) {
+        return ResultUtil.success(wxUptimeService.getWXUptimeVo(aid, hid));
     }
 }
 

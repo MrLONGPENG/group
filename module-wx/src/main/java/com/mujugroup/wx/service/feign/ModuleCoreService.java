@@ -23,10 +23,9 @@ public interface ModuleCoreService {
     String deviceList(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize
             , @RequestParam(value = "status") int status);
 
-
     @RequestMapping(value = "/merge/getTotalActiveCount", method = RequestMethod.POST)
     Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param);
 
-    @RequestMapping(value = "/feign/findList", method = RequestMethod.POST)
-    Set<Integer> findOidByHid(String hid);
+    @RequestMapping(value = "/feign/findOidByHid", method = RequestMethod.POST)
+    Set<Integer> findOidByHid(@RequestParam(value = "hid") String hid);
 }

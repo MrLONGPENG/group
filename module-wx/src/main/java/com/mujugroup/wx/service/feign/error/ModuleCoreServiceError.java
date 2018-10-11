@@ -1,7 +1,6 @@
 package com.mujugroup.wx.service.feign.error;
 
 
-import com.mujugroup.core.model.Department;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,7 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
     @Override
     public Set<Integer> findOidByHid(String hid) {
+        logger.warn("Remote call module-core failure->param:{}", hid);
         return new HashSet<>();
     }
 }
