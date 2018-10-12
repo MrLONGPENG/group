@@ -41,13 +41,25 @@ public class WxUptimeSqlProvider {
 
     public String findListByRelation(@Param("type")Integer type, @Param("key")Integer key, @Param("kid") Integer kid){
         return new SQL(){ {
-            SELECT("*");
+            SELECT(" a.id ,start_time,stop_time,start_desc,stop_desc,`explain`,b.id AS relationId ,rid,kid,`key`,`type`");
             FROM("t_wx_uptime A");
             INNER_JOIN("t_wx_relation B ON A.id = B.rid");
             if(type!= null) WHERE("B.`type` = #{type}"); // 2:运行时间 3:午休时间
             else WHERE("B.`type` = 2");                  // 默认2
             if(key != null) AND().WHERE("B.`key` = #{key}");
             if(kid != null) AND().WHERE("B.`kid` = #{kid}");
+        }}.toString();
+    }
+
+    public  String getByRelation(@Param("type")Integer type, @Param("key")Integer key, @Param("id") Integer id){
+        return new SQL(){ {
+            SELECT(" a.id ,start_time,stop_time,start_desc,stop_desc,`explain`,b.id AS relationId ,rid,kid,`key`,`type`");
+            FROM("t_wx_uptime A");
+            INNER_JOIN("t_wx_relation B ON A.id = B.rid");
+            if(type!= null) WHERE("B.`type` = #{type}"); // 2:运行时间 3:午休时间
+            else WHERE("B.`type` = 2");                  // 默认2
+            if(key != null) AND().WHERE("B.`key` = #{key}");
+            if(id != null) AND().WHERE("A.id = #{id}");
         }}.toString();
     }
 }

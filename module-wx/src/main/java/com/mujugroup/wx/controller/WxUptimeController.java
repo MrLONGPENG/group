@@ -118,6 +118,29 @@ public class WxUptimeController {
             , @ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid) {
         return ResultUtil.success(wxUptimeService.getWXUptimeVo(aid, hid));
     }
+
+    @ApiOperation(value = "修改或新增使用时间接口", notes = "修改或新增使用时间接口")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public String modifyUpTime(@ApiParam(value = "午休ID") @RequestParam(value = "noonId", defaultValue = "0") int noonId
+            , @ApiParam(value = "运行ID") @RequestParam(value = "eveId", defaultValue = "0") int eveId
+            , @ApiParam(value = "使用时间") @RequestParam(value = "useTime") String useTime
+            , @ApiParam(value = "使用时间") @RequestParam(value = "restTime") String restTime
+            , @ApiParam(value = "时间类型(0：默认类型，1：自定义类型)") @RequestParam(value = "timeType") int timeType
+            , @ApiParam(value = "休息类型(0:运行时间,1:午休时间)") @RequestParam(value = "restType") int restType
+            , @ApiParam(value = "解释说明") @RequestParam(value = "explain", required = false) String explain
+            , @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)") @RequestParam(value = "key") int key
+            , @ApiParam(value = "外键ID（医院ID,科室ID）") @RequestParam(value = "kid", required = false) int kid
+    ) {
+        try {
+            if (wxUptimeService.insertOrModify(timeType, useTime, restTime, explain, key, restType, eveId, noonId, kid)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+            }
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+    }
 }
 
 

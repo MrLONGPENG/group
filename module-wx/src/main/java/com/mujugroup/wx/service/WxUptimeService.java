@@ -26,5 +26,9 @@ public interface WxUptimeService {
 
     UptimeVo getWXUptimeVo(int aid, int hid);
 
+    boolean insert(WxUptime wxUptime);
+
+    boolean insertOrModify(int timeType, String useTime, String restTime, String explain, Integer key, int restType, int eveId, int noonId, int kid) throws ParamException;
+
 
 }
