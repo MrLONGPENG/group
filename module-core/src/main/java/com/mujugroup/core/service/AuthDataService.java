@@ -31,7 +31,11 @@ public interface AuthDataService {
 
     int updateAuthData(int uid, String[] authData);
 
+    List<String> getAuthDataList(int uid);
+
     List<DBMap> getAuthData(int uid);
 
     List<TreeBO> getAllAgentList();
+
+
 }

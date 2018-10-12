@@ -41,6 +41,11 @@ public class AuthDataServiceImpl implements AuthDataService {
     }
 
     @Override
+    public List<String> getAuthDataList(int uid) {
+        return authDataMapper.getAuthDataList(uid);
+    }
+
+    @Override
     public List<DBMap> getAuthData(int uid) {
         return authDataMapper.getAuthData(uid);
     }

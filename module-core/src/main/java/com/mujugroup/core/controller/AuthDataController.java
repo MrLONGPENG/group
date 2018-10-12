@@ -38,16 +38,16 @@ public class AuthDataController {
 
     @ApiOperation(value = "查询查询树结构（代理商、医院、科室）", notes = "组合多表，生成树形结构数据")
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
-    public String tree(@ApiParam(hidden = true) int uid, @ApiParam(value = "userId") @RequestParam(value = "userId"
-            , required = false, defaultValue = "0") int userId) {
+    public String tree(@ApiParam(value = "userId") @RequestParam(value = "userId", required = false
+            , defaultValue = "0") int userId, @ApiParam(hidden = true) int uid) {
         return ResultUtil.success(getTreeBOList(userId==0 ? uid : userId));
     }
 
     @ApiOperation(value = "更新数据权限", notes = "更新数据权限")
-    @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String updateAuthData(@ApiParam(value = "数据权限") @RequestParam(value = "authData"
-            , required = false) String[] authData, @RequestParam("uid") int uid) {
-        int result = authDataService.updateAuthData(uid, authData);
+    @RequestMapping(value = "/put", method = RequestMethod.PUT)
+    public String put(@RequestParam("userId") int userId, @ApiParam(value = "数据权限")
+            @RequestParam(value = "authData", required = false) String[] authData) {
+        int result = authDataService.updateAuthData(userId, authData);
         if (result > 0) {
             return ResultUtil.success("修改权限成功!");
         } else {
@@ -58,22 +58,7 @@ public class AuthDataController {
     @ApiOperation(value = "获取选定用户的数据权限", notes = "获取选定用户的数据权限")
     @RequestMapping(value = "/select", method = RequestMethod.GET)
     public String getAuthDataById(@ApiParam(value = "userId") @RequestParam(value = "userId") int userId) {
-        List<DBMap> authDataList = authDataService.getAuthData(userId);
-        List<String> list = new ArrayList<String>();
-        if (authDataList != null && authDataList.size() > 0) {
-            for (DBMap dbMap : authDataList) {
-                if (Integer.parseInt(dbMap.getKey()) == 1) {
-                    list.add("AID" + dbMap.getValue());
-                } else if (Integer.parseInt(dbMap.getKey()) == 2) {
-                    list.add("HID" + dbMap.getValue());
-                } else {
-                    list.add("OID" + dbMap.getValue());
-                }
-            }
-            return ResultUtil.success(list);
-        } else {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-        }
+        return ResultUtil.success(authDataService.getAuthDataList(userId));
     }
 
     //数据权限树

@@ -51,12 +51,12 @@ public class SysUserRoleController {
 
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
     @ApiOperation(value="修改用户的角色信息", notes="根据用户更新的角色信息")
-    public String putRidToUid(@ApiParam(value="用户ID", required = true) @RequestParam(name="uid") int uid
-            , @ApiParam(value="角色ID组", required = true) @RequestParam(name="rid") int[] rid){
-        logger.debug("put uid:{} rid:{}", uid, rid);
+    public String putRidToUid(@ApiParam(value="用户ID", required = true) @RequestParam(name="userId") int userId
+            , @ApiParam(value="角色ID组", required = true) @RequestParam(name="roles") int[] roles){
+        logger.debug("put uid:{} rid:{}", userId, roles);
         UserInfo userInfo = sysUserService.getCurrInfo();
         if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        if(sysUserRoleService.putRidToUid(uid, rid) == rid.length) return ResultUtil.success();
+        if(sysUserRoleService.putRidToUid(userId, roles) == roles.length) return ResultUtil.success();
         return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }
 
