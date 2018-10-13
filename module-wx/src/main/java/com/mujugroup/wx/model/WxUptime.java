@@ -109,4 +109,8 @@ public class WxUptime implements Serializable {
 		this.explain = explain;
 	}
 
+	@Override
+	public String toString() {
+		return getStartDesc() + "-" +  getStopDesc();
+	}
 }

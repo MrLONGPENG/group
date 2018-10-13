@@ -131,11 +131,7 @@ public class WxUptimeServiceImpl implements WxUptimeService {
             wxUptime.setStopDesc(stopDesc);
             if (!StringUtil.isEmpty(explain)) wxUptime.setExplain(explain);
             wxUptimeMapper.insert(wxUptime);
-            WxRelation relation = new WxRelation();
-            relation.setKey(key);
-            relation.setKid(kid);
-            relation.setRid(wxUptime.getId());
-            relation.setType(type);
+            WxRelation relation = bindRelation(key, kid, wxUptime.getId(), type);
             wxRelationMapper.insert(relation);
         }
         return true;
@@ -157,70 +153,30 @@ public class WxUptimeServiceImpl implements WxUptimeService {
 
     @Override
     public UptimeVo getWXUptimeVo(int aid, int hid) {
-        WxUptime wxEveUptime = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_HOSPITAL, hid);
-        UptimeVo wxEveUptimeVo = new UptimeVo();
-        if (wxEveUptime != null) {
-            //设置Kid
-            wxEveUptimeVo.setKid(hid);
-            //设置当前类型为医院类型
-            wxEveUptimeVo.setKey(WxRelation.KEY_HOSPITAL);
-            //设置自定义运行时间ID
-            wxEveUptimeVo.setEveId(wxEveUptime.getId());
-            //设置自定义运行时间的解释说明
-            wxEveUptimeVo.setExplain(wxEveUptime.getExplain());
-            //当前时间类型为自定义时间类型
-            wxEveUptimeVo.setTimeType(1);
-            wxEveUptimeVo.setEveningTime(wxEveUptime.getStartDesc() + "-" + wxEveUptime.getStopDesc());
+        WxUptime eveUptime = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_HOSPITAL, hid);
+        UptimeVo hidUptimeVo = new UptimeVo(hid, WxRelation.KEY_HOSPITAL);
+        if (eveUptime != null) {
+            hidUptimeVo.setEveInfo(eveUptime.getId(),1 , eveUptime.toString(), eveUptime.getExplain());
         } else {
-            //设置Kid
-            wxEveUptimeVo.setKid(aid);
-            //设置当前类型为代理商类型
-            wxEveUptimeVo.setKey(WxRelation.KEY_AGENT);
-            wxEveUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_UPTIME);
-            //设置默认运行时间ID
-            wxEveUptimeVo.setEveId(wxEveUptime.getId());
-            //设置默认运行时间的解释说明
-            wxEveUptimeVo.setExplain(wxEveUptime.getExplain());
-            //默认时间类型
-            wxEveUptimeVo.setTimeType(0);
-            wxEveUptimeVo.setEveningTime(wxEveUptime.getStartDesc() + "-" + wxEveUptime.getStopDesc());
+            eveUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_UPTIME);
+            hidUptimeVo.setEveInfo(eveUptime.getId(),0 , eveUptime.toString(), eveUptime.getExplain());
         }
         //获取午休时间
-        WxUptime wxNoonUptime = query(WxRelation.TYPE_MIDDAY, WxRelation.KEY_HOSPITAL, hid);
-        if (wxNoonUptime != null) {
-            //设置Kid
-            wxEveUptimeVo.setKid(hid);
-            //设置当前类型为医院类型
-            wxEveUptimeVo.setKey(WxRelation.KEY_HOSPITAL);
-            //设置自定义午休类型ID
-            wxEveUptimeVo.setNoonId(wxNoonUptime.getId());
-            //设置自定义午休类型的解释说明
-            wxEveUptimeVo.setExplain(wxNoonUptime.getExplain());
-            //当前休息类型午休时间
-            wxEveUptimeVo.setRestType(1);
-            wxEveUptimeVo.setNoonTime(wxNoonUptime.getStartDesc() + "-" + wxNoonUptime.getStopDesc());
+        WxUptime noonUptime = query(WxRelation.TYPE_MIDDAY, WxRelation.KEY_HOSPITAL, hid);
+        if (noonUptime != null) {
+            hidUptimeVo.setNoonInfo(noonUptime.getId(),1, noonUptime.toString(), noonUptime.getExplain());
         } else {
-            wxNoonUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_MIDDAY);
-            //设置Kid
-            wxEveUptimeVo.setKid(aid);
-            //设置当前类型为代理商类型
-            wxEveUptimeVo.setKey(WxRelation.KEY_AGENT);
-            //设置默认午休类型的ID
-            wxEveUptimeVo.setNoonId(wxNoonUptime.getId());
-            //设置默认午休类型的解释说明
-            wxEveUptimeVo.setExplain(wxNoonUptime.getExplain());
-            //当前休息类型为午休类型
-            wxEveUptimeVo.setRestType(0);
-            wxEveUptimeVo.setNoonTime(wxNoonUptime.getStartDesc() + "-" + wxNoonUptime.getStopDesc());
+            noonUptime = findByXid(new int[]{0, aid}, WxRelation.TYPE_MIDDAY);
+            hidUptimeVo.setNoonInfo(noonUptime.getId(),0, noonUptime.toString(), noonUptime.getExplain());
         }
         List<UptimeVo> wxUptimeVos = new ArrayList<>();
         //跨服务调用,获取当前医院下的所有科室
         Set<Integer> departmentIdList = moduleCoreService.findOidByHid(Integer.toString(hid));
         for (Integer item : departmentIdList) {
-            wxUptimeVos.add(getDepartmentTime(item, wxEveUptime, wxNoonUptime));
+            wxUptimeVos.add(getDepartmentTime(item, eveUptime, noonUptime));
         }
-        wxEveUptimeVo.setChildren(wxUptimeVos);
-        return wxEveUptimeVo;
+        hidUptimeVo.setChildren(wxUptimeVos);
+        return hidUptimeVo;
     }
 
     @Override
@@ -228,37 +184,73 @@ public class WxUptimeServiceImpl implements WxUptimeService {
         return wxUptimeMapper.insert(wxUptime);
     }
 
-    /*@Override
-    @Transactional
-    public boolean modify(String useTime, String explain, int restType, int eveId, int noonId) throws ParamException {
-        boolean result = true;
-        if (restType != WxRelation.TYPE_UPTIME && restType != WxRelation.TYPE_MIDDAY)
-            throw new ParamException("Type只能为2:运行时间 3:午休时间");
-        //当前休息类型为运行类型
-        if (restType == WxRelation.TYPE_UPTIME) {
-            WxUptime wxUpEveTime = bindModel(useTime, explain, eveId);
-            if (wxUpEveTime.getStartTime() <= wxUpEveTime.getStopTime()) {
-                throw new ParamException("开始时间不能小于等于结束时间，否则无法跨天计算");
-            }
-            result &= wxUptimeMapper.update(wxUpEveTime);
-        } else {
-            //当前休息类型为午休类型
-            WxUptime wxUpNoonTime = bindModel(useTime, explain, noonId);
-            if (wxUpNoonTime.getStartTime() > wxUpNoonTime.getStopTime()) {
-                throw new ParamException("午休时间开始时间不能大于结束时间");
-            }
-            result &= wxUptimeMapper.update(wxUpNoonTime);
-        }
-        return result == true ? true : false;
-    }*/
 
-    private WxUptime bindModel(String strTime, String explain, int id) {
+    @Override
+    @Transactional
+    public boolean insertOrModify(String eveTime, String noonTime, int eveType, int noonType, String eveExplain
+            , String noonExplain, int eveId, int noonId, int key, int kid) throws ParamException {
+        boolean result;
+        if (eveType == 1 && eveId <= 0) throw new ParamException("自定义晚休时间ID不能小于等于0");
+        if (noonType == 1 && noonId <= 0)  throw new ParamException("自定义午休时间ID不能小于等于0");
+        WxUptime eveUptime = query(WxRelation.TYPE_UPTIME, key, kid);
+        if(eveType ==1){// 修改晚休时间, 先判断是否存在自定义
+            if(eveUptime == null || eveUptime.getId() != eveId) throw new ParamException("请确认eveId是否正确");
+            WxUptime wxUpEveTime = bindModel(WxRelation.TYPE_UPTIME, eveTime, eveExplain, eveId);
+            result = wxUptimeMapper.update(wxUpEveTime);
+        }else{ // 添加使用时间
+            if(eveUptime != null) throw new ParamException("请确认eveType是否正确, 当前存在定义晚休类型");
+            WxUptime wxUptime = bindModel(WxRelation.TYPE_UPTIME, eveTime, eveExplain, 0);
+            result = wxUptimeMapper.insert(wxUptime);
+            WxRelation relation = bindRelation(key, kid, wxUptime.getId(), WxRelation.TYPE_UPTIME);
+            result &= wxRelationMapper.insert(relation);
+        }
+        WxUptime noonUptime = query(WxRelation.TYPE_MIDDAY, key, kid);
+        if(noonType ==1){ // 修改午休时间，先判断是否存在自定义
+            if(noonUptime == null || noonUptime.getId() != noonId) throw new ParamException("请确认noonId是否正确");
+            WxUptime wxUpNoonTime = bindModel(WxRelation.TYPE_MIDDAY, noonTime, noonExplain, noonId);
+            result &= wxUptimeMapper.update(wxUpNoonTime);
+        }else{   // 添加午休时间
+            if(noonUptime != null) throw new ParamException("请确认noonType是否正确, 当前存在定义午休类型");
+            WxUptime wxUptime = bindModel(WxRelation.TYPE_MIDDAY, noonTime, noonExplain, 0);
+            result &= wxUptimeMapper.insert(wxUptime);
+            WxRelation relation = bindRelation(key, kid, wxUptime.getId(), WxRelation.TYPE_MIDDAY);
+            result &= wxRelationMapper.insert(relation);
+        }
+        return  result;
+    }
+
+    /**o
+     * 获取科室VO对象
+     */
+    private UptimeVo getDepartmentTime(Integer oid, WxUptime eveUptime, WxUptime noonUptime) {
+        WxUptime wxUptimeEve = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_DEPARTMENT, oid);
+        WxUptime wxUptimeNoon = query(WxRelation.TYPE_MIDDAY, WxRelation.KEY_DEPARTMENT, oid);
+        UptimeVo wxUptimeVo = new UptimeVo(oid, WxRelation.KEY_DEPARTMENT);
+        if (wxUptimeEve == null) { //设置默认运行时间类型的ID
+            wxUptimeVo.setEveInfo(eveUptime.getId(), 0 , eveUptime.toString(), eveUptime.getExplain());
+        } else { //设置自定义运行时间类型ID
+            wxUptimeVo.setEveInfo(wxUptimeEve.getId(), 1 , wxUptimeEve.toString(), wxUptimeEve.getExplain());
+        }
+        if (wxUptimeNoon == null) {
+            wxUptimeVo.setNoonInfo(noonUptime.getId(),0, noonUptime.toString(), noonUptime.getExplain());
+        } else {
+            wxUptimeVo.setNoonInfo(wxUptimeNoon.getId(),1, wxUptimeNoon.toString(), wxUptimeNoon.getExplain());
+        }
+        return wxUptimeVo;
+    }
+    private WxUptime bindModel(int type, String strTime, String explain, int id) throws ParamException {
         WxUptime wxUptime = new WxUptime();
-        wxUptime.setId(id);
+        if(id > 0) wxUptime.setId(id);
         String startDesc = strTime.split("-")[0];
         String stopDesc = strTime.split("-")[1];
         int startTime = DateUtil.getTimesNoDate(startDesc);
         int stopTime = DateUtil.getTimesNoDate(stopDesc);
+        if (type == WxRelation.TYPE_UPTIME && startTime <= stopTime) {
+            throw new ParamException("开始时间不能小于等于结束时间，否则无法跨天计算");
+        }
+        if (type == WxRelation.TYPE_MIDDAY && startTime > stopTime) {
+            throw new ParamException("午休时间开始时间不能大于结束时间");
+        }
         wxUptime.setStartTime(startTime);
         wxUptime.setStopTime(stopTime);
         wxUptime.setStartDesc(startDesc);
@@ -266,104 +258,16 @@ public class WxUptimeServiceImpl implements WxUptimeService {
         wxUptime.setExplain(explain);
         return wxUptime;
     }
-    @Override
-    @Transactional
-    public boolean insertOrModify(int timeType,String useTime,String restTime, String explain, Integer key, int restType, int eveId, int noonId, int kid) throws ParamException {
-        boolean result = true;
-        if(timeType ==1){
-            // 修改使用时间
-            WxUptime wxUpEveTime = bindModel(useTime, explain, eveId);
-            if (wxUpEveTime.getStartTime() <= wxUpEveTime.getStopTime()) {
-                throw new ParamException("开始时间不能小于等于结束时间，否则无法跨天计算");
-            }
-            result &= wxUptimeMapper.update(wxUpEveTime);
-        }else{
-            // 添加使用时间
-            String startDesc = useTime.split("-")[0];
-            String stopDesc = useTime.split("-")[1];
-            int startTime = DateUtil.getTimesNoDate(startDesc);
-            int stopTime = DateUtil.getTimesNoDate(stopDesc);
-            WxUptime wxUptime = new WxUptime();
-            wxUptime.setStartTime(startTime);
-            wxUptime.setStopTime(stopTime);
-            wxUptime.setStartDesc(startDesc);
-            wxUptime.setStopDesc(stopDesc);
-            wxUptime.setExplain(explain);
-            result &= wxUptimeMapper.insert(wxUptime);
-            WxRelation relation = new WxRelation();
-            relation.setKey(key);
-            relation.setRid(wxUptime.getId());
-            relation.setKid(kid);
-            relation.setType(WxRelation.TYPE_UPTIME);
-            result &= wxRelationMapper.insert(relation);
-        }
-        if(restType ==1){
-            // 修改午休时间
-            //当前休息类型为午休类型
-            WxUptime wxUpNoonTime = bindModel(restTime, explain, noonId);
-            if (wxUpNoonTime.getStartTime() > wxUpNoonTime.getStopTime()) {
-                throw new ParamException("午休时间开始时间不能大于结束时间");
-            }
-            result &= wxUptimeMapper.update(wxUpNoonTime);
-        }else{
-            // 添加午休时间
-            WxUptime wxUptime = new WxUptime();
-            String startDesc = restTime.split("-")[0];
-            String stopDesc = restTime.split("-")[1];
-            int startTime = DateUtil.getTimesNoDate(startDesc);
-            int stopTime = DateUtil.getTimesNoDate(stopDesc);
-            wxUptime.setExplain(explain);
-            wxUptime.setStartTime(startTime);
-            wxUptime.setStopTime(stopTime);
-            wxUptime.setStartDesc(startDesc);
-            wxUptime.setStopDesc(stopDesc);
-            result &= wxUptimeMapper.insert(wxUptime);
-            WxRelation relation = new WxRelation();
-            relation.setKey(key);
-            relation.setRid(wxUptime.getId());
-            relation.setKid(kid);
-            relation.setType(WxRelation.TYPE_MIDDAY);
-            result &= wxRelationMapper.insert(relation);
-        }
-        return  result;
+
+
+    private WxRelation bindRelation(int key, int kid, int rid, int type) {
+        WxRelation relation = new WxRelation();
+        relation.setKey(key);
+        relation.setRid(rid);
+        relation.setKid(kid);
+        relation.setType(type);
+        return relation;
     }
 
-    private UptimeVo getDepartmentTime(Integer id, WxUptime eveUptime, WxUptime noonUptime) {
-        WxUptime wxUptimeEve = query(WxRelation.TYPE_UPTIME, WxRelation.KEY_DEPARTMENT, id);
-        WxUptime wxUptimeNoon = query(WxRelation.TYPE_MIDDAY, WxRelation.KEY_DEPARTMENT, id);
-        UptimeVo wxUptimeVo = new UptimeVo();
-        //设置kid
-        wxUptimeVo.setKid(id);
-        //设置当前类型为科室
-        wxUptimeVo.setKey(WxRelation.KEY_DEPARTMENT);
-        if (wxUptimeEve == null) {
-            //设置默认运行时间类型的ID
-            wxUptimeVo.setEveId(eveUptime.getId());
-            //设置默认运行时间类型的解释说明
-            wxUptimeVo.setExplain(eveUptime.getExplain());
-            //运行时间类型为默认时间类型的运行时间
-            wxUptimeVo.setTimeType(0);
-            wxUptimeVo.setEveningTime(eveUptime.getStartDesc() + "-" + eveUptime.getStopDesc());
-        } else {
-            //设置自定义运行时间类型ID
-            wxUptimeVo.setEveId(wxUptimeEve.getId());
-            //设置自定义运行时间的解释说明
-            wxUptimeVo.setExplain(wxUptimeEve.getExplain());
-            wxUptimeVo.setTimeType(1);
-            wxUptimeVo.setEveningTime(wxUptimeEve.getStartDesc() + "-" + wxUptimeEve.getStopDesc());
-        }
-        if (wxUptimeNoon == null) {
-            wxUptimeVo.setNoonId(noonUptime.getId());
-            wxUptimeVo.setExplain(noonUptime.getExplain());
-            //当前休息类型为午休时间
-            wxUptimeVo.setRestType(0);
-            wxUptimeVo.setNoonTime(noonUptime.getStartDesc() + "-" + noonUptime.getStopDesc());
-        } else {
-            wxUptimeVo.setNoonId(wxUptimeNoon.getId());
-            wxUptimeVo.setExplain(wxUptimeNoon.getExplain());
-            wxUptimeVo.setRestType(1);
-            wxUptimeVo.setNoonTime(wxUptimeNoon.getStartDesc() + "-" + wxUptimeNoon.getStopDesc());
-        }
-        return wxUptimeVo;
-    }
+
 }

@@ -4,23 +4,45 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UptimeVo implements Serializable {
-    private int kid;
+
+    //晚间类型ID;
+    private int eveId;
     //午休类型ID
     private int noonId;
-    //运行类型ID;
-    private int eveId;
-    //休息类型
-    private int restType;
-    //时间类型
-    private int timeType;
+    //运行类型 0:默认 1:自定义呢
+    private int eveType;
+    //午休类型 0:默认 1:自定义呢
+    private int noonType;
+    //晚间休息时间
+    private String eveTime;
     //午间休息时间
     private String noonTime;
-    //晚间休息时间
-    private String eveningTime;
-    //使用说明
-    private String explain;
-    //外键类型
+    // 晚间使用说明
+    private String eveExplain;
+    // 午休使用说明
+    private String noonExplain;
+    // 外键类型
     private int key;
+    // 外键ID
+    private int kid;
+
+    public UptimeVo(int kid, int key) {
+        this.kid = kid;
+        this.key = key;
+    }
+
+    public void setEveInfo(int eveId, int eveType, String eveTime, String eveExplain) {
+        this.eveId = eveId;
+        this.eveType = eveType;
+        this.eveTime = eveTime;
+        this.eveExplain = eveExplain;
+    }
+    public void setNoonInfo(int noonId, int noonType, String noonTime, String noonExplain) {
+        this.noonId = noonId;
+        this.noonType = noonType;
+        this.noonTime = noonTime;
+        this.noonExplain = noonExplain;
+    }
     //封装科室集合
     private List<UptimeVo> children;
 
@@ -32,22 +54,6 @@ public class UptimeVo implements Serializable {
         this.children = children;
     }
 
-    public int getRestType() {
-        return restType;
-    }
-
-    public void setRestType(int restType) {
-        this.restType = restType;
-    }
-
-    public int getTimeType() {
-        return timeType;
-    }
-
-    public void setTimeType(int timeType) {
-        this.timeType = timeType;
-    }
-
     public String getNoonTime() {
         return noonTime;
     }
@@ -56,13 +62,6 @@ public class UptimeVo implements Serializable {
         this.noonTime = noonTime;
     }
 
-    public String getEveningTime() {
-        return eveningTime;
-    }
-
-    public void setEveningTime(String eveningTime) {
-        this.eveningTime = eveningTime;
-    }
 
     public int getNoonId() {
         return noonId;
@@ -80,13 +79,6 @@ public class UptimeVo implements Serializable {
         this.eveId = eveId;
     }
 
-    public String getExplain() {
-        return explain;
-    }
-
-    public void setExplain(String explain) {
-        this.explain = explain;
-    }
 
     public int getKey() {
         return key;
@@ -103,4 +95,45 @@ public class UptimeVo implements Serializable {
     public void setKid(int kid) {
         this.kid = kid;
     }
+
+    public int getEveType() {
+        return eveType;
+    }
+
+    public void setEveType(int eveType) {
+        this.eveType = eveType;
+    }
+
+    public int getNoonType() {
+        return noonType;
+    }
+
+    public void setNoonType(int noonType) {
+        this.noonType = noonType;
+    }
+
+    public String getEveTime() {
+        return eveTime;
+    }
+
+    public void setEveTime(String eveTime) {
+        this.eveTime = eveTime;
+    }
+
+    public String getEveExplain() {
+        return eveExplain;
+    }
+
+    public void setEveExplain(String eveExplain) {
+        this.eveExplain = eveExplain;
+    }
+
+    public String getNoonExplain() {
+        return noonExplain;
+    }
+
+    public void setNoonExplain(String noonExplain) {
+        this.noonExplain = noonExplain;
+    }
+
 }

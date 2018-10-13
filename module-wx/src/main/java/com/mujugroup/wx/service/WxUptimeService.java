@@ -28,7 +28,6 @@ public interface WxUptimeService {
 
     boolean insert(WxUptime wxUptime);
 
-    boolean insertOrModify(int timeType, String useTime, String restTime, String explain, Integer key, int restType, int eveId, int noonId, int kid) throws ParamException;
-
-
+    boolean insertOrModify(String eveTime, String noonTime, int eveType, int noonType, String eveExplain
+            , String noonExplain, int eveId, int noonId, int key, int kid) throws ParamException;
 }
