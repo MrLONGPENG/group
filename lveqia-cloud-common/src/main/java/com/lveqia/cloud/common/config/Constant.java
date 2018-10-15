@@ -39,6 +39,10 @@ public class Constant {
     /** 时间戳-- 7 天  */
     public static final long TIMESTAMP_DAYS_7 = 7*24*60*60;
 
+    /** 时间戳-- 4:50  */
+    public static final long TIMESTAMP_DELAY = 4*60*60+50*60;
+
     /** JSON 数组字符串 */
     public static final String JSON_ARRAY = "[]";
+
 }

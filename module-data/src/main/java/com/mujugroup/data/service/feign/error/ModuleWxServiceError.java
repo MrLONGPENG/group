@@ -18,31 +18,31 @@ public class ModuleWxServiceError implements ModuleWxService {
 
     @Override
     public Map<String, String> getUserCount(String param) {
-        logger.debug("data->remote wx fail, method:getTotalUserCount param:{}",param);
+        logger.warn("data->remote wx fail, method:getTotalUserCount param:{}",param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getUsageCount(String param) {
-        logger.debug("data->remote wx fail, method:getUsageCount param:{}",param);
+        logger.warn("data->remote wx fail, method:getUsageCount param:{}",param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getUsageRate(String param) {
-        logger.debug("data->remote wx fail, method:getUsageRate param:{}",param);
+        logger.warn("data->remote wx fail, method:getUsageRate param:{}",param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getTotalProfit(String param) {
-        logger.debug("data->remote wx fail, method:getTotalProfit param:{}",param);
+        logger.warn("data->remote wx fail, method:getTotalProfit param:{}",param);
         return new HashMap<>();
     }
 
     @Override
     public PageTO<OrderTO> getOrderList(AidHidOidTO aidHidOidDto) {
-        logger.debug("data->remote wx fail, method:getOrderList param:{}",aidHidOidDto);
+        logger.warn("data->remote wx fail, method:getOrderList param:{}",aidHidOidDto);
         return null;
     }
 

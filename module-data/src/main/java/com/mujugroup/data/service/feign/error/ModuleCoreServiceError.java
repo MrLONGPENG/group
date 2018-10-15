@@ -17,49 +17,49 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
     @Override
     public Map<String, String> getNewlyActiveCount(String param) {
-        logger.debug("data->remote core fail, method:getNewlyActiveCount param:{}",param);
+        logger.warn("data->remote core fail, method:getNewlyActiveCount param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getTotalActiveCount(String param) {
-        logger.debug("data->remote core fail, method:getTotalActiveCount param:{}",param);
+        logger.warn("data->remote core fail, method:getTotalActiveCount param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getAgentById(String param) {
-        logger.debug("data->remote core fail, method:getAgentById param:{}",param);
+        logger.warn("data->remote core fail, method:getAgentById param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getHospitalById(String param) {
-        logger.debug("data->remote core fail, method:getHospitalById param:{}",param);
+        logger.warn("data->remote core fail, method:getHospitalById param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getProvinceByHid(String param) {
-        logger.debug("data->remote core fail, method:getProvinceByHid param:{}",param);
+        logger.warn("data->remote core fail, method:getProvinceByHid param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getCityByHid(String param) {
-        logger.debug("data->remote core fail, method:getCityByHid param:{}",param);
+        logger.warn("data->remote core fail, method:getCityByHid param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getDepartmentById(String param) {
-        logger.debug("data->remote core fail, method:getDepartmentById param:{}",param);
+        logger.warn("data->remote core fail, method:getDepartmentById param:{}",param);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getBedInfoByDid(String param) {
-        logger.debug("data->remote core fail, method:getBedInfoByDid param:{}",param);
+        logger.warn("data->remote core fail, method:getBedInfoByDid param:{}",param);
         return EMPTY_MAP;
     }
 
@@ -75,13 +75,13 @@ public class ModuleCoreServiceError implements ModuleCoreService {
 
     @Override
     public Map<String, String> getAuthData(String uid) {
-        logger.debug("data->remote core fail, method:getAuthData param:{}",uid);
+        logger.warn("data->remote core fail, method:getAuthData param:{}",uid);
         return EMPTY_MAP;
     }
 
     @Override
     public Map<String, String> getHospitalJson(String hid) {
-        logger.debug("data->remote core fail, method:getHospitalJson param:{}",hid);
+        logger.warn("data->remote core fail, method:getHospitalJson param:{}",hid);
         return EMPTY_MAP;
     }
 }

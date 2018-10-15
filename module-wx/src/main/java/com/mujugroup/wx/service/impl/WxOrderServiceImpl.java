@@ -129,34 +129,23 @@ public class WxOrderServiceImpl implements WxOrderService {
 
 
     /**
-     * 根据传入的起止时间戳，计算当期使用数
-     */
-    @Override
-    @Cacheable(value = "wx-order-usage-count")
-    public String getUsageCount(String aid, String hid, String oid, String start, String end) {
-        logger.debug("getUsageCount real-time data");
-        return String.valueOf(wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT
-                , Long.parseLong(start), Long.parseLong(end)).getCount1());
-    }
-
-    /**
      * 根据传入的日期格式，计算采用日累加方式
      * @param date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
      */
     @Override
     @Cacheable(value = "wx-order-usage-count-date")
-    public String getUsageCountByDate(String aid, String hid, String oid, String date) {
+    public String getUsageCount(String aid, String hid, String oid, String date) {
         logger.debug("getUsageCountByDate real-time data");
         long timestamp;
         String avgCount;
         if(date.length() == 17) {       // 粒度--周
-            timestamp = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            timestamp = DateUtil.getDelayTimestamp(date.substring(0,8)) + Constant.TIMESTAMP_DAYS_1;
             avgCount = appendUsageCount(aid, hid, oid, timestamp, 7);
         }else if(date.length() == 6) {  // 粒度--月
-            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            timestamp = DateUtil.getDelayTimestamp(date) + Constant.TIMESTAMP_DAYS_1;
             avgCount = appendUsageCount(aid, hid, oid, timestamp, DateUtil.getDay(date));
         }else{ // 其他默认粒度--日
-            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            timestamp = DateUtil.getDelayTimestamp(date) + Constant.TIMESTAMP_DAYS_1;
             avgCount = appendUsageCount(aid, hid, oid, timestamp, 1);
         }
         return avgCount;
@@ -173,13 +162,13 @@ public class WxOrderServiceImpl implements WxOrderService {
         String avgCount;
         long timestamp;
         if(date.length() == 17) {       // 粒度--周
-            timestamp = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            timestamp = DateUtil.getDelayTimestamp(date.substring(0,8)) + Constant.TIMESTAMP_DAYS_1;
             avgCount = averageUsageRate(aid, hid, oid, timestamp, 7);
         }else if(date.length() == 6) {  // 粒度--月
-            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            timestamp = DateUtil.getDelayTimestamp(date) + Constant.TIMESTAMP_DAYS_1;
             avgCount = averageUsageRate(aid, hid, oid, timestamp, DateUtil.getDay(date));
         }else{ // 其他默认粒度--日
-            timestamp = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            timestamp = DateUtil.getDelayTimestamp(date) + Constant.TIMESTAMP_DAYS_1;
             avgCount = averageUsageRate(aid, hid, oid, timestamp, 1);
         }
         return String.valueOf(avgCount);
@@ -193,13 +182,13 @@ public class WxOrderServiceImpl implements WxOrderService {
     public String getTotalProfitByDate(String aid, String hid, String oid, String date) {
         long start, end;
         if(date.length() == 17) {       // 粒度--周
-            start = DateUtil.toTimestamp(date.substring(0,8), DateUtil.TYPE_DATE_08);
+            start = DateUtil.getDelayTimestamp(date.substring(0,8));
             end = start + Constant.TIMESTAMP_DAYS_7;
         }else if(date.length() == 6) {  // 粒度--月
-            start = DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+            start = DateUtil.getDelayTimestamp(date);
             end = start + Constant.TIMESTAMP_DAYS_1 * DateUtil.getDay(date);
         }else{ // 其他默认粒度--日
-            start = DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+            start = DateUtil.getDelayTimestamp(date);
             end = start + Constant.TIMESTAMP_DAYS_1;
         }
         return getTotalProfit(aid, hid, oid,null,null, start, end);
@@ -232,19 +221,27 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     /**
+     * 只查询晚休且不按用户去重
+     * @param usage 采用usage时间查询，根据订单开始与结束时间之内按每日查询
+     */
+    @Override
+    public int getDailyUsage(String aid, String hid, String oid, long usage) {
+        return wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT,0,0, usage).getCount2();
+    }
+
+    /**
      * 周、月使用率，采用日均方法计算平均值
      */
     private String averageUsageRate(String aid, String hid, String oid, long timestamp, int days) {
         double avgCount =0, allCount;
-        long start,end;
+        long usage;
         int[] arrUsage = new int[days];
         Object[] keys = new String[days];
-        for (int i = 0; i < days; i++) {
-            start = timestamp + i * Constant.TIMESTAMP_DAYS_1;
-            end = timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1;
-            keys[i] = StringUtil.toLinkByAnd(aid, hid, oid, end);
+        for (int i = 0; i < days; i++) { // 延后时间加一天
+            usage = timestamp + i * Constant.TIMESTAMP_DAYS_1;
+            keys[i] = StringUtil.toLinkByAnd(aid, hid, oid, usage);
             // 只查询晚修类型
-            arrUsage[i] = wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT, start, end).getCount1();
+            arrUsage[i] = getDailyUsage(aid, hid, oid, usage);
         }
         Map<String, String> map = moduleCoreService.getTotalActiveCount(StringUtil.toLink(keys));
         for (int i = 0; i < days; i++) {
@@ -260,9 +257,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     private String appendUsageCount(String aid, String hid, String oid, long timestamp, int days) {
         int avgCount = 0;
         for (int i = 0; i < days; i++) {
-            avgCount += wxOrderMapper.getUsageCount(aid, hid, oid, WxOrder.ORDER_TYPE_NIGHT
-                    ,timestamp + i * Constant.TIMESTAMP_DAYS_1
-                    ,timestamp + (i+1) * Constant.TIMESTAMP_DAYS_1).getCount1();
+            avgCount += getDailyUsage(aid, hid, oid, timestamp + i * Constant.TIMESTAMP_DAYS_1);
         }
         return String.valueOf(avgCount);
     }

@@ -31,7 +31,8 @@ public class OverviewServiceImpl implements OverviewService {
     @Override
     @MergeResult
     public UsageBO usage(String uid, String aid, long timestamp) throws BaseException {
-        return new UsageBO(checkUserData(uid, aid), checkTimestamp(timestamp));
+        long delay = checkTimestampAndAddDelay(timestamp);
+        return new UsageBO(checkUserData(uid, aid), DateUtil.timestampToDays(delay - Constant.TIMESTAMP_DAYS_1), delay);
     }
 
 
@@ -39,7 +40,7 @@ public class OverviewServiceImpl implements OverviewService {
     @Override
     @MergeResult
     public ProfitBO profit(String uid, String aid, long timestamp) throws BaseException {
-        return new ProfitBO(checkUserData(uid, aid), checkTimestamp(timestamp));
+        return new ProfitBO(checkUserData(uid, aid), checkTimestampAndAddDelay(timestamp));
     }
 
 
@@ -60,9 +61,9 @@ public class OverviewServiceImpl implements OverviewService {
 
 
     /**
-     * 检查时间戳，去除凌晨之后的时间，默认今日凌晨时间戳
+     * 检查时间戳，去除凌晨之后的时间，默认今日凌晨时间戳且加上延时时间
      */
-    private long checkTimestamp(long timestamp) {
+    private long checkTimestampAndAddDelay(long timestamp) {
         // 请确保时间戳，小于当日凌晨，以便可以缓存数据
         long morning = DateUtil.getTimesMorning();
         if(timestamp == 0 || timestamp > morning ) {
@@ -71,7 +72,7 @@ public class OverviewServiceImpl implements OverviewService {
             long offset = timestamp % Constant.TIMESTAMP_DAYS_1;
             if(offset > 0) timestamp -= offset + Constant.TIMESTAMP_HOUR_8;
         }
-        return timestamp;
+        return timestamp + Constant.TIMESTAMP_DELAY;
     }
 
 

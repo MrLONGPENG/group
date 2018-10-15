@@ -1,5 +1,7 @@
 package com.lveqia.cloud.common.util;
 
+import com.lveqia.cloud.common.config.Constant;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,7 +68,7 @@ public class DateUtil {
     /**
      * 10位时间戳转当前周 yyyyMMdd-yyyyMMdd
      */
-    public static String timestampToWeek(int timestamp) {
+    public static String timestampToWeek(long timestamp) {
         Date date1,date2;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestamp * 1000L);
@@ -80,7 +82,7 @@ public class DateUtil {
     /**
      * 10位时间戳转当前日 yyyyMMdd
      */
-    public static String timestampToDays(int timestamp) {
+    public static String timestampToDays(long timestamp) {
         return timestampToString(timestamp, TYPE_DATE_08);
     }
 
@@ -88,7 +90,7 @@ public class DateUtil {
     /**
      * 10位时间戳转时间字符串
      */
-    public static String timestampToString(int timestamp, int type) {
+    public static String timestampToString(long timestamp, int type) {
         return dateToString(new Date(timestamp*1000L), type);
     }
 
@@ -208,4 +210,17 @@ public class DateUtil {
 
 
 
+
+    /**
+     * 获取延后统计时间点，采用每天4:50
+     */
+    public static long getDelayTimestamp(String date) {
+        long timestamp = Constant.TIMESTAMP_DELAY;
+        if(date.length() == 6){
+            timestamp += DateUtil.toTimestamp(date, DateUtil.TYPE_MONTH);
+        }else{
+            timestamp += DateUtil.toTimestamp(date, DateUtil.TYPE_DATE_08);
+        }
+        return timestamp;
+    }
 }

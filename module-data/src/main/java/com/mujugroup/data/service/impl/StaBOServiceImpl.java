@@ -62,6 +62,7 @@ public class StaBOServiceImpl implements StaBOService {
 
     /**
      * 根据粒度以及Key，获取结束时间戳, 同时确保生成的结束时间小于等于传入的结束时间
+     * 同时，添加延时时间
      */
     private long getEndTimestamp(int grain, String refDate, int stopTime) {
         long result = 0;
@@ -71,7 +72,7 @@ public class StaBOServiceImpl implements StaBOService {
             case 3 : result = DateUtil.getTimesEndMonth(refDate);break;
         }
         if(result > stopTime || result == 0) result = stopTime;
-        return result;
+        return result + Constant.TIMESTAMP_DELAY;
     }
 
 

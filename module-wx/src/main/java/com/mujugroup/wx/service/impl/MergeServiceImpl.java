@@ -85,9 +85,8 @@ public class MergeServiceImpl implements MergeService {
     }
 
     /**
-     * 根据条件获取指定时间类的使用数量（子循环有采用缓存，请注意查询时间参数）
-     * @param param 代理商ID&医院ID&科室ID&开始时间戳&结束时间戳&日期字符 (ps:日期字符可能为空，多个数据分号分割)
-     *              医院ID支持多个查询，即格式:1_2_3
+     * 根据条件获取指定时间类的使用数量
+     * @param param 代理商ID&医院ID&科室ID&日期字符(代理商、医院皆可使用多个查询，逗号分隔)
      * @return  key:aid&hid&oid&start&end&date value:count
      */
     @Override
@@ -99,11 +98,11 @@ public class MergeServiceImpl implements MergeService {
             if(StringUtil.isEmpty(key)) continue;
             String[] keys = key.split(Constant.SIGN_AND);
             keys[1] = StringUtil.formatIds(keys[1]);
-            if(keys.length==6) { // date 格式 yyyyMM yyyyMMdd yyyyMMdd-yyyyMMdd
-                map.put(key, wxOrderService.getUsageCountByDate(keys[0], keys[1], keys[2], keys[5]));
-            }else{
-                map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3], keys[4]));
+            if(keys.length != 4){
+                logger.error("使用数查询接口改为按日期字符查询");
+                break;
             }
+            map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3]));
         }
         return map;
     }
@@ -111,7 +110,7 @@ public class MergeServiceImpl implements MergeService {
 
     /**
      * 根据条件获取指定时间类的使用率（子循环有采用缓存，请注意查询参数date）
-     * @param param 代理商ID&医院ID&科室ID&日期字符 (ps:日期字符可能为空，多个数据分号分割)
+     * @param param 代理商ID&医院ID&科室ID&日期字符
      * @return  key:aid&hid&oid&date value:count
      */
     @Override
@@ -130,8 +129,7 @@ public class MergeServiceImpl implements MergeService {
 
     /**
      * 获取指定时间内、指定条件下的利润总和
-     * @param param 代理商ID&医院ID&科室ID&开始时间戳&结束时间戳&日期字符 (ps:日期字符可能为空，多个数据分号分割)
-     *               医院ID支持多个查询，即格式:1_2_3
+     * @param param 代理商ID&医院ID&科室ID&开始时间戳&结束时间戳&日期字符 (ps:日期字符可能为空)
      * @return key:aid&hid&oid&start&end&date value:profit(单位分)
      */
     @Override

@@ -60,7 +60,8 @@ public class WxOrderSqlProvider {
     }
 
     public String getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("orderType") int orderType, @Param("start")long start, @Param("end")long end){
+            , @Param("orderType") int orderType, @Param("start")long start, @Param("end")long end
+            , @Param("usage") long usage){
         return new SQL(){{
             SELECT("COUNT(DISTINCT `did`) as `count1`, COUNT(`did`) as `count2`");
             FROM("t_wx_order");
@@ -78,8 +79,13 @@ public class WxOrderSqlProvider {
             if(!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("oid = #{oid}");
             if(orderType!= 0) AND().WHERE("order_type = #{orderType}");
             // TODO 当存在支付时间的数据，即为已支付状态,当增加退款等状态时候，此处还需修改
+            if(usage != 0) {
+                AND().WHERE("`end_time` >= #{usage}");
+                AND().WHERE("`pay_time` < #{usage}");
+            }
             if(start != 0 ) AND().WHERE("pay_time >= #{start}");
             if(end != 0 ) AND().WHERE("pay_time < #{end}");
+
         }}.toString();
     }
 

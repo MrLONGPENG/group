@@ -88,7 +88,8 @@ public interface WxOrderMapper {
     @Results({@Result(column="count1", property="count1", javaType=Integer.class)
             ,@Result(column="count2", property="count2", javaType=Integer.class)})
     DBObj getUsageCount(@Param("aid")String aid, @Param("hid")String hid, @Param("oid")String oid
-            , @Param("orderType") int orderType, @Param("start") long start, @Param("end") long end);
+            , @Param("orderType") int orderType, @Param("start") long start, @Param("end") long end
+            , @Param("usage") long usage);
 
 
 

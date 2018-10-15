@@ -28,11 +28,11 @@ public interface WxOrderService {
 
     List<DBMap> getPayCountByHid(String aid, String hid);
 
-    String getUsageCount(String aid, String hid, String oid, String start, String end);
-
-    String getUsageCountByDate(String aid, String hid, String oid, String date);
+    String getUsageCount(String aid, String hid, String oid, String date);
 
     String getUsageRate(String aid, String hid, String oid, String date);
+
+    int getDailyUsage(String aid, String hid, String oid, long usage);
 
     String getTotalProfitByDate(String aid, String hid, String oid, String date);
 

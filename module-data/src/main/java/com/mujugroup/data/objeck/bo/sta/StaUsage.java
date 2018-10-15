@@ -21,7 +21,7 @@ public class StaUsage implements Serializable {
 
     public StaUsage(String refDate, String[] ids) {
         this.refDate = refDate;
-        this.usage = StringUtil.toLinkByAnd(ids[0], ids[1], ids[2], 0, 0, refDate);
+        this.usage = StringUtil.toLinkByAnd(ids[0], ids[1], ids[2], refDate);
     }
 
     public String getRefDate() {

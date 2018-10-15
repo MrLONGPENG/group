@@ -49,9 +49,9 @@ public class ExcelBO implements Serializable {
         String aid = info.get("aid").getAsString();
         String hid = info.get("hid").getAsString();
         this.active = StringUtil.toLinkByAnd(aid, hid, Constant.DIGIT_ZERO, end);
-        this.usage = StringUtil.toLinkByAnd(aid, hid, 0, 0, 0, refDate);
-        this.usageRate = StringUtil.toLinkByAnd(aid, hid,  0, refDate);
-        this.profit = StringUtil.toLinkByAnd(aid, hid,  0, 0, 0, refDate);
+        this.usage = StringUtil.toLinkByAnd(aid, hid, Constant.DIGIT_ZERO, refDate);
+        this.usageRate = StringUtil.toLinkByAnd(aid, hid, Constant.DIGIT_ZERO, refDate);
+        this.profit = StringUtil.toLinkByAnd(aid, hid, Constant.DIGIT_ZERO, 0, 0, refDate);
 
     }
 
