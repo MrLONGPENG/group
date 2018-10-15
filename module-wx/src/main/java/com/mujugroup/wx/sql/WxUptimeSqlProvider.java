@@ -41,7 +41,7 @@ public class WxUptimeSqlProvider {
 
     public String findListByRelation(@Param("type")Integer type, @Param("key")Integer key, @Param("kid") Integer kid){
         return new SQL(){ {
-            SELECT(" a.id ,start_time,stop_time,start_desc,stop_desc,`explain`,b.id AS relationId ,rid,kid,`key`,`type`");
+            SELECT(" A.id ,start_time,stop_time,start_desc,stop_desc,`explain`,B.id AS relationId ,rid,kid,`key`,`type`");
             FROM("t_wx_uptime A");
             INNER_JOIN("t_wx_relation B ON A.id = B.rid");
             if(type!= null) WHERE("B.`type` = #{type}"); // 2:运行时间 3:午休时间
