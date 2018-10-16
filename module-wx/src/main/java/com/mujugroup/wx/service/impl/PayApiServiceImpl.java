@@ -4,6 +4,7 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.google.gson.Gson;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.cache.ILocalCache;
@@ -30,7 +31,6 @@ public class PayApiServiceImpl implements PayApiService {
     private final WXPayConfig wxPayConfig = new MyConfig();
     private final WXPay wxPay = new WXPay(wxPayConfig);
     private final UsingApiService usingApiService;
-    private final WxUptimeService wxUptimeService;
     private final WxUsingService wxUsingService;
     private final WxOrderService wxOrderService;
     private final WxGoodsService wxGoodsService;
@@ -47,11 +47,10 @@ public class PayApiServiceImpl implements PayApiService {
     private ILocalCache<String, Long> endTimeCache;
 
     @Autowired
-    public PayApiServiceImpl(UsingApiService usingApiService, WxUptimeService wxUptimeService
-            , WxUsingService wxUsingService, WxGoodsService wxGoodsService , WxOrderService wxOrderService
+    public PayApiServiceImpl(UsingApiService usingApiService, WxUsingService wxUsingService
+            , WxGoodsService wxGoodsService , WxOrderService wxOrderService
             , ModuleLockService moduleLockService) {
         this.usingApiService = usingApiService;
-        this.wxUptimeService = wxUptimeService;
         this.wxUsingService = wxUsingService;
         this.wxGoodsService = wxGoodsService;
         this.wxOrderService = wxOrderService;
@@ -105,7 +104,7 @@ public class PayApiServiceImpl implements PayApiService {
     public String completePay(String notifyXml) throws Exception {
         //logger.debug("微信支付回调接收数据:{}", notifyXml);
         Map<String, String> map = WXPayUtil.xmlToMap(notifyXml);
-        if("dev".equals(model) ||WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
+        if(Constant.MODEL_DEV.equals(model) ||WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
                 && "SUCCESS".equals(map.get("result_code"))
                 && "SUCCESS".equals(map.get("return_code"))){
             String orderNo = map.get("out_trade_no");

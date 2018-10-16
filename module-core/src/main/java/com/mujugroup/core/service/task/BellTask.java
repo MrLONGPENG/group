@@ -13,6 +13,7 @@ import com.mujugroup.core.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,8 @@ public class BellTask {
     private final Map<String, Uptime> uptimeMap = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(BellTask.class);
 
+    @Value("${spring.profiles.active}")
+    private String model;
 
     @Autowired
     public BellTask(DeviceService deviceService, ModuleWxService moduleWxService, ModuleLockService moduleLockService) {
@@ -68,7 +71,12 @@ public class BellTask {
                 logger.debug(info);
                 array = info.split(Constant.SIGN_FEN_HAO);
                 if (array.length > 2 && "2".equals(array[1])) {
-                    moduleLockService.deviceBeep(array[0]);
+                    if(Constant.MODEL_DEV.equals(model) ){
+                        logger.warn("开发模式不响铃，当前DID:{}", array[0]);
+                    }else{
+                        moduleLockService.deviceBeep(array[0]);
+                    }
+
                 }
             }
         }

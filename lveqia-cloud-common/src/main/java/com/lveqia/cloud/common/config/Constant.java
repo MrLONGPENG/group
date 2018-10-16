@@ -45,4 +45,6 @@ public class Constant {
     /** JSON 数组字符串 */
     public static final String JSON_ARRAY = "[]";
 
+    /** 开发模式（dev）*/
+    public static final String MODEL_DEV = "dev";
 }
