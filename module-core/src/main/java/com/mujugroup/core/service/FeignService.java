@@ -20,5 +20,7 @@ public interface FeignService {
     Map<String, String> getAuthData(int uid);
 
     //通过医院ID获取所属科室ID
-   Set<Integer> findOidByHid(String hid);
+   Map<Integer,String> findOidByHid(String hid);
+   //通过医院ID获取医院名称
+   String getHospitalName(int id);
 }

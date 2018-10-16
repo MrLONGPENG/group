@@ -1,6 +1,11 @@
 package com.mujugroup.core.service;
-import java.util.Set;
+
+
+import com.lveqia.cloud.common.objeck.DBMap;
+
+import java.util.List;
+
 
 public interface DepartmentService  {
-    Set<Integer> findOidByHid(String hid);
+    List<DBMap> findOidByHid(String hid);
 }

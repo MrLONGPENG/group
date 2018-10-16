@@ -30,4 +30,5 @@ public class DBMap {
     public void addTo(HashMap<String,String> hashMap) {
         hashMap.put(key, value);
     }
+
 }

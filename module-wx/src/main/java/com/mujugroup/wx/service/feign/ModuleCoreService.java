@@ -27,5 +27,8 @@ public interface ModuleCoreService {
     Map<String, String> getTotalActiveCount(@RequestParam(value = "param") String param);
 
     @RequestMapping(value = "/feign/findOidByHid", method = RequestMethod.POST)
-    Set<Integer> findOidByHid(@RequestParam(value = "hid") String hid);
+    Map<Integer, String> findOidByHid(@RequestParam(value = "hid") String hid);
+
+    @RequestMapping(value = "/feign/findName", method = RequestMethod.POST)
+    String getHospitalName(@RequestParam(value = "id") Integer id);
 }

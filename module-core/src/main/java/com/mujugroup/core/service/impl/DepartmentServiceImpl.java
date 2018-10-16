@@ -1,5 +1,6 @@
 package com.mujugroup.core.service.impl;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.service.DepartmentService;
@@ -7,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Service("departmentService")
 public class DepartmentServiceImpl  implements DepartmentService {
@@ -18,7 +19,7 @@ public class DepartmentServiceImpl  implements DepartmentService {
     }
 
     @Override
-    public Set<Integer> findOidByHid(String hid) {
+    public List<DBMap> findOidByHid(String hid) {
         return departmentMapper.findOidByHid(hid);
     }
 }

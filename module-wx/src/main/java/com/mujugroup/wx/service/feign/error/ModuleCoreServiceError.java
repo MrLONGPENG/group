@@ -32,8 +32,13 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     }
 
     @Override
-    public Set<Integer> findOidByHid(String hid) {
+    public Map<Integer,String> findOidByHid(String hid) {
         logger.warn("Remote call module-core failure->param:{}", hid);
-        return new HashSet<>();
+        return new HashMap<>();
+    }
+
+    @Override
+    public String getHospitalName(Integer id) {
+        return null;
     }
 }

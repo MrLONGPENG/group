@@ -22,4 +22,6 @@ public interface HospitalService {
     List<Hospital> getHospitalByRegion(String pid, String cid);
 
     List<HospitalBO> getHospitalBoByIds(String[] array);
+
+    String getHospitalName(int id);
 }

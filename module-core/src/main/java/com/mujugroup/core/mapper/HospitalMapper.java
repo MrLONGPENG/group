@@ -17,7 +17,7 @@ import java.util.List;
  * 创建时间:20180627
  */
 @Mapper
-@Component(value ="hospitalMapper")
+@Component(value = "hospitalMapper")
 public interface HospitalMapper {
 
     @InsertProvider(type = HospitalSqlProvider.class, method = "insert")
@@ -31,30 +31,29 @@ public interface HospitalMapper {
 
     @Select("SELECT * FROM t_hospital WHERE id = #{id}")
     @Results(id = "hospital", value = {
-         @Result(id=true, column="id",property="id",javaType=Integer.class)
-             ,@Result(column="name",property="name",javaType=String.class)
-             ,@Result(column="agentId",property="agentId",javaType=String.class)
-             ,@Result(column="tel",property="tel",javaType=String.class)
-             ,@Result(column="person",property="person",javaType=String.class)
-             ,@Result(column="remark",property="remark",javaType=String.class)
-             ,@Result(column="crtTime",property="crtTime",javaType=Date.class)
-             ,@Result(column="crtId",property="crtId",javaType=Integer.class)
-             ,@Result(column="address",property="address",javaType=String.class)
-             ,@Result(column="country",property="country",javaType=Integer.class)
-             ,@Result(column="province",property="province",javaType=Integer.class)
-             ,@Result(column="city",property="city",javaType=Integer.class)
-             ,@Result(column="longitude",property="longitude",javaType=Double.class)
-             ,@Result(column="latitude",property="latitude",javaType=Double.class)
-             ,@Result(column="enable",property="enable",javaType=Integer.class)
-             ,@Result(column="issync",property="issync",javaType=Integer.class)
-             ,@Result(column="level",property="level",javaType=String.class)
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "agentId", property = "agentId", javaType = String.class)
+            , @Result(column = "tel", property = "tel", javaType = String.class)
+            , @Result(column = "person", property = "person", javaType = String.class)
+            , @Result(column = "remark", property = "remark", javaType = String.class)
+            , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
+            , @Result(column = "crtId", property = "crtId", javaType = Integer.class)
+            , @Result(column = "address", property = "address", javaType = String.class)
+            , @Result(column = "country", property = "country", javaType = Integer.class)
+            , @Result(column = "province", property = "province", javaType = Integer.class)
+            , @Result(column = "city", property = "city", javaType = Integer.class)
+            , @Result(column = "longitude", property = "longitude", javaType = Double.class)
+            , @Result(column = "latitude", property = "latitude", javaType = Double.class)
+            , @Result(column = "enable", property = "enable", javaType = Integer.class)
+            , @Result(column = "issync", property = "issync", javaType = Integer.class)
+            , @Result(column = "level", property = "level", javaType = String.class)
     })
     Hospital findById(Integer id);
 
     @Select("SELECT * FROM t_hospital WHERE enable = 22")
     @ResultMap("hospital")
     List<Hospital> findListAll();
-
 
 
     @ResultMap("hospital")
@@ -81,8 +80,8 @@ public interface HospitalMapper {
     List<Hospital> getHospitalByRegion(@Param("pid") String pid, @Param("cid") String cid);
 
 
-    @Results({@Result(id=true, column="id",property="id",javaType=Integer.class)
-            ,@Result(column="name",property="name",javaType=String.class)
+    @Results({@Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
     })
     @SelectProvider(type = HospitalSqlProvider.class, method = "getHospitalList")
     List<SelectVO> getHospitalList(@Param("aid") int aid, @Param("name") String name);
@@ -93,13 +92,12 @@ public interface HospitalMapper {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
             @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getHospitalListByUid(@Param("type")String type, @Param("uid") long uid);
+    List<SelectVO> getHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
 
     @Select("Select a.id as id,a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.agentId" +
             " AND d.`type`=#{type} AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("hospitalList")
     List<SelectVO> getAgentHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
-
 
 
     @Results(value = {@Result(column = "aid", property = "aid", javaType = String.class)
@@ -114,4 +112,8 @@ public interface HospitalMapper {
             ", t_country_province_city p, t_country_province_city c WHERE h.agentId " +
             "= a.id AND h.province = p.id AND h.city = c.id AND h.id in (${ids})")
     List<HospitalBO> getHospitalBoByIds(@Param("ids") String ids);
+
+    @Select("SELECT `name` FROM t_hospital where id=#{id}")
+    @ResultType(String.class)
+    String getHospitalName(@Param("id") Integer id);
 }

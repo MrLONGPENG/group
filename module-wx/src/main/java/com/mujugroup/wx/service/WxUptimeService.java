@@ -16,6 +16,8 @@ public interface WxUptimeService {
 
     WxUptime findByXid(int[] ints, int type);
 
+    WxUptime findByXid(int[] ints, int type, boolean isDefault);
+
     WxUptime query(int type, int key, int kid);
 
     WxUptime getDefaultWxUptime(int type);

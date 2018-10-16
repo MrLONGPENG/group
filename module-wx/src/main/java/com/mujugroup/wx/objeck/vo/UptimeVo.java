@@ -25,23 +25,35 @@ public class UptimeVo implements Serializable {
     private int key;
     // 外键ID
     private int kid;
+    //名称
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public UptimeVo(int kid, int key) {
         this.kid = kid;
         this.key = key;
     }
 
-    public void setEveInfo(int eveId, int eveType, String eveTime, String eveExplain) {
+    public void setEveInfo(int eveId, int eveType, String eveTime, String eveExplain,String name) {
         this.eveId = eveId;
         this.eveType = eveType;
         this.eveTime = eveTime;
         this.eveExplain = eveExplain;
+        this.name=name;
     }
-    public void setNoonInfo(int noonId, int noonType, String noonTime, String noonExplain) {
+    public void setNoonInfo(int noonId, int noonType, String noonTime, String noonExplain,String name) {
         this.noonId = noonId;
         this.noonType = noonType;
         this.noonTime = noonTime;
         this.noonExplain = noonExplain;
+        this.name=name;
     }
     //封装科室集合
     private List<UptimeVo> children;

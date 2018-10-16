@@ -1,5 +1,6 @@
 package com.mujugroup.core.mapper;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.sql.DepartmentSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,11 +52,10 @@ public interface DepartmentMapper {
     @Select("SELECT * FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
     List<Department> findListByHid(String hid);
 
-    @Select("SELECT id FROM t_department WHERE `status`= 1 AND hospital_id = #{hid} ")
-    @Results(id = "departmentID", value = {
-            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
-    })
-    Set<Integer> findOidByHid(String hid);
+    @Select("SELECT id as `key`, `name` as value  FROM t_department WHERE `status`= 1 AND hospital_id = #{hid} ")
+    @Results({@Result(column="key", property="key", javaType=String.class)
+            , @Result(column="value", property="value", javaType=String.class)})
+   List<DBMap> findOidByHid(@Param(value = "hid") String hid);
 
 
     @ResultType(String.class)

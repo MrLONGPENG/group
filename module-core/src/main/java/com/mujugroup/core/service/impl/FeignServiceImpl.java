@@ -31,7 +31,7 @@ public class FeignServiceImpl implements FeignService {
             , DepartmentService departmentService) {
         this.hospitalService = hospitalService;
         this.authDataService = authDataService;
-        this.departmentService=departmentService;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -63,11 +63,11 @@ public class FeignServiceImpl implements FeignService {
     @Override
     public Map<String, String> getHospitalJson(String param) {
         logger.debug("getHospitalJson->{}", param);
-        HashMap<String, String> hashMap =  new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         Gson gson = new GsonBuilder().create();
         List<HospitalBO> list = hospitalService.getHospitalBoByIds(array);
-        for (HospitalBO bo:list){
+        for (HospitalBO bo : list) {
             hashMap.put(bo.getHid(), gson.toJson(bo));
         }
         return hashMap;
@@ -75,15 +75,25 @@ public class FeignServiceImpl implements FeignService {
 
     @Override
     public Map<String, String> getAuthData(int uid) {
-        HashMap<String, String> hashMap =  new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<>();
         List<DBMap> list = authDataService.getAuthData(uid);
         list.forEach(dbMap -> dbMap.addTo(hashMap));
         return hashMap;
     }
 
     @Override
-    public Set<Integer> findOidByHid(String hid) {
-        return departmentService.findOidByHid(hid);
+    public Map<Integer,String> findOidByHid(String hid) {
+        HashMap<Integer,String> hashMap=new HashMap<>();
+        List<DBMap> list=departmentService.findOidByHid(hid);
+       for (DBMap map:list){
+           hashMap.put(Integer.parseInt(map.getKey()),map.getValue());
+       }
+       return hashMap;
+    }
+
+    @Override
+    public String getHospitalName(int id) {
+        return hospitalService.getHospitalName(id);
     }
 }
 
