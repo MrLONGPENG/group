@@ -116,4 +116,8 @@ public interface HospitalMapper {
     @Select("SELECT `name` FROM t_hospital where id=#{id}")
     @ResultType(String.class)
     String getHospitalName(@Param("id") Integer id);
+
+    @Select("SELECT agentid  FROM t_hospital  WHERE id=#{id}")
+    @ResultType(Integer.class)
+    Integer getAidByHid(@Param("id") int id);
 }

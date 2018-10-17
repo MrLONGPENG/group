@@ -1,15 +1,18 @@
 package com.mujugroup.core.service;
 
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
+import com.mujugroup.core.objeck.vo.DeviceVo;
 
 import java.util.List;
 
 
 public interface DeviceService {
+    boolean insert(DeviceVo deviceVo) throws ParamException;
 
     DeviceBean findDeviceBeanByDid(String did);
 
