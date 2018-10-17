@@ -87,7 +87,6 @@ public class WxGoodsController {
         }
     }
 
-
     @ApiOperation(value = "医院商品删除接口", notes = "根据类型删除商品信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
@@ -108,85 +107,68 @@ public class WxGoodsController {
         }
     }
 
-    @ApiOperation(value = "医院商品添加接口", notes = "添加医院商品")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addGoods(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
-            , defaultValue = "2") int type, @ApiParam(value = "商品名字", required = true)
-                           @RequestParam(name = "name") String name, @ApiParam(value = "商品价格", required = true) @RequestParam(name
-            = "price") int price, @ApiParam(value = "套餐天数,当且仅当Type为2的情况有效，其他为0") @RequestParam(name
-            = "days", defaultValue = "0") int days, @ApiParam(value = "商品状态 1:当前可用 2:敬请期待") @RequestParam(name
-            = "state", defaultValue = "1") int state, @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name
-            = "explain", required = false) String explain) {
-        try {
-            if (wxGoodsService.add(type, name, price, days, state, explain)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (NumberFormatException e) {
-            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
-        }
-    }
-
-    @ApiOperation(value = "医院商品修改接口", notes = "修改医院商品")
-    @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modifyGoods(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
-            , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
-            , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)
-                              @RequestParam(name = "kid") int kid, @ApiParam(value = "商品ID")
-                              @RequestParam(name = "gid", required = true) int gid, @ApiParam(value = "商品名字", required = true)
-                              @RequestParam(name = "name") String name, @ApiParam(value = "商品价格", required = true) @RequestParam(name
-            = "price") int price, @ApiParam(value = "套餐天数,当且仅当Type为2的情况有效，其他为0") @RequestParam(name
-            = "days", defaultValue = "0") int days, @ApiParam(value = "商品状态 1:当前可用 2:敬请期待") @RequestParam(name
-            = "state", defaultValue = "1") int state, @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name
-            = "explain", required = false) String explain) {
-        logger.debug("update type:{} key:{} kid:{}", type, key, kid);
-        try {
-            if (wxGoodsService.modify(type, key, kid, gid, name, price, days, state, explain)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (NumberFormatException e) {
-            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
-        }
-    }
-
     @ApiOperation(value = "获取医院商品列表", notes = "获取医院商品列表")
-    @RequestMapping(value = "/getGoodsList", method = RequestMethod.POST)
-    public String getGoodsList(@ApiParam(value = "代理商ID") @RequestParam(name = "aid", defaultValue = "0")
-                                       int aid, @ApiParam(value = "医院ID") @RequestParam(name = "hid", defaultValue = "0") int hid, @ApiParam(value =
-            "科室ID") @RequestParam(name = "oid", defaultValue = "0") int oid) {
-        if (aid > 0 && hid == 0 && oid == 0) {
-            List<GoodsVo> wxGoodsList = wxGoodsService.findRelationListByKid(aid, 1);
-            if (wxGoodsList != null && wxGoodsList.size() > 0) {
-                return ResultUtil.success(wxGoodsList);
-            } else {
-                return ResultUtil.success(wxGoodsService.findList(2, aid, 0, 0));
-            }
-        } else if (aid == 0 && hid > 0 && oid == 0) {
-            List<GoodsVo> wxGoodsList = wxGoodsService.findRelationListByKid(hid, 2);
-            if (wxGoodsList != null && wxGoodsList.size() > 0) {
-                return ResultUtil.success(wxGoodsList);
-            } else {
-                return ResultUtil.success(wxGoodsService.findList(2, 0, hid, 0));
-            }
+    @RequestMapping(value = "/get", method = RequestMethod.POST)
+    public String getGoodsList(
+            @ApiParam(value = "代理商ID") @RequestParam(name = "aid") int aid
+            , @ApiParam(value = "医院ID") @RequestParam(name = "hid") int hid
 
-
-        } else if (aid == 0 && hid == 0 && oid > 0) {
-            List<GoodsVo> wxGoodsList = wxGoodsService.findRelationListByKid(oid, 3);
-            if (wxGoodsList != null && wxGoodsList.size() > 0) {
-                return ResultUtil.success(wxGoodsList);
-            } else {
-                return ResultUtil.success(wxGoodsService.findList(2, 0, 0, oid));
-            }
+    ) {
+        GoodsVo goodsVo = wxGoodsService.getGoodsVoList(aid, hid);
+        if (goodsVo != null) {
+            return ResultUtil.success(goodsVo);
         } else {
             return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         }
     }
+
+    @ApiOperation(value = "修改或新增商品接口", notes = "修改或新增商品接口")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public String modifyGoods(@ApiParam(value = "外键类型") @RequestParam(value = "key") int key
+            , @ApiParam(value = "商品类型", required = true) @RequestParam(name = "type", defaultValue = "2") int type
+            , @ApiParam(value = "外键ID", required = true) @RequestParam(name = "kid") int kid
+            , @ApiParam(value = "午休类型(0:默认，1：自定义)", required = true) @RequestParam(name = "noon_type", defaultValue = "0") int noon_type
+            , @ApiParam(value = "套餐类型(0:默认，1：自定义)", required = true) @RequestParam(name = "combo_type", defaultValue = "0") int combo_type
+            , @ApiParam(value = "商品ID") @RequestParam(name = "gid", defaultValue = "0") int gid
+            , @ApiParam(value = "商品名字", required = true) @RequestParam(name = "name") String name
+            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") int price
+            , @ApiParam(value = "套餐天数,仅仅当Type为2的情况有效，其他为0") @RequestParam(name = "days", defaultValue = "0") int days
+            , @ApiParam(value = "商品状态 1:当前可用 2:敬请期待") @RequestParam(name = "state", defaultValue = "1") int state
+            , @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name = "explain", required = false) String explain
+    ) {
+        try {
+            if (wxGoodsService.insertOrModify(type, noon_type, combo_type, key, kid, gid, name, price, days, state, explain)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+            }
+        } catch (ParamException e) {
+            return ResultUtil.code(e.getCode(), e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "新增商品接口", notes = "修改或新增商品接口")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addGoods(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
+            , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+            , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)@RequestParam(name = "kid") int kid
+            , @ApiParam(value = "商品名字", required = true) @RequestParam(name = "name") String name
+            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") int price
+            , @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name = "explain", required = false) String explain
+    ) {
+        logger.debug("update type:{} key:{} kid:{}", type, key, kid);
+        try {
+            if (wxGoodsService.add(type, key, kid, name, price, explain)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+            }
+        } catch (NumberFormatException e) {
+            return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+    }
+
 }
 

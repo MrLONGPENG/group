@@ -46,25 +46,7 @@ public interface WxGoodsMapper {
     @Select("SELECT * FROM t_wx_goods limit 1000")
     List<WxGoods> findListAll();
 
-
     @ResultMap("wxGoods")
     @SelectProvider(type = WxGoodsSqlProvider.class, method = "findListByRelation")
-    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type")Integer type);
-
-    @Results(id = "GoodVos", value = {
-            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
-            , @Result(column = "name", property = "name", javaType = String.class)
-            , @Result(column = "price", property = "price", javaType = Integer.class)
-            , @Result(column = "fee_type", property = "feeType", javaType = String.class)
-            , @Result(column = "days", property = "days", javaType = Integer.class)
-            , @Result(column = "type", property = "type", javaType = Integer.class)
-            , @Result(column = "state", property = "state", javaType = Integer.class)
-            , @Result(column = "explain", property = "explain", javaType = String.class)
-            , @Result(column ="rid",property = "rid",javaType = Integer.class)
-            , @Result(column = "kid",property = "kid",javaType = Integer.class)
-            , @Result(column = "key",property = "key",javaType = Integer.class)
-            , @Result(column = "relationType",property = "relationType",javaType = Integer.class)
-    })
-    @SelectProvider(type = WxGoodsSqlProvider.class, method = "findRelationListByKid")
-    List<GoodsVo> findRelationListByKid(@Param("kid") Integer kid, @Param("key") Integer key);
+    List<WxGoods> findListByRelation(@Param("key") Integer key, @Param("kid") Integer kid, @Param("type") Integer type);
 }

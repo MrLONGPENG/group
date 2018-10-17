@@ -10,14 +10,18 @@ import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.objeck.vo.GoodsVo;
 import com.mujugroup.wx.service.WxGoodsService;
+import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.Relation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Service("wxGoodsService")
@@ -26,11 +30,13 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     private final Logger logger = LoggerFactory.getLogger(WxGoodsServiceImpl.class);
     private final WxGoodsMapper wxGoodsMapper;
     private final WxRelationMapper wxRelationMapper;
+    private ModuleCoreService moduleCoreService;
 
     @Autowired
-    public WxGoodsServiceImpl(WxGoodsMapper wxGoodsMapper, WxRelationMapper wxRelationMapper) {
+    public WxGoodsServiceImpl(WxGoodsMapper wxGoodsMapper, WxRelationMapper wxRelationMapper, ModuleCoreService moduleCoreService) {
         this.wxGoodsMapper = wxGoodsMapper;
         this.wxRelationMapper = wxRelationMapper;
+        this.moduleCoreService = moduleCoreService;
     }
 
     @Override
@@ -106,7 +112,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     @Override
     public List<WxGoods> findListByXid(int[] ints, int type) {
         List<WxGoods> list = null;
-        for (int i = 3; i > -1; i--) {
+        for (int i = ints.length - 1; i > -1; i--) {
             if (i != ints[i] && ints[i] == 0) continue;
             list = queryList(i, ints[i], type);
             if (list != null && list.size() > 0) break;
@@ -114,10 +120,6 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         return list;
     }
 
-    @Override
-    public List<GoodsVo> findRelationListByKid(int kid, int key) {
-        return wxGoodsMapper.findRelationListByKid(kid,key);
-    }
 
     @Override
     public List<WxGoods> queryList(int key, int kid, int type) {
@@ -129,11 +131,19 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     @Transactional
+    public boolean add(int type, int key, int kid, String name, int price, String explain) throws ParamException {
+        return update(type, key, kid, 0, name, price, 0, 1, explain);
+    }
+
+    @Override
+    @Transactional
     public boolean update(int type, int key, int kid, int gid, String name, int price, int days
             , int state, String explain) throws ParamException {
         if (type < 1 || type > 4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
         if (state != 1 && state != 2) throw new ParamException("商品状态{state}只能为1:当前可用 2:敬请期待");
         if (type == 2 && days <= 0) throw new ParamException("商品类型为基本套餐时候,必须指定Days属性,最小数量为1天");
+        if (type != 2 && days != 0) throw new ParamException("套餐天数,仅仅当Type为2的情况有效，其他为0");
+        if (type == 1 ||type == 4) throw new ParamException("当前只支持Type类型(2:套餐 3:午休)");
         if (key == WxRelation.KEY_DEFAULT && gid <= 0) throw new ParamException("默认数据无法新增，请更改外键类型或指定默认商品ID");
         if (gid > 0) { // 更新指定商品
             List<WxGoods> list = queryList(key, kid, type);
@@ -168,6 +178,22 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         return wxGoods;
     }
 
+    private WxGoods bindModel(int gid, String name, int type, int price, int days, int state, String explain) {
+        WxGoods wxGoods = new WxGoods();
+        if (gid > 0) wxGoods.setId(gid);
+        bindData(wxGoods, name, type, price, days, state, explain);
+        return wxGoods;
+    }
+
+    private WxRelation bindRelation(int key, int kid, int rid, int type) {
+        WxRelation wxRelation = new WxRelation();
+        wxRelation.setType(type);
+        wxRelation.setKid(kid);
+        wxRelation.setRid(rid);
+        wxRelation.setKey(key);
+        return wxRelation;
+    }
+
     @Override
     @Transactional
     public boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException {
@@ -189,9 +215,104 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     }
 
     @Override
+    public GoodsVo getGoodsVoList(int aid, int hid) {
+        GoodsVo goodsVo = new GoodsVo();
+        goodsVo.setKid(hid);
+        goodsVo.setKey(WxRelation.KEY_HOSPITAL);
+        //得到医院的午休商品
+        List<WxGoods> noonGoodsList = queryList(WxRelation.KEY_HOSPITAL, hid, WxGoods.TYPE_MIDDAY);
+        String hospitalName = moduleCoreService.getHospitalName(hid);
+        goodsVo.setName(hospitalName);
+        if (noonGoodsList != null && noonGoodsList.size() > 0) {
+            //设置午休类型为自定义
+            goodsVo.setNoon_type(1);
+            goodsVo.setGoods(noonGoodsList.get(0));
+        } else {
+            //获取默认的午休商品
+            List<WxGoods> defaultNoonGoodsList = findListByXid(new int[]{0, aid}, WxGoods.TYPE_MIDDAY);
+            goodsVo.setNoon_type(0);
+            goodsVo.setGoods(defaultNoonGoodsList.get(0));
+        }
+        //获取医院套餐商品
+        List<WxGoods> comboGoodsList = queryList(WxRelation.KEY_HOSPITAL, hid, WxGoods.TYPE_NIGHT);
+        if (comboGoodsList != null && comboGoodsList.size() > 0) {
+            goodsVo.setCombo_type(1);
+            goodsVo.setList(comboGoodsList);
+        } else {
+            //获取默认的套餐商品
+            List<WxGoods> defaultComboGoodsList = findListByXid(new int[]{0, aid}, WxGoods.TYPE_NIGHT);
+            goodsVo.setCombo_type(0);
+            goodsVo.setList(defaultComboGoodsList);
+        }
+        //远程跨服务调用，获取当前所选医院下的科室ID,科室名称
+        Map<Integer, String> oidMap = moduleCoreService.findOidByHid(Integer.toString(hid));
+        List<GoodsVo> goodsList = new ArrayList<>();
+        for (Map.Entry<Integer, String> entry : oidMap.entrySet()) {
+            GoodsVo departmentGoods = getDepartmentGoods(entry.getKey(), entry.getValue(), goodsVo);
+            goodsList.add(departmentGoods);
+        }
+        goodsVo.setChildren(goodsList);
+        return goodsVo;
+    }
+
+    //得到科室的商品
+    private GoodsVo getDepartmentGoods(int oid, String name, GoodsVo vo) {
+        GoodsVo goodsVo = new GoodsVo();
+        goodsVo.setKey(WxRelation.KEY_DEPARTMENT);
+        goodsVo.setKid(oid);
+        goodsVo.setName(name);
+        List<WxGoods> departmentNoonGoods = queryList(WxRelation.KEY_DEPARTMENT, oid, WxGoods.TYPE_MIDDAY);
+        if (departmentNoonGoods != null && departmentNoonGoods.size() > 0) {
+            goodsVo.setNoon_type(1);
+            goodsVo.setGoods(departmentNoonGoods.get(0));
+        } else {
+            goodsVo.setNoon_type(0);
+            goodsVo.setGoods(vo.getGoods());
+        }
+        List<WxGoods> departmentComboGoods = queryList(WxRelation.KEY_DEPARTMENT, oid, WxGoods.TYPE_NIGHT);
+        if (departmentComboGoods != null && departmentComboGoods.size() > 0) {
+            goodsVo.setCombo_type(1);
+            goodsVo.setList(departmentComboGoods);
+        } else {
+            goodsVo.setCombo_type(0);
+            goodsVo.setList(vo.getList());
+        }
+        return goodsVo;
+    }
+
     @Transactional
-    //商品添加
+    @Override
+    public boolean insertOrModify(int type, int noon_type, int combo_type, int key, int kid, int gid, String name, int price, int days
+            , int state, String explain) throws ParamException {
+        if (noon_type == 1 && gid <= 0) throw new ParamException("自定义午休类型ID不能小于等于0");
+        if (combo_type == 1 && gid <= 0) throw new ParamException("自定义套餐类型ID不能小于等于0");
+        List<WxGoods> goodsList = queryList(key, kid, type);
+        //修改自定义商品类型
+        if (noon_type == 1 || combo_type == 1) {
+            if (goodsList == null || gid != goodsList.get(0).getId())
+                throw new ParamException("请确认gid是否正确");
+            WxGoods model = bindModel(gid, name, type, price, days, state, explain);
+            return wxGoodsMapper.update(model);
+        } else {
+            //添加默认商品类型
+            if (goodsList != null && goodsList.size() > 0)
+                throw new ParamException("请确认商品类型是否正确, 当前存在定义类型");
+            WxGoods defaultModel = bindModel(0, name, type, price, days, state, explain);
+            boolean result = wxGoodsMapper.insert(defaultModel);
+            WxRelation wxRelation = bindRelation(key, kid, defaultModel.getId(), type);
+            result &= wxRelationMapper.insert(wxRelation);
+            return result;
+        }
+    }
+
+    @Override
+    @Transactional
+    //商品添加(不涉及Relation关系的添加)
     public boolean add(int type, String name, int price, int days, int state, String explain) throws ParamException {
+        if (type < 1 || type > 4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
+        if (state != 1 && state != 2) throw new ParamException("商品状态{state}只能为1:当前可用 2:敬请期待");
+        if (type == 2 && days <= 0) throw new ParamException("商品类型为基本套餐时候,必须指定Days属性,最小数量为1天");
+        if (type != 2 && days != 0) throw new ParamException("套餐天数,仅仅当Type为2的情况有效，其他为0");
         WxGoods wxGoods = new WxGoods();
         return wxGoodsMapper.insert(bindData(wxGoods, name, type, price, days, state, explain));
     }
@@ -199,15 +320,17 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     @Override
     @Transactional
     //商品修改
-    public boolean modify(int type, int key, int kid, int gid, String name, int price, int days, int state, String explain) throws ParamException {
+    public boolean modify(int type, int gid, String name, int price, int days, int state, String explain) throws ParamException {
         if (type < 1 || type > 4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
         if (state != 1 && state != 2) throw new ParamException("商品状态{state}只能为1:当前可用 2:敬请期待");
         if (type == 2 && days <= 0) throw new ParamException("商品类型为基本套餐时候,必须指定Days属性,最小数量为1天");
-        List<WxGoods> list = queryList(key, kid, type);
-        WxGoods wxGoods = list.stream().filter(goods -> goods.getId() == gid).findFirst().orElseThrow(
-                () -> new ParamException("该商品类型中无法找到指定数据，请确认GID[" + gid + "]是否存在")
-        );
-       return   wxGoodsMapper.update(bindData(wxGoods, name, type, price, days, state, explain));
+        if (type != 2 && days != 0) throw new ParamException("套餐天数,仅仅当Type为2的情况有效，其他为0");
+        //判断该商品是否存在
+        WxGoods wxGoods = findById(gid);
+        if (wxGoods != null) {
+            return wxGoodsMapper.update(bindData(wxGoods, name, type, price, days, state, explain));
+        } else {
+            throw new ParamException("该商品类型中无法找到指定数据，请确认GID[" + gid + "]是否存在");
+        }
     }
-
 }

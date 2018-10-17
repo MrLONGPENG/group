@@ -55,15 +55,5 @@ public class WxGoodsSqlProvider {
                 if(kid != null) AND().WHERE("B.`kid` = #{kid}");
         }}.toString();
     }
-    public  String findRelationListByKid(@Param("kid") Integer kid,@Param("key") Integer key){
-        return new SQL(){ {
-            SELECT("A.id ,`name` ,price,fee_type,days, A.`type`,state,`explain`,rid,kid,`key`,B.type AS relationType ");
-            FROM("t_wx_goods A");
-            INNER_JOIN("t_wx_relation B ON A.id = B.rid");
-            WHERE("B.`type` = 1");// 指定商品套餐类型
-            AND().WHERE("A.type in (2,3)");
-            if(kid != null) AND().WHERE("B.`kid` = #{kid}");
-            if(key != null) AND().WHERE("B.`key` = #{key}");
-        }}.toString();
-    }
+
 }

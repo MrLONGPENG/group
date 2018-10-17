@@ -23,18 +23,24 @@ public interface WxGoodsService {
 
     List<WxGoods> findListByXid(int[] ints, int type);
 
-    List<GoodsVo> findRelationListByKid(int kid, int key);
-
     boolean update(int type, int key, int kid, int gid, String name, int price, int days, int state, String explain)
             throws ParamException;
 
     boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException;
 
-    //商品添加
+     boolean insertOrModify(int type,int noon_type, int combo_type, int key, int kid, int gid, String name, int price, int days
+            , int state, String explain) throws ParamException;
+
+    GoodsVo getGoodsVoList(int aid,int hid);
+
+    boolean add(int type, int key, int kid,  String name, int price,  String explain)
+            throws ParamException;
+
+    //商品添加(不涉及关系表)
     boolean add(int type, String name, int price, int days, int state, String explain)
             throws ParamException;
 
     //商品修改
-    boolean modify(int type, int key, int kid, int gid, String name, int price, int days, int state, String explain)
+    boolean modify(int type, int gid, String name, int price, int days, int state, String explain)
             throws ParamException;
 }
