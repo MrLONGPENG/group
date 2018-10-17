@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public interface DeviceService {
-    boolean insert(DeviceVo deviceVo) throws ParamException;
+    boolean insert(int uid, DeviceVo deviceVo) throws ParamException;
 
     DeviceBean findDeviceBeanByDid(String did);
 

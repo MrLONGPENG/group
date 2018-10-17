@@ -61,10 +61,9 @@ public class DeviceController {
 
     @ApiOperation(value = "设备激活", notes = "设备激活")
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public String activation(@ModelAttribute DeviceVo deviceVo) {
+    public String activation(@ApiParam(hidden = true) int uid, @ModelAttribute DeviceVo deviceVo) {
         try {
-
-            if (deviceService.insert(deviceVo)) {
+            if (deviceService.insert(uid, deviceVo)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);

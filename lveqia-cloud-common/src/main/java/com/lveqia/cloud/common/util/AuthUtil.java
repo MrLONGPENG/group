@@ -9,7 +9,7 @@ import java.util.*;
 
 
 public class AuthUtil implements Serializable {
-    private static final String AUTH_TAG_APP = "app" ;
+    public static final String AUTH_TAG_APP = "app" ;
     private static final String AUTH_TAG_VUE = "vue" ;
     private final static String TOKEN_HEAD = "Bearer "; //注意空隔
     private final static String TOKEN_HEADER = "Authorization";

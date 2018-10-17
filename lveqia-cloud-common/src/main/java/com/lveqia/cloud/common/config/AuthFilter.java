@@ -40,9 +40,10 @@ public class AuthFilter implements Filter {
         logger.debug("AuthFilter->doFilter {}", uri);
         UserInfo userInfo = AuthUtil.getUserInfo(httpServletRequest);
         if(userInfo == null) {
+            httpServletResponse.setContentType("application/json;charset=utf-8");
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = httpServletResponse.getWriter();
-            out.write(ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL));
+            out.write(ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID));
             out.flush();
             out.close();
         } else {

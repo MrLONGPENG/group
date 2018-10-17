@@ -19,6 +19,7 @@ import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,16 +41,22 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public boolean insert(DeviceVo deviceVo) throws ParamException {
-        if (deviceMapper.isExistMac(deviceVo.getDid()) > 0) throw new ParamException("该did已存在");
-        if (deviceMapper.isExistCode(deviceVo.getBid()) > 0) throw new ParamException("该bid已存在");
-        deviceVo.setAgentId(getAidOid(deviceVo.getHospitalId(), deviceVo.getDepart()));
+    public boolean insert(int uid, DeviceVo vo) throws ParamException {
+        if(!StringUtil.isNumeric(vo.getDid()) || vo.getDid().length() !=9)  throw new ParamException("无效DID编号");
+        if(!StringUtil.isNumeric(vo.getBid()) || vo.getBid().length() !=19)  throw new ParamException("无效BID编号");
+        if (deviceMapper.isExistMac(vo.getDid()) > 0) throw new ParamException("该DID已存在,无法重复激活");
+        if (deviceMapper.isExistCode(vo.getBid()) > 0) throw new ParamException("该BID已存在,无法重复激活");
         mapperFactory.classMap(DeviceVo.class, Device.class)
                 .field("did", "mac")
                 .field("bid", "code")
+                .field("hid", "hospitalId")
+                .field("oid", "depart")
+                .field("bed", "hospitalBed")
                 .byDefault().register();
-        ;
-        Device device = mapperFactory.getMapperFacade().map(deviceVo, Device.class);
+        Device device = mapperFactory.getMapperFacade().map(vo, Device.class);
+        device.setAgentId(getAidOid(vo.getHid(), vo.getOid()));
+        device.setCrtId(uid); device.setUpdateId(uid);
+        device.setCrtTime(new Date());
         return deviceMapper.insert(device);
     }
 
