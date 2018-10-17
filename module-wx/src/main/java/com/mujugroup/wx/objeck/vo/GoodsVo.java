@@ -24,6 +24,11 @@ public class GoodsVo implements Serializable {
     //科室商品集合
     private List<GoodsVo> children;
 
+    public GoodsVo(int kid, int key) {
+        this.kid = kid;
+        this.key = key;
+    }
+
     public int getNoon_type() {
         return noon_type;
     }

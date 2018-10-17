@@ -216,9 +216,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     public GoodsVo getGoodsVoList(int aid, int hid) {
-        GoodsVo goodsVo = new GoodsVo();
-        goodsVo.setKid(hid);
-        goodsVo.setKey(WxRelation.KEY_HOSPITAL);
+        GoodsVo goodsVo = new GoodsVo(hid, WxRelation.KEY_HOSPITAL);
         //得到医院的午休商品
         List<WxGoods> noonGoodsList = queryList(WxRelation.KEY_HOSPITAL, hid, WxGoods.TYPE_MIDDAY);
         String hospitalName = moduleCoreService.getHospitalName(hid);
@@ -257,9 +255,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     //得到科室的商品
     private GoodsVo getDepartmentGoods(int oid, String name, GoodsVo vo) {
-        GoodsVo goodsVo = new GoodsVo();
-        goodsVo.setKey(WxRelation.KEY_DEPARTMENT);
-        goodsVo.setKid(oid);
+        GoodsVo goodsVo = new GoodsVo(oid, WxRelation.KEY_DEPARTMENT);
         goodsVo.setName(name);
         List<WxGoods> departmentNoonGoods = queryList(WxRelation.KEY_DEPARTMENT, oid, WxGoods.TYPE_MIDDAY);
         if (departmentNoonGoods != null && departmentNoonGoods.size() > 0) {

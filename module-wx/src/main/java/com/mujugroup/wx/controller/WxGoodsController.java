@@ -100,26 +100,17 @@ public class WxGoodsController {
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
             }
-        } catch (ParamException e) {
-            return ResultUtil.code(e.getCode(), e.getMessage());
         } catch (BaseException e) {
             return ResultUtil.code(e.getCode(), e.getMessage());
         }
     }
 
     @ApiOperation(value = "获取医院商品列表", notes = "获取医院商品列表")
-    @RequestMapping(value = "/get", method = RequestMethod.POST)
-    public String getGoodsList(
-            @ApiParam(value = "代理商ID") @RequestParam(name = "aid") int aid
-            , @ApiParam(value = "医院ID") @RequestParam(name = "hid") int hid
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public String getGoodsList(@ApiParam(value = "代理商ID") @RequestParam(name = "aid") int aid
+            , @ApiParam(value = "医院ID") @RequestParam(name = "hid") int hid ) {
+        return ResultUtil.success(wxGoodsService.getGoodsVoList(aid, hid));
 
-    ) {
-        GoodsVo goodsVo = wxGoodsService.getGoodsVoList(aid, hid);
-        if (goodsVo != null) {
-            return ResultUtil.success(goodsVo);
-        } else {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-        }
     }
 
     @ApiOperation(value = "修改或新增商品接口", notes = "修改或新增商品接口")
