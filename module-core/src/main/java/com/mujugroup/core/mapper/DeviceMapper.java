@@ -7,7 +7,6 @@ import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
-import org.omg.CORBA.INTERNAL;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

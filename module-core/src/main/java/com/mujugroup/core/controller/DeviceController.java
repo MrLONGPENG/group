@@ -63,6 +63,7 @@ public class DeviceController {
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
     public String activation(@ModelAttribute DeviceVo deviceVo) {
         try {
+
             if (deviceService.insert(deviceVo)) {
                 return ResultUtil.success();
             } else {

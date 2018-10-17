@@ -4,6 +4,7 @@ import com.github.wxiaoqi.merge.annonation.MergeResult;
 
 import com.lveqia.cloud.common.exception.ParamException;
 
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
@@ -42,6 +43,7 @@ public class DeviceServiceImpl implements DeviceService {
     public boolean insert(DeviceVo deviceVo) throws ParamException {
         if (deviceMapper.isExistMac(deviceVo.getDid()) > 0) throw new ParamException("该did已存在");
         if (deviceMapper.isExistCode(deviceVo.getBid()) > 0) throw new ParamException("该bid已存在");
+        deviceVo.setAgentId(getAidOid(deviceVo.getHospitalId(), deviceVo.getDepart()));
         mapperFactory.classMap(DeviceVo.class, Device.class)
                 .field("did", "mac")
                 .field("bid", "code")
@@ -82,6 +84,12 @@ public class DeviceServiceImpl implements DeviceService {
     @MergeResult
     public List<StatusOidBean> findGroupByOid(int aid, int hid, int oid) {
         return deviceMapper.findGroupByOid(aid, hid, oid);
+    }
+
+    private int getAidOid(int hid, int oid) throws ParamException {
+        String aid = hospitalMapper.getAidByHidOid(oid, hid);
+        if (StringUtil.isEmpty(aid))  throw new ParamException("医院或科室编号有误,请重新输入");
+        return Integer.parseInt(aid);
     }
 
 
