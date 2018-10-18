@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,10 +303,8 @@ public class WxGoodsServiceImpl implements WxGoodsService {
                 || (combo_type == 1 && type == WxGoods.TYPE_NIGHT)) {
             if (goodsList == null||goodsList.size()<=0)
                 throw new ParamException("请确认输入参数是否正确");
-            if (goodsList!=null&&goodsList.size()>0){
-                if (goodsList.get(0).getId()!=gid)
-                    throw new ParamException("请确认输入gid是否正确");
-            }
+            if (goodsList.get(0).getId()!=gid)
+                throw new ParamException("请确认输入gid是否正确");
             WxGoods model = bindModel(gid, name, type, thePrice, days, state, explain);
             return wxGoodsMapper.update(model);
         } else {
@@ -316,7 +313,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
                 throw new ParamException("请确认商品类型是否正确, 当前存在定义类型");
             WxGoods defaultModel = bindModel(0, name, type, thePrice, days, state, explain);
             boolean result = wxGoodsMapper.insert(defaultModel);
-            WxRelation wxRelation = bindRelation(key, kid, defaultModel.getId(), type);
+            WxRelation wxRelation = bindRelation(key, kid, defaultModel.getId(), WxRelation.TYPE_GOODS);
             result &= wxRelationMapper.insert(wxRelation);
             return result;
         }
