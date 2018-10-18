@@ -134,8 +134,8 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     @Transactional
-    public boolean add(int type, int key, int kid, String name, double price, String explain) throws ParamException {
-        return update(type, key, kid, 0, name, price, 0, 1, explain);
+    public boolean add(int key, int kid, String name, double price, int days, String explain) throws ParamException {
+        return update(WxGoods.TYPE_NIGHT, key, kid, 0, name, price, days, 1, explain);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         if (type != 2 && days != 0) throw new ParamException("套餐天数,仅仅当Type为2的情况有效，其他为0");
         if (type == 1 || type == 4) throw new ParamException("当前只支持Type类型(2:套餐 3:午休)");
         if (key == WxRelation.KEY_DEFAULT && gid <= 0) throw new ParamException("默认数据无法新增，请更改外键类型或指定默认商品ID");
-        if (priceRegex(String.valueOf(price)) == false) throw new ParamException("价格输入有误");
+        if (!priceRegex(String.valueOf(price))) throw new ParamException("价格输入有误");
         int thePrice = formatDoubleToInt(price, 100.0);
         if (gid > 0) { // 更新指定商品
             List<WxGoods> list = queryList(key, kid, type);
@@ -296,13 +296,18 @@ public class WxGoodsServiceImpl implements WxGoodsService {
             , int state, String explain) throws ParamException {
         if (noon_type == 1 && gid <= 0) throw new ParamException("自定义午休类型ID不能小于等于0");
         if (combo_type == 1 && gid <= 0) throw new ParamException("自定义套餐类型ID不能小于等于0");
-        if (priceRegex(String.valueOf(price)) == false) throw new ParamException("价格输入有误");
+        if (!priceRegex(String.valueOf(price))) throw new ParamException("价格输入有误");
         int thePrice = formatDoubleToInt(price, 100.0);
         List<WxGoods> goodsList = queryList(key, kid, type);
         //修改自定义商品类型
-        if (noon_type == 1 || combo_type == 1) {
-            if (goodsList == null || gid != goodsList.get(0).getId())
-                throw new ParamException("请确认gid是否正确");
+        if ((noon_type == 1 && type == WxGoods.TYPE_MIDDAY)
+                || (combo_type == 1 && type == WxGoods.TYPE_NIGHT)) {
+            if (goodsList == null||goodsList.size()<=0)
+                throw new ParamException("请确认输入参数是否正确");
+            if (goodsList!=null&&goodsList.size()>0){
+                if (goodsList.get(0).getId()!=gid)
+                    throw new ParamException("请确认输入gid是否正确");
+            }
             WxGoods model = bindModel(gid, name, type, thePrice, days, state, explain);
             return wxGoodsMapper.update(model);
         } else {

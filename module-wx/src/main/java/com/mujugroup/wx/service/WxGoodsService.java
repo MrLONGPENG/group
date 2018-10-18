@@ -33,7 +33,7 @@ public interface WxGoodsService {
 
     GoodsVo getGoodsVoList(int aid,int hid);
 
-    boolean add(int type, int key, int kid,  String name, double price,  String explain)
+    boolean add(int key, int kid,  String name, double price, int days, String explain)
             throws ParamException;
 
     //商品添加(不涉及关系表)

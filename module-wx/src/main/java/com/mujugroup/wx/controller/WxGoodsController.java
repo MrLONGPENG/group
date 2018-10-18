@@ -140,16 +140,16 @@ public class WxGoodsController {
 
     @ApiOperation(value = "新增商品接口", notes = "修改或新增商品接口")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addGoods(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
-            , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
+    public String addGoods( @ApiParam(value = "套餐天数,仅仅当Type为2的情况有效，其他为0") @RequestParam(name = "days", defaultValue = "0") int days
+           , @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)@RequestParam(name = "kid") int kid
             , @ApiParam(value = "商品名字", required = true) @RequestParam(name = "name") String name
             , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") double price
             , @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name = "explain", required = false) String explain
     ) {
-        logger.debug("update type:{} key:{} kid:{}", type, key, kid);
+        logger.debug("update  key:{} kid:{}",  key, kid);
         try {
-            if (wxGoodsService.add(type, key, kid, name, price, explain)) {
+            if (wxGoodsService.add(key,kid,name,price,days,explain)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
