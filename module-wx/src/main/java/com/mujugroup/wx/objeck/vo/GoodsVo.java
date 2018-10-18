@@ -3,7 +3,6 @@ package com.mujugroup.wx.objeck.vo;
 import com.mujugroup.wx.model.WxGoods;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsVo implements Serializable {
@@ -12,9 +11,9 @@ public class GoodsVo implements Serializable {
     //套餐类型 0：默认 1：自定义
     private int combo_type;
     //存放午休商品
-    private WxGoods goods;
+    private GoodsItemVo goods;
     //存放套餐商品
-    private List<WxGoods> list;
+    private List<GoodsItemVo> list;
     // 外键类型
     private int key;
     // 外键ID
@@ -45,19 +44,19 @@ public class GoodsVo implements Serializable {
         this.combo_type = combo_type;
     }
 
-    public WxGoods getGoods() {
+    public GoodsItemVo getGoods() {
         return goods;
     }
 
-    public void setGoods(WxGoods goods) {
+    public void setGoods(GoodsItemVo goods) {
         this.goods = goods;
     }
 
-    public List<WxGoods> getList() {
+    public List<GoodsItemVo> getList() {
         return list;
     }
 
-    public void setList(List<WxGoods> list) {
+    public void setList(List<GoodsItemVo> list) {
         this.list = list;
     }
 

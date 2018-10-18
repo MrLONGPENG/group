@@ -69,7 +69,7 @@ public class WxGoodsController {
                          @RequestParam(name = "kid") int kid, @ApiParam(value = "商品ID，大于O为指定更新,为零或不填为新增，默认为0")
                          @RequestParam(name = "gid", defaultValue = "0") int gid, @ApiParam(value = "商品名字", required = true)
                          @RequestParam(name = "name") String name, @ApiParam(value = "商品价格", required = true) @RequestParam(name
-            = "price") int price, @ApiParam(value = "套餐天数,仅仅当Type为2的情况有效，其他为0") @RequestParam(name
+            = "price") double price, @ApiParam(value = "套餐天数,仅仅当Type为2的情况有效，其他为0") @RequestParam(name
             = "days", defaultValue = "0") int days, @ApiParam(value = "商品状态 1:当前可用 2:敬请期待") @RequestParam(name
             = "state", defaultValue = "1") int state, @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name
             = "explain", required = false) String explain) {
@@ -122,7 +122,7 @@ public class WxGoodsController {
             , @ApiParam(value = "套餐类型(0:默认，1：自定义)", required = true) @RequestParam(name = "combo_type", defaultValue = "0") int combo_type
             , @ApiParam(value = "商品ID") @RequestParam(name = "gid", defaultValue = "0") int gid
             , @ApiParam(value = "商品名字", required = true) @RequestParam(name = "name") String name
-            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") int price
+            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price")double price
             , @ApiParam(value = "套餐天数,仅仅当Type为2的情况有效，其他为0") @RequestParam(name = "days", defaultValue = "0") int days
             , @ApiParam(value = "商品状态 1:当前可用 2:敬请期待") @RequestParam(name = "state", defaultValue = "1") int state
             , @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name = "explain", required = false) String explain
@@ -144,7 +144,7 @@ public class WxGoodsController {
             , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)@RequestParam(name = "kid") int kid
             , @ApiParam(value = "商品名字", required = true) @RequestParam(name = "name") String name
-            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") int price
+            , @ApiParam(value = "商品价格", required = true) @RequestParam(name = "price") double price
             , @ApiParam(value = "此属性使用说明, 非必须") @RequestParam(name = "explain", required = false) String explain
     ) {
         logger.debug("update type:{} key:{} kid:{}", type, key, kid);
