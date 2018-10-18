@@ -94,10 +94,11 @@ public class BellTask {
         boolean isTrue = false, isTime = false;
         if (midday != null && !midday.isEmpty) {
             isTrue = currTime > midday.start && currTime < midday.stop;
+            if(isTrue) return false; // 午休时间不响铃
         }
         Uptime uptime = getUptime(2, agentId, hospitalId, depart); // 运行时间
         if (uptime != null && !uptime.isEmpty) {
-            isTrue |=  (currTime >= uptime.start || currTime <= uptime.stop);
+            isTrue =  (currTime >= uptime.start || currTime <= uptime.stop);
             isTime = !isTrue && (currTime - uptime.stop) % INTERVAL_TIME == 0;
         }
         logger.debug("did: isTrue=>{} isTime=>{}", isTrue, isTime);
