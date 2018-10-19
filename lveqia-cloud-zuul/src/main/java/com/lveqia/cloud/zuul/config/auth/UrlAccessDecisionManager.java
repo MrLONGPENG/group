@@ -1,5 +1,6 @@
 package com.lveqia.cloud.zuul.config.auth;
 
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.zuul.config.WebSecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             throws AccessDeniedException, AuthenticationException {
         logger.debug("UrlAccessDecisionManager->decide");
         // 下面逻辑采用：当接口需要的权限只要用户存在其中一个即有权限
-        for (ConfigAttribute ca : collection) {
-            //当前请求需要的权限
-            String needRole = ca.getAttribute();
+        String needRole;
+        for (ConfigAttribute ca : collection) { //当前请求需要的权限
+            needRole = ca.getAttribute();
             if ("ROLE_LOGIN".equals(needRole)) {
                 if (authentication instanceof AnonymousAuthenticationToken) {
                     throw new BadCredentialsException("未登录");
@@ -40,7 +41,7 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (GrantedAuthority authority : authorities) {
                 logger.debug("authority->{}", authority.getAuthority());
-                if ("ROLE_admin".equals(authority.getAuthority())  // admin权限全部放行
+                if (Constant.ROLE_ADMIN.equals(authority.getAuthority())  // admin权限全部放行
                         || authority.getAuthority().equals(needRole)) {
                     return;
                 }

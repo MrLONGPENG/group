@@ -1,6 +1,19 @@
 package com.lveqia.cloud.common.config;
 
 public class Constant {
+    /** 超级管理员 */
+    public static final String ROLE_ADMIN = "ROLE_admin";
+    ///** 木巨开发者 */
+    //public static final String ROLE_DEVELOPER = "ROLE_developer";
+    ///** 木巨主管 */
+    //public static final String ROLE_MANAGER = "ROLE_manager";
+    ///** 运营主管 */
+    //public static final String ROLE_CAPTAIN = "ROLE_captain";
+    /** 普通运营 */
+    public static final String ROLE_OPERATE = "ROLE_operate";
+    ///** 普通账号 */
+    //public static final String ROLE_READERS = "ROLE_readers";
+
     /** 符号--与符号（&） */
     public static final String SIGN_AND = "&";
     /** 符号--下划线（_）  */

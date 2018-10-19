@@ -1,4 +1,4 @@
-package com.lveqia.cloud.zuul.config;
+package com.lveqia.cloud.zuul.config.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;

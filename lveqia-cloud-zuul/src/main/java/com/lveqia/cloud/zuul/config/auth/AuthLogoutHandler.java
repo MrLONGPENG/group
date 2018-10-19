@@ -6,6 +6,7 @@ import com.lveqia.cloud.zuul.config.RedisCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class AuthLogoutHandler implements LogoutHandler {
         String key = AuthUtil.getKey(AuthUtil.getUserInfo(request));
         logger.debug("AuthLogoutHandler uid:{} {}", key);
         redisCacheManager.delete(key);
-        response.setContentType("application/json;charset=utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try {
             PrintWriter  out = response.getWriter();
             out.write(ResultUtil.success("成功退出!"));

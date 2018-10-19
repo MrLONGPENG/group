@@ -23,12 +23,11 @@ public class ResultUtil {
 
 
     public final static int CODE_THIRD_DATA_ERROR  = 210;
-
-    public final static int CODE_PASSWORD_ERROR  = 401;
+    public final static int CODE_UNAUTHORIZED    = 401;
     public final static int CODE_ACCOUNT_DISABLE = 402;
-    public final static int CODE_NOT_FIND_DATA = 403;
+    public final static int CODE_PASSWORD_ERROR  = 403;
     public final static int CODE_NOT_FIND_PATH = 404;
-    public final static int CODE_NOT_AUTHORITY = 405;
+    public final static int CODE_NOT_FIND_DATA = 405;
     
     public final static int CODE_UNKNOWN_ERROR = 500;
 
@@ -89,31 +88,35 @@ public class ResultUtil {
     }
 
     /**
+     * 根据CODE获取提示信息
+     */
+    public static String getMessage(int code){
+        switch (code){
+            case CODE_TOKEN_INVALID:    return "登陆凭证无效";
+            case CODE_PARAMETER_MISS:   return "必要参数缺失";
+            case CODE_REQUEST_FORMAT:   return "请求参数格式错误";
+            case CODE_DATA_AUTHORITY:   return "无此数据权限";
+            case CODE_VALIDATION_FAIL:  return "效验数据失败";
+            case CODE_DB_STORAGE_FAIL:  return "数据存储失败";
+            case CODE_REMOTE_CALL_FAIL: return "远程调用服务失败";
+            case CODE_THIRD_DATA_ERROR: return "第三方数据格式错误";
+            case CODE_DATA_DUPLICATION: return "已存在重复的数据";
+            case CODE_UNAUTHORIZED   : return "账户无权限, 无法操作，请联系管理员!";
+            case CODE_ACCOUNT_DISABLE: return "账户被禁用，登录失败，请联系管理员!";
+            case CODE_PASSWORD_ERROR:  return "用户名或密码输入错误，登录失败!";
+            case CODE_NOT_FIND_DATA:   return "没有找到数据或请求参数错误";
+            case CODE_NOT_FIND_PATH:   return "接口路径没有找到，请检查路由!";
+            case CODE_UNKNOWN_ERROR:   return "未知错误";
+        }
+        return "Unknown error";
+    }
+
+    /**
      * 返回错误的结果，带默认错误提示
      */
     public static String error(int code) {
-        switch (code){
-            case CODE_TOKEN_INVALID:    return error(code,"登陆凭证无效");
-            case CODE_PARAMETER_MISS:   return error(code,"必要参数缺失");
-            case CODE_REQUEST_FORMAT:   return error(code,"请求参数格式错误");
-            case CODE_DATA_AUTHORITY:   return error(code,"无此数据权限");
-            case CODE_VALIDATION_FAIL:  return error(code,"效验数据失败");
-            case CODE_DB_STORAGE_FAIL:  return error(code,"数据存储失败");
-            case CODE_REMOTE_CALL_FAIL: return error(code,"远程调用服务失败");
-            case CODE_THIRD_DATA_ERROR: return error(code,"第三方数据格式错误");
-            case CODE_DATA_DUPLICATION: return error(code,"已存在重复的数据");
-            // 400+ 错误
-
-            case CODE_PASSWORD_ERROR:  return error(code,"用户名或密码输入错误，登录失败!");
-            case CODE_ACCOUNT_DISABLE: return error(code,"账户被禁用，登录失败，请联系管理员!");
-            case CODE_NOT_FIND_DATA:   return error(code,"没有找到数据或请求参数错误");
-            case CODE_NOT_FIND_PATH:   return error(code,"接口路径没有找到，请检查路由!");
-            case CODE_NOT_AUTHORITY:   return error(code,"无权限操作此资源，请联系管理员!");
-            case CODE_UNKNOWN_ERROR:   return error(code,"未知错误");
-        }
-        return error(code,"Unknown error");
+        return error(code,getMessage(code));
     }
-
 
     /**
      * 返回错误的结果，带错误提示

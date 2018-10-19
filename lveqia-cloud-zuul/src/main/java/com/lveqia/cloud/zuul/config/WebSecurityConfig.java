@@ -1,9 +1,10 @@
 package com.lveqia.cloud.zuul.config;
 
 import com.lveqia.cloud.zuul.config.auth.*;
-import com.lveqia.cloud.zuul.config.jwt.JwtEntryPoint;
-import com.lveqia.cloud.zuul.config.jwt.JwtProvider;
-import com.lveqia.cloud.zuul.config.jwt.JwtTokenFilter;
+import com.lveqia.cloud.zuul.config.filter.AppTokenFilter;
+import com.lveqia.cloud.zuul.config.auth.AuthEntryPoint;
+import com.lveqia.cloud.zuul.config.auth.AppProvider;
+import com.lveqia.cloud.zuul.config.filter.AuthTokenFilter;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,17 +34,15 @@ import org.springframework.web.cors.CorsUtils;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    private final JwtProvider jwtProvider;
+    private final AppProvider appProvider;
     private final ConfigSource configSource;
     private final SysUserService sysUserService;
-    private final JwtTokenFilter jwtTokenFilter;
+    private final AuthTokenFilter jwtTokenFilter;
     private final AuthLogoutHandler authLogoutHandler;
     private final AuthSuccessHandler authSuccessHandler;
     private final AuthFailureHandler authFailureHandler;
-    ;
     private final UrlAccessDeniedHandler urlAccessDeniedHandler;
-    private final JwtEntryPoint unauthorizedHandler;
+    private final AuthEntryPoint unauthorizedHandler;
     private final UrlAccessDecisionManager urlAccessDecisionManager;
     private final UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
     private final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -56,15 +55,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    @Bean
+    public AppTokenFilter appTokenFilter() throws Exception {
+        AppTokenFilter filer = new AppTokenFilter();
+        filer.setAuthenticationManager(authenticationManagerBean());
+        filer.setAuthenticationFailureHandler(authFailureHandler);
+        filer.setAuthenticationSuccessHandler(authSuccessHandler);
+        return filer;
+    }
+
     @Autowired
-    public WebSecurityConfig(JwtProvider jwtProvider, ConfigSource configSource, SysUserService sysUserService
-            , JwtTokenFilter jwtTokenFilter, AuthLogoutHandler authLogoutHandler
+    public WebSecurityConfig(AppProvider appProvider, ConfigSource configSource, SysUserService sysUserService
+            , AuthTokenFilter jwtTokenFilter, AuthLogoutHandler authLogoutHandler
             , AuthSuccessHandler authSuccessHandler, AuthFailureHandler authFailureHandler
-            , UrlAccessDeniedHandler urlAccessDeniedHandler, JwtEntryPoint unauthorizedHandler
+            , UrlAccessDeniedHandler urlAccessDeniedHandler, AuthEntryPoint unauthorizedHandler
             , UrlAccessDecisionManager urlAccessDecisionManager
             , UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource) {
         logger.debug("WebSecurityConfig");
-        this.jwtProvider = jwtProvider;
+        this.appProvider = appProvider;
         this.configSource = configSource;
         this.sysUserService = sysUserService;
         this.jwtTokenFilter = jwtTokenFilter;
@@ -81,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         logger.debug("AuthenticationManagerBuilder");
-        auth.authenticationProvider(jwtProvider)
+        auth.authenticationProvider(appProvider)
             .userDetailsService(sysUserService)
             .passwordEncoder(new BCryptPasswordEncoder());
     }
@@ -120,7 +128,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 增加退出接口，以便注销Token以及其他
         .and().logout().logoutUrl("/sys/logout").addLogoutHandler(authLogoutHandler).permitAll();
         // 增加JWT (json web token) 过滤器
+        http.addFilterBefore(appTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
         // 禁用缓存
         http.headers().cacheControl();
     }

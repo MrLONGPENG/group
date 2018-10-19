@@ -10,6 +10,7 @@ import com.lveqia.cloud.zuul.model.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -33,17 +34,20 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response
             , Authentication authentication) throws IOException {
-        response.setContentType("application/json;charset=utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         logger.debug("getPrincipal {}", authentication.getPrincipal());
         UserInfo userInfo = getUserInfo((SysUser) authentication.getPrincipal());
-        userInfo.setTag(AuthUtil.getTag(request)); // 设置登陆来源，app与vue
+        if(authentication instanceof AppToken){ // 设置登陆来源，app与vue
+            userInfo.setTag(AuthUtil.AUTH_TAG_APP);
+        }else{
+            userInfo.setTag(AuthUtil.AUTH_TAG_VUE);
+        }
         PrintWriter out = response.getWriter();
         String key = AuthUtil.getKey(userInfo);
         String token =  redisCacheManager.getToken(key);
         if(StringUtil.isEmpty(token)) { // 如果Redis不存在Token则创建新的，同时
             token = AuthUtil.generateToken(userInfo);
             redisCacheManager.setToken(key , token);
-
         }
         redisCacheManager.expireAt(key, AuthUtil.generateExpirationDate(AuthUtil.EXPIRATION_REDIS));
         userInfo.setToken(token);

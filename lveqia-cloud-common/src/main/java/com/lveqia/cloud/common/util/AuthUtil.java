@@ -10,7 +10,7 @@ import java.util.*;
 
 public class AuthUtil implements Serializable {
     public static final String AUTH_TAG_APP = "app" ;
-    private static final String AUTH_TAG_VUE = "vue" ;
+    public static final String AUTH_TAG_VUE = "vue" ;
     private final static String TOKEN_HEAD = "Bearer "; //注意空隔
     private final static String TOKEN_HEADER = "Authorization";
     private static final String CLAIM_KEY_UID = "uid" ;
@@ -48,14 +48,6 @@ public class AuthUtil implements Serializable {
                 , info.getId())).orElse("token:vue:0");
     }
 
-    /**
-     * 获取去登陆路径 客户端或网页
-     * @param request app/vue
-     */
-    public static String getTag(HttpServletRequest request) {
-        String tag = request.getParameter("client");
-        return StringUtil.isEmpty(tag) ? AUTH_TAG_VUE : tag;
-    }
 
     private static UserInfo getUserInfo(String token){
         if(StringUtil.isEmpty(token)) return null;

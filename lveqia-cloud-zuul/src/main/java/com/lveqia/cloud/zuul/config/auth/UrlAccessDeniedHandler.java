@@ -28,7 +28,7 @@ public class UrlAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        out.write(ResultUtil.error(ResultUtil.CODE_NOT_AUTHORITY));
+        out.write(ResultUtil.error(ResultUtil.CODE_UNAUTHORIZED));
         out.flush();
         out.close();
     }
