@@ -120,7 +120,14 @@ public interface HospitalMapper {
     @Select("SELECT a.agentId FROM t_department t INNER JOIN t_hospital a  ON t.hospital_id=a.id " +
             " WHERE t.id=#{oid} AND t.hospital_id=#{hid}")
     @ResultType(String.class)
-    String getAidByHidOid(@Param("oid") int oid,@Param("hid")int hid);
+    String getAidByHidOid(@Param("oid") int oid, @Param("hid") int hid);
 
+    @ResultType(Integer.class)
+    @Select("Select Count(*) FROM t_country_province_city c,t_country_province_city p where c.pid=p.id" +
+            " AND c.id=#{cid} AND p.id=#{pid}")
+    Integer getProvinceCity(@Param(value = "cid") int cid, @Param(value = "pid") int pid);
 
+    @Select("Select COUNT(*) from t_hospital where `name`=#{name}")
+    @ResultType(Integer.class)
+    Integer isExitsName(@Param(value = "name") String name);
 }

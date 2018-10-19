@@ -5,11 +5,9 @@ import com.mujugroup.core.model.Department;
 import com.mujugroup.core.sql.DepartmentSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
-
+import com.mujugroup.core.objeck.vo.SelectVO;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 科室表,数据库操作接口类
@@ -50,7 +48,7 @@ public interface DepartmentMapper {
 
     @ResultMap("department")
     @Select("SELECT * FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
-    List<Department> findListByHid(String hid);
+    List<Department> findListByHid(@Param(value = "hid") String hid);
 
     @Select("SELECT id as `key`, `name` as value  FROM t_department WHERE `status`= 1 AND hospital_id = #{hid} ")
     @Results({@Result(column="key", property="key", javaType=String.class)
@@ -61,4 +59,8 @@ public interface DepartmentMapper {
     @ResultType(String.class)
     @Select("SELECT `name` FROM `t_department` WHERE `status`= 1 AND `id` = #{id}")
     String getDepartmentNameById(@Param("id") String id);
+
+    @ResultMap("department")
+    @Select("SELECT id ,`name` FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
+    List<SelectVO> getListByHid(@Param(value = "hid") String hid);
 }
