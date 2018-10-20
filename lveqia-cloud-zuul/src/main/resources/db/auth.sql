@@ -56,8 +56,8 @@ INSERT INTO `t_sys_menu` VALUES ('1', '/', '/home', 'Home', '数据概览', 'fa 
 INSERT INTO `t_sys_menu` VALUES ('2', '/', '/home', 'Home', '订单管理', 'fa fa-th-list fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('3', '/', '/home', 'Home', '系统管理', 'fa fa-cog fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('4', '/', '/home', 'Home', '运维管理', 'fa fa-cogs fa-fw fa-lg', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '消息管理', 'fa fa-commenting fa-fw fa-lg', null, '1', null, '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '医院管理', 'fa fa-hospital-o fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('5', '/', '/home', 'Home', '设备管理', 'fa fa-cubes fa-fw fa-lg', null, '1', null, '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('6', '/', '/home', 'Home', '信息配置', 'fa fa-hospital-o fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('7', '/', '/home', 'Home', '业务配置', 'fa fa-tasks fa-fw fa-lg', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('8', '/', '/home', 'Home', '预留管理2', 'fa fa-user-circle-o', null, '1', null, '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('9', '/', '/home', 'Home', '预留管理3', 'fa fa-user-circle-o', null, '1', null, '1', '0');
@@ -73,7 +73,9 @@ INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统
 INSERT INTO `t_sys_menu` VALUES ('18', '/sys/*', '/sys/data', 'SysData', '运营账号', 'fa fa-user-md fa-fw', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('19', '/rule/*', '/rule/goods', 'RuleGoods', '商品配置', 'fa fa-cart-plus fa-fw', null, '1', '7', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('20', '/rule/*', '/rule/uptime', 'RuleUptime', '时间配置', 'fa fa-clock-o fa-fw', null, '1', '7', '1', '0');
-
+INSERT INTO `t_sys_menu` VALUES ('21', '/device/*', '/device/list', 'DeviceList', '木巨柜管理', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('22', '/info/*', '/info/hospital', 'InfoHospital', '医院管理', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('23', '/info/*', '/info/department', 'InfoDepartment', '木巨科室', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role
