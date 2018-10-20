@@ -303,8 +303,9 @@ public class WxGoodsServiceImpl implements WxGoodsService {
                 || (combo_type == 1 && type == WxGoods.TYPE_NIGHT)) {
             if (goodsList == null||goodsList.size()<=0)
                 throw new ParamException("请确认输入参数是否正确");
-            if (goodsList.get(0).getId()!=gid)
+            if(goodsList.stream().filter(goods->goods.getId()==gid).count()<=0){
                 throw new ParamException("请确认输入gid是否正确");
+            }
             WxGoods model = bindModel(gid, name, type, thePrice, days, state, explain);
             return wxGoodsMapper.update(model);
         } else {
