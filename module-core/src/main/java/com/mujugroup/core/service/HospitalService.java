@@ -38,7 +38,7 @@ public interface HospitalService {
 
     Integer getProvinceCity(int cid, int pid);
 
-    Integer isExitsName(String name);
+    Integer isExitsName(String aid,String name);
 
 
 }

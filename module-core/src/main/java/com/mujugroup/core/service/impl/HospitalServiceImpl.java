@@ -69,14 +69,15 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Integer isExitsName(String name) {
-        return hospitalMapper.isExitsName(name);
+    public Integer isExitsName(String aid,String name) {
+        return hospitalMapper.isExitsName(aid,name);
     }
 
     @Override
     public boolean remove(String hid) throws ParamException {
         if (StringUtil.isEmpty(hid)) throw new ParamException("请选择要删除的医院");
         if (!StringUtil.isNumeric(hid)) throw new ParamException("医院选择有误,请重新选择");
+        if (hospitalMapper.findById(Integer.parseInt(hid))==null)throw new ParamException("要删除的医院不存在,请重新选择");
         List<Department> departmentList = departmentMapper.findListByHid(hid);
         if (departmentList != null && departmentList.size() > 0) throw new ParamException("该医院下存在科室,无法进行删除");
         return hospitalMapper.deleteById(Integer.parseInt(hid));
@@ -84,9 +85,11 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public boolean modify(String id, PutVo hospitalPutVo) throws ParamException {
+        if (StringUtil.isEmpty(hospitalPutVo.getAid()))throw  new ParamException("请先选择代理商");
         if (StringUtil.isEmpty(id))throw  new ParamException("医院编号不能为空");
         if (!StringUtil.isNumeric(id))throw  new ParamException("医院编号必须为数字");
-        if (isExitsName(hospitalPutVo.getName())>0) throw new ParamException("医院名称已存在,请重新输入");
+       if (hospitalMapper.findById(Integer.parseInt(id))==null)throw new ParamException("要修改的医院不存在,请重新选择");
+        if (isExitsName(hospitalPutVo.getAid(),hospitalPutVo.getName())>0) throw new ParamException("医院名称已存在,请重新输入");
         hospitalPutVo.setId(Integer.parseInt(id));
         Hospital hospital = hospitalVoToHospital(hospitalPutVo,PutVo.class);
         return hospitalMapper.update(hospital);
@@ -94,12 +97,13 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public boolean add(int uid, HospitalVo hospitalVo) throws ParamException {
+        if (StringUtil.isEmpty(hospitalVo.getAid()))throw  new ParamException("请先选择代理商");
         if (!StringUtil.isNumeric(hospitalVo.getAid())) throw new ParamException("代理商选择有误");
         if (getProvinceCity(hospitalVo.getCid(), hospitalVo.getPid()) <= 0) throw new ParamException("请选择正确的省市");
         List<Hospital> hospitalList = findListByAid(String.valueOf(hospitalVo.getAid()));
         if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("请选择正确的代理商");
         if (StringUtil.isEmpty(hospitalVo.getName())) throw new ParamException("医院名称不能为空");
-        if (isExitsName(hospitalVo.getName())>0) throw new ParamException("医院名称已存在,请重新输入");
+        if (isExitsName(hospitalVo.getAid(),hospitalVo.getName())>0) throw new ParamException("医院名称已存在,请重新输入");
             Hospital hospital = hospitalVoToHospital(hospitalVo, HospitalVo.class);
         hospital.setCountry(0);
         hospital.setProvince(hospitalVo.getPid());

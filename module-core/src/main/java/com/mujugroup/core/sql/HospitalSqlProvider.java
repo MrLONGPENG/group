@@ -63,17 +63,30 @@ public class HospitalSqlProvider {
         }}.toString();
     }
 
-    public String getHospitalList(@Param("aid") int aid, @Param("name") String name){
+   /* public String getHospitalList(@Param("aid") int aid, @Param("name") String name){
         return new SQL(){{
             SELECT("id, name");
             FROM("t_hospital");
             WHERE("enable = 22");
             if(aid!=0) AND().WHERE("agentId = #{aid}");
             if(!StringUtil.isEmpty(name) && name.contains(Constant.SIGN_PERCENT)){
-                AND().WHERE("name like %#{aid}%");
+                AND().WHERE("name like %#{name}%");
             }else if(!StringUtil.isEmpty(name)){
-                AND().WHERE("name = #{aid}");
+                AND().WHERE("name = #{name}");
             }
         }}.toString();
-    }
+    }*/
+   public String getHospitalList(@Param("aid") int aid, @Param("name") String name){
+       return new SQL(){{
+           SELECT("id, name");
+           FROM("t_hospital");
+           WHERE("enable = 22");
+           if(aid!=0) AND().WHERE("agentId = #{aid}");
+           if(!StringUtil.isEmpty(name) &&name.indexOf(name)!=-1){
+               AND().WHERE("name like concat(concat('%',#{name}),'%')");
+           }else if(!StringUtil.isEmpty(name)){
+               AND().WHERE("name = #{name}");
+           }
+       }}.toString();
+   }
 }

@@ -6,6 +6,7 @@ import com.mujugroup.core.sql.DepartmentSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 import com.mujugroup.core.objeck.vo.SelectVO;
+
 import java.util.Date;
 import java.util.List;
 
@@ -51,9 +52,9 @@ public interface DepartmentMapper {
     List<Department> findListByHid(@Param(value = "hid") String hid);
 
     @Select("SELECT id as `key`, `name` as value  FROM t_department WHERE `status`= 1 AND hospital_id = #{hid} ")
-    @Results({@Result(column="key", property="key", javaType=String.class)
-            , @Result(column="value", property="value", javaType=String.class)})
-   List<DBMap> findOidByHid(@Param(value = "hid") String hid);
+    @Results({@Result(column = "key", property = "key", javaType = String.class)
+            , @Result(column = "value", property = "value", javaType = String.class)})
+    List<DBMap> findOidByHid(@Param(value = "hid") String hid);
 
 
     @ResultType(String.class)
@@ -63,4 +64,17 @@ public interface DepartmentMapper {
     @ResultMap("department")
     @Select("SELECT id ,`name` FROM t_department WHERE `status`= 1 AND hospital_id = #{hid}")
     List<SelectVO> getListByHid(@Param(value = "hid") String hid);
+
+    @ResultMap("department")
+    @SelectProvider(type = DepartmentSqlProvider.class, method = "getListByHidOrName")
+    List<SelectVO> getListByHidOrName(@Param(value = "hid") String hid, @Param(value = "name") String name);
+
+    @SelectProvider(type = DepartmentSqlProvider.class, method = "getDepartmentList")
+    @ResultMap("department")
+    List<SelectVO> getDepartmentList(@Param(value = "name") String name);
+
+    @Select("SELECT COUNT(*) FROM t_department WHERE hospital_id=#{hid} AND `name`=#{name}")
+    @ResultType(Integer.class)
+    Integer isExistName(@Param(value = "hid") String id,@Param(value = "name") String name);
+
 }

@@ -1,7 +1,10 @@
 package com.mujugroup.core.service;
 
 import com.lveqia.cloud.common.exception.ExistException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Agent;
+import com.mujugroup.core.objeck.vo.Agent.AgentVo;
+import com.mujugroup.core.objeck.vo.Agent.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 
 import java.util.List;
@@ -10,14 +13,13 @@ import java.util.List;
  * @author leolaurel
  */
 public interface AgentService {
+    boolean insertAgent(AgentVo agentVo) throws ParamException;
 
-    int insertAgent(String name,int enable);
-
-    int updateAgent(int id,String name,int enable);
+    boolean updateAgent(String id, PutVo agentPutVo) throws ParamException;
 
     boolean exist(int id);
 
-    int deleteById(int id) throws ExistException;
+    boolean deleteById(String id) throws ParamException;
 
     Agent findById(Integer id);
 
@@ -28,4 +30,6 @@ public interface AgentService {
     List<SelectVO> getAgentListByUid(long uid);
 
     List<SelectVO> getAgentHospitalByUid(long uid);
+
+
 }

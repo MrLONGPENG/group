@@ -53,7 +53,7 @@ public interface AgentMapper {
     List<SelectVO> getAgentList();
 
     @Select("SELECT a.id as id,a.name as name From t_agent a ")
-    @Results(id = "agentVo",value = {@Result(id = true, column = "id", property = "id", javaType = Integer.class)
+    @Results(id = "agentVo", value = {@Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
     })
     List<SelectVO> getTheAgentList();
@@ -76,4 +76,8 @@ public interface AgentMapper {
     @Select("Select COUNT(*) FROM t_agent a,t_hospital b WHERE a.id=b.agentid AND a.id=#{id} limit 1")
     @ResultType(boolean.class)
     boolean exist(@Param("id") int id);
+
+    @Select("SELECT COUNT(*)  FROM t_agent WHERE `name`=#{name}")
+    @ResultType(Integer.class)
+    Integer isExistName(@Param(value = "name") String name);
 }
