@@ -42,12 +42,6 @@ public class DeviceServiceImpl implements DeviceService {
         this.hospitalMapper = hospitalMapper;
         this.mapperFactory = mapperFactory;
     }
-
-    @Override
-    public List<Device> getDeviceList(String did, String bid, String bed, String aid, String hid, String oid) {
-        return deviceMapper.getDeviceList(did, bid, bed, aid, hid, oid);
-    }
-
     @Transactional
     @Override
     public boolean delete(String id) throws ParamException {
