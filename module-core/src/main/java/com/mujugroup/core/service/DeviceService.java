@@ -6,7 +6,8 @@ import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
-import com.mujugroup.core.objeck.vo.DeviceVo;
+import com.mujugroup.core.objeck.vo.Device.DeviceVo;
+import com.mujugroup.core.objeck.vo.Device.PutVo;
 
 import java.util.List;
 
@@ -26,5 +27,8 @@ public interface DeviceService {
 
     List<StatusOidBean> findGroupByOid(int aid, int hid, int oid);
 
+    boolean modifyDevice(String id, PutVo devicePutVo) throws ParamException;
+
+    boolean delete(String id) throws ParamException;
 
 }

@@ -128,4 +128,10 @@ public interface DeviceMapper {
     @ResultType(Integer.class)
     @Select("SELECT COUNT(*) FROM `t_device` WHERE `code` = #{code}")
     Integer isExistCode(@Param("code") String code);
+
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceList")
+    @ResultMap("device")
+    List<Device> getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
+            , @Param(value = "oid") String oid);
 }

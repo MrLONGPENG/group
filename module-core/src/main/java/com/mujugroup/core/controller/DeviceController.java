@@ -7,7 +7,8 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
-import com.mujugroup.core.objeck.vo.DeviceVo;
+import com.mujugroup.core.objeck.vo.Device.DeviceVo;
+import com.mujugroup.core.objeck.vo.Device.PutVo;
 import com.mujugroup.core.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,6 +65,35 @@ public class DeviceController {
     public String activation(@ApiParam(hidden = true) int uid, @ModelAttribute DeviceVo deviceVo) {
         try {
             if (deviceService.insert(uid, deviceVo)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+            }
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "编辑设备信息", notes = "编辑设备信息")
+    @RequestMapping(value = "/put/{id}", method = RequestMethod.PUT)
+    public String modifyDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id
+            , @ModelAttribute PutVo devicePutVo) {
+        try {
+            if (deviceService.modifyDevice(id, devicePutVo)) {
+                return ResultUtil.success();
+            } else {
+                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+            }
+        } catch (ParamException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "删除设备", notes = "删除设备")
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public String deleteDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id) {
+        try {
+            if (deviceService.delete(id)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
