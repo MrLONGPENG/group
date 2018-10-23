@@ -2,6 +2,7 @@ package com.mujugroup.data.service;
 
 
 import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.data.objeck.bo.ProfitBO;
 import com.mujugroup.data.objeck.vo.ExcelVO;
@@ -19,5 +20,5 @@ public interface StaVOService {
 
     List<ExcelVO> getExcelVO(String uid, String hid, int grain, int startTime, int stopTime) throws  BaseException;
 
-    String[] checkIds(String uid, String aid, String hid, String oid);
+    String[] checkIds(String uid, String aid, String hid, String oid) throws DataException;
 }

@@ -3,6 +3,8 @@ package com.mujugroup.data.service.impl;
 import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
+import com.lveqia.cloud.common.exception.DataException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -66,7 +68,7 @@ public class StaVOServiceImpl implements StaVOService {
     }
 
     @Override
-    public String[] checkIds(String uid, String aid, String hid, String oid) {
+    public String[] checkIds(String uid, String aid, String hid, String oid) throws DataException {
         return checkIds(uid, 0,0 , aid, hid, oid);
     }
 
@@ -74,7 +76,7 @@ public class StaVOServiceImpl implements StaVOService {
      * 根据条件确定真实的AID/HID/OID
      * TODO 此处方法还需要完善
      */
-    private String[] checkIds(String uid, int pid, int cid, String aid, String hid, String oid) {
+    private String[] checkIds(String uid, int pid, int cid, String aid, String hid, String oid) throws DataException {
         String[] ids = new String[]{aid, hid, oid};
         if(pid != 0 || cid != 0){ // 优先根据城市查询医院ID集合
             Set<Integer> set =  moduleCoreService.getHospitalByRegion(pid, cid);
@@ -82,6 +84,7 @@ public class StaVOServiceImpl implements StaVOService {
             return  ids;
         }
         Map<String, String> map = moduleCoreService.getAuthData(uid);
+        if(map.size() ==0 ) throw new DataException("当前用户无数据权限，请联系管理员！");
         if(Constant.DIGIT_ZERO.equals(aid)){
             if(map.containsKey(CoreConfig.AUTH_DATA_AGENT)) ids[0] = map.get(CoreConfig.AUTH_DATA_AGENT);
         }

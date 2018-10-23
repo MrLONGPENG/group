@@ -1,5 +1,6 @@
 package com.mujugroup.data.controller;
 
+import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
 import com.lveqia.cloud.common.objeck.to.OrderTO;
 import com.lveqia.cloud.common.objeck.to.PageTO;
@@ -55,7 +56,12 @@ public class OrderController {
             , @ApiParam(value="订单类型 0:全部 1:晚休 2:午休，不填默认晚休") @RequestParam(name="orderType"
             , required=false, defaultValue="1") int orderType, @ApiParam(hidden = true) String uid){
         logger.debug("order->list {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
-        String[] ids = staVOService.checkIds(uid, aid, hid, oid);
+        String[] ids;
+        try {
+            ids = staVOService.checkIds(uid, aid, hid, oid);
+        } catch (DataException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage());
+        }
         AidHidOidTO to = new AidHidOidTO(ids[0], ids[1], ids[2], orderType, startTime, stopTime, pageNum, pageSize);
         PageTO<OrderTO> pageTO = moduleWxService.getOrderList(to);
         if(pageTO !=null){

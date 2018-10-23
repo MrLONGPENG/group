@@ -51,6 +51,7 @@ public class OverviewServiceImpl implements OverviewService {
         if(!StringUtil.isNumeric(aid)) throw new ParamException("代理商ID必须为数字!");
         if(Constant.DIGIT_ZERO.equals(aid)){
             Map<String, String> map = moduleCoreService.getAuthData(uid);
+            if(map.size() ==0 ) throw new DataException("当前用户无数据权限，请联系管理员！");
             if(map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL) || map.containsKey(CoreConfig.AUTH_DATA_DEPARTMENT)){
                 throw new DataException("数据权限不全为代理商，无法查询");
             }
