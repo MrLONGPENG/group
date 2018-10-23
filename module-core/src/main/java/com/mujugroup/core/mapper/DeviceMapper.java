@@ -114,7 +114,13 @@ public interface DeviceMapper {
 
 
     @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveCount")
-    String getActiveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
+    @ResultType(int.class)
+    int getActiveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
+            , @Param("start") String start, @Param("end") String end);
+
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getActiveRemoveCount")
+    @ResultType(int.class)
+    int getActiveRemoveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
             , @Param("start") String start, @Param("end") String end);
 
     @ResultType(String.class)
@@ -134,6 +140,7 @@ public interface DeviceMapper {
     List<Device> getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid);
+
     @Select("U")
     boolean remove(@Param(value = "id") String id);
 }

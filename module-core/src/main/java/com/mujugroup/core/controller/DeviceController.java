@@ -7,8 +7,8 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
-import com.mujugroup.core.objeck.vo.Device.DeviceVo;
-import com.mujugroup.core.objeck.vo.Device.PutVo;
+import com.mujugroup.core.objeck.vo.device.DeviceVo;
+import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,9 +76,9 @@ public class DeviceController {
 
     @ApiOperation(value = "编辑设备信息", notes = "编辑设备信息")
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
-    public String modifyDevice(@ModelAttribute PutVo devicePutVo) {
+    public String modifyDevice(@ApiParam(hidden = true) int uid, @ModelAttribute PutVo devicePutVo) {
         try {
-            if (deviceService.modifyDevice(devicePutVo)) {
+            if (deviceService.modifyDevice(uid,devicePutVo)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);

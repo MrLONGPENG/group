@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 设备关联表
- * 类名:Device
+ * 类名:device
  * 创建人:LEOLAUREL
  * 创建时间:20180627
  */

@@ -13,11 +13,10 @@ import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.mapper.BeanMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.vo.Device.DeviceVo;
-import com.mujugroup.core.objeck.vo.Device.PutVo;
+import com.mujugroup.core.objeck.vo.device.DeviceVo;
+import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
 import ma.glasnost.orika.MapperFactory;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,13 +52,12 @@ public class DeviceServiceImpl implements DeviceService {
             throw new ParamException("当前设备不存在,请重新选择");
         }
         device.setStatus(Device.TYPE_DELETE);
-
         return deviceMapper.update(device);
     }
 
     @Transactional
     @Override
-    public boolean modifyDevice(PutVo devicePutVo) throws ParamException {
+    public boolean modifyDevice(int uid, PutVo devicePutVo) throws ParamException {
         if (devicePutVo.getId() == null) throw new ParamException("设备编号不能为空");
         Device device = deviceMapper.findById(devicePutVo.getId());
         if (device == null) {
@@ -72,41 +70,46 @@ public class DeviceServiceImpl implements DeviceService {
         if (devicePutVo.getStatus() == null) throw new ParamException("请选择设备状态");
         if (devicePutVo.getRun() == null) throw new ParamException("请选择是否为商用");
         if (devicePutVo.getPay() == null) throw new ParamException("请选择是否为扫码支付");
+        //将VO对象转为实体对象
         Device model = deviceVoToDevice(devicePutVo, PutVo.class);
-        if ((!device.getAgentId().equals(devicePutVo.getAid())) || (!device.getHospitalId().equals(devicePutVo.getHid()))|| (!device.getDepart().equals(devicePutVo.getOid()))) {
-            //将原有数据的状态设置为禁止状态
-            device.setStatus(Device.TYPE_FORBIDDEN);
+        if ((!device.getAgentId().equals(devicePutVo.getAid())) || (!device.getHospitalId().equals(devicePutVo.getHid())) || (!device.getDepart().equals(devicePutVo.getOid()))) {
+            //将原有数据的状态设置为删除状态
+            device.setStatus(Device.TYPE_DELETE);
+            //更新原有数据
             boolean result = deviceMapper.update(device);
-            model.setMac(device.getMac());
-            model.setCode(device.getCode());
-            model.setCrtId(device.getCrtId());
-            model.setUpdateId(device.getUpdateId());
-            model.setCrtTime(device.getCrtTime());
-            Device entity = new Device();
-            //设为启用状态
-            entity.setMac(model.getMac());
-            entity.setCode(model.getCode());
-            entity.setHospitalBed(model.getHospitalBed());
-            entity.setCrtId(model.getCrtId());
-            entity.setStatus(Device.TYPE_ENABLE);
-            //进行添加操作,该数据记录的创建时间
-            entity.setCrtTime(new Date());
-            //进行添加操作,该数据记录的更新时间
-            entity.setUpdateTime(new Date());
-            entity.setUpdateId(model.getUpdateId());
-            entity.setMac(model.getMac());
-            entity.setDepart(model.getDepart());
-            entity.setHospitalId(model.getHospitalId());
-            entity.setAgentId(model.getAgentId());
-            entity.setRemark(model.getRemark());
-            entity.setRun(model.getRun());
-            entity.setPay(model.getPay());
+            Device entity = bindDevice(uid, model, device);
             result &= deviceMapper.insert(entity);
             return result;
         } else {
             model.setUpdateTime(new Date());
+            model.setUpdateId(uid);
             return deviceMapper.update(model);
         }
+    }
+
+    private Device bindDevice(int uid, Device model, Device device) {
+        Device entity = new Device();
+        entity.setMac(device.getMac());
+        entity.setCode(device.getCode());
+        entity.setHospitalBed(model.getHospitalBed());
+        //设为启用状态
+        entity.setStatus(Device.TYPE_ENABLE);
+        //进行添加操作,该数据记录的创建时间
+        entity.setCrtTime(new Date());
+        //进行添加操作,该数据记录的更新时间
+        entity.setUpdateTime(entity.getCrtTime());
+        entity.setCrtId(uid);
+        entity.setUpdateId(uid);
+        //设置代理商
+        entity.setAgentId(model.getAgentId());
+        //设置医院
+        entity.setHospitalId(model.getHospitalId());
+        //设置科室
+        entity.setDepart(model.getDepart());
+        entity.setRemark(model.getRemark() == null ? device.getRemark() : model.getRemark());
+        entity.setRun(model.getRun() == null ? (device.getRun() == null ? 0 : device.getRun()) : model.getRun());
+        entity.setPay(model.getPay() == null ? (device.getPay() == null ? 0 : device.getPay()) : model.getPay());
+        return entity;
     }
 
     @Transactional

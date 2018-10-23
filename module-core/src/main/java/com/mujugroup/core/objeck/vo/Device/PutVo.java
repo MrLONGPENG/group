@@ -1,4 +1,4 @@
-package com.mujugroup.core.objeck.vo.Device;
+package com.mujugroup.core.objeck.vo.device;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

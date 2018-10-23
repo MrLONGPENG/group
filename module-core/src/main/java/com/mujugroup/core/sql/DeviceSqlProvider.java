@@ -86,6 +86,29 @@ public class DeviceSqlProvider {
         return getActiveByKey(null, aid, hid, oid, start, end);
     }
 
+    public String getActiveRemoveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
+            , @Param("start") String start, @Param("end") String end) {
+        return new SQL() {{
+            SELECT("COUNT(DISTINCT `mac`) as `value`");
+            FROM("t_device");
+            WHERE("status = 17");
+            if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
+                AND().WHERE("`agentId` in (" + aid + ")");
+            } else if (!Constant.DIGIT_ZERO.equals(aid)) {
+                AND().WHERE("agentId = #{aid}");
+            }
+            if (!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO)) {
+                AND().WHERE("`hospitalId` in (" + hid + ")");
+            } else if (!Constant.DIGIT_ZERO.equals(hid)) {
+                AND().WHERE("`hospitalId` = #{hid}");
+            }
+            if (!Constant.DIGIT_ZERO.equals(oid)) AND().WHERE("depart = #{oid}");
+            if (!Constant.DIGIT_ZERO.equals(start)) AND().WHERE("crtTime >= FROM_UNIXTIME(#{start})");
+            if (!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("crtTime < FROM_UNIXTIME(#{end})");
+            if (!Constant.DIGIT_ZERO.equals(end)) AND().WHERE("update_time>FROM_UNIXTIME(#{end})");
+        }}.toString();
+    }
+
     private String getActiveByKey(String key, String aid, String hid, String oid, String start, String end) {
         return new SQL() {{
             if (key != null) {
@@ -111,6 +134,7 @@ public class DeviceSqlProvider {
             if (key != null) GROUP_BY("`key`");
         }}.toString();
     }
+
 
     public String getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
