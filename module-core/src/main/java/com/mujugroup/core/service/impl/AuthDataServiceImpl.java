@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +51,14 @@ public class AuthDataServiceImpl implements AuthDataService {
 
     @Override
     public List<DBMap> getAuthData(int uid) {
+        if(uid == 1){ // 系统用户返回全部权限
+            DBMap dbMap = new DBMap();
+            dbMap.setKey(CoreConfig.AUTH_DATA_ALL);
+            dbMap.setValue(CoreConfig.AUTH_DATA_ALL);
+            List<DBMap> list = new ArrayList<>();
+            list.add(dbMap);
+            return list;
+        }
         return authDataMapper.getAuthData(uid);
     }
 

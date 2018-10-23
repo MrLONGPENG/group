@@ -1,6 +1,7 @@
 package com.mujugroup.core.controller;
 
 
+import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.bo.TreeBO;
@@ -40,7 +41,9 @@ public class AuthDataController {
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     public String tree(@ApiParam(value = "userId") @RequestParam(value = "userId", required = false
             , defaultValue = "0") int userId, @ApiParam(hidden = true) int uid) {
-        return ResultUtil.success(getTreeBOList(userId==0 ? uid : userId));
+        List<TreeVO> list = getTreeBOList(userId==0 ? uid : userId);
+        return list !=null ? ResultUtil.success(list) : ResultUtil.error(ResultUtil.CODE_UNAUTHORIZED
+                , "当前用户无数据权限，无法操作，请联系管理员！");
     }
 
     @ApiOperation(value = "更新数据权限", notes = "更新数据权限")
@@ -66,8 +69,12 @@ public class AuthDataController {
         List<TreeBO> aidList = authDataService.getAgentAuthData(id);
         List<TreeBO> hidList = authDataService.getHospitalAuthData(id);
         if (aidList.size() == 0 && hidList.size() == 0) {
-            List<TreeBO> allList = authDataService.getAllAgentList();
-            return authDataService.treeBoToVo(allList);
+            List<DBMap> auth = authDataService.getAuthData(id);
+            if(auth!=null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))){
+                List<TreeBO> allList = authDataService.getAllAgentList();
+                return authDataService.treeBoToVo(allList);
+            }
+            return null;
         }
         if (hidList.size() > 0) {
             TreeBO treeBO = new TreeBO();
