@@ -18,7 +18,7 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     }
 
     @Override
-    public Map<String, String> addAuthData(int uid) {
+    public Map<String, String> getAuthData(long uid) {
         return new HashMap<>();
     }
 }

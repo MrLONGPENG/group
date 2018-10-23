@@ -112,7 +112,7 @@ public class SysUserServiceImpl implements SysUserService {
             throw new BaseException(ResultUtil.CODE_DATA_DUPLICATION, "手机号码已注册，注册失败!");
         }
         if(userAddVo.getType() == 0){ // 若果是添加系统账号，需要判断当前用户是否拥有全部权限
-            Map<String, String> map = moduleCoreService.addAuthData((int) crtId);
+            Map<String, String> map = moduleCoreService.getAuthData(crtId);
             if(!map.containsKey(CoreConfig.AUTH_DATA_ALL))
                 throw new BaseException(ResultUtil.CODE_UNAUTHORIZED, "此用户无权添加系统用户!");
             if(map.size() > 1) logger.warn("注意：拥有全部数据权限记录大于一条");

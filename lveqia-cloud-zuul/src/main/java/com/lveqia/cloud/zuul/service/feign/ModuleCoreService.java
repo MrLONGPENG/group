@@ -17,5 +17,5 @@ public interface ModuleCoreService {
     int addAuthData(@RequestParam(value = "uid") int uid, @RequestParam(value = "authData") String[] authData);
 
     @RequestMapping(value = "/feign/getAuthData",method = RequestMethod.POST)
-    Map<String, String> addAuthData(@RequestParam(value = "uid") int uid);
+    Map<String, String> getAuthData(@RequestParam(value = "uid") long uid);
 }
