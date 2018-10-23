@@ -35,7 +35,7 @@ public class AuthDataSqlProvider {
         }}.toString();
     }
 
-    public  String  addAuthData(@Param("uid") int uid, @Param("ids") int[] ids,@Param("types") int[] types){
+    public  String  addAuthData(@Param("uid") int uid, @Param("ids") String[] ids,@Param("types") String[] types){
         return new SQL(){
             {
                 INSERT_INTO("t_auth_data");
@@ -45,8 +45,6 @@ public class AuthDataSqlProvider {
                     if(sb.length() != 0) sb.append("), (");
                     sb.append(uid).append(", ").append(ids[i]).append(", ").append(types[i]);
                 }
-
-
                 INTO_VALUES(new String(sb));
             }
         }.toString();

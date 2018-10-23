@@ -3,12 +3,15 @@ package com.mujugroup.core.service.impl;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.mapper.AuthDataMapper;
 import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.objeck.vo.TreeVO;
 import com.mujugroup.core.service.AuthDataService;
 import ma.glasnost.orika.MapperFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,7 @@ public class AuthDataServiceImpl implements AuthDataService {
 
     private final AuthDataMapper authDataMapper;
     private final MapperFactory mapperFactory;
-    //private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AuthDataServiceImpl.class);
     private Gson gson = new GsonBuilder().create();
 
 
@@ -50,25 +53,24 @@ public class AuthDataServiceImpl implements AuthDataService {
         return authDataMapper.getAuthData(uid);
     }
 
-
-
     @Override
     public int addAuthData(int uid, String[] authData) {
-        int[] ridArray = new int[authData.length];
-        int[] typeArray = new int[authData.length];
-        if (authData.length > 0) {
-            String str;
-            for (int i = 0; i < authData.length; i++) {
-                //将关系ID放入关系数组中存储
-                ridArray[i] = Integer.parseInt(authData[i].substring(3));
-                //将关系类型加入到类型数组中
-                str = authData[i].substring(0, 3);
-                if (str.equalsIgnoreCase("AID")) {
-                    typeArray[i] = 1;
-                } else if (str.equalsIgnoreCase("HID")) {
-                    typeArray[i] = 2;
-                } else {
-                    typeArray[i] = 3;
+        if (authData.length <= 0) return 0;
+        String[] ridArray = new String[authData.length];
+        String[] typeArray = new String[authData.length];
+        for (int i = 0; i < authData.length; i++) {
+            //将关系ID放入关系数组中存储
+            ridArray[i] = authData[i].substring(3);
+            //将关系类型加入到类型数组中
+            switch (authData[i].substring(0, 3)){
+                case "ALL" : typeArray[i] = CoreConfig.AUTH_DATA_ALL; break;
+                case "AID" : typeArray[i] = CoreConfig.AUTH_DATA_AGENT; break;
+                case "HID" : typeArray[i] = CoreConfig.AUTH_DATA_HOSPITAL; break;
+                case "OID" : typeArray[i] = CoreConfig.AUTH_DATA_HOSPITAL; break;
+                default: {
+                    logger.warn("未知数据权限格式：{}", authData[i].substring(0, 3));
+                    typeArray[i] = CoreConfig.AUTH_DATA_DEPARTMENT;
+                    break;
                 }
             }
         }

@@ -25,7 +25,7 @@ public interface AuthDataMapper {
     boolean insert(AuthData authData);
 
     @InsertProvider(type = AuthDataSqlProvider.class, method = "addAuthData")
-    int addAuthData(@Param("uid") int uid, @Param("ids") int[] rid, @Param("types") int[] types);
+    int addAuthData(@Param("uid") int uid, @Param("ids") String[] rid, @Param("types") String[] types);
 
     @UpdateProvider(type = AuthDataSqlProvider.class, method = "update")
     boolean update(AuthData authData);
