@@ -42,7 +42,7 @@ public class AuthDataController {
     public String tree(@ApiParam(value = "userId") @RequestParam(value = "userId", required = false
             , defaultValue = "0") int userId, @ApiParam(hidden = true) int uid) {
         List<TreeVO> list = getTreeBOList(userId==0 ? uid : userId);
-        return list !=null ? ResultUtil.success(list) : ResultUtil.error(ResultUtil.CODE_UNAUTHORIZED
+        return list !=null ? ResultUtil.success(list) : ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY
                 , "当前用户无数据权限，无法操作，请联系管理员！");
     }
 
