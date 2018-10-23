@@ -1,4 +1,6 @@
 package com.lveqia.cloud.zuul.service.impl;
+import com.lveqia.cloud.common.config.CoreConfig;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -6,6 +8,7 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import com.lveqia.cloud.zuul.service.feign.ModuleCoreService;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service("sysUserService")
@@ -88,30 +92,42 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional
-    public int addUser(long crtId, String username, String name, String phone, String email, String password
-            , String address, String avatarUrl, String remark, int[] roles, String[] authData) throws BaseException {
-        if (StringUtil.isNumeric(username)) {
+    public int addUser(long crtId, UserAddVo userAddVo) throws BaseException {
+        if(userAddVo.getUsername() == null) throw new ParamException("缺少必要参数[username]");
+        if(userAddVo.getPassword() == null) throw new ParamException("缺少必要参数[password]");
+        if(userAddVo.getPhone() == null) throw new ParamException("缺少必要参数[phone]");
+        if(userAddVo.getEmail() == null) throw new ParamException("缺少必要参数[email]");
+        if(userAddVo.getName() == null) throw new ParamException("缺少必要参数[name]");
+        if(userAddVo.getType() == null) throw new ParamException("缺少必要参数[type]");
+        if (StringUtil.isNumeric(userAddVo.getUsername())) {
             throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "用户名不能全为数字");
         }
-        if (!StringUtil.isNumeric(phone)) {
+        if (!StringUtil.isNumeric(userAddVo.getPhone())) {
             throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "手机号只能全部为数字");
         }
-        if (sysUserMapper.loadUserByUsername(username) != null) {
+        if (sysUserMapper.loadUserByUsername(userAddVo.getUsername()) != null) {
             throw new BaseException(ResultUtil.CODE_DATA_DUPLICATION, "用户名重复，注册失败!");
         }
-        if (sysUserMapper.loadUserByPhone(phone) != null) {
+        if (sysUserMapper.loadUserByPhone(userAddVo.getPhone()) != null) {
             throw new BaseException(ResultUtil.CODE_DATA_DUPLICATION, "手机号码已注册，注册失败!");
         }
-        SysUser sysUser = getSysUser((int) crtId, username, name, phone, email, password, address, avatarUrl, remark);
+        if(userAddVo.getType() == 0){ // 若果是添加系统账号，需要判断当前用户是否拥有全部权限
+            Map<String, String> map = moduleCoreService.addAuthData((int) crtId);
+            if(!map.containsKey(CoreConfig.AUTH_DATA_ALL))
+                throw new BaseException(ResultUtil.CODE_UNAUTHORIZED, "此用户无权添加系统用户!");
+            if(map.size() > 1) logger.warn("注意：拥有全部数据权限记录大于一条");
+            userAddVo.setAuthData(new String[]{"ALL0"}); // 添加全部权限的用户
+        }
+        SysUser sysUser = getSysUser((int) crtId, userAddVo);
         int result = sysUserMapper.insert(sysUser);
         //获取当前注册成功后的用户ID
         int id = sysUser.getId();
         try {
-            if (authData != null && authData.length > 0) {
-                addAuthData(id, authData);
+            if (userAddVo.getAuthData() != null && userAddVo.getAuthData().length > 0) {
+                moduleCoreService.addAuthData(id, userAddVo.getAuthData());
             }
-            if(roles!=null && roles.length >0){
-                addUserRole(id, roles);
+            if(userAddVo.getRoles()!=null && userAddVo.getRoles().length >0){
+                sysUserRoleService.putRidToUid(id, userAddVo.getRoles());
             }
 
         }catch (Exception e){
@@ -121,30 +137,18 @@ public class SysUserServiceImpl implements SysUserService {
         return result;
     }
 
-    private SysUser getSysUser(int crtId, String username, String name, String phone, String email
-            , String password, String address, String avatarUrl, String remark) {
+    private SysUser getSysUser(int crtId, UserAddVo userAddVo) {
         SysUser sysUser = new SysUser();
-        sysUser.setName(name);
-        sysUser.setPhone(phone);
-        sysUser.setEmail(email);
-        sysUser.setRemark(remark);
-        sysUser.setAddress(address);
-        sysUser.setUsername(username);
-        sysUser.setAvatarUrl(avatarUrl);
+        sysUser.setName(userAddVo.getName());
+        sysUser.setPhone(userAddVo.getPhone());
+        sysUser.setEmail(userAddVo.getEmail());
+        sysUser.setRemark(userAddVo.getRemark());
+        sysUser.setAddress(userAddVo.getAddress());
+        sysUser.setUsername(userAddVo.getUsername());
+        sysUser.setAvatarUrl(userAddVo.getAvatarUrl());
         sysUser.setCrtId(crtId);
-        sysUser.setPassword(new BCryptPasswordEncoder().encode(password));
+        sysUser.setPassword(new BCryptPasswordEncoder().encode(userAddVo.getPassword()));
         return sysUser;
-    }
-
-    /*
-    将当前添加的用户加入角色
-     */
-    private void addUserRole(int uid, int[] rid) {
-        sysUserRoleService.putRidToUid(uid, rid);
-    }
-
-    private void addAuthData(int uid,String[] authData){
-         moduleCoreService.addAuthData(uid,authData);
     }
 
 

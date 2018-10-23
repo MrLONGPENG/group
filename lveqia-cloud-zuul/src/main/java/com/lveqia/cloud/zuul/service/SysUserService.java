@@ -4,6 +4,7 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -23,8 +24,7 @@ public interface SysUserService extends UserDetailsService {
 
     List<SysUser> getSysUserList(boolean fuzzy, String name, String username);
 
-    int addUser(long id, String username, String name, String phone, String email, String password
-            , String address, String avatarUrl, String remark, int[] roles,String[] authData) throws BaseException;
+    int addUser(long id, UserAddVo userAddVo) throws BaseException;
 
     int delUser(int uid);
 
@@ -34,5 +34,4 @@ public interface SysUserService extends UserDetailsService {
 
     // TODO: 2018-09-27
     List<UserVO> getUserTreeList(int pid);
-
 }

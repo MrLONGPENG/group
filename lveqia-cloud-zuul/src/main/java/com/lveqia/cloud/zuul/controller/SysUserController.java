@@ -6,6 +6,7 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,9 +14,8 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -69,21 +69,11 @@ public class SysUserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "系统用户注册接口", notes = "根据用户名、手机号以及密码注册系统用户")
-    public String add(@ApiParam(value = "账号", required = true) @RequestParam(value = "username") String username
-            , @ApiParam(value = "姓名(昵称)", required = true) @RequestParam(value = "name") String name
-            , @ApiParam(value = "手机号(可登陆)", required = true) @RequestParam(value = "phone") String phone
-            , @ApiParam(value = "电子邮箱(找密码)", required = true) @RequestParam(value = "email") String email
-            , @ApiParam(value = "账户密码", required = true) @RequestParam(value = "password") String password
-            , @ApiParam(value = "家庭住址") @RequestParam(value = "address", required = false) String address
-            , @ApiParam(value = "头像地址") @RequestParam(value = "avatarUrl", required = false) String avatarUrl
-            , @ApiParam(value = "账户备注") @RequestParam(value = "remark", required = false) String remark
-            , @ApiParam(value = "角色组") @RequestParam(value = "roles", required = false) int[] roles
-           , @ApiParam(value = "数据权限") @RequestParam(value = "authData", required = false) String[] authData) {
+    public String add(@Validated @ModelAttribute UserAddVo userAddVo) {
         try {
             UserInfo userInfo = sysUserService.getCurrInfo();
             if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-            if (sysUserService.addUser(userInfo.getId(), username, name, phone, email, password
-                    , address, avatarUrl, remark, roles, authData) == 1) {
+            if (sysUserService.addUser(userInfo.getId(), userAddVo) == 1) {
                 return ResultUtil.success("注册成功!");
             } else {
                 return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR, "注册失败!");

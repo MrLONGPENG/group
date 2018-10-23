@@ -4,6 +4,8 @@ import com.lveqia.cloud.zuul.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class ModuleCoreServiceError implements ModuleCoreService {
@@ -13,5 +15,10 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     public int addAuthData(int uid, String[] authData) {
         logger.debug("addAuthData");
         return 0;
+    }
+
+    @Override
+    public Map<String, String> addAuthData(int uid) {
+        return new HashMap<>();
     }
 }
