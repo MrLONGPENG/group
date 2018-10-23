@@ -2,6 +2,7 @@ package com.mujugroup.core.objeck.vo.Device;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 @ApiModel(value = "DeviceVo", description = "设备Vo")
@@ -12,6 +13,9 @@ public class DeviceVo implements Serializable {
 
     @ApiModelProperty(value = "bid", notes = "设备ID/锁十进制ID", required = true)
     private String bid;
+
+    @ApiModelProperty(value = "aid", notes = "代理商ID")
+    private Integer aid;
 
     @ApiModelProperty(value = "hid", notes = "医院ID", required = true)
     private Integer hid;
@@ -115,5 +119,13 @@ public class DeviceVo implements Serializable {
 
     public void setRun(Integer run) {
         this.run = run;
+    }
+
+    public Integer getAid() {
+        return aid;
+    }
+
+    public void setAid(Integer aid) {
+        this.aid = aid;
     }
 }

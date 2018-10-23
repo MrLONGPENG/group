@@ -42,33 +42,71 @@ public class DeviceServiceImpl implements DeviceService {
         this.hospitalMapper = hospitalMapper;
         this.mapperFactory = mapperFactory;
     }
+
     @Transactional
     @Override
     public boolean delete(String id) throws ParamException {
         if (StringUtil.isEmpty(id)) throw new ParamException("设备编号不能为空");
         if (!StringUtil.isNumeric(id)) throw new ParamException("设备编号必须为数字");
-        if (deviceMapper.findById(Integer.parseInt(id)) == null) {
+        Device device = deviceMapper.findById(Integer.parseInt(id));
+        if (device == null) {
             throw new ParamException("当前设备不存在,请重新选择");
         }
-        return deviceMapper.deleteById(Integer.parseInt(id));
+        device.setStatus(Device.TYPE_DELETE);
+
+        return deviceMapper.update(device);
     }
 
     @Transactional
     @Override
-    public boolean modifyDevice(String id, PutVo devicePutVo) throws ParamException {
-        if (StringUtil.isEmpty(id)) throw new ParamException("设备编号不能为空");
-        if (deviceMapper.findById(Integer.parseInt(id)) == null) {
+    public boolean modifyDevice(PutVo devicePutVo) throws ParamException {
+        if (devicePutVo.getId() == null) throw new ParamException("设备编号不能为空");
+        Device device = deviceMapper.findById(devicePutVo.getId());
+        if (device == null) {
             throw new ParamException("当前设备不存在,请重新选择");
         }
+        if (devicePutVo.getAid() == null) throw new ParamException("请选择代理商");
         if (devicePutVo.getHid() == null) throw new ParamException("请选择医院");
         if (devicePutVo.getOid() == null) throw new ParamException("请选择科室");
         if (StringUtil.isEmpty(devicePutVo.getBed())) throw new ParamException("请输入床位信息");
         if (devicePutVo.getStatus() == null) throw new ParamException("请选择设备状态");
         if (devicePutVo.getRun() == null) throw new ParamException("请选择是否为商用");
         if (devicePutVo.getPay() == null) throw new ParamException("请选择是否为扫码支付");
-        devicePutVo.setId(Integer.parseInt(id));
-        return deviceMapper.update(deviceVoToDevice(devicePutVo, PutVo.class));
-
+        Device model = deviceVoToDevice(devicePutVo, PutVo.class);
+        if ((!device.getAgentId().equals(devicePutVo.getAid())) || (!device.getHospitalId().equals(devicePutVo.getHid()))|| (!device.getDepart().equals(devicePutVo.getOid()))) {
+            //将原有数据的状态设置为禁止状态
+            device.setStatus(Device.TYPE_FORBIDDEN);
+            boolean result = deviceMapper.update(device);
+            model.setMac(device.getMac());
+            model.setCode(device.getCode());
+            model.setCrtId(device.getCrtId());
+            model.setUpdateId(device.getUpdateId());
+            model.setCrtTime(device.getCrtTime());
+            Device entity = new Device();
+            //设为启用状态
+            entity.setMac(model.getMac());
+            entity.setCode(model.getCode());
+            entity.setHospitalBed(model.getHospitalBed());
+            entity.setCrtId(model.getCrtId());
+            entity.setStatus(Device.TYPE_ENABLE);
+            //进行添加操作,该数据记录的创建时间
+            entity.setCrtTime(new Date());
+            //进行添加操作,该数据记录的更新时间
+            entity.setUpdateTime(new Date());
+            entity.setUpdateId(model.getUpdateId());
+            entity.setMac(model.getMac());
+            entity.setDepart(model.getDepart());
+            entity.setHospitalId(model.getHospitalId());
+            entity.setAgentId(model.getAgentId());
+            entity.setRemark(model.getRemark());
+            entity.setRun(model.getRun());
+            entity.setPay(model.getPay());
+            result &= deviceMapper.insert(entity);
+            return result;
+        } else {
+            model.setUpdateTime(new Date());
+            return deviceMapper.update(model);
+        }
     }
 
     @Transactional
@@ -78,11 +116,14 @@ public class DeviceServiceImpl implements DeviceService {
         if (!StringUtil.isNumeric(vo.getBid()) || vo.getBid().length() != 19) throw new ParamException("无效BID编号");
         if (deviceMapper.isExistMac(vo.getDid()) > 0) throw new ParamException("该DID已存在,无法重复激活");
         if (deviceMapper.isExistCode(vo.getBid()) > 0) throw new ParamException("该BID已存在,无法重复激活");
+        if (vo.getHid() == null) throw new ParamException("请选择医院");
+        if (vo.getOid() == null) throw new ParamException("请选择科室");
         Device device = deviceVoToDevice(vo, DeviceVo.class);
         device.setAgentId(getAidOid(vo.getHid(), vo.getOid()));
         device.setCrtId(uid);
         device.setUpdateId(uid);
         device.setCrtTime(new Date());
+        device.setUpdateTime(new Date());
         return deviceMapper.insert(device);
     }
 
@@ -139,6 +180,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .field("hid", "hospitalId")
                 .field("oid", "depart")
                 .field("bed", "hospitalBed")
+                .field("aid", "agentId")
                 .byDefault().register();
         return mapperFactory.getMapperFacade().map(obj, Device.class);
     }

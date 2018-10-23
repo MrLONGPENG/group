@@ -134,4 +134,6 @@ public interface DeviceMapper {
     List<Device> getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid);
+    @Select("U")
+    boolean remove(@Param(value = "id") String id);
 }

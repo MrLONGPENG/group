@@ -14,6 +14,9 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_device")
 public class Device implements Serializable {
+	public  static  final int  TYPE_ENABLE=14;
+	public  static  final  int TYPE_FORBIDDEN=15;
+	public  static  final  int TYPE_DELETE=17;
 
     /**
      * 主键

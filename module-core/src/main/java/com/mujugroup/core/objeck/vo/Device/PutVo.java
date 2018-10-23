@@ -7,13 +7,16 @@ import java.io.Serializable;
 
 @ApiModel(value = "PutVo", description = "设备编辑的VO")
 public class PutVo implements Serializable {
-    @ApiModelProperty(value = "id",notes = "设备编号",required = true)
+    @ApiModelProperty(value = "id", notes = "设备编号", required = true)
     private Integer id;
     @ApiModelProperty(value = "did", notes = "二维码业务ID")
     private String did;
 
     @ApiModelProperty(value = "bid", notes = "设备ID/锁十进制ID")
     private String bid;
+
+    @ApiModelProperty(value = "aid", notes = "代理商ID", required = true)
+    private Integer aid;
 
     @ApiModelProperty(value = "hid", notes = "医院ID", required = true)
     private Integer hid;
@@ -33,10 +36,10 @@ public class PutVo implements Serializable {
     @ApiModelProperty(value = "remark", notes = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "pay", notes = "是否扫码支付 1 是 0 否",required = true)
+    @ApiModelProperty(value = "pay", notes = "是否扫码支付 1 是 0 否", required = true)
     private Integer pay;
 
-    @ApiModelProperty(value = "run", notes = "商用",required = true)
+    @ApiModelProperty(value = "run", notes = "商用", required = true)
     private Integer run;
 
     public Integer getId() {
@@ -125,5 +128,13 @@ public class PutVo implements Serializable {
 
     public void setRun(Integer run) {
         this.run = run;
+    }
+
+    public Integer getAid() {
+        return aid;
+    }
+
+    public void setAid(Integer aid) {
+        this.aid = aid;
     }
 }

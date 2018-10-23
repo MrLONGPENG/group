@@ -75,11 +75,10 @@ public class DeviceController {
     }
 
     @ApiOperation(value = "编辑设备信息", notes = "编辑设备信息")
-    @RequestMapping(value = "/put/{id}", method = RequestMethod.PUT)
-    public String modifyDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id
-            , @ModelAttribute PutVo devicePutVo) {
+    @RequestMapping(value = "/put", method = RequestMethod.PUT)
+    public String modifyDevice(@ModelAttribute PutVo devicePutVo) {
         try {
-            if (deviceService.modifyDevice(id, devicePutVo)) {
+            if (deviceService.modifyDevice(devicePutVo)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);

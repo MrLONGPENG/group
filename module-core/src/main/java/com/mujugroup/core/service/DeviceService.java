@@ -27,7 +27,7 @@ public interface DeviceService {
 
     List<StatusOidBean> findGroupByOid(int aid, int hid, int oid);
 
-    boolean modifyDevice(String id, PutVo devicePutVo) throws ParamException;
+    boolean modifyDevice(PutVo devicePutVo) throws ParamException;
 
     boolean delete(String id) throws ParamException;
 
