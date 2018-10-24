@@ -34,7 +34,7 @@ public class AgentController {
     }
 
     @ApiOperation(value = "查询代理商列表", notes = "查询代理商列表")
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(hidden = true) int uid) {
         try {
             List<SelectVO> userAgentList = agentService.getAgentListByUid(uid);
@@ -106,7 +106,7 @@ public class AgentController {
     }
 
     @ApiOperation(value = "代理商列表", notes = "可通过名称模糊匹配")
-    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String findAgentList(@ApiParam(hidden = true) String uid, @ApiParam(value = "name") @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         try {
             List<Agent> agentList = agentService.findAll(uid, name);
