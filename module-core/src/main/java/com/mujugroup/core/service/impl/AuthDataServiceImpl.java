@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leolaurel
@@ -96,6 +98,14 @@ public class AuthDataServiceImpl implements AuthDataService {
     @MergeResult
     public List<TreeBO> getAllAgentList() {
         return authDataMapper.getAllAgentList();
+    }
+
+    @Override
+    public Map<String, String> getAuthDataByUid(int uid) {
+        List<DBMap> list=getAuthData(uid);
+        HashMap<String, String> hashMap = new HashMap<>();
+        list.forEach(dbMap -> dbMap.addTo(hashMap));
+        return hashMap;
     }
 
 
