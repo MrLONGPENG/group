@@ -3,8 +3,8 @@ package com.mujugroup.core.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.DBMap;
-import com.mujugroup.core.objeck.vo.Department.DepartmentVo;
-import com.mujugroup.core.objeck.vo.Department.PutVo;
+import com.mujugroup.core.objeck.vo.department.DepartmentVo;
+import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface DepartmentService {
 
     boolean insert(DepartmentVo departmentVo) throws ParamException;
 
-    boolean update(String id, PutVo departmentPutVo) throws ParamException;
+    boolean update(PutVo departmentPutVo) throws ParamException;
 
     boolean delete(String id) throws ParamException;
 }

@@ -1,4 +1,4 @@
-package com.mujugroup.core.objeck.vo.Department;
+package com.mujugroup.core.objeck.vo.department;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,36 +6,27 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-@ApiModel(value = "DepartmentVo",description = "科室添加的Vo")
+@ApiModel(value = "DepartmentVo", description = "科室添加的Vo")
 public class DepartmentVo implements Serializable {
 
-    @ApiModelProperty(value = "id",notes = "主键")
+    @ApiModelProperty(value = "id", notes = "主键")
     private Integer id;
-    @ApiModelProperty(value = "status",notes = "1显示;0删除;")
+    @ApiModelProperty(value = "status", notes = "1显示;0删除;")
     private Integer status;
-
-
-  @ApiModelProperty(value = "hospitalId",notes = "医院ID",required = true)
-    private Integer hospitalId;
-
-
-   @ApiModelProperty(value = "name",notes = "科室名称",required = true)
+    @ApiModelProperty(value = "hid", notes = "医院ID", required = true)
+    private Integer hid;
+    @ApiModelProperty(value = "name", notes = "科室名称", required = true)
     private String name;
 
-   @ApiModelProperty(value = "aihuiDepartId",notes = "爱汇科室Id")
-    private Integer aihuiDepartId;
-
-
-    @ApiModelProperty(value = "remark",notes = "科室描述")
+    @ApiModelProperty(value = "moid", notes = "木巨科室Id")
+    private Integer moid;
+    @ApiModelProperty(value = "remark", notes = "科室描述")
     private String remark;
-
-
-   @ApiModelProperty(value = "sort",notes = "排序")
+    @ApiModelProperty(value = "sort", notes = "排序")
     private Integer sort;
 
-   @ApiModelProperty(value = "createDate",notes = "创建时间")
+    @ApiModelProperty(value = "createDate", notes = "创建时间")
     private Date createDate;
-
 
 
     public Integer getId() {
@@ -54,12 +45,20 @@ public class DepartmentVo implements Serializable {
         this.status = status;
     }
 
-    public Integer getHospitalId() {
-        return hospitalId;
+    public Integer getHid() {
+        return hid;
     }
 
-    public void setHospitalId(Integer hospitalId) {
-        this.hospitalId = hospitalId;
+    public void setHid(Integer hid) {
+        this.hid = hid;
+    }
+
+    public Integer getMoid() {
+        return moid;
+    }
+
+    public void setMoid(Integer moid) {
+        this.moid = moid;
     }
 
     public String getName() {
@@ -70,13 +69,6 @@ public class DepartmentVo implements Serializable {
         this.name = name;
     }
 
-    public Integer getAihuiDepartId() {
-        return aihuiDepartId;
-    }
-
-    public void setAihuiDepartId(Integer aihuiDepartId) {
-        this.aihuiDepartId = aihuiDepartId;
-    }
 
     public String getRemark() {
         return remark;

@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 科室表
- * 类名:Department
+ * 类名:department
  * 创建人:LEOLAUREL
  * 创建时间:20180627
  */

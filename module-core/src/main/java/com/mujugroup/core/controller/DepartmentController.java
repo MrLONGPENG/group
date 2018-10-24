@@ -2,8 +2,8 @@ package com.mujugroup.core.controller;
 
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.objeck.vo.Department.DepartmentVo;
-import com.mujugroup.core.objeck.vo.Department.PutVo;
+import com.mujugroup.core.objeck.vo.department.DepartmentVo;
+import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.DepartmentService;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class DepartmentController {
         }
     }
 
-    @ApiOperation(value = "获取所有的爱汇科室", notes = "可以通过名称进行模糊匹配")
+    @ApiOperation(value = "获取所有的木巨科室", notes = "可以通过名称进行模糊匹配")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String getDepartmentList(@ApiParam(value = "科室名称") @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         List<SelectVO> departmentSelectVoList = departmentService.getDepartmentList(name);
@@ -62,13 +62,10 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "修改科室", notes = "修改科室")
-    @RequestMapping(value = "/modify/{id}", method = RequestMethod.PUT)
-    public String modifyDepartment(@ApiParam(value = "科室ID") @PathVariable(value = "id") String id
-            , @ModelAttribute PutVo departmentPutVo
-    ) {
-
+    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
+    public String modifyDepartment(@ModelAttribute PutVo departmentPutVo) {
         try {
-            if (departmentService.update(id, departmentPutVo)) {
+            if (departmentService.update(departmentPutVo)) {
                 return ResultUtil.success();
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
@@ -83,7 +80,6 @@ public class DepartmentController {
     public String modifyDepartment(@ApiParam(value = "科室ID") @PathVariable(value = "id") String id
 
     ) {
-
         try {
             if (departmentService.delete(id)) {
                 return ResultUtil.success();
