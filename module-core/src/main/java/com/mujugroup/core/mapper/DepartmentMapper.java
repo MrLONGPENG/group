@@ -72,12 +72,12 @@ public interface DepartmentMapper {
             , @Result(column = "status", property = "status", javaType = Integer.class)
             , @Result(column = "hospital_id", property = "hid", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
-            , @Result(column = "moid", property = "moid", javaType = Integer.class)
+            , @Result(column = "mid", property = "mid", javaType = Integer.class)
             , @Result(column = "remark", property = "remark", javaType = String.class)
             , @Result(column = "sort", property = "sort", javaType = Integer.class)
             , @Result(column = "create_date", property = "createDate", javaType = Date.class)
-            , @Result(column = "hospitalName", property = "hName", javaType = String.class)
-            , @Result(column = "mujuName", property = "mName", javaType = String.class)
+            , @Result(column = "hospital", property = "hospital", javaType = String.class)
+            , @Result(column = "department", property = "department", javaType = String.class)
     })
     List<ListVo> findAll(@Param(value = "hid") int hid,@Param(value = "name") String name);
 

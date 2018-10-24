@@ -37,7 +37,7 @@ public class Department implements Serializable {
      * 表字段 : t_department.hospital_id
      */
     @Column(name = "hospital_id")
-    private Integer hospitalId;
+    private Integer hid;
 
     /**
      * 科室名称
@@ -47,11 +47,11 @@ public class Department implements Serializable {
     private String name;
 
     /**
-     * 爱汇科室Id 对应t_aihui_department表
+     * 木巨科室Id 对应t_aihui_department表
      * 表字段 : t_department.aihui_depart_id
      */
     @Column(name = "aihui_depart_id")
-    private Integer aihuiDepartId;
+    private Integer mid;
 
     /**
      * 科室描述
@@ -74,8 +74,6 @@ public class Department implements Serializable {
     @Column(name = "create_date")
     private Date createDate;
 
-
-
     public Integer getId() {
 		return id;
 	}
@@ -92,15 +90,15 @@ public class Department implements Serializable {
 		this.status = status;
 	}
 
-    public Integer getHospitalId() {
-		return hospitalId;
+	public Integer getHid() {
+		return hid;
 	}
 
-	public void setHospitalId(Integer hospitalId) {
-		this.hospitalId = hospitalId;
+	public void setHid(Integer hid) {
+		this.hid = hid;
 	}
 
-    public String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -108,15 +106,15 @@ public class Department implements Serializable {
 		this.name = name;
 	}
 
-    public Integer getAihuiDepartId() {
-		return aihuiDepartId;
+	public Integer getMid() {
+		return mid;
 	}
 
-	public void setAihuiDepartId(Integer aihuiDepartId) {
-		this.aihuiDepartId = aihuiDepartId;
+	public void setMid(Integer mid) {
+		this.mid = mid;
 	}
 
-    public String getRemark() {
+	public String getRemark() {
 		return remark;
 	}
 

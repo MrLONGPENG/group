@@ -10,18 +10,18 @@ import java.util.Date;
 public class ListVo implements Serializable {
     @ApiModelProperty(value = "id", notes = "主键")
     private Integer id;
-    @ApiModelProperty(value = "status", notes = "1显示;0删除;")
-    private Integer status;
     @ApiModelProperty(value = "uid", notes = "创建者ID")
     private Integer uid;
-    @ApiModelProperty(value = "hName", notes = "医院名称")
-    private String hName;
+    @ApiModelProperty(value = "mid", notes = "木巨科室Id")
+    private Integer mid;
     @ApiModelProperty(value = "name", notes = "科室名称")
     private String name;
-    @ApiModelProperty(value = "moid", notes = "木巨科室Id")
-    private Integer moid;
-    @ApiModelProperty(value = "mName", notes = "木巨科室名称")
-    private String mName;
+    @ApiModelProperty(value = "status", notes = "1显示;0删除;")
+    private Integer status;
+    @ApiModelProperty(value = "hospital", notes = "医院名称")
+    private String hospital;
+    @ApiModelProperty(value = "department", notes = "木巨科室名称")
+    private String department;
     @ApiModelProperty(value = "remark", notes = "科室描述")
     private String remark;
     @ApiModelProperty(value = "sort", notes = "排序")

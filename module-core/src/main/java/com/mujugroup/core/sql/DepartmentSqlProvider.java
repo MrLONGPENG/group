@@ -19,9 +19,9 @@ public class DepartmentSqlProvider {
             INSERT_INTO("t_department");
             if (department.getId() != null) VALUES("id", "#{id}");
             if (department.getStatus() != null) VALUES("status", "#{status}");
-            if (department.getHospitalId() != null) VALUES("hospital_id", "#{hospitalId}");
+            if (department.getHid() != null) VALUES("hospital_id", "#{hid}");
             if (department.getName() != null) VALUES("name", "#{name}");
-            if (department.getAihuiDepartId() != null) VALUES("aihui_depart_id", "#{aihuiDepartId}");
+            if (department.getMid() != null) VALUES("aihui_depart_id", "#{mid}");
             if (department.getRemark() != null) VALUES("remark", "#{remark}");
             if (department.getSort() != null) VALUES("sort", "#{sort}");
             if (department.getCreateDate() != null) VALUES("create_date", "#{createDate}");
@@ -34,9 +34,9 @@ public class DepartmentSqlProvider {
             UPDATE("t_department");
             if (department.getId() != null) SET("id = #{id}");
             if (department.getStatus() != null) SET("status = #{status}");
-            if (department.getHospitalId() != null) SET("hospital_id = #{hospitalId}");
+            if (department.getHid() != null) SET("hospital_id = #{hid}");
             if (department.getName() != null) SET("name = #{name}");
-            if (department.getAihuiDepartId() != null) SET("aihui_depart_id = #{aihuiDepartId}");
+            if (department.getMid() != null) SET("aihui_depart_id = #{mid}");
             if (department.getRemark() != null) SET("remark = #{remark}");
             if (department.getSort() != null) SET("sort = #{sort}");
             if (department.getCreateDate() != null) SET("create_date = #{createDate}");
@@ -45,7 +45,8 @@ public class DepartmentSqlProvider {
     }
     public String findAll(@Param(value = "hid") int hid, @Param(value = "name") String name) {
         return new SQL() {{
-            SELECT("t.id,  t.hospital_id ,t.name ,dict.name AS mujuName ,h.name AS hospitalName,t.sort,t.create_date,dict.id AS moid,t.status,t.remark");
+            SELECT("t.id, h.id AS hid, t.name, dict.name AS department ,h.name AS hospital" +
+                    ",t.sort, t.create_date, dict.id AS mid, t.status, t.remark");
             FROM("t_department t,t_dict_department dict,t_hospital h");
             WHERE("t.aihui_depart_id=dict.id AND t.hospital_id=h.id");
             if (!StringUtil.isEmpty(name)) {
