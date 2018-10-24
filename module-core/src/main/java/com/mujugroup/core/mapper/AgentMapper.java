@@ -80,4 +80,8 @@ public interface AgentMapper {
     @Select("SELECT COUNT(*)  FROM t_agent WHERE `name`=#{name}")
     @ResultType(Integer.class)
     Integer isExistName(@Param(value = "name") String name);
+
+    @SelectProvider(type = AgentSqlProvider.class,method = "findAll")
+    @ResultMap("agent")
+    List<Agent> findAll(@Param(value = "name") String name);
 }

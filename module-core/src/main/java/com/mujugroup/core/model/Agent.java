@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 代理商信息表
- * 类名:Agent
+ * 类名:agent
  * 创建人:leolaurel
  * 创建时间:20180927
  */

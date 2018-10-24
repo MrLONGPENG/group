@@ -1,4 +1,4 @@
-package com.mujugroup.core.objeck.vo.Agent;
+package com.mujugroup.core.objeck.vo.agent;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

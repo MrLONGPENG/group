@@ -5,6 +5,7 @@ import com.mujugroup.core.objeck.bo.TreeBO;
 import com.mujugroup.core.objeck.vo.TreeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leolaurel
@@ -37,5 +38,6 @@ public interface AuthDataService {
 
     List<TreeBO> getAllAgentList();
 
+    Map<String, String> getAuthDataByUid(int uid);
 
 }

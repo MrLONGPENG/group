@@ -1,4 +1,4 @@
-package com.mujugroup.core.objeck.vo.Agent;
+package com.mujugroup.core.objeck.vo.agent;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import java.util.Date;
 public class PutVo implements Serializable {
     @ApiModelProperty(value = "id", notes = "主键",required = true)
     private Integer id;
-    @ApiModelProperty(value = "name", notes = "代理商名称")
+    @ApiModelProperty(value = "name", notes = "代理商名称",required = true)
     private String name;
     @ApiModelProperty(value = "crtTime", notes = "创建时间")
     private Date crtTime;
