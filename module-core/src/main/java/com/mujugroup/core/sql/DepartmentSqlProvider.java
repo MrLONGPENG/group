@@ -43,32 +43,17 @@ public class DepartmentSqlProvider {
             WHERE("id = #{id}");
         }}.toString();
     }
-
-    public String getDepartmentList(@Param("name") String name) {
+    public String findAll(@Param(value = "hid") int hid, @Param(value = "name") String name) {
         return new SQL() {{
-            SELECT("id,`name`");
-            FROM("t_aihui_department");
-            WHERE("`enable`=22");
-            if(!StringUtil.isEmpty(name) &&name.indexOf(name)!=-1){
-                AND().WHERE("name like concat(concat('%',#{name}),'%')");
-            }else if(!StringUtil.isEmpty(name)){
-                AND().WHERE("name = #{name}");
+            SELECT("t.id,  t.hospital_id ,t.name ,dict.name AS mujuName ,h.name AS hospitalName,t.sort,t.create_date,dict.id AS moid,t.status,t.remark");
+            FROM("t_department t,t_dict_department dict,t_hospital h");
+            WHERE("t.aihui_depart_id=dict.id AND t.hospital_id=h.id");
+            if (!StringUtil.isEmpty(name)) {
+                AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
+            }
+            if (hid != 0) {
+                AND().WHERE("t.hospital_id = #{hid}");
             }
         }}.toString();
-    }
-
-    public String getListByHidOrName(@Param(value = "hid") String hid, @Param(value = "name") String name) {
-        return new SQL() {{
-            SELECT(" id ,`name`");
-            FROM("t_department");
-            WHERE("`status`= 1");
-            AND().WHERE("hospital_id = #{hid}");
-            if(!StringUtil.isEmpty(name) &&name.indexOf(name)!=-1){
-                AND().WHERE("name like concat(concat('%',#{name}),'%')");
-            }else if(!StringUtil.isEmpty(name)){
-                AND().WHERE("name = #{name}");
-            }
-        }}.toString();
-
     }
 }

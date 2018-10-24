@@ -40,6 +40,6 @@ public interface HospitalService {
 
     Integer isExitsName(String aid, String name);
 
-    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws ParamException, DataException;
+    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws  DataException;
 
 }

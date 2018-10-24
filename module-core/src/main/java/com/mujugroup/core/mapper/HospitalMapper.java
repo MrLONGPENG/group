@@ -133,6 +133,24 @@ public interface HospitalMapper {
     Integer isExitsName(@Param(value = "aid") String aid, @Param(value = "name") String name);
 
     @SelectProvider(type = HospitalSqlProvider.class, method = "findAll")
+    @Results(id = "listVo",value = {
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "name", property = "name", javaType = String.class)
+            , @Result(column = "aid", property = "aid", javaType = String.class)
+            , @Result(column = "tel", property = "tel", javaType = String.class)
+            , @Result(column = "person", property = "person", javaType = String.class)
+            , @Result(column = "remark", property = "remark", javaType = String.class)
+            , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
+            , @Result(column = "uid", property = "uid", javaType = Integer.class)
+            , @Result(column = "address", property = "address", javaType = String.class)
+            , @Result(column = "province", property = "pid", javaType = Integer.class)
+            , @Result(column = "city", property = "cid", javaType = Integer.class)
+            , @Result(column = "pname", property = "provinceName", javaType = String.class)
+            , @Result(column = "cname", property = "cityName", javaType = String.class)
+            , @Result(column = "enable", property = "enable", javaType = Integer.class)
+            , @Result(column = "level", property = "level", javaType = String.class)
+
+    })
     List<ListVo> findAll(@Param(value = "aid") int aid, @Param(value = "name") String name, @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId);
 
 }

@@ -1,9 +1,11 @@
 package com.mujugroup.core.service;
 
 
+import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.objeck.vo.department.DepartmentVo;
+import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 
@@ -13,15 +15,11 @@ import java.util.List;
 public interface DepartmentService {
     List<DBMap> findOidByHid(String hid);
 
-    List<SelectVO> getListByHid(String hid);
+    boolean insert(int uid, DepartmentVo departmentVo) throws ParamException, DataException;
 
-    List<SelectVO> getListByHidOrName(String hid, String name);
+    boolean update(int uid, PutVo departmentPutVo) throws ParamException, DataException;
 
-    List<SelectVO> getDepartmentList(String name);
+    boolean delete(int uid, String id) throws ParamException, DataException;
 
-    boolean insert(DepartmentVo departmentVo) throws ParamException;
-
-    boolean update(PutVo departmentPutVo) throws ParamException;
-
-    boolean delete(String id) throws ParamException;
+    List<ListVo> findAll(int uid, int hid, String name) throws DataException;
 }

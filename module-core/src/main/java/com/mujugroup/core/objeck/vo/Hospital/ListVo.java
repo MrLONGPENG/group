@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @ApiModel(value = "ListVo", description = "医院列表")
 public class ListVo implements Serializable {
-    @ApiModelProperty(value = "id", notes = "医院编号", required = true)
+    @ApiModelProperty(value = "id", notes = "医院编号")
     private Integer id;
     @ApiModelProperty(value = "name", notes = "医院名称")
     private String name;
@@ -38,4 +38,8 @@ public class ListVo implements Serializable {
     private String provinceName;
     @ApiModelProperty(value = "cityName", notes = "城市名称")
     private String cityName;
+    @ApiModelProperty(value = "level", notes = "医院等级")
+    private String level;
+    @ApiModelProperty(value = "enable", notes = "启用状态")
+    private Integer enable;
 }
