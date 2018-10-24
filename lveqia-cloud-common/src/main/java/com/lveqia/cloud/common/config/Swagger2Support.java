@@ -15,6 +15,9 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+/**
+ * 全局Swagger2基类
+ */
 public class Swagger2Support {
 
     private final String moduleName;
