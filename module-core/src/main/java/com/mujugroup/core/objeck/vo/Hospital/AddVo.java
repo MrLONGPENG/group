@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-@ApiModel(value = "AddVo", description = "医院编辑Vo")
-public class PutVo implements Serializable {
+@ApiModel(value = "AddVo", description = "医院添加Vo")
+public class AddVo implements Serializable {
 
-    @ApiModelProperty(value = "id", notes = "医院编号",required = true)
+    @ApiModelProperty(value = "id", notes = "医院编号")
     private Integer id;
-    @ApiModelProperty(value = "name", notes = "医院名称")
+    @ApiModelProperty(value = "name", notes = "医院名称", required = true)
     private String name;
-    @ApiModelProperty(value = "aid", notes = "代理商编号")
+    @ApiModelProperty(value = "aid", notes = "代理商编号", required = true)
     private String aid;
     @ApiModelProperty(value = "tel", notes = "电话")
     private String tel;
@@ -23,15 +23,15 @@ public class PutVo implements Serializable {
     private String remark;
     @ApiModelProperty(value = "crtTime", notes = "创建时间")
     private Date crtTime;
-    @ApiModelProperty(value = "uid", notes = "创建ID")
+    @ApiModelProperty(value = "uid", notes = "创建ID", required = true)
     private Integer uid;
     @ApiModelProperty(value = "address", notes = "医院地址")
     private String address;
-    @ApiModelProperty(value = "country", notes = "国家")
+    @ApiModelProperty(value = "country", notes = "国家",required = true)
     private Integer country;
-    @ApiModelProperty(value = "pid", notes = "省份ID")
+    @ApiModelProperty(value = "pid", notes = "省份ID", required = true)
     private Integer pid;
-    @ApiModelProperty(value = "cid", notes = "城市ID")
+    @ApiModelProperty(value = "cid", notes = "城市ID", required = true)
     private Integer cid;
     @ApiModelProperty(value = "enable", notes = "医院状态 22 启用 23 禁用 17 删除")
     private Integer enable;

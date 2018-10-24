@@ -1,13 +1,13 @@
 package com.mujugroup.core.service;
 
+import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
-import com.mujugroup.core.objeck.vo.Hospital.HospitalVo;
-import com.mujugroup.core.objeck.vo.Hospital.PutVo;
+import com.mujugroup.core.objeck.vo.hospital.AddVo;
+import com.mujugroup.core.objeck.vo.hospital.ListVo;
+import com.mujugroup.core.objeck.vo.hospital.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
-import ma.glasnost.orika.ObjectFactory;
-import ma.glasnost.orika.metadata.Type;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import java.util.List;
  */
 public interface HospitalService {
 
-    List<SelectVO> getHospitalList(int aid, String name);
+    List<SelectVO> getHospitalList(int uid, int aid, String name) throws DataException;
 
-    List<SelectVO> getHospitalListByUid(String type, long uid);
+    List<SelectVO> getHospitalListByUid(String type, long uid) throws DataException;
 
-    List<SelectVO> getAgentHospitalListByUid(String type, long uid);
+    List<SelectVO> getAgentHospitalListByUid(String type, long uid) throws DataException;
 
     List<Hospital> findListByAid(String aid);
 
@@ -30,15 +30,16 @@ public interface HospitalService {
 
     String getHospitalName(int id);
 
-    boolean add(int uid, HospitalVo hospitalVo) throws ParamException;
+    boolean add(int uid, AddVo addVo) throws ParamException, DataException;
 
-    boolean modify(String id,PutVo hospitalPutVo)throws ParamException;
+    boolean modify(int uid, PutVo hospitalPutVo) throws ParamException, DataException;
 
-    boolean remove(String hid) throws ParamException;
+    boolean remove(int uid, String hid) throws ParamException, DataException;
 
     Integer getProvinceCity(int cid, int pid);
 
-    Integer isExitsName(String aid,String name);
+    Integer isExitsName(String aid, String name);
 
+    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws ParamException, DataException;
 
 }

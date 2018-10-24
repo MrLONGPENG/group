@@ -3,6 +3,7 @@ package com.mujugroup.core.mapper;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
 import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.sql.HospitalSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -129,5 +130,9 @@ public interface HospitalMapper {
 
     @Select("Select COUNT(*) from t_hospital where agentId=#{aid} AND `name`=#{name}")
     @ResultType(Integer.class)
-    Integer isExitsName(@Param(value = "aid") String aid,@Param(value = "name") String name);
+    Integer isExitsName(@Param(value = "aid") String aid, @Param(value = "name") String name);
+
+    @SelectProvider(type = HospitalSqlProvider.class, method = "findAll")
+    List<ListVo> findAll(@Param(value = "aid") int aid, @Param(value = "name") String name, @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId);
+
 }

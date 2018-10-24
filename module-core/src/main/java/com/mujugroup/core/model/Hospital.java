@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 医院信息表
- * 类名:Hospital
+ * 类名:hospital
  * 创建人:LEOLAUREL
  * 创建时间:20180627
  */
