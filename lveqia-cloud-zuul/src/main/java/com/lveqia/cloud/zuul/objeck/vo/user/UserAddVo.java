@@ -2,9 +2,12 @@ package com.lveqia.cloud.zuul.objeck.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 
+@Data
 @ApiModel(value = "UserAddVo", description = "系统用户或运营账号添加VO")
 public class UserAddVo implements Serializable {
 
@@ -48,92 +51,4 @@ public class UserAddVo implements Serializable {
 
     @ApiModelProperty(value = "数据权限", notes = "授予账户的数据权限集合")
     private String[] authData;
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public int[] getRoles() {
-        return roles;
-    }
-
-    public void setRoles(int[] roles) {
-        this.roles = roles;
-    }
-
-    public String[] getAuthData() {
-        return authData;
-    }
-
-    public void setAuthData(String[] authData) {
-        this.authData = authData;
-    }
 }
