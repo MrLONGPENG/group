@@ -56,4 +56,18 @@ public class DepartmentSqlProvider {
             }
         }}.toString();
     }
+
+    public String getSelectList(@Param(value = "hid") int hid, @Param(value = "name") String name){
+        return new SQL() {{
+            SELECT("id, name");
+            FROM("t_department");
+            WHERE("`status` = 1");
+            if (!StringUtil.isEmpty(name)) {
+                AND().WHERE("name like concat(concat('%',#{name}),'%')");
+            }
+            if (hid != 0) {
+                AND().WHERE("hospital_id = #{hid}");
+            }
+        }}.toString();
+    }
 }

@@ -80,4 +80,12 @@ public interface DepartmentMapper {
             , @Result(column = "mujuName", property = "mName", javaType = String.class)
     })
     List<ListVo> findAll(@Param(value = "hid") int hid,@Param(value = "name") String name);
+
+
+    @Results(id = "selectVo", value = {
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class),
+            @Result(column = "name", property = "name", javaType = String.class)
+    })
+    @SelectProvider(type = DepartmentSqlProvider.class, method = "getSelectList")
+    List<SelectVO> getSelectList(@Param(value = "hid") int hid,@Param(value = "name") String name);
 }

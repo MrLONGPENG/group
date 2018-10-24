@@ -27,16 +27,26 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @ApiOperation(value = "通过选中的医院ID获取所有的科室", notes = "通过选中的医院ID获取所有的科室,可以通过名称进行模糊匹配")
+
+    @ApiOperation(value = "通过医院ID获取所有的科室", notes = "通过医院ID,或名称进行模糊匹配查询下拉列表")
+    @RequestMapping(value = "/select", method = RequestMethod.POST)
+    public String select(@ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid
+            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false) String name ) {
+        List<SelectVO> list = departmentService.getSelectList(hid, name);
+        if (list != null && list.size() > 0) {
+            return ResultUtil.success(list);
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+        }
+    }
+
+    @ApiOperation(value = "通过医院ID获取所有的科室", notes = "通过医院ID,或名称，可模糊匹配，获取所有的科室信息")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String list(
-            @ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum
-            , @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
-            , required = false, defaultValue = "10") int pageSize
-            , @ApiParam(hidden = true) int uid
+    public String list(@ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false
+            , defaultValue = "1") int pageNum, @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
+            , required = false, defaultValue = "10") int pageSize , @ApiParam(hidden = true) int uid
             , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue = "0") int hid
-            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false, defaultValue = "") String name
-    ) {
+            , @ApiParam(value = "科室名称")@RequestParam(value = "name", required = false) String name) {
         try {
             PageHelper.startPage(pageNum, pageSize);
             List<ListVo> list = departmentService.findAll(uid, hid, name);
@@ -81,9 +91,8 @@ public class DepartmentController {
 
     @ApiOperation(value = "删除科室", notes = "删除科室")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    public String modifyDepartment(@ApiParam(hidden = true) int uid, @ApiParam(value = "科室ID") @PathVariable(value = "id") String id
-
-    ) {
+    public String modifyDepartment(@ApiParam(hidden = true) int uid
+            , @ApiParam(value = "科室ID") @PathVariable(value = "id") String id) {
         try {
             if (departmentService.delete(uid, id)) {
                 return ResultUtil.success();

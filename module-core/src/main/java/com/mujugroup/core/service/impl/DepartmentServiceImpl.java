@@ -51,6 +51,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.findAll(hid, name);
     }
 
+    @Override
+    public List<SelectVO> getSelectList(int hid, String name) {
+        return departmentMapper.getSelectList(hid, name);
+    }
+
     @Autowired
     public DepartmentServiceImpl(DepartmentMapper departmentMapper, MapperFactory mapperFactory, HospitalMapper hospitalMapper, AuthDataService authDataService) {
         this.departmentMapper = departmentMapper;
