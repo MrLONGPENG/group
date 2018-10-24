@@ -69,17 +69,13 @@ public class SysUserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "系统用户注册接口", notes = "根据用户名、手机号以及密码注册系统用户")
-    public String add(@Validated @ModelAttribute UserAddVo userAddVo) {
-        try {
-            UserInfo userInfo = sysUserService.getCurrInfo();
-            if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-            if (sysUserService.addUser(userInfo.getId(), userAddVo) == 1) {
-                return ResultUtil.success("注册成功!");
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR, "注册失败!");
-            }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String add(@Validated @ModelAttribute UserAddVo userAddVo) throws BaseException {
+        UserInfo userInfo = sysUserService.getCurrInfo();
+        if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
+        if (sysUserService.addUser(userInfo.getId(), userAddVo) == 1) {
+            return ResultUtil.success("注册成功!");
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR, "注册失败!");
         }
     }
 

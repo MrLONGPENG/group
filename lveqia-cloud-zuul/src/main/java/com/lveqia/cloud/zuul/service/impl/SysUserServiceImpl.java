@@ -93,17 +93,8 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     @Transactional
     public int addUser(long crtId, UserAddVo userAddVo) throws BaseException {
-        if(userAddVo.getUsername() == null) throw new ParamException("缺少必要参数[username]");
-        if(userAddVo.getPassword() == null) throw new ParamException("缺少必要参数[password]");
-        if(userAddVo.getPhone() == null) throw new ParamException("缺少必要参数[phone]");
-        if(userAddVo.getEmail() == null) throw new ParamException("缺少必要参数[email]");
-        if(userAddVo.getName() == null) throw new ParamException("缺少必要参数[name]");
-        if(userAddVo.getType() == null) throw new ParamException("缺少必要参数[type]");
         if (StringUtil.isNumeric(userAddVo.getUsername())) {
             throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "用户名不能全为数字");
-        }
-        if (!StringUtil.isNumeric(userAddVo.getPhone())) {
-            throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "手机号只能全部为数字");
         }
         if (sysUserMapper.loadUserByUsername(userAddVo.getUsername()) != null) {
             throw new BaseException(ResultUtil.CODE_DATA_DUPLICATION, "用户名重复，注册失败!");
@@ -131,8 +122,9 @@ public class SysUserServiceImpl implements SysUserService {
             }
 
         }catch (Exception e){
-            logger.debug("add has error, delete");
             sysUserMapper.deleteById(id);
+            logger.debug("add has error, delete");
+            throw new BaseException(ResultUtil.CODE_DATA_DUPLICATION, "角色或数据权限添加失败，无法注册!");
         }
         return result;
     }
