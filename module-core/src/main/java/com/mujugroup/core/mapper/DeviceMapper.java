@@ -34,7 +34,7 @@ public interface DeviceMapper {
     @Select("SELECT * FROM t_device WHERE id = #{id}")
     @Results(id = "device", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class)
-            , @Result(column = "mac", property = "mac", javaType = String.class)
+            , @Result(column = "did", property = "did", javaType = String.class)
             , @Result(column = "agentId", property = "agentId", javaType = Integer.class)
             , @Result(column = "hospitalId", property = "hospitalId", javaType = Integer.class)
             , @Result(column = "hospitalBed", property = "hospitalBed", javaType = String.class)
@@ -42,15 +42,11 @@ public interface DeviceMapper {
             , @Result(column = "crtId", property = "crtId", javaType = Integer.class)
             , @Result(column = "status", property = "status", javaType = Integer.class)
             , @Result(column = "useflag", property = "useflag", javaType = Integer.class)
-            , @Result(column = "reserve_date", property = "reserveDate", javaType = Date.class)
-            , @Result(column = "imgUrl", property = "imgUrl", javaType = String.class)
             , @Result(column = "remark", property = "remark", javaType = String.class)
             , @Result(column = "depart", property = "depart", javaType = Integer.class)
-            , @Result(column = "code", property = "code", javaType = String.class)
-            , @Result(column = "pay", property = "pay", javaType = Integer.class)
+            , @Result(column = "bid", property = "bid", javaType = String.class)
+            , @Result(column = "bell", property = "bell", javaType = Integer.class)
             , @Result(column = "run", property = "run", javaType = Integer.class)
-            , @Result(column = "station_id", property = "stationId", javaType = Integer.class)
-            , @Result(column = "is_station", property = "isStation", javaType = Integer.class)
             , @Result(column = "update_id", property = "updateId", javaType = Integer.class)
             , @Result(column = "update_time", property = "updateTime", javaType = Date.class)
             , @Result(column = "issync", property = "issync", javaType = Integer.class)
@@ -91,9 +87,9 @@ public interface DeviceMapper {
     List<StatusHidBean> findGroupByHid(@Param("aid") int aid, @Param("hid") int hid);
 
 
-    @Select("SELECT mac as did, `code` as bid, depart as oid, hospitalId as hid, agentId as aid, hospitalBed" +
-            ", COUNT(DISTINCT mac) as act FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} " +
-            " AND depart = #{oid} AND status = 14 GROUP BY mac")
+    @Select("SELECT did, `bid`, depart as oid, hospitalId as hid, agentId as aid, hospitalBed" +
+            ", COUNT(DISTINCT did) as act FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} " +
+            " AND depart = #{oid} AND status = 14 GROUP BY did")
     @Results(value = {@Result(column = "did", property = "did", javaType = String.class)
             , @Result(column = "bid", property = "bid", javaType = String.class)
             , @Result(column = "oid", property = "oid", javaType = Integer.class)
@@ -124,16 +120,16 @@ public interface DeviceMapper {
             , @Param("start") String start, @Param("end") String end);
 
     @ResultType(String.class)
-    @Select("SELECT `hospitalBed` FROM `t_device` WHERE `mac` = #{did}")
+    @Select("SELECT `hospitalBed` FROM `t_device` WHERE `did` = #{did}")
     String getBedInfoByDid(@Param("did") String did);
 
     @ResultType(Integer.class)
-    @Select("SELECT COUNT(*) FROM `t_device` WHERE `mac` = #{did}")
-    Integer isExistMac(@Param("did") String did);
+    @Select("SELECT COUNT(*) FROM `t_device` WHERE `did` = #{did} and `status`=14 ")
+    Integer isExistDid(@Param("did") String did);
 
     @ResultType(Integer.class)
-    @Select("SELECT COUNT(*) FROM `t_device` WHERE `code` = #{code}")
-    Integer isExistCode(@Param("code") String code);
+    @Select("SELECT COUNT(*) FROM `t_device` WHERE `bid` = #{bid} and `status`=14")
+    Integer isExistBid(@Param("bid") String bid);
 
     @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceList")
     @ResultMap("device")

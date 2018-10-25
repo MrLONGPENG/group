@@ -12,6 +12,8 @@ public class ListVo implements Serializable {
     private Integer id;
     @ApiModelProperty(value = "uid", notes = "创建者ID")
     private Integer uid;
+    @ApiModelProperty(value = "hid", notes = "医院ID")
+    private Integer hid;
     @ApiModelProperty(value = "mid", notes = "木巨科室Id")
     private Integer mid;
     @ApiModelProperty(value = "name", notes = "科室名称")

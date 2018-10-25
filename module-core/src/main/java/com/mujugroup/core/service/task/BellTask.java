@@ -58,10 +58,10 @@ public class BellTask {
         PageInfo pageInfo = PageInfo.of(list);
         StringBuilder key = new StringBuilder();
         for (Device device : list) {
-            if (device.getPay() != 0) continue; //TODO 临时增加控制是否开启bell
+            if (device.getBell() != 0) continue; //TODO 临时增加控制是否开启bell
             // 只在设置的时间内可以警报，其他未知情况全部跳过
-            if (isNeedBell(currTime, device.getAgentId(), device.getHospitalId(), device.getDepart(),device.getMac())) {
-                key.append(device.getCode()).append(Constant.SIGN_FEN_HAO);
+            if (isNeedBell(currTime, device.getAgentId(), device.getHospitalId(), device.getDepart(),device.getDid())) {
+                key.append(device.getBid()).append(Constant.SIGN_FEN_HAO);
             }
         }
         if (key.length() > 0) {

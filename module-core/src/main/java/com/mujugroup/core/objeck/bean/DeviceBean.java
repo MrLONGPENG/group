@@ -8,7 +8,7 @@ public class DeviceBean implements Serializable {
 
     private String did;
 
-    private String code;
+    private String bid;
 
     private String hospitalBed;
 
@@ -25,7 +25,6 @@ public class DeviceBean implements Serializable {
     private JsonObject info;
 
 
-
     public String getDid() {
         return did;
     }
@@ -34,12 +33,12 @@ public class DeviceBean implements Serializable {
         this.did = did;
     }
 
-    public String getCode() {
-        return code;
+    public String getBid() {
+        return bid;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setBid(String bid) {
+        this.bid = bid;
     }
 
     public String getHospitalBed() {

@@ -69,7 +69,7 @@ public class DeviceServiceImpl implements DeviceService {
         if (StringUtil.isEmpty(devicePutVo.getBed())) throw new ParamException("请输入床位信息");
         if (devicePutVo.getStatus() == null) throw new ParamException("请选择设备状态");
         if (devicePutVo.getRun() == null) throw new ParamException("请选择是否为商用");
-        if (devicePutVo.getPay() == null) throw new ParamException("请选择是否为扫码支付");
+        if (devicePutVo.getBell() == null) throw new ParamException("请选择是否响铃");
         //将VO对象转为实体对象
         Device model = deviceVoToDevice(devicePutVo, PutVo.class);
         if ((!device.getAgentId().equals(devicePutVo.getAid())) || (!device.getHospitalId().equals(devicePutVo.getHid())) || (!device.getDepart().equals(devicePutVo.getOid()))) {
@@ -89,8 +89,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     private Device bindDevice(int uid, Device model, Device device) {
         Device entity = new Device();
-        entity.setMac(device.getMac());
-        entity.setCode(device.getCode());
+        entity.setDid(device.getDid());
+        entity.setBid(device.getBid());
         entity.setHospitalBed(model.getHospitalBed());
         //设为启用状态
         entity.setStatus(Device.TYPE_ENABLE);
@@ -108,7 +108,7 @@ public class DeviceServiceImpl implements DeviceService {
         entity.setDepart(model.getDepart());
         entity.setRemark(model.getRemark() == null ? device.getRemark() : model.getRemark());
         entity.setRun(model.getRun() == null ? (device.getRun() == null ? 0 : device.getRun()) : model.getRun());
-        entity.setPay(model.getPay() == null ? (device.getPay() == null ? 0 : device.getPay()) : model.getPay());
+        entity.setBell(model.getBell() == null ? (device.getBell() == null ? 0 : device.getBell()) : model.getBell());
         return entity;
     }
 
@@ -117,8 +117,8 @@ public class DeviceServiceImpl implements DeviceService {
     public boolean insert(int uid, DeviceVo vo) throws ParamException {
         if (!StringUtil.isNumeric(vo.getDid()) || vo.getDid().length() != 9) throw new ParamException("无效DID编号");
         if (!StringUtil.isNumeric(vo.getBid()) || vo.getBid().length() != 19) throw new ParamException("无效BID编号");
-        if (deviceMapper.isExistMac(vo.getDid()) > 0) throw new ParamException("该DID已存在,无法重复激活");
-        if (deviceMapper.isExistCode(vo.getBid()) > 0) throw new ParamException("该BID已存在,无法重复激活");
+        if (deviceMapper.isExistDid(vo.getDid()) > 0) throw new ParamException("该DID已存在,无法重复激活");
+        if (deviceMapper.isExistBid(vo.getBid()) > 0) throw new ParamException("该BID已存在,无法重复激活");
         if (vo.getHid() == null) throw new ParamException("请选择医院");
         if (vo.getOid() == null) throw new ParamException("请选择科室");
         Device device = deviceVoToDevice(vo, DeviceVo.class);
@@ -178,8 +178,6 @@ public class DeviceServiceImpl implements DeviceService {
      */
     private Device deviceVoToDevice(Object obj, Class<?> voType) {
         mapperFactory.classMap(voType, Device.class)
-                .field("did", "mac")
-                .field("bid", "code")
                 .field("hid", "hospitalId")
                 .field("oid", "depart")
                 .field("bed", "hospitalBed")

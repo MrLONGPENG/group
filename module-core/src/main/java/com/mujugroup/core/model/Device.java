@@ -14,27 +14,25 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_device")
 public class Device implements Serializable {
-	public  static  final int  TYPE_ENABLE=14;
-	public  static  final  int TYPE_FORBIDDEN=15;
-	public  static  final  int TYPE_DELETE=17;
+    public static final int TYPE_ENABLE = 14;
+    public static final int TYPE_FORBIDDEN = 15;
+    public static final int TYPE_DELETE = 17;
 
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_device.id
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
     /**
      * deviceId did
      * 表字段 : t_device.mac
      */
-    @Column(name = "mac")
-    private String mac;
-
+    @Column(name = "did")
+    private String did;
     /**
      * 代理商id
      * 表字段 : t_device.agentId
@@ -83,21 +81,6 @@ public class Device implements Serializable {
      */
     @Column(name = "useflag")
     private Integer useflag;
-
-    /**
-     * 预约时间(只针对预约状态或历史预约过)
-     * 表字段 : t_device.reserve_date
-     */
-    @Column(name = "reserve_date")
-    private Date reserveDate;
-
-    /**
-     * 
-     * 表字段 : t_device.imgUrl
-     */
-    @Column(name = "imgUrl")
-    private String imgUrl;
-
     /**
      * 备注
      * 表字段 : t_device.remark
@@ -113,18 +96,18 @@ public class Device implements Serializable {
     private Integer depart;
 
     /**
-     * 设备/床唯一编码/邀请码
-     * 表字段 : t_device.code
+     * 设备ID/锁十进制ID
+     * 表字段 : t_device.bid
      */
-    @Column(name = "code")
-    private String code;
+    @Column(name = "bid")
+    private String bid;
 
     /**
-     * 是否扫码支付 1 是 0 否
-     * 表字段 : t_device.pay
+     * 是否响铃 1 是 0 否
+     * 表字段 : t_device.bell
      */
-    @Column(name = "pay")
-    private Integer pay;
+    @Column(name = "bell")
+    private Integer bell;
 
     /**
      * 商用
@@ -132,21 +115,6 @@ public class Device implements Serializable {
      */
     @Column(name = "run")
     private Integer run;
-
-    /**
-     * 护士站Id
-     * 表字段 : t_device.station_id
-     */
-    @Column(name = "station_id")
-    private Integer stationId;
-
-    /**
-     * 是否为护士站 0 否 1 是
-     * 表字段 : t_device.is_station
-     */
-    @Column(name = "is_station")
-    private Integer isStation;
-
     /**
      * 修改人ID
      * 表字段 : t_device.update_id
@@ -155,12 +123,10 @@ public class Device implements Serializable {
     private Integer updateId;
 
     /**
-     * 
      * 表字段 : t_device.update_time
      */
     @Column(name = "update_time")
     private Date updateTime;
-
     /**
      * 是否与子服务器同步，0：已同步，1：未同步
      * 表字段 : t_device.issync
@@ -168,174 +134,139 @@ public class Device implements Serializable {
     @Column(name = "issync")
     private Integer issync;
 
-
-
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getMac() {
-		return mac;
-	}
+    public String getDid() {
+        return did;
+    }
 
-	public void setMac(String mac) {
-		this.mac = mac;
-	}
+    public void setDid(String did) {
+        this.did = did;
+    }
 
+    public String getBid() {
+        return bid;
+    }
+
+    public void setBid(String bid) {
+        this.bid = bid;
+    }
+
+    public Integer getBell() {
+        return bell;
+    }
+
+    public void setBell(Integer bell) {
+        this.bell = bell;
+    }
     public Integer getAgentId() {
-		return agentId;
-	}
+        return agentId;
+    }
 
-	public void setAgentId(Integer agentId) {
-		this.agentId = agentId;
-	}
+    public void setAgentId(Integer agentId) {
+        this.agentId = agentId;
+    }
 
     public Integer getHospitalId() {
-		return hospitalId;
-	}
+        return hospitalId;
+    }
 
-	public void setHospitalId(Integer hospitalId) {
-		this.hospitalId = hospitalId;
-	}
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
 
     public String getHospitalBed() {
-		return hospitalBed;
-	}
+        return hospitalBed;
+    }
 
-	public void setHospitalBed(String hospitalBed) {
-		this.hospitalBed = hospitalBed;
-	}
+    public void setHospitalBed(String hospitalBed) {
+        this.hospitalBed = hospitalBed;
+    }
 
     public Date getCrtTime() {
-		return crtTime;
-	}
+        return crtTime;
+    }
 
-	public void setCrtTime(Date crtTime) {
-		this.crtTime = crtTime;
-	}
+    public void setCrtTime(Date crtTime) {
+        this.crtTime = crtTime;
+    }
 
     public Integer getCrtId() {
-		return crtId;
-	}
+        return crtId;
+    }
 
-	public void setCrtId(Integer crtId) {
-		this.crtId = crtId;
-	}
+    public void setCrtId(Integer crtId) {
+        this.crtId = crtId;
+    }
 
     public Integer getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getUseflag() {
-		return useflag;
-	}
+        return useflag;
+    }
 
-	public void setUseflag(Integer useflag) {
-		this.useflag = useflag;
-	}
-
-    public Date getReserveDate() {
-		return reserveDate;
-	}
-
-	public void setReserveDate(Date reserveDate) {
-		this.reserveDate = reserveDate;
-	}
-
-    public String getImgUrl() {
-		return imgUrl;
-	}
-
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
+    public void setUseflag(Integer useflag) {
+        this.useflag = useflag;
+    }
 
     public String getRemark() {
-		return remark;
-	}
+        return remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Integer getDepart() {
-		return depart;
-	}
+        return depart;
+    }
 
-	public void setDepart(Integer depart) {
-		this.depart = depart;
-	}
-
-    public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-    public Integer getPay() {
-		return pay;
-	}
-
-	public void setPay(Integer pay) {
-		this.pay = pay;
-	}
+    public void setDepart(Integer depart) {
+        this.depart = depart;
+    }
 
     public Integer getRun() {
-		return run;
-	}
+        return run;
+    }
 
-	public void setRun(Integer run) {
-		this.run = run;
-	}
-
-    public Integer getStationId() {
-		return stationId;
-	}
-
-	public void setStationId(Integer stationId) {
-		this.stationId = stationId;
-	}
-
-    public Integer getIsStation() {
-		return isStation;
-	}
-
-	public void setIsStation(Integer isStation) {
-		this.isStation = isStation;
-	}
+    public void setRun(Integer run) {
+        this.run = run;
+    }
 
     public Integer getUpdateId() {
-		return updateId;
-	}
+        return updateId;
+    }
 
-	public void setUpdateId(Integer updateId) {
-		this.updateId = updateId;
-	}
+    public void setUpdateId(Integer updateId) {
+        this.updateId = updateId;
+    }
 
     public Date getUpdateTime() {
-		return updateTime;
-	}
+        return updateTime;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Integer getIssync() {
-		return issync;
-	}
+        return issync;
+    }
 
-	public void setIssync(Integer issync) {
-		this.issync = issync;
-	}
+    public void setIssync(Integer issync) {
+        this.issync = issync;
+    }
 
 }

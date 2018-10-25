@@ -20,7 +20,7 @@ public class DeviceSqlProvider {
         return new SQL() {{
             INSERT_INTO("t_device");
             if (device.getId() != null) VALUES("id", "#{id}");
-            if (device.getMac() != null) VALUES("mac", "#{mac}");
+            if (device.getDid() != null) VALUES("did", "#{did}");
             if (device.getAgentId() != null) VALUES("agentId", "#{agentId}");
             if (device.getHospitalId() != null) VALUES("hospitalId", "#{hospitalId}");
             if (device.getHospitalBed() != null) VALUES("hospitalBed", "#{hospitalBed}");
@@ -28,15 +28,11 @@ public class DeviceSqlProvider {
             if (device.getCrtId() != null) VALUES("crtId", "#{crtId}");
             if (device.getStatus() != null) VALUES("status", "#{status}");
             if (device.getUseflag() != null) VALUES("useflag", "#{useflag}");
-            if (device.getReserveDate() != null) VALUES("reserve_date", "#{reserveDate}");
-            if (device.getImgUrl() != null) VALUES("imgUrl", "#{imgUrl}");
             if (device.getRemark() != null) VALUES("remark", "#{remark}");
             if (device.getDepart() != null) VALUES("depart", "#{depart}");
-            if (device.getCode() != null) VALUES("code", "#{code}");
-            if (device.getPay() != null) VALUES("pay", "#{pay}");
+            if (device.getBid() != null) VALUES("bid", "#{bid}");
+            if (device.getBell() != null) VALUES("bell", "#{bell}");
             if (device.getRun() != null) VALUES("run", "#{run}");
-            if (device.getStationId() != null) VALUES("station_id", "#{stationId}");
-            if (device.getIsStation() != null) VALUES("is_station", "#{isStation}");
             if (device.getUpdateId() != null) VALUES("update_id", "#{updateId}");
             if (device.getUpdateTime() != null) VALUES("update_time", "#{updateTime}");
             if (device.getIssync() != null) VALUES("issync", "#{issync}");
@@ -48,7 +44,7 @@ public class DeviceSqlProvider {
         return new SQL() {{
             UPDATE("t_device");
             if (device.getId() != null) SET("id = #{id}");
-            if (device.getMac() != null) SET("mac = #{mac}");
+            if (device.getDid() != null) SET("did = #{did}");
             if (device.getAgentId() != null) SET("agentId = #{agentId}");
             if (device.getHospitalId() != null) SET("hospitalId = #{hospitalId}");
             if (device.getHospitalBed() != null) SET("hospitalBed = #{hospitalBed}");
@@ -56,15 +52,11 @@ public class DeviceSqlProvider {
             if (device.getCrtId() != null) SET("crtId = #{crtId}");
             if (device.getStatus() != null) SET("status = #{status}");
             if (device.getUseflag() != null) SET("useflag = #{useflag}");
-            if (device.getReserveDate() != null) SET("reserve_date = #{reserveDate}");
-            if (device.getImgUrl() != null) SET("imgUrl = #{imgUrl}");
             if (device.getRemark() != null) SET("remark = #{remark}");
             if (device.getDepart() != null) SET("depart = #{depart}");
-            if (device.getCode() != null) SET("code = #{code}");
-            if (device.getPay() != null) SET("pay = #{pay}");
+            if (device.getBid() != null) SET("bid = #{bid}");
+            if (device.getBell() != null) SET("bell = #{bell}");
             if (device.getRun() != null) SET("run = #{run}");
-            if (device.getStationId() != null) SET("station_id = #{stationId}");
-            if (device.getIsStation() != null) SET("is_station = #{isStation}");
             if (device.getUpdateId() != null) SET("update_id = #{updateId}");
             if (device.getUpdateTime() != null) SET("update_time = #{updateTime}");
             if (device.getIssync() != null) SET("issync = #{issync}");
@@ -89,7 +81,7 @@ public class DeviceSqlProvider {
     public String getActiveRemoveCount(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
             , @Param("start") String start, @Param("end") String end) {
         return new SQL() {{
-            SELECT("COUNT(DISTINCT `mac`) as `value`");
+            SELECT("COUNT(DISTINCT `did`) as `value`");
             FROM("t_device");
             WHERE("status = 17");
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
@@ -112,9 +104,9 @@ public class DeviceSqlProvider {
     private String getActiveByKey(String key, String aid, String hid, String oid, String start, String end) {
         return new SQL() {{
             if (key != null) {
-                SELECT(key + ", COUNT(DISTINCT `mac`) as `value`");
+                SELECT(key + ", COUNT(DISTINCT `did`) as `value`");
             } else {
-                SELECT("COUNT(DISTINCT `mac`) as `value`");
+                SELECT("COUNT(DISTINCT `did`) as `value`");
             }
             FROM("t_device");
             WHERE("status = 14");
@@ -144,15 +136,13 @@ public class DeviceSqlProvider {
             FROM("t_device");
             WHERE("status=14");
             if (!StringUtil.isEmpty(did)) {
-                AND().WHERE("mac=#{did}");
+                AND().WHERE("did=#{did}");
             }
             if (!StringUtil.isEmpty(bid)) {
-                AND().WHERE("`code`=#{bid}");
+                AND().WHERE("`bid`=#{bid}");
             }
-            if (!StringUtil.isEmpty(bed) && bed.indexOf(bed) != -1) {
+            if (!StringUtil.isEmpty(bed)) {
                 AND().WHERE("hospitalBed like concat(concat('%',#{bed}),'%')");
-            } else if (!StringUtil.isEmpty(bed)) {
-                AND().WHERE("hospitalBed=#{bed}");
             }
             if (!StringUtil.isEmpty(aid)) {
                 AND().WHERE("agentId=#{aid}");

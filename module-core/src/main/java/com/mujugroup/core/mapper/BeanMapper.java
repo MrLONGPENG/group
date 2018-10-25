@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 public interface BeanMapper {
 
 
-    @Select("SELECT * FROM t_device WHERE `status`=14 AND mac = #{did}")
-    @Results(value={@Result(column="mac",property="did",javaType=String.class)
-            ,@Result(column="code",property="code",javaType=String.class)
+    @Select("SELECT * FROM t_device WHERE `status`=14 AND did = #{did}")
+    @Results(value={@Result(column="did",property="did",javaType=String.class)
+            ,@Result(column="bid",property="bid",javaType=String.class)
             ,@Result(column="agentId",property="agentId",javaType=Integer.class)
             ,@Result(column="hospitalId",property="hospitalId",javaType=Integer.class)
             ,@Result(column="depart",property="departmentId",javaType=Integer.class)

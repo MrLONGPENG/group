@@ -36,9 +36,8 @@ public class PutVo implements Serializable {
     @ApiModelProperty(value = "remark", notes = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "pay", notes = "是否扫码支付 1 是 0 否", required = true)
-    private Integer pay;
-
+    @ApiModelProperty(value = "bell", notes = "是否响铃 1 是 0 否", required = true)
+    private Integer bell;
     @ApiModelProperty(value = "run", notes = "商用", required = true)
     private Integer run;
 
@@ -114,14 +113,13 @@ public class PutVo implements Serializable {
         this.remark = remark;
     }
 
-    public Integer getPay() {
-        return pay;
+    public Integer getBell() {
+        return bell;
     }
 
-    public void setPay(Integer pay) {
-        this.pay = pay;
+    public void setBell(Integer bell) {
+        this.bell = bell;
     }
-
     public Integer getRun() {
         return run;
     }

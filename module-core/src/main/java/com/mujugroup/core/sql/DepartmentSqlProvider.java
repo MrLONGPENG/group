@@ -21,7 +21,7 @@ public class DepartmentSqlProvider {
             if (department.getStatus() != null) VALUES("status", "#{status}");
             if (department.getHid() != null) VALUES("hospital_id", "#{hid}");
             if (department.getName() != null) VALUES("name", "#{name}");
-            if (department.getMid() != null) VALUES("aihui_depart_id", "#{mid}");
+            if (department.getMid() != null) VALUES("mid", "#{mid}");
             if (department.getRemark() != null) VALUES("remark", "#{remark}");
             if (department.getSort() != null) VALUES("sort", "#{sort}");
             if (department.getCreateDate() != null) VALUES("create_date", "#{createDate}");
@@ -36,19 +36,21 @@ public class DepartmentSqlProvider {
             if (department.getStatus() != null) SET("status = #{status}");
             if (department.getHid() != null) SET("hospital_id = #{hid}");
             if (department.getName() != null) SET("name = #{name}");
-            if (department.getMid() != null) SET("aihui_depart_id = #{mid}");
+            if (department.getMid() != null) SET("mid = #{mid}");
             if (department.getRemark() != null) SET("remark = #{remark}");
             if (department.getSort() != null) SET("sort = #{sort}");
             if (department.getCreateDate() != null) SET("create_date = #{createDate}");
             WHERE("id = #{id}");
         }}.toString();
     }
+
     public String findAll(@Param(value = "hid") int hid, @Param(value = "name") String name) {
         return new SQL() {{
             SELECT("t.id, h.id AS hid, t.name, dict.name AS department ,h.name AS hospital" +
                     ",t.sort, t.create_date, dict.id AS mid, t.status, t.remark");
-            FROM("t_department t,t_dict_department dict,t_hospital h");
-            WHERE("t.aihui_depart_id=dict.id AND t.hospital_id=h.id");
+            FROM("t_department t");
+            LEFT_OUTER_JOIN("t_dict_department dict ON t.mid=dict.id");
+            INNER_JOIN("t_hospital h  ON t.hospital_id=h.id");
             if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
             }
@@ -58,7 +60,7 @@ public class DepartmentSqlProvider {
         }}.toString();
     }
 
-    public String getSelectList(@Param(value = "hid") int hid, @Param(value = "name") String name){
+    public String getSelectList(@Param(value = "hid") int hid, @Param(value = "name") String name) {
         return new SQL() {{
             SELECT("id, name");
             FROM("t_department");

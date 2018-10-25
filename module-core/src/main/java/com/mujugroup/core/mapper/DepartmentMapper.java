@@ -34,9 +34,9 @@ public interface DepartmentMapper {
     @Results(id = "department", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "status", property = "status", javaType = Integer.class)
-            , @Result(column = "hospital_id", property = "hospitalId", javaType = Integer.class)
+            , @Result(column = "hospital_id", property = "hid", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
-            , @Result(column = "aihui_depart_id", property = "aihuiDepartId", javaType = Integer.class)
+            , @Result(column = "mid", property = "mid", javaType = Integer.class)
             , @Result(column = "remark", property = "remark", javaType = String.class)
             , @Result(column = "sort", property = "sort", javaType = Integer.class)
             , @Result(column = "create_date", property = "createDate", javaType = Date.class)
@@ -70,7 +70,7 @@ public interface DepartmentMapper {
     @Results(id = "listVo", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "status", property = "status", javaType = Integer.class)
-            , @Result(column = "hospital_id", property = "hid", javaType = Integer.class)
+            , @Result(column = "hid", property = "hid", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
             , @Result(column = "mid", property = "mid", javaType = Integer.class)
             , @Result(column = "remark", property = "remark", javaType = String.class)

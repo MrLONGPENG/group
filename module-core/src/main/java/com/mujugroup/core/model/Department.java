@@ -47,10 +47,10 @@ public class Department implements Serializable {
     private String name;
 
     /**
-     * 木巨科室Id 对应t_aihui_department表
-     * 表字段 : t_department.aihui_depart_id
+     * 木巨科室Id 对应t_dict_department表
+     * 表字段 : t_department.mid
      */
-    @Column(name = "aihui_depart_id")
+    @Column(name = "mid")
     private Integer mid;
 
     /**

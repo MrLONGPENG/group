@@ -35,8 +35,8 @@ public class DeviceVo implements Serializable {
     @ApiModelProperty(value = "remark", notes = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "pay", notes = "是否扫码支付 1 是 0 否")
-    private Integer pay;
+    @ApiModelProperty(value = "bell", notes = "是否响铃 1 是 0 否")
+    private Integer bell;
 
     @ApiModelProperty(value = "run", notes = "商用")
     private Integer run;
@@ -104,15 +104,6 @@ public class DeviceVo implements Serializable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-    public Integer getPay() {
-        return pay;
-    }
-
-    public void setPay(Integer pay) {
-        this.pay = pay;
-    }
-
     public Integer getRun() {
         return run;
     }
