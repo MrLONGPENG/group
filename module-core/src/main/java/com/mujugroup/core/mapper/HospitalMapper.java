@@ -145,8 +145,8 @@ public interface HospitalMapper {
             , @Result(column = "address", property = "address", javaType = String.class)
             , @Result(column = "province", property = "pid", javaType = Integer.class)
             , @Result(column = "city", property = "cid", javaType = Integer.class)
-            , @Result(column = "pname", property = "provinceName", javaType = String.class)
-            , @Result(column = "cname", property = "cityName", javaType = String.class)
+            , @Result(column = "provinceName", property = "provinceName", javaType = String.class)
+            , @Result(column = "cityName", property = "cityName", javaType = String.class)
             , @Result(column = "enable", property = "enable", javaType = Integer.class)
             , @Result(column = "level", property = "level", javaType = String.class)
 
