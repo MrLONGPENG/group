@@ -28,9 +28,9 @@ public interface AgentService {
 
     List<SelectVO> getTheAgentList();
 
-    List<SelectVO> getAgentListByUid(long uid) throws DataException;
+    List<SelectVO> getAgentListByUid(long uid);
 
-    List<SelectVO> getAgentHospitalByUid(long uid) throws DataException;
+    List<SelectVO> getAgentHospitalByUid(long uid);
 
     List<Agent> findAll(String uid,String name) throws ParamException,DataException;
 

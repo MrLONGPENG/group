@@ -1,12 +1,15 @@
 package com.mujugroup.core.controller;
 
+import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.AgentService;
+import com.mujugroup.core.service.AuthDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,25 +29,26 @@ import java.util.List;
 @Api(description = "代理商相关接口")
 public class AgentController {
 
-    private AgentService agentService;
+    private final AgentService agentService;
+    private final AuthDataService authDataService;
 
     @Autowired
-    public AgentController(AgentService agentService) {
+    public AgentController(AgentService agentService, AuthDataService authDataService) {
         this.agentService = agentService;
+        this.authDataService = authDataService;
     }
 
     @ApiOperation(value = "查询代理商列表", notes = "查询代理商列表")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(hidden = true) int uid) {
-        try {
-            List<SelectVO> userAgentList = agentService.getAgentListByUid(uid);
-            // uid+type=2  count >0
-            List<SelectVO> userHospitalAgentList = agentService.getAgentHospitalByUid(uid);
-            if (userHospitalAgentList != null && userHospitalAgentList.size() > 0) {
-                userAgentList.add(new SelectVO(-1, "其他可选医院"));
-            }
-
-            if (userAgentList == null || userAgentList.size() == 0) {
+        List<SelectVO> userAgentList = agentService.getAgentListByUid(uid);
+        List<SelectVO> userHospitalAgentList = agentService.getAgentHospitalByUid(uid);
+        if (userHospitalAgentList != null && userHospitalAgentList.size() > 0) {
+            userAgentList.add(new SelectVO(-1, "其他可选医院"));
+        }
+        if (userAgentList == null || userAgentList.size() == 0) {
+            List<DBMap> auth = authDataService.getAuthData(uid);
+            if (auth != null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))) {
                 List<SelectVO> list = agentService.getTheAgentList();
                 if (list != null) {
                     return ResultUtil.success(list);
@@ -52,10 +56,11 @@ public class AgentController {
                     return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
                 }
             } else {
-                return ResultUtil.success(userAgentList);
+                return ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY);
             }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+
+        } else {
+            return ResultUtil.success(userAgentList);
         }
 
     }

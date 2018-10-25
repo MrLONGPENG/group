@@ -90,18 +90,12 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<SelectVO> getAgentListByUid(long uid) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid((int) uid);
-        if (map.size() == 0) throw new DataException("当前用户无数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限,暂无法进行查看");
+    public List<SelectVO> getAgentListByUid(long uid) {
         return agentMapper.getAgentListByUid(uid);
     }
 
     @Override
-    public List<SelectVO> getAgentHospitalByUid(long uid) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid((int) uid);
-        if (map.size() == 0) throw new DataException("当前用户无数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限,暂无法进行查看");
+    public List<SelectVO> getAgentHospitalByUid(long uid) {
         return agentMapper.getAgentHospitalByUid(uid);
     }
 
