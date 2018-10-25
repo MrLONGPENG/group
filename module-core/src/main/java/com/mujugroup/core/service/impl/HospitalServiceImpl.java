@@ -83,41 +83,71 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<ListVo> findAll(int uid,int aid, String name, int provinceId, int cityId) throws DataException {
+    public List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-       if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
-        return  hospitalMapper.findAll(aid,name,provinceId,cityId);
+        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
+        return hospitalMapper.findAll(aid, name, provinceId, cityId);
     }
 
     @Override
     public boolean remove(int uid, String hid) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
+        //判断当前用户有无数据权限
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户没有最高数据权限,暂无法进行医院的删除操作");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_AGENT)) throw new DataException("当前用户没有代理商权限,暂无法进行医院的删除操作");
-        if (StringUtil.isEmpty(hid)) throw new ParamException("请选择要删除的医院");
-        if (!StringUtil.isNumeric(hid)) throw new ParamException("医院选择有误,请重新选择");
-        if (hospitalMapper.findById(Integer.parseInt(hid)) == null) throw new ParamException("要删除的医院不存在,请重新选择");
-        List<Department> departmentList = departmentMapper.findListByHid(hid);
-        if (departmentList != null && departmentList.size() > 0) throw new ParamException("该医院下存在科室,无法进行删除");
-        return hospitalMapper.deleteById(Integer.parseInt(hid));
+        //如果当前用户没有最高数据权限只有代理商分权限
+        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            Hospital model = hospitalMapper.findById(Integer.parseInt(hid));
+            if (model == null) {
+                throw new ParamException("要删除的医院不存在,请重新选择");
+            } else {
+                if (Arrays.stream(strArray).noneMatch(s -> s.equals(model.getAgentId()))) {
+                    throw new DataException("当前医院所属代理商无权限,暂无法进行删除医院的操作");
+                } else {
+                    List<Department> departmentList = departmentMapper.findListByHid(hid);
+                    if (departmentList != null && departmentList.size() > 0) {
+                        throw new ParamException("该医院下存在科室,无法进行删除");
+                    } else {
+                        return hospitalMapper.deleteById(Integer.parseInt(hid));
+                    }
+                }
+            }
+        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+            return hospitalMapper.deleteById(Integer.parseInt(hid));
+        } else {
+            throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
+        }
     }
 
     @Override
     public boolean modify(int uid, PutVo hospitalPutVo) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
+        //判断当前用户有无数据权限
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户没有最高数据权限,暂无法进行医院的更新操作");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_AGENT)) throw new DataException("当前用户没有代理商权限,暂无法进行医院的更新操作");
-        if (StringUtil.isEmpty(hospitalPutVo.getAid())) throw new ParamException("请先选择代理商");
-        if (hospitalPutVo.getId() == null) throw new ParamException("医院编号不能为空");
+        //如果当前用户没有最高数据权限只有代理商分权限
+        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospitalPutVo.getAid()))) {
+                throw new DataException("当前医院所属代理商无权限,暂无法进行修改医院的操作");
+            } else {
+                return modifyFunc(hospitalPutVo);
+            }
+        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+            return modifyFunc(hospitalPutVo);
+        } else {
+            throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
+        }
+
+    }
+
+    private boolean modifyFunc(PutVo hospitalPutVo) throws ParamException {
         Hospital model = hospitalMapper.findById(hospitalPutVo.getId());
         if (model == null) throw new ParamException("要修改的医院不存在,请重新选择");
         if (isExitsName(hospitalPutVo.getAid(), hospitalPutVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         List<Hospital> hospitalList = findListByAid(String.valueOf(hospitalPutVo.getAid()));
         if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("该代理商不存在");
-        if (hospitalPutVo.getAid() != model.getAgentId()) {
+        if (!hospitalPutVo.getAid().equals(model.getAgentId())) {
             throw new ParamException("暂不支持代理商的变更");
         }
         Hospital hospital = hospitalVoToHospital(hospitalPutVo, PutVo.class);
@@ -127,20 +157,30 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public boolean add(int uid, AddVo addVo) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
-
-        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户没有最高数据权限,暂无法进行添加医院的操作");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_AGENT)) throw new DataException("当前用户没有代理商权限,暂无法进行添加医院的操作");
         String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
-        if (Arrays.stream(strArray).noneMatch(s -> s.equals(addVo.getAid())))
-            throw new DataException("当前用户没有代理商权限,暂无法进行添加医院的操作");
-        if (StringUtil.isEmpty(addVo.getAid())) throw new ParamException("请先选择代理商");
-        if (addVo.getCid() == null || addVo.getPid() == null) throw new ParamException("请选择所属省市");
+        //判断当前用户有无数据权限
+        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
+        //如果当前用户没有最高数据权限只有代理商分权限
+        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            //进行医院所属代理商的权限校验
+            if (Arrays.stream(strArray).noneMatch(s -> s.equals(addVo.getAid()))) {
+                throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
+            } else {
+                return addFunc(addVo, uid);
+            }
+        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+            //当前用户拥有最高数据权限,直接进行添加操作
+            return addFunc(addVo, uid);
+        } else {
+            throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
+        }
+    }
+
+    private boolean addFunc(AddVo addVo, int uid) throws ParamException {
         if (!StringUtil.isNumeric(addVo.getAid())) throw new ParamException("代理商选择有误");
         if (getProvinceCity(addVo.getCid(), addVo.getPid()) <= 0) throw new ParamException("请选择正确的省市");
         List<Hospital> hospitalList = findListByAid(String.valueOf(addVo.getAid()));
         if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("请选择正确的代理商");
-        if (StringUtil.isEmpty(addVo.getName())) throw new ParamException("医院名称不能为空");
         if (isExitsName(addVo.getAid(), addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         Hospital hospital = hospitalVoToHospital(addVo, AddVo.class);
         hospital.setCountry(0);
@@ -153,11 +193,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> getHospitalListByUid(String type, long uid) throws DataException {
-
-        Map<String, String> map = authDataService.getAuthDataByUid((int) uid);
-        if (map.size() == 0) throw new DataException("当前用户无数据权限，请联系管理员！");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
+    public List<SelectVO> getHospitalListByUid(String type, long uid)  {
         return hospitalMapper.getHospitalListByUid(type, uid);
     }
 

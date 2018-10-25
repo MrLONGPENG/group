@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +43,6 @@ public class HospitalController {
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(value = "代理商ID") @RequestParam(name = "aid", required = false, defaultValue = "0") int aid
             , @ApiParam(value = "模糊名字") @RequestParam(name = "name", required = false) String name, @ApiParam(hidden = true) int uid) {
-        try {
             if (aid == -1) {
                 return ResultUtil.success(hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL
                         , uid));
@@ -61,53 +61,35 @@ public class HospitalController {
             List<SelectVO> list = hospitalService.getHospitalList(uid, aid, name);
             if (list != null) return ResultUtil.success(list);
             return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-
-        } catch (DataException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
-        }
     }
 
     @ApiOperation(value = "添加医院", notes = "添加医院")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addHospital(@ApiParam(hidden = true) int uid, @ModelAttribute AddVo addVo) {
-        try {
-            if (hospitalService.add(uid, addVo)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String addHospital(@ApiParam(hidden = true) int uid, @Validated @ModelAttribute AddVo addVo) throws BaseException {
+        if (hospitalService.add(uid, addVo)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 
     @ApiOperation(value = "编辑医院", notes = "编辑医院")
     @RequestMapping(value = "/modify", method = RequestMethod.PUT)
-    public String modifyHospital(@ApiParam(hidden = true) int uid, @ModelAttribute PutVo hospitalPutVo) {
-        try {
-            if (hospitalService.modify(uid, hospitalPutVo)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (BaseException e) {
-
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String modifyHospital(@ApiParam(hidden = true) int uid, @Validated @ModelAttribute PutVo hospitalPutVo) throws BaseException {
+        if (hospitalService.modify(uid, hospitalPutVo)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
-
     }
 
     @ApiOperation(value = "删除医院", notes = "删除医院")
     @RequestMapping(value = "/delete/{hid}", method = RequestMethod.POST)
-    public String removeHospital(@ApiParam(hidden = true) int uid, @ApiParam(value = "医院ID") @PathVariable(value = "hid") String hid) {
-        try {
-            if (hospitalService.remove(uid, hid)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String removeHospital(@ApiParam(hidden = true) int uid, @ApiParam(value = "医院ID") @PathVariable(value = "hid") String hid) throws BaseException {
+        if (hospitalService.remove(uid, hid)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 
@@ -121,17 +103,14 @@ public class HospitalController {
             , @ApiParam(value = "医院名称") @RequestParam(value = "name", required = false, defaultValue = "") String name
             , @ApiParam(value = "省份编号") @RequestParam(value = "provinceId", required = false, defaultValue = "0") int provinceId
             , @ApiParam(value = "城市编号") @RequestParam(value = "cityId", required = false, defaultValue = "0") int cityId
-    ) {
-        try {
-            PageHelper.startPage(pageNum, pageSize);
-            List<ListVo> list = hospitalService.findAll(uid, aid, name, provinceId, cityId);
-            if (list != null && list.size() > 0) {
-                return ResultUtil.success(list, PageInfo.of(list));
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-            }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    ) throws BaseException {
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<ListVo> list = hospitalService.findAll(uid, aid, name, provinceId, cityId);
+        if (list != null && list.size() > 0) {
+            return ResultUtil.success(list, PageInfo.of(list));
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         }
     }
 

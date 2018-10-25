@@ -16,11 +16,11 @@ import java.util.List;
  */
 public interface HospitalService {
 
-    List<SelectVO> getHospitalList(int uid, int aid, String name) throws DataException;
+    List<SelectVO> getHospitalList(int uid, int aid, String name);
 
-    List<SelectVO> getHospitalListByUid(String type, long uid) throws DataException;
+    List<SelectVO> getHospitalListByUid(String type, long uid);
 
-    List<SelectVO> getAgentHospitalListByUid(String type, long uid) throws DataException;
+    List<SelectVO> getAgentHospitalListByUid(String type, long uid);
 
     List<Hospital> findListByAid(String aid);
 

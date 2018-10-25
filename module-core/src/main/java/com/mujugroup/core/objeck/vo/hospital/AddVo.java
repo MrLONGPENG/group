@@ -2,17 +2,21 @@ package com.mujugroup.core.objeck.vo.hospital;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.NonNull;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
-
+@Data
 @ApiModel(value = "AddVo", description = "医院添加Vo")
 public class AddVo implements Serializable {
-
     @ApiModelProperty(value = "id", notes = "医院编号")
     private Integer id;
+    @NotBlank(message = "医院名称不能为空")
     @ApiModelProperty(value = "name", notes = "医院名称", required = true)
     private String name;
+    @NotBlank(message = "代理商编号不能为空")
     @ApiModelProperty(value = "aid", notes = "代理商编号", required = true)
     private String aid;
     @ApiModelProperty(value = "tel", notes = "电话")
@@ -39,127 +43,4 @@ public class AddVo implements Serializable {
     private Integer issync;
     @ApiModelProperty(value = "level", notes = "医院等级")
     private String level;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-
-    public String getPerson() {
-        return person;
-    }
-
-    public void setPerson(String person) {
-        this.person = person;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Date getCrtTime() {
-        return crtTime;
-    }
-
-    public void setCrtTime(Date crtTime) {
-        this.crtTime = crtTime;
-    }
-
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getCountry() {
-        return country;
-    }
-
-    public void setCountry(Integer country) {
-        this.country = country;
-    }
-
-    public Integer getEnable() {
-        return enable;
-    }
-
-    public void setEnable(Integer enable) {
-        this.enable = enable;
-    }
-
-    public Integer getIssync() {
-        return issync;
-    }
-
-    public void setIssync(Integer issync) {
-        this.issync = issync;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public String getAid() {
-        return aid;
-    }
-
-    public void setAid(String aid) {
-        this.aid = aid;
-    }
-
-    public Integer getUid() {
-        return uid;
-    }
-
-    public void setUid(Integer uid) {
-        this.uid = uid;
-    }
-
-    public Integer getPid() {
-        return pid;
-    }
-
-    public void setPid(Integer pid) {
-        this.pid = pid;
-    }
-
-    public Integer getCid() {
-        return cid;
-    }
-
-    public void setCid(Integer cid) {
-        this.cid = cid;
-    }
-
-
 }
