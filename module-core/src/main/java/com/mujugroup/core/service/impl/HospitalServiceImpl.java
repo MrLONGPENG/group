@@ -43,11 +43,9 @@ public class HospitalServiceImpl implements HospitalService {
         this.authDataService = authDataService;
     }
 
+
     @Override
-    public List<SelectVO> getAgentHospitalListByUid(String type, long uid) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid((int) uid);
-        if (map.size() == 0) throw new DataException("当前用户无数据权限，请联系管理员！");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
+    public List<SelectVO> getAgentHospitalListByUid(String type, long uid)  {
         return hospitalMapper.getAgentHospitalListByUid(type, uid);
     }
 
@@ -88,6 +86,11 @@ public class HospitalServiceImpl implements HospitalService {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
         return hospitalMapper.findAll(aid, name, provinceId, cityId);
+    }
+
+    @Override
+    public List<SelectVO> selectAll() {
+        return hospitalMapper.selectAll();
     }
 
     @Override
@@ -198,10 +201,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> getHospitalList(int uid, int aid, String name) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid(uid);
-        if (map.size() == 0) throw new DataException("当前用户无数据权限，请联系管理员！");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
+    public List<SelectVO> getHospitalList(int uid, int aid, String name) {
         return hospitalMapper.getHospitalList(aid, name);
     }
 

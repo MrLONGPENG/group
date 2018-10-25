@@ -44,10 +44,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<ListVo> findAll(int uid, int hid, String name) throws DataException {
+    public List<ListVo> findAll(int uid, int hid, String name){
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
-        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看数据!");
         return departmentMapper.findAll(hid, name);
     }
 

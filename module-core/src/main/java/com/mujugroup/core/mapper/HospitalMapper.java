@@ -133,7 +133,7 @@ public interface HospitalMapper {
     Integer isExitsName(@Param(value = "aid") String aid, @Param(value = "name") String name);
 
     @SelectProvider(type = HospitalSqlProvider.class, method = "findAll")
-    @Results(id = "listVo",value = {
+    @Results(id = "listVo", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
             , @Result(column = "aid", property = "aid", javaType = String.class)
@@ -153,4 +153,7 @@ public interface HospitalMapper {
     })
     List<ListVo> findAll(@Param(value = "aid") int aid, @Param(value = "name") String name, @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId);
 
+    @Select("SELECT id,`name` FROM t_hospital WHERE `enable` = 22")
+    @ResultMap(value = "hospitalList")
+    List<SelectVO> selectAll();
 }

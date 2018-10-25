@@ -5,12 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.vo.hospital.AddVo;
 import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.objeck.vo.hospital.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.HospitalService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,35 +33,38 @@ import java.util.List;
 @Api(description = "医院相关接口")
 public class HospitalController {
 
-    private HospitalService hospitalService;
+    private final HospitalService hospitalService;
+    private final AuthDataService authDataService;
 
     @Autowired
-    public HospitalController(HospitalService hospitalService) {
+    public HospitalController(HospitalService hospitalService, AuthDataService authDataService) {
         this.hospitalService = hospitalService;
+        this.authDataService = authDataService;
     }
 
     @ApiOperation(value = "查询医院下拉列表", notes = "查询医院下拉列表，可模糊匹配医院名字")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(value = "代理商ID") @RequestParam(name = "aid", required = false, defaultValue = "0") int aid
             , @ApiParam(value = "模糊名字") @RequestParam(name = "name", required = false) String name, @ApiParam(hidden = true) int uid) {
-            if (aid == -1) {
-                return ResultUtil.success(hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL
-                        , uid));
-            } else if (aid == 0) {
-                List<SelectVO> allList = hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL
-                        , uid);
-                List<SelectVO> secList = hospitalService.getAgentHospitalListByUid(CoreConfig.AUTH_DATA_AGENT
-                        , uid);
-                if (allList != null) {
-                    allList.addAll(secList);
-                } else {
-                    allList = secList;
-                }
-                if (allList != null && allList.size() > 0) return ResultUtil.success(allList);
+        Map<String,String> map= authDataService.getAuthDataByUid(uid);
+        if (map.containsKey(CoreConfig.AUTH_DATA_ALL)){
+            return ResultUtil.success(hospitalService.selectAll());
+        }
+        if (aid == -1) {
+            return ResultUtil.success(hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL, uid));
+        } else if (aid == 0) {
+            List<SelectVO> allList = hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL, uid);
+            List<SelectVO> secList = hospitalService.getAgentHospitalListByUid(CoreConfig.AUTH_DATA_AGENT, uid);
+            if (allList != null) {
+                allList.addAll(secList);
+            } else {
+                allList = secList;
             }
-            List<SelectVO> list = hospitalService.getHospitalList(uid, aid, name);
-            if (list != null) return ResultUtil.success(list);
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+            if (allList != null && allList.size() > 0) return ResultUtil.success(allList);
+        }
+        List<SelectVO> list = hospitalService.getHospitalList(uid, aid, name);
+        if (list != null) return ResultUtil.success(list);
+        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
     @ApiOperation(value = "添加医院", notes = "添加医院")

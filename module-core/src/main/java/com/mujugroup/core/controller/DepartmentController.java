@@ -47,7 +47,6 @@ public class DepartmentController {
             , required = false, defaultValue = "10") int pageSize , @ApiParam(hidden = true) int uid
             , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue = "0") int hid
             , @ApiParam(value = "科室名称")@RequestParam(value = "name", required = false) String name) {
-        try {
             PageHelper.startPage(pageNum, pageSize);
             List<ListVo> list = departmentService.findAll(uid, hid, name);
             if (list != null && list.size() > 0) {
@@ -55,10 +54,6 @@ public class DepartmentController {
             } else {
                 return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
             }
-        } catch (BaseException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
-        }
-
     }
 
     @ApiOperation(value = "添加科室", notes = "添加科室")
