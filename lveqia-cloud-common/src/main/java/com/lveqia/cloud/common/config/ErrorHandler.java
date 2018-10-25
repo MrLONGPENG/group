@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
@@ -53,7 +54,13 @@ public abstract class ErrorHandler {
         return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, sb.toString());
     }
 
-
+    /**
+     *  请求丢失必要参数
+     */
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    public String missErrorHandler(MissingServletRequestParameterException exception) {
+        return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, exception.getMessage());
+    }
 
 
 
