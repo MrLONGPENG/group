@@ -64,7 +64,7 @@ public interface DeviceMapper {
     List<Device> findListByStatus(int status);
 
 
-    @Select("SELECT hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
+    @Select("SELECT hospitalId as hid, agentId as aid, COUNT(DISTINCT did) as act" +
             " FROM t_device WHERE agentId = #{aid} AND status = 14 GROUP BY hospitalId")
     @Results(value = {@Result(column = "hid", property = "hid", javaType = Integer.class)
             , @Result(column = "aid", property = "aid", javaType = Integer.class)
@@ -75,7 +75,7 @@ public interface DeviceMapper {
     List<StatusAidBean> findGroupByAid(@Param("aid") int aid);
 
 
-    @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, COUNT(DISTINCT mac) as act" +
+    @Select("SELECT depart as oid, hospitalId as hid, agentId as aid, COUNT(DISTINCT did) as act" +
             " FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} AND status = 14 GROUP BY depart")
     @Results(value = {@Result(column = "oid", property = "oid", javaType = Integer.class)
             , @Result(column = "hid", property = "hid", javaType = Integer.class)
@@ -89,7 +89,7 @@ public interface DeviceMapper {
 
     @Select("SELECT did, `bid`, depart as oid, hospitalId as hid, agentId as aid, hospitalBed" +
             ", COUNT(DISTINCT did) as act FROM t_device WHERE agentId = #{aid} AND hospitalId = #{hid} " +
-            " AND depart = #{oid} AND status = 14 GROUP BY did")
+            " AND depart = #{oid} AND status = 14 GROUP BY did,bid,hospitalBed")
     @Results(value = {@Result(column = "did", property = "did", javaType = String.class)
             , @Result(column = "bid", property = "bid", javaType = String.class)
             , @Result(column = "oid", property = "oid", javaType = Integer.class)
