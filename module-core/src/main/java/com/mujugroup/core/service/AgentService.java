@@ -32,6 +32,6 @@ public interface AgentService {
 
     List<SelectVO> getAgentHospitalByUid(long uid);
 
-    List<Agent> findAll(String uid,String name) throws ParamException,DataException;
+    List<Agent> findAll(String uid,String name,int enable) throws ParamException,DataException;
 
 }

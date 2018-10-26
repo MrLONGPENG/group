@@ -14,10 +14,15 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_hospital")
 public class Hospital implements Serializable {
-
+    //启用状态
+    public static final int TYPE_ENABLE = 22;
+    //禁用状态
+    public static final int TYPE_FORBIDDEN = 23;
+    //删除状态
+    public static final int TYPE_DELETE = 17;
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_hospital.id
      */
     @Id
@@ -75,28 +80,24 @@ public class Hospital implements Serializable {
     private Integer crtId;
 
     /**
-     * 
      * 表字段 : t_hospital.address
      */
     @Column(name = "address")
     private String address;
 
     /**
-     * 
      * 表字段 : t_hospital.country
      */
     @Column(name = "country")
     private Integer country;
 
     /**
-     * 
      * 表字段 : t_hospital.province
      */
     @Column(name = "province")
     private Integer province;
 
     /**
-     * 
      * 表字段 : t_hospital.city
      */
     @Column(name = "city")
@@ -138,141 +139,140 @@ public class Hospital implements Serializable {
     private String level;
 
 
-
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAgentId() {
-		return agentId;
-	}
+        return agentId;
+    }
 
-	public void setAgentId(String agentId) {
-		this.agentId = agentId;
-	}
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
 
     public String getTel() {
-		return tel;
-	}
+        return tel;
+    }
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
 
     public String getPerson() {
-		return person;
-	}
+        return person;
+    }
 
-	public void setPerson(String person) {
-		this.person = person;
-	}
+    public void setPerson(String person) {
+        this.person = person;
+    }
 
     public String getRemark() {
-		return remark;
-	}
+        return remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Date getCrtTime() {
-		return crtTime;
-	}
+        return crtTime;
+    }
 
-	public void setCrtTime(Date crtTime) {
-		this.crtTime = crtTime;
-	}
+    public void setCrtTime(Date crtTime) {
+        this.crtTime = crtTime;
+    }
 
     public Integer getCrtId() {
-		return crtId;
-	}
+        return crtId;
+    }
 
-	public void setCrtId(Integer crtId) {
-		this.crtId = crtId;
-	}
+    public void setCrtId(Integer crtId) {
+        this.crtId = crtId;
+    }
 
     public String getAddress() {
-		return address;
-	}
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public Integer getCountry() {
-		return country;
-	}
+        return country;
+    }
 
-	public void setCountry(Integer country) {
-		this.country = country;
-	}
+    public void setCountry(Integer country) {
+        this.country = country;
+    }
 
     public Integer getProvince() {
-		return province;
-	}
+        return province;
+    }
 
-	public void setProvince(Integer province) {
-		this.province = province;
-	}
+    public void setProvince(Integer province) {
+        this.province = province;
+    }
 
     public Integer getCity() {
-		return city;
-	}
+        return city;
+    }
 
-	public void setCity(Integer city) {
-		this.city = city;
-	}
+    public void setCity(Integer city) {
+        this.city = city;
+    }
 
     public Double getLongitude() {
-		return longitude;
-	}
+        return longitude;
+    }
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
     public Double getLatitude() {
-		return latitude;
-	}
+        return latitude;
+    }
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
 
     public Integer getEnable() {
-		return enable;
-	}
+        return enable;
+    }
 
-	public void setEnable(Integer enable) {
-		this.enable = enable;
-	}
+    public void setEnable(Integer enable) {
+        this.enable = enable;
+    }
 
     public Integer getIssync() {
-		return issync;
-	}
+        return issync;
+    }
 
-	public void setIssync(Integer issync) {
-		this.issync = issync;
-	}
+    public void setIssync(Integer issync) {
+        this.issync = issync;
+    }
 
     public String getLevel() {
-		return level;
-	}
+        return level;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
 }

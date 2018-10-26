@@ -14,7 +14,9 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_agent")
 public class Agent implements Serializable {
-
+    public static final int TYPE_ENABLE = 1;
+    public static final int TYPE_FORBIDDEN = 2;
+    public static final int TYPE_DELETE = 0;
     /**
      * 主键
      * <p>

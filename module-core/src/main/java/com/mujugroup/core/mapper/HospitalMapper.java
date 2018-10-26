@@ -151,7 +151,8 @@ public interface HospitalMapper {
             , @Result(column = "level", property = "level", javaType = String.class)
 
     })
-    List<ListVo> findAll(@Param(value = "aid") int aid, @Param(value = "name") String name, @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId);
+    List<ListVo> findAll(@Param(value = "aid") int aid, @Param(value = "name") String name
+            , @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId,@Param(value = "enable") int enable);
 
     @Select("SELECT id,`name` FROM t_hospital WHERE `enable` = 22")
     @ResultMap(value = "hospitalList")

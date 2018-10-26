@@ -112,9 +112,12 @@ public class AgentController {
 
     @ApiOperation(value = "代理商列表", notes = "可通过名称模糊匹配")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String findAgentList(@ApiParam(hidden = true) String uid, @ApiParam(value = "name") @RequestParam(value = "name", required = false, defaultValue = "") String name) {
+    public String findAgentList(@ApiParam(hidden = true) String uid
+            , @ApiParam(value = "name") @RequestParam(value = "name", required = false, defaultValue = "") String name
+            , @ApiParam(value = "enable") @RequestParam(value = "enable", required = false, defaultValue = "0") int enable
+    ) {
         try {
-            List<Agent> agentList = agentService.findAll(uid, name);
+            List<Agent> agentList = agentService.findAll(uid, name,enable);
             if (agentList != null && agentList.size() > 0) {
                 return ResultUtil.success(agentList);
             } else {

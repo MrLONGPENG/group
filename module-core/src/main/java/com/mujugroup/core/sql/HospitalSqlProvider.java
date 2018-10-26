@@ -65,6 +65,7 @@ public class HospitalSqlProvider {
     }
 
 
+
     public String getHospitalList(@Param("aid") int aid, @Param("name") String name) {
         return new SQL() {{
             SELECT("id, name");
@@ -76,7 +77,11 @@ public class HospitalSqlProvider {
         }}.toString();
     }
 
-    public String findAll(@Param(value = "aid") int aid, @Param(value = "name") String name, @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId) {
+
+
+    public String findAll(@Param(value = "aid") int aid, @Param(value = "name") String name
+            , @Param(value = "provinceId") int provinceId, @Param(value = "cityId") int cityId
+            , @Param(value = "enable") int enable) {
         return new SQL() {{
             SELECT("h.id,a.id AS aid,h.name,a.name AS aName, p.name AS provinceName" +
                     ", c.name  AS cityName,tel,person,h.remark,h.crtTime ,address,h.enable,h.level" +
@@ -84,6 +89,8 @@ public class HospitalSqlProvider {
             FROM("t_hospital h,t_agent a, t_country_province_city p, t_country_province_city c");
             WHERE("h.province = p.id AND h.city = c.id  AND h.agentId=a.id");
             if (aid != 0) AND().WHERE(" h.agentId = #{aid}");
+            if (enable != 0) AND().WHERE("h.enable = #{enable}");
+            else WHERE("h.enable =22");
             if (provinceId != 0) AND().WHERE("h.province = #{provinceId}");
             if (cityId != 0) AND().WHERE("h.city = #{cityId}");
             if (!StringUtil.isEmpty(name)) {

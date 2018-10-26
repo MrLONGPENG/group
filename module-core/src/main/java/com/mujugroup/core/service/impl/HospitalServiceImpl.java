@@ -7,6 +7,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
+import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
@@ -14,6 +15,7 @@ import com.mujugroup.core.objeck.vo.hospital.AddVo;
 import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.objeck.vo.hospital.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.HospitalService;
 import ma.glasnost.orika.MapperFactory;
@@ -33,15 +35,17 @@ public class HospitalServiceImpl implements HospitalService {
     private final MapperFactory mapperFactory;
     private final DepartmentMapper departmentMapper;
     private final AuthDataService authDataService;
+    private final AgentService agentService;
 
 
     @Autowired
     public HospitalServiceImpl(HospitalMapper hospitalMapper, MapperFactory mapperFactory
-            , DepartmentMapper departmentMapper, AuthDataService authDataService) {
+            , DepartmentMapper departmentMapper, AuthDataService authDataService, AgentService agentService) {
         this.hospitalMapper = hospitalMapper;
         this.mapperFactory = mapperFactory;
         this.departmentMapper = departmentMapper;
         this.authDataService = authDataService;
+        this.agentService = agentService;
     }
 
 
@@ -82,11 +86,11 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws DataException {
+    public List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId,int enable) throws DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
-        return hospitalMapper.findAll(aid, name, provinceId, cityId);
+        return hospitalMapper.findAll(aid, name, provinceId, cityId,enable);
     }
 
     @Override
@@ -113,7 +117,9 @@ public class HospitalServiceImpl implements HospitalService {
                     if (departmentList != null && departmentList.size() > 0) {
                         throw new ParamException("该医院下存在科室,无法进行删除");
                     } else {
-                        return hospitalMapper.deleteById(Integer.parseInt(hid));
+                        //变更医院的状态为删除状态
+                        model.setEnable(Hospital.TYPE_DELETE);
+                        return hospitalMapper.update(model);
                     }
                 }
             }
@@ -183,8 +189,8 @@ public class HospitalServiceImpl implements HospitalService {
     private boolean addFunc(AddVo addVo, int uid) throws ParamException {
         if (!StringUtil.isNumeric(addVo.getAid())) throw new ParamException("代理商选择有误");
         if (getProvinceCity(addVo.getCid(), addVo.getPid()) <= 0) throw new ParamException("请选择正确的省市");
-        List<Hospital> hospitalList = findListByAid(String.valueOf(addVo.getAid()));
-        if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("请选择正确的代理商");
+        Agent agent=agentService.findById(Integer.parseInt(addVo.getAid()));
+        if (agent == null) throw new ParamException("请选择正确的代理商");
         if (isExitsName(addVo.getAid(), addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         Hospital hospital = hospitalVoToHospital(addVo, AddVo.class);
         hospital.setCountry(0);
@@ -202,7 +208,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> getHospitalList(int uid, int aid, String name) {
+    public List<SelectVO> getHospitalList(int aid, String name) {
         return hospitalMapper.getHospitalList(aid, name);
     }
 

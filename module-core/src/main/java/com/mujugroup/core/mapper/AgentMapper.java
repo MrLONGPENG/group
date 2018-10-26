@@ -83,5 +83,5 @@ public interface AgentMapper {
 
     @SelectProvider(type = AgentSqlProvider.class,method = "findAll")
     @ResultMap("agent")
-    List<Agent> findAll(@Param(value = "name") String name);
+    List<Agent> findAll(@Param(value = "name") String name,@Param(value = "enable")int enable);
 }

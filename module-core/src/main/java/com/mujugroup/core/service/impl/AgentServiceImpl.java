@@ -55,10 +55,12 @@ public class AgentServiceImpl implements AgentService {
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限,暂无法进行代理商删除操作");
         if (StringUtil.isEmpty(id)) throw new ParamException("代理商编号不能为空!");
         if (!StringUtil.isNumeric(id)) throw new ParamException("代理商编号必须为数字!");
-        if (agentMapper.findById(Integer.parseInt(id)) == null) throw new ParamException("要删除的代理商不存在,请重新选择");
+        Agent agent = agentMapper.findById(Integer.parseInt(id));
+        if (agent == null) throw new ParamException("要删除的代理商不存在,请重新选择");
         if (exist(Integer.parseInt(id)) == true) throw new ParamException("该代理商下存在相应的医院，无法进行删除!");
-        boolean result = agentMapper.deleteById(Integer.parseInt(id));
-        return result;
+        //将当前代理商状态设置为删除状态
+        agent.setEnable(Agent.TYPE_DELETE);
+        return agentMapper.update(agent);
     }
 
     @Override
@@ -100,13 +102,13 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<Agent> findAll(String uid, String name) throws ParamException, DataException {
+    public List<Agent> findAll(String uid, String name,int enable) throws ParamException, DataException {
         if (StringUtil.isEmpty(uid)) throw new ParamException("用户编号不能为空");
         if (!StringUtil.isNumeric(uid)) throw new ParamException("用户编号必须为数字");
         Map<String, String> map = authDataService.getAuthDataByUid(Integer.parseInt(uid));
         if (map.size() == 0) throw new DataException("当前用户无数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限,暂无法进行查看");
-        return agentMapper.findAll(name);
+        return agentMapper.findAll(name,enable);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.mujugroup.core.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -46,11 +48,9 @@ public class HospitalController {
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(value = "代理商ID") @RequestParam(name = "aid", required = false, defaultValue = "0") int aid
             , @ApiParam(value = "模糊名字") @RequestParam(name = "name", required = false) String name, @ApiParam(hidden = true) int uid) {
-        Map<String,String> map= authDataService.getAuthDataByUid(uid);
-        if (map.containsKey(CoreConfig.AUTH_DATA_ALL)){
-            return ResultUtil.success(hospitalService.selectAll());
-        }
-        if (aid == -1) {
+        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        if(map.size() == 0 ) return ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY);
+        if (aid == -1 ) {
             return ResultUtil.success(hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL, uid));
         } else if (aid == 0) {
             List<SelectVO> allList = hospitalService.getHospitalListByUid(CoreConfig.AUTH_DATA_HOSPITAL, uid);
@@ -60,10 +60,20 @@ public class HospitalController {
             } else {
                 allList = secList;
             }
-            if (allList != null && allList.size() > 0) return ResultUtil.success(allList);
+            if (allList != null && allList.size() > 0) {
+                return ResultUtil.success(allList);
+            } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+                return ResultUtil.success(hospitalService.selectAll());
+            }
+        }else{ // aid > 0
+            if (map.containsKey(CoreConfig.AUTH_DATA_ALL)|| (map.containsKey(CoreConfig.AUTH_DATA_AGENT)
+                    && Arrays.asList(map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO)).contains(aid))) {
+                List<SelectVO> list = hospitalService.getHospitalList(aid, name);
+                if (list != null) return ResultUtil.success(list);
+            }else{
+                return ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY);
+            }
         }
-        List<SelectVO> list = hospitalService.getHospitalList(uid, aid, name);
-        if (list != null) return ResultUtil.success(list);
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
@@ -107,10 +117,10 @@ public class HospitalController {
             , @ApiParam(value = "医院名称") @RequestParam(value = "name", required = false, defaultValue = "") String name
             , @ApiParam(value = "省份编号") @RequestParam(value = "provinceId", required = false, defaultValue = "0") int provinceId
             , @ApiParam(value = "城市编号") @RequestParam(value = "cityId", required = false, defaultValue = "0") int cityId
+            , @ApiParam(value = "医院状态") @RequestParam(value = "enable", required = false, defaultValue = "0") int enable
     ) throws BaseException {
-
         PageHelper.startPage(pageNum, pageSize);
-        List<ListVo> list = hospitalService.findAll(uid, aid, name, provinceId, cityId);
+        List<ListVo> list = hospitalService.findAll(uid, aid, name, provinceId, cityId, enable);
         if (list != null && list.size() > 0) {
             return ResultUtil.success(list, PageInfo.of(list));
         } else {

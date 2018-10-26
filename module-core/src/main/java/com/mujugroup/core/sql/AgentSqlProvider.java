@@ -36,12 +36,16 @@ public class AgentSqlProvider {
         }}.toString();
     }
 
-    public String findAll(@Param(value = "name") String name) {
+    public String findAll(@Param(value = "name") String name, @Param(value = "enable") int enable) {
         return new SQL() {{
             SELECT("*");
             FROM("t_agent");
-            WHERE("`enable`=1");
-            if (!StringUtil.isEmpty(name)){
+            if (enable != 0) {
+                WHERE("`enable`= #{enable}");
+            } else {
+                WHERE("`enable`=1");
+            }
+            if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("name like concat(concat('%',#{name}),'%')");
             }
         }}.toString();

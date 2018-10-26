@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface HospitalService {
 
-    List<SelectVO> getHospitalList(int uid, int aid, String name);
+    List<SelectVO> getHospitalList(int aid, String name);
 
     List<SelectVO> getHospitalListByUid(String type, long uid);
 
@@ -40,7 +40,9 @@ public interface HospitalService {
 
     Integer isExitsName(String aid, String name);
 
-    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId) throws DataException;
+    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId, int enable) throws DataException;
 
     List<SelectVO> selectAll();
+
+
 }
