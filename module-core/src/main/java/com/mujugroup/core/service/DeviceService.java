@@ -6,14 +6,14 @@ import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
-import com.mujugroup.core.objeck.vo.device.DeviceVo;
+import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 
 import java.util.List;
 
 
 public interface DeviceService {
-    boolean insert(int uid, DeviceVo deviceVo) throws ParamException;
+    boolean insert(int uid, AddVo deviceVo) throws ParamException;
 
     DeviceBean findDeviceBeanByDid(String did);
 

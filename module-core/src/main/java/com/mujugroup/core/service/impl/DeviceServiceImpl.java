@@ -1,19 +1,18 @@
 package com.mujugroup.core.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
-
 import com.lveqia.cloud.common.exception.ParamException;
-
+import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
+import com.mujugroup.core.mapper.BeanMapper;
+import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
+import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
-import com.mujugroup.core.mapper.BeanMapper;
-import com.mujugroup.core.mapper.DeviceMapper;
-import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.vo.device.DeviceVo;
+import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
 import ma.glasnost.orika.MapperFactory;
@@ -42,42 +41,42 @@ public class DeviceServiceImpl implements DeviceService {
         this.mapperFactory = mapperFactory;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public boolean delete(String id) throws ParamException {
         if (StringUtil.isEmpty(id)) throw new ParamException("设备编号不能为空");
         if (!StringUtil.isNumeric(id)) throw new ParamException("设备编号必须为数字");
         Device device = deviceMapper.findById(Integer.parseInt(id));
-        if (device == null) {
-            throw new ParamException("当前设备不存在,请重新选择");
-        }
+        if (device == null) throw new ParamException("当前设备不存在,请重新选择");
         device.setStatus(Device.TYPE_DELETE);
         return deviceMapper.update(device);
     }
 
-    @Transactional
+
     @Override
-    public boolean modifyDevice(int uid, PutVo devicePutVo) throws ParamException {
-        if (devicePutVo.getId() == null) throw new ParamException("设备编号不能为空");
-        Device device = deviceMapper.findById(devicePutVo.getId());
-        if (device == null) {
-            throw new ParamException("当前设备不存在,请重新选择");
-        }
-        if (devicePutVo.getAid() == null) throw new ParamException("请选择代理商");
-        if (devicePutVo.getHid() == null) throw new ParamException("请选择医院");
-        if (devicePutVo.getOid() == null) throw new ParamException("请选择科室");
-        if (StringUtil.isEmpty(devicePutVo.getBed())) throw new ParamException("请输入床位信息");
-        if (devicePutVo.getStatus() == null) throw new ParamException("请选择设备状态");
-        if (devicePutVo.getRun() == null) throw new ParamException("请选择是否为商用");
-        if (devicePutVo.getBell() == null) throw new ParamException("请选择是否响铃");
-        //将VO对象转为实体对象
-        Device model = deviceVoToDevice(devicePutVo, PutVo.class);
-        if ((!device.getAgentId().equals(devicePutVo.getAid())) || (!device.getHospitalId().equals(devicePutVo.getHid())) || (!device.getDepart().equals(devicePutVo.getOid()))) {
+    @Transactional
+    public boolean modifyDevice(int uid, PutVo putVo) throws ParamException {
+        Device device = deviceMapper.findById(putVo.getId());
+        if (device == null) throw new ParamException("当前设备不存在,请重新选择");
+        if (device.getStatus() == Device.TYPE_DELETE) throw new ParamException("已经删除设备无法修改,请重新选择");
+
+        Device model = deviceVoToDevice(putVo, PutVo.class);   //将VO对象转为实体对象
+        if ((putVo.getAid() != null && !putVo.getAid().equals(device.getAgentId()))
+                || (putVo.getHid() != null && !putVo.getHid().equals(device.getHospitalId()))
+                || (putVo.getOid() != null && !putVo.getOid().equals(model.getDepart()))) {
             //将原有数据的状态设置为删除状态
+            Date lastTime = deviceMapper.findLastDeleteTime(device.getDid(), Device.TYPE_DELETE);
+            if(lastTime != null && lastTime.getTime()/1000 > DateUtil.getTimesMorning()){
+                throw new ParamException("该设备当天已修改过代理商、医院或科室信息，无法再次修改");
+            }
+            device.setUpdateTime(new Date());
             device.setStatus(Device.TYPE_DELETE);
+            Device entity = bindDevice(uid, model, device);
+            if(getAidOid(entity.getHospitalId(), entity.getDepart()) != entity.getAgentId()){
+               throw  new ParamException("代理商与医院或科室编号有误,请重新输入");
+            }
             //更新原有数据
             boolean result = deviceMapper.update(device);
-            Device entity = bindDevice(uid, model, device);
             result &= deviceMapper.insert(entity);
             return result;
         } else {
@@ -86,42 +85,32 @@ public class DeviceServiceImpl implements DeviceService {
             return deviceMapper.update(model);
         }
     }
-
     private Device bindDevice(int uid, Device model, Device device) {
         Device entity = new Device();
         entity.setDid(device.getDid());
         entity.setBid(device.getBid());
-        entity.setHospitalBed(model.getHospitalBed());
-        //设为启用状态
-        entity.setStatus(Device.TYPE_ENABLE);
-        //进行添加操作,该数据记录的创建时间
-        entity.setCrtTime(new Date());
-        //进行添加操作,该数据记录的更新时间
-        entity.setUpdateTime(entity.getCrtTime());
         entity.setCrtId(uid);
         entity.setUpdateId(uid);
-        //设置代理商
-        entity.setAgentId(model.getAgentId());
-        //设置医院
-        entity.setHospitalId(model.getHospitalId());
-        //设置科室
-        entity.setDepart(model.getDepart());
+        entity.setCrtTime(new Date());                //进行添加操作,该数据记录的创建时间
+        entity.setUpdateTime(entity.getCrtTime());    //进行添加操作,该数据记录的更新时间
+        entity.setStatus(model.getStatus() == null ? device.getStatus() : model.getStatus());
+        entity.setAgentId(model.getAgentId()== null ? device.getAgentId() : model.getAgentId());
+        entity.setHospitalId(model.getHospitalId() == null ? device.getHospitalId() : model.getHospitalId());
+        entity.setDepart(model.getDepart() == null ? device.getDepart(): model.getDepart());
+        entity.setRun(model.getRun() == null ? device.getRun() : model.getRun());
+        entity.setBell(model.getBell() == null ? device.getBell() : model.getBell());
         entity.setRemark(model.getRemark() == null ? device.getRemark() : model.getRemark());
-        entity.setRun(model.getRun() == null ? (device.getRun() == null ? 0 : device.getRun()) : model.getRun());
-        entity.setBell(model.getBell() == null ? (device.getBell() == null ? 0 : device.getBell()) : model.getBell());
+        entity.setHospitalBed(model.getHospitalBed() == null ? device.getHospitalBed() : model.getHospitalBed());
         return entity;
     }
 
-    @Transactional
+
     @Override
-    public boolean insert(int uid, DeviceVo vo) throws ParamException {
-        if (!StringUtil.isNumeric(vo.getDid()) || vo.getDid().length() != 9) throw new ParamException("无效DID编号");
-        if (!StringUtil.isNumeric(vo.getBid()) || vo.getBid().length() != 19) throw new ParamException("无效BID编号");
+    @Transactional
+    public boolean insert(int uid, AddVo vo) throws ParamException {
         if (deviceMapper.isExistDid(vo.getDid()) > 0) throw new ParamException("该DID已存在,无法重复激活");
         if (deviceMapper.isExistBid(vo.getBid()) > 0) throw new ParamException("该BID已存在,无法重复激活");
-        if (vo.getHid() == null) throw new ParamException("请选择医院");
-        if (vo.getOid() == null) throw new ParamException("请选择科室");
-        Device device = deviceVoToDevice(vo, DeviceVo.class);
+        Device device = deviceVoToDevice(vo, AddVo.class);
         device.setAgentId(getAidOid(vo.getHid(), vo.getOid()));
         device.setCrtId(uid);
         device.setUpdateId(uid);

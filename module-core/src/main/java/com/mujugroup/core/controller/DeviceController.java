@@ -7,7 +7,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
-import com.mujugroup.core.objeck.vo.device.DeviceVo;
+import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
 import io.swagger.annotations.Api;
@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,43 +63,34 @@ public class DeviceController {
 
     @ApiOperation(value = "设备激活", notes = "设备激活")
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public String activation(@ApiParam(hidden = true) int uid, @ModelAttribute DeviceVo deviceVo) {
-        try {
-            if (deviceService.insert(uid, deviceVo)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String activation(@ApiParam(hidden = true) int uid, @Validated @ModelAttribute AddVo deviceVo)
+            throws ParamException {
+        if (deviceService.insert(uid, deviceVo)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 
     @ApiOperation(value = "编辑设备信息", notes = "编辑设备信息")
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
-    public String modifyDevice(@ApiParam(hidden = true) int uid, @ModelAttribute PutVo devicePutVo) {
-        try {
-            if (deviceService.modifyDevice(uid,devicePutVo)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String modifyDevice(@ApiParam(hidden = true) int uid, @Validated @ModelAttribute PutVo devicePutVo)
+            throws ParamException {
+        if (deviceService.modifyDevice(uid,devicePutVo)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 
     @ApiOperation(value = "删除设备", notes = "删除设备")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public String deleteDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id) {
-        try {
-            if (deviceService.delete(id)) {
-                return ResultUtil.success();
-            } else {
-                return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
-            }
-        } catch (ParamException e) {
-            return ResultUtil.error(e.getCode(), e.getMessage());
+    public String deleteDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id)
+        throws ParamException {
+        if (deviceService.delete(id)) {
+            return ResultUtil.success();
+        } else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }
 }

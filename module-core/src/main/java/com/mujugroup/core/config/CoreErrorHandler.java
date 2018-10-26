@@ -14,6 +14,6 @@ public class CoreErrorHandler extends ErrorHandler {
     @Override
     protected String otherErrorHandler(Exception exception) {
         logger.error("CoreErrorHandler find error {}", exception);
-        return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL);
+        return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }
 }
