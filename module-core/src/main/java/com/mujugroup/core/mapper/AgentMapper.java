@@ -35,7 +35,7 @@ public interface AgentMapper {
             , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
             , @Result(column = "enable", property = "enable", javaType = Integer.class)
     })
-    Agent findById(Integer id);
+    Agent findById( @Param(value = "id") Integer id);
 
     @Select("SELECT * FROM t_agent")
     @ResultMap("agent")

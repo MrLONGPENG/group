@@ -81,8 +81,8 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Integer isExitsName(String aid, String name) {
-        return hospitalMapper.isExitsName(aid, name);
+    public Integer isExitsName(String name) {
+        return hospitalMapper.isExitsName(name);
     }
 
     @Override
@@ -154,12 +154,19 @@ public class HospitalServiceImpl implements HospitalService {
     private boolean modifyFunc(PutVo hospitalPutVo) throws ParamException {
         Hospital model = hospitalMapper.findById(hospitalPutVo.getId());
         if (model == null) throw new ParamException("要修改的医院不存在,请重新选择");
-        if (isExitsName(hospitalPutVo.getAid(), hospitalPutVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
-        List<Hospital> hospitalList = findListByAid(String.valueOf(hospitalPutVo.getAid()));
-        if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("该代理商不存在");
-        if (!hospitalPutVo.getAid().equals(model.getAgentId())) {
-            throw new ParamException("暂不支持代理商的变更");
+        if (model.getName()!=null&&hospitalPutVo.getName()!=null){
+            if (!model.getName().equals(hospitalPutVo.getName())){
+                if (isExitsName(hospitalPutVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
+            }
         }
+        if (!StringUtil.isEmpty(hospitalPutVo.getAid())){
+            List<Hospital> hospitalList = findListByAid(String.valueOf(hospitalPutVo.getAid()));
+            if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("该代理商不存在");
+            if (!hospitalPutVo.getAid().equals(model.getAgentId())) {
+                throw new ParamException("暂不支持代理商的变更");
+            }
+        }
+
         Hospital hospital = hospitalVoToHospital(hospitalPutVo, PutVo.class);
         return hospitalMapper.update(hospital);
     }
@@ -191,13 +198,13 @@ public class HospitalServiceImpl implements HospitalService {
         if (getProvinceCity(addVo.getCid(), addVo.getPid()) <= 0) throw new ParamException("请选择正确的省市");
         Agent agent=agentService.findById(Integer.parseInt(addVo.getAid()));
         if (agent == null) throw new ParamException("请选择正确的代理商");
-        if (isExitsName(addVo.getAid(), addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
+        if (isExitsName(addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         Hospital hospital = hospitalVoToHospital(addVo, AddVo.class);
         hospital.setCountry(0);
         hospital.setProvince(addVo.getPid());
         hospital.setCity(addVo.getCid());
         hospital.setCrtId(uid);
-        hospital.setEnable(22);
+        hospital.setEnable(Hospital.TYPE_ENABLE);
         hospital.setCrtTime(new Date());
         return hospitalMapper.insert(hospital);
     }

@@ -128,9 +128,9 @@ public interface HospitalMapper {
             " AND c.id=#{cid} AND p.id=#{pid}")
     Integer getProvinceCity(@Param(value = "cid") int cid, @Param(value = "pid") int pid);
 
-    @Select("Select COUNT(*) from t_hospital where agentId=#{aid} AND `name`=#{name}")
+    @Select("Select COUNT(*) from t_hospital where `name`=#{name}")
     @ResultType(Integer.class)
-    Integer isExitsName(@Param(value = "aid") String aid, @Param(value = "name") String name);
+    Integer isExitsName(@Param(value = "name") String name);
 
     @SelectProvider(type = HospitalSqlProvider.class, method = "findAll")
     @Results(id = "listVo", value = {

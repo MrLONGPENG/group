@@ -8,16 +8,17 @@ import lombok.NonNull;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
+
 @Data
 @ApiModel(value = "PutVo", description = "医院编辑Vo")
 public class PutVo implements Serializable {
     @NonNull
-    @ApiModelProperty(value = "id", notes = "医院编号",required = true)
+    @ApiModelProperty(value = "id", notes = "医院编号", required = true)
     private Integer id;
     @NotBlank(message = "医院名称不能为空")
     @ApiModelProperty(value = "name", notes = "医院名称")
     private String name;
-    @NotBlank(message = "代理商编号不能为空")
+
     @ApiModelProperty(value = "aid", notes = "代理商编号")
     private String aid;
     @ApiModelProperty(value = "tel", notes = "电话")
@@ -34,10 +35,10 @@ public class PutVo implements Serializable {
     private String address;
     @ApiModelProperty(value = "country", notes = "国家")
     private Integer country;
-    @NonNull
+
     @ApiModelProperty(value = "pid", notes = "省份ID")
     private Integer pid;
-    @NonNull
+
     @ApiModelProperty(value = "cid", notes = "城市ID")
     private Integer cid;
     @ApiModelProperty(value = "enable", notes = "医院状态 22 启用 23 禁用 17 删除")

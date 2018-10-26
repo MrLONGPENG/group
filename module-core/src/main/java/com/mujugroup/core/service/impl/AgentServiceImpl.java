@@ -80,13 +80,16 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public boolean updateAgent(String uid, PutVo agentPutVo) throws ParamException, DataException {
-        if (StringUtil.isEmpty(uid)) throw new ParamException("用户编号不能为空");
-        if (!StringUtil.isNumeric(uid)) throw new ParamException("用户编号必须为数字");
         Map<String, String> map = authDataService.getAuthDataByUid(Integer.parseInt(uid));
         if (map.size() == 0) throw new DataException("当前用户无数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限,暂无法进行代理商编辑操作");
-        if (agentMapper.findById(agentPutVo.getId()) == null) throw new ParamException("要修改的代理商不存在,请重新选择");
-        if (agentMapper.isExistName(agentPutVo.getName()) > 0) throw new ParamException("该代理商名称已存在,请重新输入");
+        Agent model=agentMapper.findById(agentPutVo.getId());
+        if (model == null) throw new ParamException("要修改的代理商不存在,请重新选择");
+        if (model.getName()!=null&&agentPutVo.getName()!=null){
+            if (!model.getName().equals(agentPutVo.getName())){
+                if (agentMapper.isExistName(agentPutVo.getName()) > 0) throw new ParamException("该代理商名称已存在,请重新输入");
+            }
+        }
         Agent agent = agentVoToAgent(agentPutVo, PutVo.class);
         return agentMapper.update(agent);
     }

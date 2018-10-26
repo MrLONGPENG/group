@@ -38,7 +38,7 @@ public interface HospitalService {
 
     Integer getProvinceCity(int cid, int pid);
 
-    Integer isExitsName(String aid, String name);
+    Integer isExitsName(String name);
 
     List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId, int enable) throws DataException;
 
