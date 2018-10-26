@@ -1,13 +1,15 @@
 -- ----------------------------
 -- table device
 -- ----------------------------
-ALTER TABLE device.t_device CHANGE mac did varchar(30) COMMENT '二维码业务ID' ;
-ALTER TABLE device.t_device CHANGE code bid varchar(30) COMMENT '锁ID';
-ALTER TABLE device.t_device CHANGE pay bell int(3) COMMENT '是否响铃';
-ALTER TABLE  device.t_device drop  column reserve_date;
-ALTER TABLE  device.t_device drop  column imgUrl;
-ALTER TABLE  device.t_device drop  column station_id;
-ALTER TABLE  device.t_device drop  column is_station;
+ALTER TABLE t_device CHANGE mac did varchar(30) COMMENT '二维码业务ID' ;
+ALTER TABLE t_device CHANGE code bid varchar(30) COMMENT '锁ID';
+ALTER TABLE t_device CHANGE pay bell int(3) COMMENT '是否响铃';
+ALTER TABLE  t_device drop  column reserve_date;
+ALTER TABLE  t_device drop  column imgUrl;
+ALTER TABLE  t_device drop  column station_id;
+ALTER TABLE  t_device drop  column is_station;
+ALTER TABLE t_device ALTER COLUMN bell DROP DEFAULT;
+ALTER TABLE t_device ALTER COLUMN bell SET DEFAULT '0'
 -- ----------------------------
 -- table department
 -- ----------------------------
@@ -27,3 +29,4 @@ CREATE TABLE `t_dict_department` (
   `update_time` datetime DEFAULT NULL COMMENT '更新者时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='科室字典表';
+

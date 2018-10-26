@@ -15,7 +15,7 @@ CREATE TABLE `t_device` (
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',
   `depart` int(11) DEFAULT NULL COMMENT '科室（t_department）ID',
   `bid` varchar(30) DEFAULT NULL COMMENT '锁ID',
-  `bell` int(3) DEFAULT NULL COMMENT '是否响铃',
+  `bell` int(3) DEFAULT '0' COMMENT '是否响铃',
   `run` int(2) DEFAULT '0' COMMENT '商用',
   `update_id` int(11) DEFAULT NULL COMMENT '修改人ID',
   `update_time` datetime DEFAULT NULL,

@@ -53,7 +53,7 @@ public class BellTask {
 
     private void onDevice(int currTime, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Device> list = deviceService.findListByStatus(14);
+        List<Device> list = deviceService.findListByStatus(Device.TYPE_ENABLE);
         if (list == null) return;
         PageInfo pageInfo = PageInfo.of(list);
         StringBuilder key = new StringBuilder();
