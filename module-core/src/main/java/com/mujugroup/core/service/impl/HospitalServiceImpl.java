@@ -1,5 +1,6 @@
 package com.mujugroup.core.service.impl;
 
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
@@ -96,11 +97,11 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public boolean remove(int uid, String hid) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
-        String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
         //判断当前用户有无数据权限
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         //如果当前用户没有最高数据权限只有代理商分权限
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
             Hospital model = hospitalMapper.findById(Integer.parseInt(hid));
             if (model == null) {
                 throw new ParamException("要删除的医院不存在,请重新选择");
@@ -126,11 +127,11 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public boolean modify(int uid, PutVo hospitalPutVo) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
-        String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
         //判断当前用户有无数据权限
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         //如果当前用户没有最高数据权限只有代理商分权限
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
             if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospitalPutVo.getAid()))) {
                 throw new DataException("当前医院所属代理商无权限,暂无法进行修改医院的操作");
             } else {
@@ -160,11 +161,11 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public boolean add(int uid, AddVo addVo) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
-        String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(",");
         //判断当前用户有无数据权限
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         //如果当前用户没有最高数据权限只有代理商分权限
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
             //进行医院所属代理商的权限校验
             if (Arrays.stream(strArray).noneMatch(s -> s.equals(addVo.getAid()))) {
                 throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
