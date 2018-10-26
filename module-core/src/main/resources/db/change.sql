@@ -1,19 +1,26 @@
 -- ----------------------------
 -- table device
 -- ----------------------------
-ALTER TABLE t_device CHANGE mac did varchar(30) COMMENT '二维码业务ID' ;
-ALTER TABLE t_device CHANGE code bid varchar(30) COMMENT '锁ID';
-ALTER TABLE t_device CHANGE pay bell int(3) COMMENT '是否响铃';
-ALTER TABLE  t_device drop  column reserve_date;
-ALTER TABLE  t_device drop  column imgUrl;
-ALTER TABLE  t_device drop  column station_id;
-ALTER TABLE  t_device drop  column is_station;
-ALTER TABLE t_device ALTER COLUMN bell DROP DEFAULT;
-ALTER TABLE t_device ALTER COLUMN bell SET DEFAULT '0'
+alter table t_device modify column crtTime timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
+alter table t_device modify column update_time datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE t_device CHANGE mac did varchar(30) DEFAULT NULL COMMENT '二维码业务ID' ;
+ALTER TABLE t_device CHANGE code bid varchar(30) DEFAULT NULL COMMENT '锁设备ID';
+ALTER TABLE t_device CHANGE pay bell tinyint(4) DEFAULT '0' COMMENT '是否响铃 0 响铃 其他不响';
+ALTER TABLE t_device drop  column reserve_date;
+ALTER TABLE t_device drop  column imgUrl;
+ALTER TABLE t_device drop  column station_id;
+ALTER TABLE t_device drop  column is_station;
+-- 保证重新修改
+ALTER TABLE t_device CHANGE did did varchar(30) DEFAULT NULL COMMENT '二维码业务ID' ;
+ALTER TABLE t_device CHANGE bid bid varchar(30) DEFAULT NULL COMMENT '锁设备ID';
+ALTER TABLE t_device CHANGE bell bell tinyint(4) DEFAULT '0' COMMENT '是否响铃 0 响铃 其他不响';
+-- 新增类型更换
+ALTER TABLE t_device CHANGE status status tinyint(4) DEFAULT NULL COMMENT '状态 14 启用 15禁用 16 借出 17 删除';
+ALTER TABLE t_device CHANGE useflag useflag tinyint(4) DEFAULT '20' COMMENT '使用状态 19 使用 20 闲置';
 -- ----------------------------
 -- table department
 -- ----------------------------
-ALTER TABLE device.t_department CHANGE aihui_depart_id  mid int(11) DEFAULT '0' COMMENT '木巨科室Id 对应t_dict_department表'
+ALTER TABLE t_department CHANGE aihui_depart_id  mid int(11) DEFAULT '0' COMMENT '木巨科室Id 对应t_dict_department表';
 -- ----------------------------
 -- table t_dict_department
 -- ----------------------------

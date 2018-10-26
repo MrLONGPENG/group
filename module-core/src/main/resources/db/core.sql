@@ -5,24 +5,24 @@ DROP TABLE IF EXISTS `t_device`;
 CREATE TABLE `t_device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `did` varchar(30) DEFAULT NULL COMMENT '二维码业务ID',
+  `bid` varchar(30) DEFAULT NULL COMMENT '锁设备ID',
   `agentId` int(11) DEFAULT NULL COMMENT '代理商id',
   `hospitalId` int(11) DEFAULT NULL COMMENT '医院id',
   `hospitalBed` varchar(100) DEFAULT NULL COMMENT '医院床位信息',
   `crtTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `crtId` int(11) DEFAULT NULL COMMENT '创建人',
-  `status` int(2) DEFAULT NULL COMMENT '状态 14 启用 15禁用 16 借出 17 删除',
-  `useflag` int(2) DEFAULT '20' COMMENT '使用状态 19 使用 20 闲置',
+  `status` tinyint(4) DEFAULT NULL COMMENT '状态 14 启用 15禁用 16 借出 17 删除',
+  `useflag` tinyint(4) DEFAULT '20' COMMENT '使用状态 19 使用 20 闲置',
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',
   `depart` int(11) DEFAULT NULL COMMENT '科室（t_department）ID',
-  `bid` varchar(30) DEFAULT NULL COMMENT '锁ID',
-  `bell` int(3) DEFAULT '0' COMMENT '是否响铃',
+  `bell` tinyint(4) DEFAULT '0' COMMENT '是否响铃 0 响铃 其他不响',
   `run` int(2) DEFAULT '0' COMMENT '商用',
   `update_id` int(11) DEFAULT NULL COMMENT '修改人ID',
-  `update_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `issync` int(1) DEFAULT '1' COMMENT '是否与子服务器同步，0：已同步，1：未同步',
   PRIMARY KEY (`id`),
   KEY `index_run` (`run`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='设备关联表'
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='设备关联表';
 
 
 -- ----------------------------
@@ -80,7 +80,7 @@ CREATE TABLE `t_department` (
   `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `issync` int(11) DEFAULT '1' COMMENT '是否与子服务器同步，0：已同步，1：未同步',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='科室表'
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='科室表';
 
 
 -- ----------------------------
