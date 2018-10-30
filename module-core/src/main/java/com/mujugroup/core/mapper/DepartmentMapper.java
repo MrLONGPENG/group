@@ -62,9 +62,9 @@ public interface DepartmentMapper {
     @Select("SELECT `name` FROM `t_department` WHERE `status`= 1 AND `id` = #{id}")
     String getDepartmentNameById(@Param("id") String id);
 
-    @Select("SELECT COUNT(*) FROM t_department WHERE hospital_id=#{hid} AND `name`=#{name}")
+    @Select("SELECT COUNT(*) FROM t_department WHERE `name`=#{name}")
     @ResultType(Integer.class)
-    Integer isExistName(@Param(value = "hid") String id, @Param(value = "name") String name);
+    Integer isExistName(@Param(value = "name") String name);
 
     @SelectProvider(type = DepartmentSqlProvider.class, method = "findAll")
     @Results(id = "listVo", value = {

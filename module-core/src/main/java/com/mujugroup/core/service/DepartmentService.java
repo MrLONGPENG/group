@@ -23,5 +23,5 @@ public interface DepartmentService {
 
     List<ListVo> findAll(int uid, int hid, String name);
 
-    List<SelectVO> getSelectList(int hid, String name);
+    List<SelectVO> getSelectList(int uid,int hid, String name) throws DataException;
 }
