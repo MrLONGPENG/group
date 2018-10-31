@@ -160,8 +160,8 @@ public class HospitalServiceImpl implements HospitalService {
             }
         }
         if (!StringUtil.isEmpty(hospitalPutVo.getAid())){
-            List<Hospital> hospitalList = findListByAid(String.valueOf(hospitalPutVo.getAid()));
-            if (hospitalList == null || hospitalList.size() <= 0) throw new ParamException("该代理商不存在");
+            Agent agent=agentService.findById(Integer.parseInt(hospitalPutVo.getAid()));
+            if (agent == null) throw new ParamException("请选择正确的代理商");
             if (!hospitalPutVo.getAid().equals(model.getAgentId())) {
                 throw new ParamException("暂不支持代理商的变更");
             }
