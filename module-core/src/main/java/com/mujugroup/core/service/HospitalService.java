@@ -40,7 +40,7 @@ public interface HospitalService {
 
     Integer isExitsName(String name);
 
-    List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId, int enable) throws DataException;
+    List<ListVo> findAll(int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException;
 
     List<SelectVO> selectAll();
 

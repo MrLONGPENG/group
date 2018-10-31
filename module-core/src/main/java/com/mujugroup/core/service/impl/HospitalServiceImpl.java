@@ -50,7 +50,7 @@ public class HospitalServiceImpl implements HospitalService {
 
 
     @Override
-    public List<SelectVO> getAgentHospitalListByUid(String type, long uid)  {
+    public List<SelectVO> getAgentHospitalListByUid(String type, long uid) {
         return hospitalMapper.getAgentHospitalListByUid(type, uid);
     }
 
@@ -86,11 +86,26 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<ListVo> findAll(int uid, int aid, String name, int provinceId, int cityId,int enable) throws DataException {
+    public List<ListVo> findAll(int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) throw new DataException("当前用户无最高数据权限，暂无法查看!");
-        return hospitalMapper.findAll(aid, name, provinceId, cityId,enable);
+        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
+            if (StringUtil.isEmpty(aid)||Constant.DIGIT_ZERO.equals(aid)) {
+                return hospitalMapper.findAll(map.get(CoreConfig.AUTH_DATA_AGENT), name, provinceId, cityId, enable);
+            } else {
+                String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
+                if (Arrays.stream(strArray).anyMatch(s -> s.equals(aid))) {
+                    return hospitalMapper.findAll(aid, name, provinceId, cityId, enable);
+                } else {
+                    throw new DataException("当前医院所属代理商无权限,暂无法查看");
+                }
+            }
+        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+            return hospitalMapper.findAll(aid, name, provinceId, cityId, enable);
+        } else {
+            throw new DataException("当前医院所属代理商无权限,暂无法查看");
+        }
+
     }
 
     @Override
@@ -154,13 +169,13 @@ public class HospitalServiceImpl implements HospitalService {
     private boolean modifyFunc(PutVo hospitalPutVo) throws ParamException {
         Hospital model = hospitalMapper.findById(hospitalPutVo.getId());
         if (model == null) throw new ParamException("要修改的医院不存在,请重新选择");
-        if (model.getName()!=null&&hospitalPutVo.getName()!=null){
-            if (!model.getName().equals(hospitalPutVo.getName())){
+        if (model.getName() != null && hospitalPutVo.getName() != null) {
+            if (!model.getName().equals(hospitalPutVo.getName())) {
                 if (isExitsName(hospitalPutVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
             }
         }
-        if (!StringUtil.isEmpty(hospitalPutVo.getAid())){
-            Agent agent=agentService.findById(Integer.parseInt(hospitalPutVo.getAid()));
+        if (!StringUtil.isEmpty(hospitalPutVo.getAid())) {
+            Agent agent = agentService.findById(Integer.parseInt(hospitalPutVo.getAid()));
             if (agent == null) throw new ParamException("请选择正确的代理商");
             if (!hospitalPutVo.getAid().equals(model.getAgentId())) {
                 throw new ParamException("暂不支持代理商的变更");
@@ -196,7 +211,7 @@ public class HospitalServiceImpl implements HospitalService {
     private boolean addFunc(AddVo addVo, int uid) throws ParamException {
         if (!StringUtil.isNumeric(addVo.getAid())) throw new ParamException("代理商选择有误");
         if (getProvinceCity(addVo.getCid(), addVo.getPid()) <= 0) throw new ParamException("请选择正确的省市");
-        Agent agent=agentService.findById(Integer.parseInt(addVo.getAid()));
+        Agent agent = agentService.findById(Integer.parseInt(addVo.getAid()));
         if (agent == null) throw new ParamException("请选择正确的代理商");
         if (isExitsName(addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         Hospital hospital = hospitalVoToHospital(addVo, AddVo.class);
@@ -210,7 +225,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> getHospitalListByUid(String type, long uid)  {
+    public List<SelectVO> getHospitalListByUid(String type, long uid) {
         return hospitalMapper.getHospitalListByUid(type, uid);
     }
 
