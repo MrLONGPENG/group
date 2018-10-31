@@ -16,7 +16,6 @@ public class PutVo implements Serializable {
     @ApiModelProperty(value = "status", notes = "1显示;0删除;")
     private Integer status;
     @ApiModelProperty(value = "hid", notes = "医院ID", required = true)
-    @NonNull
     private Integer hid;
     @ApiModelProperty(value = "name", notes = "科室名称", required = true)
     private String name;

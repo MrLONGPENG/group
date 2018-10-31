@@ -47,11 +47,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                 Hospital hospital = hospitalMapper.findById(Integer.parseInt(hid));
                 if (hospital == null) throw new DataException("当前科室所属医院不存在");
                 String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-                if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospital.getAgentId()))) {
-                    throw new DataException("当前医院所属代理商无权限,暂无法进行查看科室的操作");
+                if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) {
+                    return departmentMapper.findAll(hid, name);
                 } else {
+                    //校验当前医院是否拥有医院的数据权限
                     if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
-                        //校验当前医院是否拥有医院的数据权限
                         if (noHospitalPermission(map, hospital)) {
                             throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
                         } else {
@@ -61,6 +61,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                         throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
                     }
                 }
+
             }
         } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && !map.containsKey(CoreConfig.AUTH_DATA_AGENT)
                 && map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
@@ -95,8 +96,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (hospital == null) throw new DataException("当前科室所属医院不存在");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-            if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospital.getAgentId()))) {
-                throw new DataException("当前医院所属代理商无权限,暂无法进行查看科室的操作");
+            if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) {
+                return departmentMapper.getSelectList(hid, name);
             } else {
                 //校验当前医院是否拥有医院的数据权限
                 if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
@@ -108,8 +109,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                 } else {
                     throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
                 }
-
             }
+
         } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && !map.containsKey(CoreConfig.AUTH_DATA_AGENT)
                 && map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
             //校验当前医院是否拥有医院的数据权限
@@ -149,14 +150,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             //校验所选医院是否拥有相应的代理商数据权限
             String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-            if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospital.getAgentId()))) {
-                throw new DataException("当前医院所属代理商无权限,暂无法进行添加科室的操作");
-            } else if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
-                //校验当前医院是否拥有医院的数据权限
-                if (noHospitalPermission(map, hospital)) {
-                    throw new DataException("当前医院没有数据权限,暂无法进行添加科室的操作");
-                } else {
-                    return addFunc(departmentVo);
+            if (Arrays.stream(strArray).anyMatch((s -> s.equals(hospital.getAgentId())))) {
+                return addFunc(departmentVo);
+            } else {
+                if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
+                    if (noHospitalPermission(map, hospital)) {
+                        throw new DataException("当前医院没有数据权限,暂无法进行添加科室的操作");
+                    } else {
+                        return addFunc(departmentVo);
+                    }
                 }
             }
         } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && !map.containsKey(CoreConfig.AUTH_DATA_AGENT) && map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
@@ -176,7 +178,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private boolean addFunc(AddVo addVo) throws ParamException {
         Hospital hospital = hospitalMapper.findById(addVo.getHid());
         if (hospital == null) throw new ParamException("该医院不存在");
-        if (departmentMapper.isExistName(addVo.getName()) > 0)
+        if (departmentMapper.isExistName(addVo.getName(),String.valueOf(addVo.getHid())) > 0)
             throw new ParamException("该科室已存在");
         addVo.setCreateDate(new Date());
         addVo.setStatus(1);
@@ -186,11 +188,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     private boolean modifyFunc(PutVo departmentPutVo) throws ParamException {
         Department department = departmentMapper.findById(departmentPutVo.getId());
         if (department == null) throw new ParamException("该科室不存在");
+        if (departmentPutVo.getHid()==null)throw new ParamException("所属医院不能为空");
         Hospital hospital = hospitalMapper.findById(departmentPutVo.getHid());
         if (hospital == null) throw new ParamException("该医院不存在");
         if (department.getName() != null && departmentPutVo.getName() != null) {
             if (!department.getName().equals(departmentPutVo.getName())) {
-                if (departmentMapper.isExistName(departmentPutVo.getName()) > 0)
+                if (departmentMapper.isExistName(departmentPutVo.getName(),String.valueOf(departmentPutVo.getHid())) > 0)
                     throw new ParamException("科室名称已存在,请重新输入");
             }
         }
@@ -212,8 +215,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             //校验所选医院是否拥有相应的代理商数据权限
             String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-            if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospital.getAgentId()))) {
-                throw new DataException("当前医院所属代理商无权限,暂无法进行更新科室的操作");
+            if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) {
+                return modifyFunc(departmentPutVo);
             } else {
                 if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
                     //校验当前医院是否拥有医院的数据权限
@@ -265,11 +268,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             //校验所选医院是否拥有相应的代理商数据权限
             String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-            if (Arrays.stream(strArray).noneMatch(s -> s.equals(hospital.getAgentId()))) {
-                throw new DataException("当前医院所属代理商无权限,暂无法进行删除科室的操作");
-            } else if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
+            if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) {
+                   return departmentMapper.deleteById(Integer.parseInt(id));
+            } else {
                 //校验当前医院是否拥有医院的数据权限
-                return delHospitalPermission(map, hospital, id);
+                if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
+                    if (noHospitalPermission(map, hospital)) {
+                        throw new DataException("当前医院没有数据权限,暂无法进行删除科室的操作");
+                    } else {
+                        return departmentMapper.deleteById(Integer.parseInt(id));
+                    }
+                } else {
+                    throw new DataException("当前用户没有操作科室的数据权限,请联系管理员");
+                }
             }
         } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && !map.containsKey(CoreConfig.AUTH_DATA_AGENT)
                 && map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
