@@ -34,7 +34,7 @@ public class DepartmentController {
     @ApiOperation(value = "通过医院ID获取所有的科室", notes = "通过医院ID,或名称进行模糊匹配查询下拉列表")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String select(@ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid
-            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false) String name
+            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false, defaultValue = "") String name
             , @ApiParam(hidden = true) int uid
     ) throws BaseException {
         List<SelectVO> list = departmentService.getSelectList(uid, hid, name);
@@ -50,8 +50,8 @@ public class DepartmentController {
     public String list(@ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false
             , defaultValue = "1") int pageNum, @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
             , required = false, defaultValue = "10") int pageSize, @ApiParam(hidden = true) int uid
-            , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue = "0") int hid
-            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false) String name) {
+            , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue ="") String hid
+            , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false,defaultValue = "") String name) throws BaseException {
         PageHelper.startPage(pageNum, pageSize);
         List<ListVo> list = departmentService.findAll(uid, hid, name);
         if (list != null && list.size() > 0) {

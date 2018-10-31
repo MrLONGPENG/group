@@ -44,7 +44,7 @@ public class DepartmentSqlProvider {
         }}.toString();
     }
 
-    public String findAll(@Param(value = "hid") int hid, @Param(value = "name") String name) {
+    public String findAll(@Param(value = "hid") String hid, @Param(value = "name") String name) {
         return new SQL() {{
             SELECT("t.id, h.id AS hid, t.name, dict.name AS department ,h.name AS hospital" +
                     ",t.sort, t.create_date, dict.id AS mid, t.status, t.remark");
@@ -54,7 +54,9 @@ public class DepartmentSqlProvider {
             if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
             }
-            if (hid != 0) {
+            if ((!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO))||Constant.DIGIT_ZERO.equals(hid)) {
+                AND().WHERE("t.hospital_id in (" + hid + ")");
+            }else if (!StringUtil.isEmpty(hid)){
                 AND().WHERE("t.hospital_id = #{hid}");
             }
         }}.toString();
