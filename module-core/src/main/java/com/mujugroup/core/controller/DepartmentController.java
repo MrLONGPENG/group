@@ -2,13 +2,13 @@ package com.mujugroup.core.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.vo.department.AddVo;
 import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.DepartmentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,11 +23,13 @@ import java.util.Map;
 @RequestMapping(value = "/department")
 public class DepartmentController {
     private final DepartmentService departmentService;
+    private final AuthDataService authDataService;
 
 
     @Autowired
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService, AuthDataService authDataService) {
         this.departmentService = departmentService;
+        this.authDataService = authDataService;
     }
 
 
@@ -52,8 +54,9 @@ public class DepartmentController {
             , required = false, defaultValue = "10") int pageSize, @ApiParam(hidden = true) int uid
             , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue ="") String hid
             , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false,defaultValue = "") String name) throws BaseException {
-        PageHelper.startPage(pageNum, pageSize);
-        List<ListVo> list = departmentService.findAll(uid, hid, name);
+        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        PageHelper.startPage(pageNum,pageSize);
+        List<ListVo> list = departmentService.findAll(map,uid, hid, name);
         if (list != null && list.size() > 0) {
             return ResultUtil.success(list, PageInfo.of(list));
         } else {

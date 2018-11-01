@@ -46,8 +46,8 @@ public class DepartmentSqlProvider {
 
     public String findAll(@Param(value = "hid") String hid, @Param(value = "name") String name) {
         return new SQL() {{
-            SELECT("t.id, h.id AS hid, t.name, dict.name AS department ,h.name AS hospital" +
-                    ",t.sort, t.create_date, dict.id AS mid, t.status, t.remark");
+            SELECT("t.id, h.id AS hid, t.name, IFNULL(dict.name,'') AS department ,h.name AS hospital" +
+                    ",t.sort, t.create_date, t.mid AS mid, t.status, t.remark");
             FROM("t_department t");
             LEFT_OUTER_JOIN("t_dict_department dict ON t.mid=dict.id");
             INNER_JOIN("t_hospital h  ON t.hospital_id=h.id");

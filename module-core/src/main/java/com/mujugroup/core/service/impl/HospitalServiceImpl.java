@@ -86,8 +86,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<ListVo> findAll(int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+    public List<ListVo> findAll(Map<String,String> map,int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             if (StringUtil.isEmpty(aid)||Constant.DIGIT_ZERO.equals(aid)) {

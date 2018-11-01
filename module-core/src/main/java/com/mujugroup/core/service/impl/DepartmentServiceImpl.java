@@ -37,8 +37,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final Logger logger = LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     @Override
-    public List<ListVo> findAll(int uid, String hid, String name) throws DataException {
-        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+    public List<ListVo> findAll(Map<String,String> map,int uid, String hid, String name) throws DataException {
+
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             if (StringUtil.isEmpty(hid) || Constant.DIGIT_ZERO.equals(hid)) {

@@ -10,6 +10,7 @@ import com.mujugroup.core.objeck.vo.hospital.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leolaurel
@@ -40,7 +41,7 @@ public interface HospitalService {
 
     Integer isExitsName(String name);
 
-    List<ListVo> findAll(int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException;
+    List<ListVo> findAll(Map<String,String> map,int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException;
 
     List<SelectVO> selectAll();
 

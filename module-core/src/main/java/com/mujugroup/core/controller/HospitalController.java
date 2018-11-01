@@ -119,8 +119,9 @@ public class HospitalController {
             , @ApiParam(value = "城市编号") @RequestParam(value = "cityId", required = false, defaultValue = "0") int cityId
             , @ApiParam(value = "医院状态") @RequestParam(value = "enable", required = false, defaultValue = "0") int enable
     ) throws BaseException {
+        Map<String, String> map = authDataService.getAuthDataByUid(uid);
         PageHelper.startPage(pageNum, pageSize);
-        List<ListVo> list = hospitalService.findAll(uid, aid, name, provinceId, cityId, enable);
+        List<ListVo> list = hospitalService.findAll(map,uid, aid, name, provinceId, cityId, enable);
         if (list != null && list.size() > 0) {
             return ResultUtil.success(list, PageInfo.of(list));
         } else {

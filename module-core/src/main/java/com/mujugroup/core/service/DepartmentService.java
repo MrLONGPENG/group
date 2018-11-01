@@ -9,7 +9,9 @@ import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 
+
 import java.util.List;
+import java.util.Map;
 
 
 public interface DepartmentService {
@@ -21,7 +23,7 @@ public interface DepartmentService {
 
     boolean delete(int uid, String id) throws ParamException, DataException;
 
-    List<ListVo> findAll(int uid, String hid, String name) throws DataException;
+    List<ListVo> findAll(Map<String,String> map, int uid, String hid, String name) throws DataException;
 
     List<SelectVO> getSelectList(int uid,int hid, String name) throws DataException;
 }
