@@ -1,6 +1,7 @@
 package com.mujugroup.lock.controller;
 
 import com.google.gson.JsonObject;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.service.DeviceService;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description="锁模块设备接口")
 public class DeviceController {
 
+    @Value("${spring.profiles.active}")
+    private String model;
     private final DeviceService deviceService;
     private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
     @Autowired
@@ -58,6 +62,10 @@ public class DeviceController {
         if(did == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
         if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         if(did.length()>9 && did.length()!=19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        if(Constant.MODEL_DEV.equals(model)) {
+            logger.info("远程调用锁接口，Did: {}, type: {}");
+            return ResultUtil.success("{\"code\":200}");
+        }
         JsonObject object = null;
         switch (type){
             case 0: object = deviceService.unlock(did);break;
