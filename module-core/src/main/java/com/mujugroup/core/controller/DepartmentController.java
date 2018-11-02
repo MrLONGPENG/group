@@ -9,6 +9,7 @@ import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.DepartmentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/department")
+@Api(description = "科室操作相关接口")
 public class DepartmentController {
     private final DepartmentService departmentService;
 

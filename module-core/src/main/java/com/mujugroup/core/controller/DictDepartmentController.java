@@ -7,6 +7,7 @@ import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.objeck.vo.dictDepartment.AddVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.PutVo;
 import com.mujugroup.core.service.DictDepartmentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dictDepartment")
+@Api(description = "木巨科室操作相关接口")
 public class DictDepartmentController {
 
     private DictDepartmentService dictDepartmentService;
