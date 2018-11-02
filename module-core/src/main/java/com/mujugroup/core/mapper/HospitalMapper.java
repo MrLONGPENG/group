@@ -157,4 +157,9 @@ public interface HospitalMapper {
     @Select("SELECT id,`name` FROM t_hospital WHERE `enable` = 22")
     @ResultMap(value = "hospitalList")
     List<SelectVO> selectAll();
+
+
+    @ResultType(String.class)
+    @Select("SELECT group_concat(`id`) as ids FROM t_hospital WHERE `enable` = 22 AND `agentId` in (${aid})")
+    String getHidByAid(@Param(value = "aid") String aid);
 }

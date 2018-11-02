@@ -111,8 +111,7 @@ public class HospitalController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String findAll(@ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false
             , defaultValue = "1") int pageNum, @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
-            , required = false, defaultValue = "10") int pageSize
-            , @ApiParam(hidden = true) int uid
+            , required = false, defaultValue = "10") int pageSize, @ApiParam(hidden = true) int uid
             , @ApiParam(value = "代理商编号") @RequestParam(value = "aid", required = false, defaultValue = "") String aid
             , @ApiParam(value = "医院名称") @RequestParam(value = "name", required = false, defaultValue = "") String name
             , @ApiParam(value = "省份编号") @RequestParam(value = "provinceId", required = false, defaultValue = "0") int provinceId

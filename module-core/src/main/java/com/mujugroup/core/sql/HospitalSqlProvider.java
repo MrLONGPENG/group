@@ -88,11 +88,12 @@ public class HospitalSqlProvider {
                     ", h.crtId AS uid,p.id as pid,c.id as cid");
             FROM("t_hospital h,t_agent a, t_country_province_city p, t_country_province_city c");
             WHERE("h.province = p.id AND h.city = c.id  AND h.agentId=a.id");
-             if ((!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)||Constant.DIGIT_ZERO.equals(aid)))
-                AND().WHERE("h.agentId in (" + aid + ")");
-             else if (!StringUtil.isEmpty(aid)) AND().WHERE(" h.agentId = #{aid}");
+             if ((!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)))
+                 AND().WHERE("h.agentId in (" + aid + ")");
+             else if (!StringUtil.isEmpty(aid) && !Constant.DIGIT_ZERO.equals(aid))
+                 AND().WHERE(" h.agentId = #{aid}");
             if (enable != 0) AND().WHERE("h.enable = #{enable}");
-            else WHERE("h.enable =22");
+            else AND().WHERE("h.enable =22");
             if (provinceId != 0) AND().WHERE("h.province = #{provinceId}");
             if (cityId != 0) AND().WHERE("h.city = #{cityId}");
             if (!StringUtil.isEmpty(name)) {

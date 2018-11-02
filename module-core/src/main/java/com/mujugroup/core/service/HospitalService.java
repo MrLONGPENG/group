@@ -45,5 +45,8 @@ public interface HospitalService {
 
     List<SelectVO> selectAll();
 
-
+    /**
+     * 根据AID查询HID，多个逗号分隔
+     */
+    String getHidByAid(String aid);
 }

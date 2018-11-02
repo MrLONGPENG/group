@@ -54,9 +54,9 @@ public class DepartmentSqlProvider {
             if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
             }
-            if ((!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO))||Constant.DIGIT_ZERO.equals(hid)) {
+            if ((!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO))) {
                 AND().WHERE("t.hospital_id in (" + hid + ")");
-            }else if (!StringUtil.isEmpty(hid)){
+            }else if (!StringUtil.isEmpty(hid) && !Constant.DIGIT_ZERO.equals(hid)){
                 AND().WHERE("t.hospital_id = #{hid}");
             }
         }}.toString();

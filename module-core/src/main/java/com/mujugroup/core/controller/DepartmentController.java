@@ -54,9 +54,9 @@ public class DepartmentController {
             , required = false, defaultValue = "10") int pageSize, @ApiParam(hidden = true) int uid
             , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue ="") String hid
             , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false,defaultValue = "") String name) throws BaseException {
-        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        String ids = departmentService.checkUserData(uid, hid);
         PageHelper.startPage(pageNum,pageSize);
-        List<ListVo> list = departmentService.findAll(map,uid, hid, name);
+        List<ListVo> list = departmentService.findAll(ids, name);
         if (list != null && list.size() > 0) {
             return ResultUtil.success(list, PageInfo.of(list));
         } else {

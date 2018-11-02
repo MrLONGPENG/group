@@ -16,6 +16,7 @@ import com.mujugroup.core.objeck.vo.department.PutVo;
 import com.mujugroup.core.objeck.vo.SelectVO;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.DepartmentService;
+import com.mujugroup.core.service.HospitalService;
 import ma.glasnost.orika.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,58 +35,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final MapperFactory mapperFactory;
     private final HospitalMapper hospitalMapper;
     private final AuthDataService authDataService;
+    private final HospitalService hospitalService;
     private final Logger logger = LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     @Override
-    public List<ListVo> findAll(Map<String,String> map,int uid, String hid, String name) throws DataException {
-
-        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
-            if (StringUtil.isEmpty(hid) || Constant.DIGIT_ZERO.equals(hid)) {
-                return departmentMapper.findAll(map.get(CoreConfig.AUTH_DATA_HOSPITAL), name);
-            } else {
-                Hospital hospital = hospitalMapper.findById(Integer.parseInt(hid));
-                if (hospital == null) throw new DataException("当前科室所属医院不存在");
-                String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-                if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) {
-                    return departmentMapper.findAll(hid, name);
-                } else {
-                    //校验当前医院是否拥有医院的数据权限
-                    if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
-                        if (noHospitalPermission(map, hospital)) {
-                            throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
-                        } else {
-                            return departmentMapper.findAll(hid, name);
-                        }
-                    } else {
-                        throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
-                    }
-                }
-
-            }
-        } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && !map.containsKey(CoreConfig.AUTH_DATA_AGENT)
-                && map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)) {
-            return hospitalPermission(hid, map, name);
-        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
-            return departmentMapper.findAll(hid, name);
-        } else {
-            throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
-        }
-    }
-
-    private List<ListVo> hospitalPermission(String hid, Map<String, String> map, String name) throws DataException {
-        if (StringUtil.isEmpty(hid)) {
-            return departmentMapper.findAll(map.get(CoreConfig.AUTH_DATA_HOSPITAL), name);
-        } else {
-            Hospital hospital = hospitalMapper.findById(Integer.parseInt(hid));
-            if (hospital == null) throw new DataException("当前科室所属医院不存在");
-            //校验当前医院是否拥有医院的数据权限
-            if (noHospitalPermission(map, hospital)) {
-                throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
-            } else {
-                return departmentMapper.findAll(hid, name);
-            }
-        }
+    public List<ListVo> findAll(String hid, String name) {
+        return departmentMapper.findAll(hid, name);
     }
 
     @Override
@@ -126,12 +81,45 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
+    @Override
+    public String checkUserData(int uid, String hid) throws DataException{
+        Map<String, String> map = authDataService.getAuthDataByUid(uid);
+        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
+        if (StringUtil.isEmpty(hid) || Constant.DIGIT_ZERO.equals(hid)) {
+            if(map.containsKey(CoreConfig.AUTH_DATA_ALL)) return Constant.DIGIT_ZERO;
+            StringBuffer ids = new StringBuffer();
+            if(map.containsKey(CoreConfig.AUTH_DATA_AGENT)){
+                ids.append(hospitalService.getHidByAid(map.get(CoreConfig.AUTH_DATA_AGENT)));
+            }
+            if(map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)){
+                if(ids.length() > 0) ids.append(Constant.SIGN_DOU_HAO);
+                ids.append(map.get(CoreConfig.AUTH_DATA_HOSPITAL));
+            }
+            if(ids.length() >0 ) return new String(ids);
+            throw new DataException("当前用户没有数据权限,暂无法进行查看科室的操作");
+        }else{
+            Hospital hospital = hospitalMapper.findById(Integer.parseInt(hid));
+            if (hospital == null) throw new DataException("当前科室所属医院不存在");
+            if(map.containsKey(CoreConfig.AUTH_DATA_ALL)) return hid;
+            if(map.containsKey(CoreConfig.AUTH_DATA_AGENT)){
+                String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
+                if (Arrays.stream(strArray).anyMatch(s -> s.equals(hospital.getAgentId()))) return hid;
+            }
+            if (map.containsKey(CoreConfig.AUTH_DATA_HOSPITAL)){
+                String[] hosArray = map.get(CoreConfig.AUTH_DATA_HOSPITAL).split(Constant.SIGN_DOU_HAO);
+                if(Arrays.stream(hosArray).anyMatch(s -> s.equals(String.valueOf(hospital.getId())))) return hid;
+            }
+            throw new DataException("当前医院没有数据权限,暂无法进行查看科室的操作");
+        }
+    }
+
     @Autowired
-    public DepartmentServiceImpl(DepartmentMapper departmentMapper, MapperFactory mapperFactory, HospitalMapper hospitalMapper, AuthDataService authDataService) {
+    public DepartmentServiceImpl(DepartmentMapper departmentMapper, MapperFactory mapperFactory, HospitalMapper hospitalMapper, AuthDataService authDataService, HospitalService hospitalService) {
         this.departmentMapper = departmentMapper;
         this.mapperFactory = mapperFactory;
         this.hospitalMapper = hospitalMapper;
         this.authDataService = authDataService;
+        this.hospitalService = hospitalService;
     }
 
     @Override
