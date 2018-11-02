@@ -7,6 +7,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
+import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
@@ -54,7 +55,8 @@ public class DeviceController {
                        @RequestParam(name = "status", required = false, defaultValue = "0") int status) {
         logger.debug("device-list");
         PageHelper.startPage(pageNum, pageSize);
-        List<Device> list = status == 0 ? deviceService.findListAll() : deviceService.findListByStatus(status);
+       // List<Device> list = status == 0 ? deviceService.findListAll() : deviceService.findListByStatus(status);
+        List<DeviceBO> list=deviceService.findDeviceList();
         if (list != null) {
             return ResultUtil.success(list, PageInfo.of(list));
         }

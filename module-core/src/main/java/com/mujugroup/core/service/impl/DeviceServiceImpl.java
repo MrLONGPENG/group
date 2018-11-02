@@ -12,6 +12,7 @@ import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
+import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service("deviceService")
@@ -50,6 +53,18 @@ public class DeviceServiceImpl implements DeviceService {
         if (device == null) throw new ParamException("当前设备不存在,请重新选择");
         device.setStatus(Device.TYPE_DELETE);
         return deviceMapper.update(device);
+    }
+
+    @Override
+    @MergeResult
+    public List<DeviceBO> findDeviceList() {
+       List<Device> list=deviceMapper.findListAll();
+        mapperFactory.classMap(Device.class, DeviceBO.class)
+                .field("crtId","name")
+                .field("crtId","crtId")
+                .byDefault().register();
+        return mapperFactory.getMapperFacade().mapAsList(list, DeviceBO.class);
+
     }
 
 

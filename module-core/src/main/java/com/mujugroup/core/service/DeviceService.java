@@ -6,6 +6,7 @@ import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
+import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 
@@ -30,5 +31,9 @@ public interface DeviceService {
     boolean modifyDevice(int uid,PutVo devicePutVo) throws ParamException;
 
     boolean delete(String id) throws ParamException;
+
+    List<DeviceBO> findDeviceList();
+
+
 
 }

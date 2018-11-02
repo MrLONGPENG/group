@@ -55,7 +55,7 @@ public interface DeviceMapper {
 
 
     @ResultMap("device")
-    @Select("SELECT * FROM t_device")
+    @Select("SELECT * FROM t_device WHERE `status`=14")
     List<Device> findListAll();
 
 

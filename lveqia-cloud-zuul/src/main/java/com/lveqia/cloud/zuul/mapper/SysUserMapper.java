@@ -1,5 +1,6 @@
 package com.lveqia.cloud.zuul.mapper;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.sql.SysUserSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ,数据库操作接口类
@@ -73,5 +75,9 @@ public interface SysUserMapper {
     @ResultMap("sysUser")
     @SelectProvider(type = SysUserSqlProvider.class, method = "getSysUserList")
     List<SysUser> getSysUserList(boolean fuzzy, @Param("name") String name, @Param("username") String username);
+
+    @Select("SELECT `name`  FROM t_sys_user WHERE id=#{id}")
+    @ResultType(String.class)
+    String getNameById(@Param(value = "id") String id);
 
 }
