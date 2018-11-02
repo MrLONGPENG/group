@@ -6,6 +6,9 @@ import com.mujugroup.lock.model.LockDid;
 import com.mujugroup.lock.model.LockInfo;
 import com.mujugroup.lock.service.LockDidService;
 import com.mujugroup.lock.service.LockInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/did")
+@Api(description="锁模块锁ID关系接口")
 public class LockDidController {
 
     private final LockDidService lockDidService;
@@ -28,14 +32,17 @@ public class LockDidController {
         this.lockInfoService = lockInfoService;
     }
 
-    @RequestMapping(value = "/getDeviceId")
-    public String getDeviceId(String did){
+    @RequestMapping(value = "/getDeviceId", method = RequestMethod.GET)
+    @ApiOperation(value="锁模块查询接口", notes="根据业务DID查询")
+    public String getDeviceId(@ApiParam(value = "业务ID") String did){
         logger.debug("getDeviceId:{}", did);
         return query(did, null);
     }
 
-    @RequestMapping(value = "/query")
-    public String query(String did, String bid){
+
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @ApiOperation(value="锁模块查询接口", notes="根据业务DID查询")
+    public String query(@ApiParam(value = "业务ID") String did, @ApiParam(value = "锁ID") String bid){
         logger.debug("query did:{} bid:{}", did ,bid);
         if(did == null && bid ==null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
         LockDid lockDid;

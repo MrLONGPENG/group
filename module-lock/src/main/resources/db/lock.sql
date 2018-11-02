@@ -58,7 +58,7 @@ CREATE TABLE `t_lock_record`(
 `did` bigint(20) DEFAULT NULL COMMENT '业务ID',
 `lock_id` bigint(20) DEFAULT NULL COMMENT '设备锁十进制ID',
 `time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '开关锁时间',
-`lockStatus` tinyint(4) DEFAULT 0 COMMENT '状态 0 关闭 1 打开',
+`lockStatus` tinyint(4) DEFAULT 0 COMMENT '状态 1 关闭 2 打开',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关锁记录表';
 

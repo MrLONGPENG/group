@@ -31,23 +31,25 @@ public class DeviceController {
 
 
     @ApiOperation(value="锁模块开锁接口", notes="根据业务DID或设备BID开锁")
-    @RequestMapping(value = "/unlock", method = {RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/unlock", method = RequestMethod.POST)
     public String unlock(String did){
         return remoteCall(0, did);
     }
 
-    @RequestMapping(value = "/query")
+    @ApiOperation(value="锁模块查询接口", notes="根据业务DID查询")
+    @RequestMapping(value = "/query", method =  RequestMethod.POST)
     public String query(String did){
         return remoteCall(1, did);
     }
 
-    @RequestMapping(value = "/beep")
+    @ApiOperation(value="锁模块响铃接口", notes="根据业务DID")
+    @RequestMapping(value = "/beep", method = RequestMethod.POST )
     public String beep(String did){
         return remoteCall(2, did);
     }
 
-
-    @RequestMapping(value = "/ble")
+    @ApiOperation(value="锁模块蓝牙接口", notes="根据业务DID")
+    @RequestMapping(value = "/ble", method = RequestMethod.POST )
     public String ble(String did){
         return remoteCall(3, did);
     }
@@ -63,7 +65,7 @@ public class DeviceController {
         if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         if(did.length()>9 && did.length()!=19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
         if(Constant.MODEL_DEV.equals(model)) {
-            logger.info("远程调用锁接口，Did: {}, type: {}");
+            logger.info("远程调用锁接口，Did: {}, type: {}", did, type);
             return ResultUtil.success("{\"code\":200}");
         }
         JsonObject object = null;
