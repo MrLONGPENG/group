@@ -49,6 +49,18 @@ CREATE TABLE `t_lock_info` (
 UNIQUE KEY `index_did` (`did`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁设备信息表';
+-- ----------------------------
+-- Table structure for t_lock_record
+-- ----------------------------
+DROP TABLE IF EXISTS `t_lock_record`;
+CREATE TABLE `t_lock_record`(
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`did` bigint(20) DEFAULT NULL COMMENT '业务ID',
+`lock_id` bigint(20) DEFAULT NULL COMMENT '设备锁十进制ID',
+`time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '开关锁时间',
+`lockStatus` tinyint(4) DEFAULT 0 COMMENT '状态 0 关闭 1 打开',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关锁记录表';
 
 
 
