@@ -14,10 +14,13 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_department")
 public class Department implements Serializable {
-
+    //当前科室状态为删除状态
+    public static final int TYPE_REMOVE = 0;
+    //当前科室状态为显示状态
+    public static final int TYPE_DISPLAY = 1;
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_department.id
      */
     @Id
@@ -75,67 +78,67 @@ public class Department implements Serializable {
     private Date createDate;
 
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Integer getHid() {
-		return hid;
-	}
+    public Integer getHid() {
+        return hid;
+    }
 
-	public void setHid(Integer hid) {
-		this.hid = hid;
-	}
+    public void setHid(Integer hid) {
+        this.hid = hid;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Integer getMid() {
-		return mid;
-	}
+    public Integer getMid() {
+        return mid;
+    }
 
-	public void setMid(Integer mid) {
-		this.mid = mid;
-	}
+    public void setMid(Integer mid) {
+        this.mid = mid;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Integer getSort() {
-		return sort;
-	}
+        return sort;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public Date getCreateDate() {
-		return createDate;
-	}
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
 }

@@ -142,5 +142,9 @@ public interface DeviceMapper {
 
     @ResultType(Date.class)
     @Select("SELECT update_time FROM t_device WHERE did=#{did} AND status = #{status} order by id desc limit 1")
-    Date findLastDeleteTime(@Param(value = "did")String did, @Param(value = "status") int status);
+    Date findLastDeleteTime(@Param(value = "did") String did, @Param(value = "status") int status);
+
+    @Select("SELECT * FROM t_device WHERE depart= #{oid} AND `status`=14")
+    @ResultMap("device")
+    List<Device> getDeviceListByOid(@Param(value = "oid") String id);
 }
