@@ -1,12 +1,17 @@
 package com.mujugroup.wx.config;
 
 import com.github.wxpay.sdk.WXPayConfig;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class MyConfig implements WXPayConfig {
+    public static final String FAIL = "FAIL";
+    //public static final String ERROR = "ERROR";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String REFUND_NOT_ENOUGH_MONEY = "NOTENOUGH";
+    public static final String REFUND_SOURCE_RECHARGE_FUNDS = "REFUND_SOURCE_RECHARGE_FUNDS";
+    public static final String REFUND_SOURCE_UNSETTLED_FUNDS = "REFUND_SOURCE_UNSETTLED_FUNDS";
 
-    private byte[] certData= new byte[1024];
+    //private byte[] certData= new byte[1024];
 
     @Override
     public String getAppID() {
@@ -26,7 +31,7 @@ public class MyConfig implements WXPayConfig {
 
     @Override
     public InputStream getCertStream() {
-        return new ByteArrayInputStream(this.certData);
+        return getClass().getClassLoader().getResourceAsStream("key/cert.p12");
     }
 
     @Override

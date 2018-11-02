@@ -3,7 +3,6 @@ package com.mujugroup.wx.service.impl;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.google.gson.Gson;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @RefreshScope
 @Service("payApiService")
@@ -102,11 +103,11 @@ public class PayApiServiceImpl implements PayApiService {
 
     @Override
     public String completePay(String notifyXml) throws Exception {
-        //logger.debug("微信支付回调接收数据:{}", notifyXml);
+        logger.debug("微信支付回调接收数据:{}", notifyXml);
         Map<String, String> map = WXPayUtil.xmlToMap(notifyXml);
         if(Constant.MODEL_DEV.equals(model) ||WXPayUtil.isSignatureValid(map, wxPayConfig.getKey())
-                && "SUCCESS".equals(map.get("result_code"))
-                && "SUCCESS".equals(map.get("return_code"))){
+                && MyConfig.SUCCESS.equals(map.get("result_code"))
+                && MyConfig.SUCCESS.equals(map.get("return_code"))){
             String orderNo = map.get("out_trade_no");
             WxOrder wxOrder = wxOrderService.findOrderByNo(orderNo);
             long payTime = System.currentTimeMillis()/1000;
@@ -135,8 +136,41 @@ public class PayApiServiceImpl implements PayApiService {
         }
 
         Map<String, String> data = new HashMap<>();
-        data.put("return_code","SUCCESS");
+        data.put("return_code", MyConfig.SUCCESS);
         data.put("return_msg","OK");
         return WXPayUtil.mapToXml(data);
+    }
+
+    @Override
+    public Map<String, String> refund(int index, String orderNo, Long totalFee, Long refundFee
+            , String refundDesc, String refundAccount) {
+        SortedMap<String, String> params = new TreeMap<>();
+        //商户订单号和微信订单号二选一
+        params.put("out_trade_no",orderNo);
+        params.put("out_refund_no", orderNo + index);
+        params.put("total_fee", String.valueOf(totalFee));
+        params.put("refund_fee", String.valueOf(refundFee));
+        params.put("refund_desc", refundDesc);
+        params.put("refund_account", refundAccount);
+        try {
+            Map<String, String> map = wxPay.refund(params); //加入微信支付日志
+            logger.debug("微信消息-传入参数{};微信输出{}", params, map);
+            if (map != null && MyConfig.SUCCESS.equals(map.get("result_code"))
+                    && MyConfig.SUCCESS.equals(map.get("return_code"))) {//插入数据库
+                logger.debug("out_trade_no {} out_refund_no{}", orderNo, orderNo + index);
+                logger.debug("refund_id {} {}", map.get("refund_id"), map.get("err_code"));
+            }
+            if (map != null && MyConfig.FAIL.equals(map.get("result_code"))
+                    && MyConfig.SUCCESS.equals(map.get("return_code"))
+                    && MyConfig.REFUND_NOT_ENOUGH_MONEY.equals(map.get("err_code"))
+                    && MyConfig.REFUND_SOURCE_UNSETTLED_FUNDS.equals(refundAccount)) {
+                logger.debug("未结算金额不足  使用余额退款");
+                map = refund(index, orderNo, totalFee, refundFee, refundDesc, MyConfig.REFUND_SOURCE_RECHARGE_FUNDS);
+            }
+            return map;
+        } catch (Exception e) {//微信退款接口异常
+            logger.debug("微信消息-传入参数{};异常信息-{}", params, e.getMessage());
+        }
+        return null;
     }
 }

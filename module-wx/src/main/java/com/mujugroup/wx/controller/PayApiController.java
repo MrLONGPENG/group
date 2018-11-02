@@ -2,6 +2,7 @@ package com.mujugroup.wx.controller;
 
 import com.lveqia.cloud.common.util.IpUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
+import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.service.PayApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +40,7 @@ public class PayApiController {
         return ResultUtil.success(map);
     }
 
-    @ApiOperation(value="小程序支付完成回调接口", notes="支持小程序支付完成回调")
+    // 小程序支付完成回调接口
     @RequestMapping(value = "notify",  method = RequestMethod.POST)
     public String notify(@RequestBody String notifyXml)  {
         try {
@@ -49,4 +50,22 @@ public class PayApiController {
         }
         return ResultUtil.success();
     }
+
+    /**
+     * 申请退款
+     *
+     * @param index        订单退款序号
+     * @param orderNo      商户订单号， 退款单号=订单号+退款序号
+     * @param totalFee      订单金额
+     * @param refundFee     退款金额
+     */
+    @RequestMapping(value = "refund",  method = RequestMethod.POST)
+    public String refund(int index, String orderNo, Long totalFee,Long refundFee, String refundDesc) {
+        Map<String, String> map = payApiService.refund(index, orderNo, totalFee,refundFee
+                , refundDesc, MyConfig.REFUND_SOURCE_UNSETTLED_FUNDS);
+        if(map==null) return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
+        return ResultUtil.success(map);
+
+    }
+
 }

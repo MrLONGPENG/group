@@ -41,7 +41,6 @@ public class UsingApiServiceImpl implements UsingApiService {
     private final SessionService sessionService;
     private final WxUsingService wxUsingService;
     private final WxGoodsService wxGoodsService;
-    private final WxUptimeService wxUptimeService;
     private final ModuleCoreService moduleCoreService;
     private final ModuleLockService moduleLockService;
     private final RedisTemplate redisTemplate;
@@ -51,13 +50,12 @@ public class UsingApiServiceImpl implements UsingApiService {
 
     @Autowired
     public UsingApiServiceImpl(SessionService sessionService, WxUsingService wxUsingService
-            , WxGoodsService wxGoodsService, WxUptimeService wxUptimeService, RedisTemplate redisTemplate
-            , ModuleCoreService moduleCoreService, ModuleLockService moduleLockService) {
+            , WxGoodsService wxGoodsService, RedisTemplate redisTemplate, ModuleCoreService moduleCoreService
+            , ModuleLockService moduleLockService) {
         this.redisTemplate = redisTemplate;
         this.wxUsingService = wxUsingService;
         this.sessionService = sessionService;
         this.wxGoodsService = wxGoodsService;
-        this.wxUptimeService = wxUptimeService;
         this.moduleCoreService = moduleCoreService;
         this.moduleLockService = moduleLockService;
 
