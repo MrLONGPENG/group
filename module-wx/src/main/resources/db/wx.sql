@@ -70,6 +70,18 @@ PRIMARY KEY (`id`)
 
 
 
+DROP TABLE IF EXISTS `t_wx_refund`;
+CREATE TABLE `t_wx_refund` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `trade_no` varchar(32) DEFAULT NULL COMMENT '内部订单号，如20180626123456',
+  `refund_no` varchar(32) DEFAULT NULL COMMENT '退款订单号，如20180626123456',
+  `total_fee` int(11) DEFAULT NULL COMMENT '实际总金额',
+  `refund_fee` int(11) DEFAULT NULL COMMENT '退款金额',
+  `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  INDEX `index_refund` (`refund_no`) COMMENT '退款订单索引',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='退款订单表';
+
 -- ----------------------------
 -- Table structure for t_wx_repair
 -- ----------------------------
