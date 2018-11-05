@@ -33,7 +33,8 @@ public class AppProvider implements AuthenticationProvider {
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         boolean hasAuthority = false;
         for (GrantedAuthority authority : authorities) {
-            if (Constant.ROLE_OPERATE.equals(authority.getAuthority())){
+            if (Constant.ROLE_OPERATE.equals(authority.getAuthority())
+                    || Constant.ROLE_ADMIN.equals(authority.getAuthority())){
                 hasAuthority = true;
                 break;
             }
