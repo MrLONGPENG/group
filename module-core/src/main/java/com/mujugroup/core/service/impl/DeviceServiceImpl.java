@@ -1,7 +1,10 @@
 package com.mujugroup.core.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.BeanMapper;
@@ -55,12 +58,21 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceMapper.update(device);
     }
 
+
+
+    @Override
+    public PageTO<Device>  findDeviceList(String did, String bid
+            , String bed, String aid, String hid
+            , String oid, int status, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Device> list = deviceMapper.findListAll(did, bid, bed, aid, hid, oid, status);
+        return new PageTO<>(PageInfo.of(list), list);
+
+    }
+
     @Override
     @MergeResult
-    public List<DeviceBO> findDeviceList(String did, String bid
-            , String bed, String aid, String hid
-            , String oid, int status) {
-        List<Device> list = deviceMapper.findListAll(did, bid , bed, aid, hid , oid, status);
+    public List<DeviceBO> toDeviceBO(List<Device> pageList) {
         mapperFactory.classMap(Device.class, DeviceBO.class)
                 .field("crtId", "name")
                 .field("crtId", "crtId")
@@ -71,8 +83,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .field("depart", "departmentName")
                 .field("depart", "depart")
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().mapAsList(list, DeviceBO.class);
-
+        return mapperFactory.getMapperFacade().mapAsList(pageList, DeviceBO.class);
     }
 
 
@@ -150,7 +161,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> findListAll(String did, String bid, String bed, String aid, String hid, String oid, int status) {
-        return deviceMapper.findListAll(did, bid , bed, aid, hid , oid, status);
+        return deviceMapper.findListAll(did, bid, bed, aid, hid, oid, status);
     }
 
 

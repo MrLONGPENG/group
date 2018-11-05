@@ -4,6 +4,7 @@ package com.mujugroup.core.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
@@ -61,13 +62,8 @@ public class DeviceController {
             , @RequestParam(name = "oid", required = false, defaultValue = "") String oid
     ) {
         logger.debug("device-list");
-        PageHelper.startPage(pageNum, pageSize);
-        // List<Device> list = status == 0 ? deviceService.findListAll() : deviceService.findListByStatus(status);
-        List<DeviceBO> list = deviceService.findDeviceList(did, bid, bed, aid, hid, oid, status);
-        if (list != null) {
-            return ResultUtil.success(list, PageInfo.of(list));
-        }
-        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+        PageTO<Device> page = deviceService.findDeviceList(did, bid, bed, aid, hid, oid, status, pageNum, pageSize);
+        return ResultUtil.success(deviceService.toDeviceBO(page.getPageList()), page.getPageInfo());
     }
 
     @ApiOperation(value = "设备激活", notes = "设备激活")

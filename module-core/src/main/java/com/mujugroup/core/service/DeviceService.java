@@ -1,6 +1,7 @@
 package com.mujugroup.core.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
@@ -34,9 +35,9 @@ public interface DeviceService {
 
     boolean delete(String id) throws ParamException;
 
-    List<DeviceBO> findDeviceList(String did, String bid
+    PageTO<Device> findDeviceList(String did, String bid
             , String bed, String aid, String hid
-            , String oid, int status);
+            , String oid, int status, int pageNum, int pageSize);
 
-
+    List<DeviceBO> toDeviceBO(List<Device> pageList);
 }
