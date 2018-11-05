@@ -52,11 +52,18 @@ public class DeviceController {
     public String list(@ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false
             , defaultValue = "1") int pageNum, @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
             , required = false, defaultValue = "10") int pageSize, @ApiParam(value = "指定状态查询")
-                       @RequestParam(name = "status", required = false, defaultValue = "0") int status) {
+                       @RequestParam(name = "status", required = false, defaultValue = "0") int status
+            , @RequestParam(name = "did", required = false, defaultValue = "") String did
+            , @RequestParam(name = "bid", required = false, defaultValue = "") String bid
+            , @RequestParam(name = "bed", required = false, defaultValue = "") String bed
+            , @RequestParam(name = "aid", required = false, defaultValue = "") String aid
+            , @RequestParam(name = "hid", required = false, defaultValue = "") String hid
+            , @RequestParam(name = "oid", required = false, defaultValue = "") String oid
+    ) {
         logger.debug("device-list");
         PageHelper.startPage(pageNum, pageSize);
-       // List<Device> list = status == 0 ? deviceService.findListAll() : deviceService.findListByStatus(status);
-        List<DeviceBO> list=deviceService.findDeviceList();
+        // List<Device> list = status == 0 ? deviceService.findListAll() : deviceService.findListByStatus(status);
+        List<DeviceBO> list = deviceService.findDeviceList(did, bid, bed, aid, hid, oid, status);
         if (list != null) {
             return ResultUtil.success(list, PageInfo.of(list));
         }
@@ -78,7 +85,7 @@ public class DeviceController {
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
     public String modifyDevice(@ApiParam(hidden = true) int uid, @Validated @ModelAttribute PutVo devicePutVo)
             throws ParamException {
-        if (deviceService.modifyDevice(uid,devicePutVo)) {
+        if (deviceService.modifyDevice(uid, devicePutVo)) {
             return ResultUtil.success();
         } else {
             return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
@@ -88,7 +95,7 @@ public class DeviceController {
     @ApiOperation(value = "删除设备", notes = "删除设备")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public String deleteDevice(@ApiParam(value = "选中的设备ID") @PathVariable(value = "id") String id)
-        throws ParamException {
+            throws ParamException {
         if (deviceService.delete(id)) {
             return ResultUtil.success();
         } else {

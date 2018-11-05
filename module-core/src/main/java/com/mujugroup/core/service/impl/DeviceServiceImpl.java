@@ -57,11 +57,19 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     @MergeResult
-    public List<DeviceBO> findDeviceList() {
-       List<Device> list=deviceMapper.findListAll();
+    public List<DeviceBO> findDeviceList(String did, String bid
+            , String bed, String aid, String hid
+            , String oid, int status) {
+        List<Device> list = deviceMapper.findListAll(did, bid , bed, aid, hid , oid, status);
         mapperFactory.classMap(Device.class, DeviceBO.class)
-                .field("crtId","name")
-                .field("crtId","crtId")
+                .field("crtId", "name")
+                .field("crtId", "crtId")
+                .field("agentId", "agentName")
+                .field("agentId", "agentId")
+                .field("hospitalId", "hospitalName")
+                .field("hospitalId", "hospitalId")
+                .field("depart", "departmentName")
+                .field("depart", "depart")
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, DeviceBO.class);
 
@@ -81,14 +89,14 @@ public class DeviceServiceImpl implements DeviceService {
                 || (putVo.getOid() != null && !putVo.getOid().equals(model.getDepart()))) {
             //将原有数据的状态设置为删除状态
             Date lastTime = deviceMapper.findLastDeleteTime(device.getDid(), Device.TYPE_DELETE);
-            if(lastTime != null && lastTime.getTime()/1000 > DateUtil.getTimesMorning()){
+            if (lastTime != null && lastTime.getTime() / 1000 > DateUtil.getTimesMorning()) {
                 throw new ParamException("该设备当天已修改过代理商、医院或科室信息，无法再次修改");
             }
             device.setUpdateTime(new Date());
             device.setStatus(Device.TYPE_DELETE);
             Device entity = bindDevice(uid, model, device);
-            if(getAidOid(entity.getHospitalId(), entity.getDepart()) != entity.getAgentId()){
-               throw  new ParamException("代理商与医院或科室编号有误,请重新输入");
+            if (getAidOid(entity.getHospitalId(), entity.getDepart()) != entity.getAgentId()) {
+                throw new ParamException("代理商与医院或科室编号有误,请重新输入");
             }
             //更新原有数据
             boolean result = deviceMapper.update(device);
@@ -100,6 +108,7 @@ public class DeviceServiceImpl implements DeviceService {
             return deviceMapper.update(model);
         }
     }
+
     private Device bindDevice(int uid, Device model, Device device) {
         Device entity = new Device();
         entity.setDid(device.getDid());
@@ -109,9 +118,9 @@ public class DeviceServiceImpl implements DeviceService {
         entity.setCrtTime(new Date());                //进行添加操作,该数据记录的创建时间
         entity.setUpdateTime(entity.getCrtTime());    //进行添加操作,该数据记录的更新时间
         entity.setStatus(model.getStatus() == null ? device.getStatus() : model.getStatus());
-        entity.setAgentId(model.getAgentId()== null ? device.getAgentId() : model.getAgentId());
+        entity.setAgentId(model.getAgentId() == null ? device.getAgentId() : model.getAgentId());
         entity.setHospitalId(model.getHospitalId() == null ? device.getHospitalId() : model.getHospitalId());
-        entity.setDepart(model.getDepart() == null ? device.getDepart(): model.getDepart());
+        entity.setDepart(model.getDepart() == null ? device.getDepart() : model.getDepart());
         entity.setRun(model.getRun() == null ? device.getRun() : model.getRun());
         entity.setBell(model.getBell() == null ? device.getBell() : model.getBell());
         entity.setRemark(model.getRemark() == null ? device.getRemark() : model.getRemark());
@@ -140,9 +149,10 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> findListAll() {
-        return deviceMapper.findListAll();
+    public List<Device> findListAll(String did, String bid, String bed, String aid, String hid, String oid, int status) {
+        return deviceMapper.findListAll(did, bid , bed, aid, hid , oid, status);
     }
+
 
     @Override
     public List<Device> findListByStatus(int status) {

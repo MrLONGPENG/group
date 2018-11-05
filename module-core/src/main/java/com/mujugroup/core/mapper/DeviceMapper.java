@@ -5,6 +5,7 @@ import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.model.Device;
+import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -55,9 +56,10 @@ public interface DeviceMapper {
 
 
     @ResultMap("device")
-    @Select("SELECT * FROM t_device WHERE `status`=14")
-    List<Device> findListAll();
-
+    @SelectProvider(type = DeviceSqlProvider.class, method = "findListAll")
+    List<Device> findListAll(@Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
+            , @Param(value = "oid") String oid, @Param(value = "status") int status);
 
     @ResultMap("device")
     @Select("SELECT * FROM t_device WHERE status = #{status}")
@@ -130,12 +132,6 @@ public interface DeviceMapper {
     @ResultType(Integer.class)
     @Select("SELECT COUNT(*) FROM `t_device` WHERE `bid` = #{bid} and `status`=14")
     Integer isExistBid(@Param("bid") String bid);
-
-    @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceList")
-    @ResultMap("device")
-    List<Device> getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
-            , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
-            , @Param(value = "oid") String oid);
 
     @Select("U")
     boolean remove(@Param(value = "id") String id);

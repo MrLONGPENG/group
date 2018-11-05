@@ -128,13 +128,16 @@ public class DeviceSqlProvider {
     }
 
 
-    public String getDeviceList(@Param(value = "did") String did, @Param(value = "bid") String bid
+    public String findListAll(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "bed") String bed, @Param(value = "aid") String aid, @Param(value = "hid") String hid
-            , @Param(value = "oid") String oid) {
+            , @Param(value = "oid") String oid, @Param(value = "status") int status) {
         return new SQL() {{
             SELECT("*");
             FROM("t_device");
-            WHERE("status=14");
+            WHERE("`status`=14");
+            if (status!=0) {
+                AND().WHERE("`status`= #{status}");
+            }
             if (!StringUtil.isEmpty(did)) {
                 AND().WHERE("did=#{did}");
             }
@@ -144,13 +147,13 @@ public class DeviceSqlProvider {
             if (!StringUtil.isEmpty(bed)) {
                 AND().WHERE("hospitalBed like concat(concat('%',#{bed}),'%')");
             }
-            if (!StringUtil.isEmpty(aid)) {
+            if (!StringUtil.isEmpty(aid) && !Constant.DIGIT_ZERO.equals(aid)) {
                 AND().WHERE("agentId=#{aid}");
             }
-            if (!StringUtil.isEmpty(hid)) {
+            if (!StringUtil.isEmpty(hid) && !Constant.DIGIT_ZERO.equals(hid)) {
                 AND().WHERE("hospitalId=#{hid}");
             }
-            if (!StringUtil.isEmpty(oid)) {
+            if (!StringUtil.isEmpty(oid) && !Constant.DIGIT_ZERO.equals(oid)) {
                 AND().WHERE("depart=#{oid}");
             }
         }}.toString();

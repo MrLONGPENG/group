@@ -18,7 +18,9 @@ public interface DeviceService {
 
     DeviceBean findDeviceBeanByDid(String did);
 
-    List<Device> findListAll();
+    List<Device> findListAll(String did, String bid
+            , String bed, String aid, String hid
+            , String oid, int status);
 
     List<Device> findListByStatus(int status);
 
@@ -28,12 +30,13 @@ public interface DeviceService {
 
     List<StatusOidBean> findGroupByOid(int aid, int hid, int oid);
 
-    boolean modifyDevice(int uid,PutVo devicePutVo) throws ParamException;
+    boolean modifyDevice(int uid, PutVo devicePutVo) throws ParamException;
 
     boolean delete(String id) throws ParamException;
 
-    List<DeviceBO> findDeviceList();
-
+    List<DeviceBO> findDeviceList(String did, String bid
+            , String bed, String aid, String hid
+            , String oid, int status);
 
 
 }

@@ -2,6 +2,7 @@ package com.mujugroup.core.objeck.bo;
 
 import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.config.Constant;
+import com.mujugroup.core.service.MergeService;
 import com.mujugroup.core.service.feign.LveqiaCloudZuulService;
 import lombok.Data;
 
@@ -31,4 +32,14 @@ public class DeviceBO implements Serializable {
     private Integer updateId;
     private Date updateTime;
     private Integer issync;
+    @MergeField(feign = MergeService.class, method = "getAgentById", isValueNeedMerge = true
+            , defaultValue = Constant.STRING_UNKNOWN)
+    private String agentName;
+    @MergeField(feign = MergeService.class, method = "getHospitalById", isValueNeedMerge = true
+            , defaultValue = Constant.STRING_UNKNOWN)
+    private String hospitalName;
+    @MergeField(feign = MergeService.class, method = "getDepartmentById", isValueNeedMerge = true
+            , defaultValue = Constant.STRING_UNKNOWN)
+    private String departmentName;
+
 }
