@@ -80,4 +80,7 @@ public interface SysUserMapper {
     @ResultType(String.class)
     String getNameById(@Param(value = "id") String id);
 
+
+    @Select("SELECT `id` as `key` ,`name` as `value`  FROM t_sys_user WHERE id in (${ids})")
+    List<DBMap> getNameByIds(@Param(value = "ids")String ids);
 }
