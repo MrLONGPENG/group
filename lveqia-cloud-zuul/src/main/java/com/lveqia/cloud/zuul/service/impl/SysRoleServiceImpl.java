@@ -81,7 +81,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     private SysRole getSysRole(String name, String desc) {
         SysRole sysRole = new SysRole();
-        sysRole.setName("ROLE_"+name);
+        sysRole.setName(name);
         sysRole.setDesc(desc);
         return sysRole;
     }
