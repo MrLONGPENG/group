@@ -6,7 +6,7 @@ import com.lveqia.cloud.common.util.JsonUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.objeck.bo.ExcelBo;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StaBOService;
+import com.mujugroup.data.service.StaBoService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.utils.ExcelData;
 import com.mujugroup.data.utils.ExcelUtils;
@@ -22,11 +22,11 @@ public class ExcelServiceImpl implements ExcelService {
 
 
     private final ModuleCoreService moduleCoreService;
-    private final StaBOService staBOService;
+    private final StaBoService staBoService;
     @Autowired
-    public ExcelServiceImpl(ModuleCoreService moduleCoreService, StaBOService staBOService) {
+    public ExcelServiceImpl(ModuleCoreService moduleCoreService, StaBoService staBoService) {
         this.moduleCoreService = moduleCoreService;
-        this.staBOService = staBOService;
+        this.staBoService = staBoService;
     }
 
 
@@ -60,7 +60,7 @@ public class ExcelServiceImpl implements ExcelService {
         data.setName(info.get("hospital").getAsString());
         data.setTitles(titles);
         try {
-            List<ExcelBo> list = staBOService.getExcelBO(info, grain, startTime, stopTime);
+            List<ExcelBo> list = staBoService.getExcelBO(info, grain, startTime, stopTime);
             data.setRows(ExcelUtils.toRows(list));
         } catch (ParamException e) {
             e.printStackTrace();

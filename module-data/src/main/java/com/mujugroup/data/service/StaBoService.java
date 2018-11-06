@@ -11,7 +11,7 @@ import com.mujugroup.data.objeck.bo.sta.StaUsageRate;
 
 import java.util.List;
 
-public interface StaBOService {
+public interface StaBoService {
 
     List<String> getRefDate(int startTime, int stopTime
             , int grain) throws ParamException;

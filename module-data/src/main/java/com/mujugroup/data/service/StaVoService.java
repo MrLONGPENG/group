@@ -9,10 +9,10 @@ import com.mujugroup.data.objeck.vo.ProfitVo;
 
 import java.util.List;
 
-public interface StaVOService {
+public interface StaVoService {
 
 
-    ProfitVo getProfitVO(ProfitBo profitBO);
+    ProfitVo getProfitVO(ProfitBo profitBo);
 
     List<?> getStaVOList(String action, String uid, int pid, int cid, String aid, String hid, String oid, int grain
             , int start, int stop)throws BaseException;

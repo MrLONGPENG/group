@@ -10,14 +10,14 @@ import com.mujugroup.data.objeck.bo.sta.StaActive;
 import com.mujugroup.data.objeck.bo.sta.StaProfit;
 import com.mujugroup.data.objeck.bo.sta.StaUsage;
 import com.mujugroup.data.objeck.bo.sta.StaUsageRate;
-import com.mujugroup.data.service.StaBOService;
+import com.mujugroup.data.service.StaBoService;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service("staBOService")
-public class StaBOServiceImpl implements StaBOService {
+public class StaBOServiceImpl implements StaBoService {
 
 
     /**

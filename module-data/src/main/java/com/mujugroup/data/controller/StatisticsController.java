@@ -4,7 +4,7 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StaVOService;
+import com.mujugroup.data.service.StaVoService;
 import com.mujugroup.data.utils.ExcelData;
 import com.mujugroup.data.utils.ExcelUtils;
 import io.swagger.annotations.Api;
@@ -29,10 +29,10 @@ public class StatisticsController {
     private final Logger logger = LoggerFactory.getLogger(StatisticsController.class);
 
     private final ExcelService excelService;
-    private final StaVOService staVOService;
+    private final StaVoService staVOService;
 
     @Autowired
-    public StatisticsController(ExcelService excelService, StaVOService staVOService) {
+    public StatisticsController(ExcelService excelService, StaVoService staVOService) {
         this.excelService = excelService;
         this.staVOService = staVOService;
     }

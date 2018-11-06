@@ -14,8 +14,8 @@ import com.mujugroup.data.objeck.vo.ExcelVo;
 import com.mujugroup.data.objeck.vo.ProfitVo;
 import com.mujugroup.data.objeck.vo.StaProfitVo;
 import com.mujugroup.data.service.ExcelService;
-import com.mujugroup.data.service.StaBOService;
-import com.mujugroup.data.service.StaVOService;
+import com.mujugroup.data.service.StaBoService;
+import com.mujugroup.data.service.StaVoService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +27,17 @@ import java.util.Set;
 
 
 @Service("staVOService")
-public class StaVOServiceImpl implements StaVOService {
+public class StaVOServiceImpl implements StaVoService {
 
     private final ExcelService excelService;
-    private final StaBOService staBOService;
+    private final StaBoService staBoService;
     private final MapperFactory mapperFactory;
     private final ModuleCoreService moduleCoreService;
     @Autowired
-    public StaVOServiceImpl(ExcelService excelService, StaBOService staBOService
+    public StaVOServiceImpl(ExcelService excelService, StaBoService staBoService
             , MapperFactory mapperFactory, ModuleCoreService moduleCoreService) {
         this.excelService = excelService;
-        this.staBOService = staBOService;
+        this.staBoService = staBoService;
         this.mapperFactory = mapperFactory;
         this.moduleCoreService = moduleCoreService;
     }
@@ -51,17 +51,17 @@ public class StaVOServiceImpl implements StaVOService {
        String[] ids =  checkIds(uid, pid, cid, aid, hid, oid);
         switch (action){
             case "getStaUsage": case "get_statistics_usage" :
-                return staBOService.getUsage(ids, grain, start, stop);
+                return staBoService.getUsage(ids, grain, start, stop);
             case "getStaActive" : case "get_statistics_active" :
-                return staBOService.getActive(ids, grain, start, stop);
+                return staBoService.getActive(ids, grain, start, stop);
             case "getStaProfit" : case "get_statistics_profit" :
-               List<StaProfit> staProfitList = staBOService.getProfit(ids, grain, start, stop);
+               List<StaProfit> staProfitList = staBoService.getProfit(ids, grain, start, stop);
                 mapperFactory.classMap(StaProfit.class, StaProfitVo.class)
                         .fieldMap("profit").converter("rmbPriceConvert").add()
                         .byDefault().register();
                 return mapperFactory.getMapperFacade().mapAsList(staProfitList, StaProfitVo.class);
             case "getStaUsageRate": case "get_statistics_usage_rate" :
-                return staBOService.getUsageRate(ids, grain, start, stop);
+                return staBoService.getUsageRate(ids, grain, start, stop);
         }
         throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "无法找到Action:"+action);
     }
@@ -116,7 +116,7 @@ public class StaVOServiceImpl implements StaVOService {
         mapperFactory.classMap(ExcelBo.class, ExcelVo.class)
                 .fieldMap("profit").converter("rmbPriceConvert").add()
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().mapAsList(staBOService.getExcelBO(info
+        return mapperFactory.getMapperFacade().mapAsList(staBoService.getExcelBO(info
                 , grain, startTime,stopTime), ExcelVo.class);
     }
 

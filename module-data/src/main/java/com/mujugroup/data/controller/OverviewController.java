@@ -7,7 +7,7 @@ import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.data.objeck.bo.ProfitBo;
 import com.mujugroup.data.objeck.bo.UsageBo;
 import com.mujugroup.data.service.OverviewService;
-import com.mujugroup.data.service.StaVOService;
+import com.mujugroup.data.service.StaVoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OverviewController {
     private final Logger logger = LoggerFactory.getLogger(OverviewController.class);
 
-    private final StaVOService staVOService;
+    private final StaVoService staVOService;
     private final OverviewService overviewService;
 
     @Autowired
-    public OverviewController(StaVOService staVOService, OverviewService overviewService) {
+    public OverviewController(StaVoService staVOService, OverviewService overviewService) {
         this.staVOService = staVOService;
         this.overviewService = overviewService;
     }

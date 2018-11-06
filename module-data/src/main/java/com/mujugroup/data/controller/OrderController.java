@@ -8,7 +8,7 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.objeck.bo.OrderBo;
 import com.mujugroup.data.service.OrderService;
-import com.mujugroup.data.service.StaVOService;
+import com.mujugroup.data.service.StaVoService;
 import com.mujugroup.data.service.feign.ModuleWxService;
 import com.mujugroup.data.utils.ExcelData;
 import com.mujugroup.data.utils.ExcelUtils;
@@ -35,10 +35,10 @@ public class OrderController {
     private final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     private final OrderService orderService;
-    private final StaVOService staVOService;
+    private final StaVoService staVOService;
     private final ModuleWxService moduleWxService;
     @Autowired
-    public OrderController(OrderService orderService, StaVOService staVOService, ModuleWxService moduleWxService) {
+    public OrderController(OrderService orderService, StaVoService staVOService, ModuleWxService moduleWxService) {
         this.orderService = orderService;
         this.staVOService = staVOService;
         this.moduleWxService = moduleWxService;
