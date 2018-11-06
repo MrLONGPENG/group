@@ -10,6 +10,7 @@ public class AddVo implements Serializable {
     private Integer id;
     private Long did;
     private Long lockId;
-    private Date time;
+    private Date receiveTime;
     private Integer lockStatus;
+    private Date localTime;
 }

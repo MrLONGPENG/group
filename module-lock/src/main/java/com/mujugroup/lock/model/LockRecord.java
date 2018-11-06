@@ -42,17 +42,31 @@ public class LockRecord implements Serializable {
      * 开关锁时间
      * 表字段 : t_lock_record.time
      */
-    @Column(name = "time")
-    private Date time;
-
+    @Column(name = "receiveTime")
+    private Date receiveTime;
     /**
      * 状态 0 关闭 1 打开
      * 表字段 : t_lock_record.lockStatus
      */
     @Column(name = "lockStatus")
     private Integer lockStatus;
+    @Column(name = "localTime")
+    private Date localTime;
 
+    public Date getLocalTime() {
+        return localTime;
+    }
 
+    public void setLocalTime(Date localTime) {
+        this.localTime = localTime;
+    }
+    public Date getReceiveTime() {
+        return receiveTime;
+    }
+
+    public void setReceiveTime(Date receiveTime) {
+        this.receiveTime = receiveTime;
+    }
     public Integer getId() {
         return id;
     }
@@ -77,13 +91,6 @@ public class LockRecord implements Serializable {
         this.lockId = lockId;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public Integer getLockStatus() {
         return lockStatus;

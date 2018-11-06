@@ -37,7 +37,7 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     @JmsListener(destination = "lockRecord")
-    public String getInfo(String info){
+    public String getInfo(String info) {
         try {
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();
             switch (json.get("msgType").getAsInt()) {
@@ -133,13 +133,16 @@ public class ConsumerServiceImpl implements ConsumerService {
     private void insertLockRecord(JsonObject result) {
         LockRecord lockRecord = new LockRecord();
         String lockId = result.get("id").getAsString();
-        LockDid lockDid =lockDidService.getLockDidByBid(lockId);
+        LockDid lockDid = lockDidService.getLockDidByBid(lockId);
         //设置bid(锁编号)
         lockRecord.setLockId(Long.parseLong(lockId));
         //设置did
         lockRecord.setDid(lockDid.getDid());
-        lockRecord.setTime(new Date(result.get("lastRefresh").getAsLong()));
+        lockRecord.setReceiveTime(new Date(result.get("lastRefresh").getAsLong()));
         lockRecord.setLockStatus(result.get("lockStatus").getAsInt());
+        //保存到服务器的时间
+        lockRecord.setLocalTime(new Date());
+
         lockRecordService.add(lockRecord);
     }
 }
