@@ -79,7 +79,7 @@ public interface DepartmentMapper {
             , @Result(column = "hospital", property = "hospital", javaType = String.class)
             , @Result(column = "department", property = "department", javaType = String.class)
     })
-    List<ListVo> findAll(@Param(value = "hid") String hid,@Param(value = "name") String name);
+    List<ListVo> findAll(@Param(value = "hid") String hid,@Param(value = "name") String name,@Param(value = "status") String status);
 
 
     @Results(id = "selectVo", value = {

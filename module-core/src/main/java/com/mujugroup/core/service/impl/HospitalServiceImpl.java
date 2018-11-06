@@ -220,7 +220,8 @@ public class HospitalServiceImpl implements HospitalService {
         if (agent == null) throw new ParamException("请选择正确的代理商");
         if (isExitsName(addVo.getName()) > 0) throw new ParamException("医院名称已存在,请重新输入");
         Hospital hospital = hospitalVoToHospital(addVo, AddVo.class);
-        hospital.setCountry(0);
+        //设置所在国家为中国
+        hospital.setCountry(Hospital.COUNTRY_CHINA);
         hospital.setProvince(addVo.getPid());
         hospital.setCity(addVo.getCid());
         hospital.setCrtId(uid);

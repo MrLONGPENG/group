@@ -23,7 +23,7 @@ public interface DepartmentService {
 
     boolean delete(int uid, String id) throws ParamException, DataException;
 
-    List<ListVo> findAll(String hid, String name) throws DataException;
+    List<ListVo> findAll(String hid, String name,String status) throws DataException;
 
     List<SelectVO> getSelectList(int uid,int hid, String name) throws DataException;
 

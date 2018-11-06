@@ -14,6 +14,8 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Table(name = "t_hospital")
 public class Hospital implements Serializable {
+    //所在国家(1：中国)
+    public static final int COUNTRY_CHINA=1;
     //启用状态
     public static final int TYPE_ENABLE = 22;
     //禁用状态

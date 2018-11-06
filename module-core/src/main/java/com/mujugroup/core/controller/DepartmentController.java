@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -36,11 +37,8 @@ public class DepartmentController {
             , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false
             , defaultValue = "") String name, @ApiParam(hidden = true) int uid) throws BaseException {
         List<SelectVO> list = departmentService.getSelectList(uid, hid, name);
-        if (list != null && list.size() > 0) {
-            return ResultUtil.success(list);
-        } else {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-        }
+        return ResultUtil.success(list);
+
     }
 
     @ApiOperation(value = "通过医院ID获取所有的科室", notes = "通过医院ID,或名称，可模糊匹配，获取所有的科室信息")
@@ -48,17 +46,16 @@ public class DepartmentController {
     public String list(@ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false
             , defaultValue = "1") int pageNum, @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
             , required = false, defaultValue = "10") int pageSize, @ApiParam(hidden = true) int uid
-            , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue ="") String hid
+            , @ApiParam(value = "医院ID") @RequestParam(value = "hid", required = false, defaultValue = "") String hid
             , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false
-            , defaultValue = "") String name) throws BaseException {
+            , defaultValue = "") String name
+            , @ApiParam(value = "科室状态") @RequestParam(value = "status", required = false, defaultValue = "") String status
+    ) throws BaseException {
         String ids = departmentService.checkUserData(uid, hid);
-        PageHelper.startPage(pageNum,pageSize);
-        List<ListVo> list = departmentService.findAll(ids, name);
-        if (list != null && list.size() > 0) {
-            return ResultUtil.success(list, PageInfo.of(list));
-        } else {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<ListVo> list = departmentService.findAll(ids, name, status);
+        return ResultUtil.success(list, PageInfo.of(list));
+
     }
 
     @ApiOperation(value = "添加科室", notes = "添加科室")

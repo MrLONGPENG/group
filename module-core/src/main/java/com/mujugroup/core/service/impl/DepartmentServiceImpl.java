@@ -42,8 +42,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final Logger logger = LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     @Override
-    public List<ListVo> findAll(String hid, String name) {
-        return departmentMapper.findAll(hid, name);
+    public List<ListVo> findAll(String hid, String name, String status) {
+        return departmentMapper.findAll(hid, name, status);
     }
 
     @Override

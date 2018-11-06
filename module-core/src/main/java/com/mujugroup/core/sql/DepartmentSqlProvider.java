@@ -44,21 +44,28 @@ public class DepartmentSqlProvider {
         }}.toString();
     }
 
-    public String findAll(@Param(value = "hid") String hid, @Param(value = "name") String name) {
+    public String findAll(@Param(value = "hid") String hid, @Param(value = "name") String name
+            , @Param(value = "status") String status) {
         return new SQL() {{
             SELECT("t.id, h.id AS hid, t.name, IFNULL(dict.name,'') AS department ,h.name AS hospital" +
                     ",t.sort, t.create_date, t.mid AS mid, t.status, t.remark");
             FROM("t_department t");
             LEFT_OUTER_JOIN("t_dict_department dict ON t.mid=dict.id");
             INNER_JOIN("t_hospital h  ON t.hospital_id=h.id");
+            WHERE("t.status=1");
+            if (!StringUtil.isEmpty(status)) {
+                AND().WHERE("t.status= #{status}");
+            }
             if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
             }
             if ((!StringUtil.isEmpty(hid) && hid.contains(Constant.SIGN_DOU_HAO))) {
                 AND().WHERE("t.hospital_id in (" + hid + ")");
-            }else if (!StringUtil.isEmpty(hid) && !Constant.DIGIT_ZERO.equals(hid)){
+            } else if (!StringUtil.isEmpty(hid) && !Constant.DIGIT_ZERO.equals(hid)) {
                 AND().WHERE("t.hospital_id = #{hid}");
             }
+
+
         }}.toString();
     }
 
