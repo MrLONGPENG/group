@@ -95,6 +95,8 @@ public class UsingApiServiceImpl implements UsingApiService {
                     JsonObject data = returnData.getAsJsonObject("data");
                     if(wxUsing!=null && !openId.equals(wxUsing.getOpenId())) {
                         usingBean.setType(1);
+                        usingBean.setPayTime(wxUsing.getPayTime());
+                        usingBean.setEndTime(wxUsing.getEndTime());
                         usingBean.setInfo("该设备已经被他人使用，请联系客户");
                     }else if(wxUsing!=null && wxUsing.getUsing()){  // 使用中,计算时间
                         usingBean.setType(2);
