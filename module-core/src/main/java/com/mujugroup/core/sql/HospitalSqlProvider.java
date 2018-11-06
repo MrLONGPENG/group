@@ -68,11 +68,12 @@ public class HospitalSqlProvider {
 
     public String getHospitalList(@Param("aid") int aid, @Param("name") String name) {
         return new SQL() {{
-            SELECT("id, name");
-            FROM("t_hospital");
-            if (aid != 0) AND().WHERE("agentId = #{aid}");
+            SELECT("`id`, `name`");
+            FROM("`t_hospital`");
+            WHERE("`enable` = 22");
+            if (aid != 0) AND().WHERE("`agentId` = #{aid}");
             if (!StringUtil.isEmpty(name)) {
-                AND().WHERE("name like concat(concat('%',#{name}),'%')");
+                AND().WHERE("`name` like concat(concat('%',#{name}),'%')");
             }
         }}.toString();
     }
