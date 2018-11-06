@@ -15,7 +15,7 @@ public class LockInfoSqlProvider {
         return new SQL() {{
             INSERT_INTO("t_lock_info");
             if (lockInfo.getId() != null) VALUES("id", "#{id}");
-            if (lockInfo.getLockId() != null) VALUES("lock_id", "#{bid}");
+            if (lockInfo.getLockId() != null) VALUES("lock_id", "#{lockId}");
             if (lockInfo.getBrand() != null) VALUES("brand", "#{brand}");
             if (lockInfo.getMac() != null) VALUES("mac", "#{mac}");
             if (lockInfo.getKey() != null) VALUES("key", "#{key}");
@@ -41,7 +41,7 @@ public class LockInfoSqlProvider {
         return new SQL() {{
             UPDATE("t_lock_info");
             if (lockInfo.getId() != null) SET("id = #{id}");
-            if (lockInfo.getLockId() != null) SET("lock_id = #{bid}");
+            if (lockInfo.getLockId() != null) SET("lock_id = #{lockId}");
             if (lockInfo.getBrand() != null) SET("brand = #{brand}");
             if (lockInfo.getMac() != null) SET("mac = #{mac}");
             if (lockInfo.getKey() != null) SET("key = #{key}");

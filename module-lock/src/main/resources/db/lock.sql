@@ -28,7 +28,7 @@ INSERT INTO `t_lock_did` VALUES (6, 001001003, 1, 2666073827771144345, '24ffcc05
 DROP TABLE IF EXISTS `t_lock_info`;
 CREATE TABLE `t_lock_info` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`did` bigint(20) DEFAULT NULL COMMENT '设备ID',
+`lock_id` bigint(20) DEFAULT NULL COMMENT '设备ID',
 `brand` tinyint(4) DEFAULT NULL COMMENT '设备锁厂商品牌(1:连旅；2:待定)',
 `mac` varchar(32) DEFAULT NULL COMMENT '设备蓝牙地址',
 `key` varchar(32) DEFAULT NULL COMMENT '设备蓝牙密钥',
@@ -52,16 +52,35 @@ PRIMARY KEY (`id`)
 -- ----------------------------
 -- Table structure for t_lock_record
 -- ----------------------------
-DROP TABLE IF EXISTS `t_lock_record`;
-CREATE TABLE `t_lock_record`(
-`id` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `t_lock_switch`;
+CREATE TABLE `t_lock_switch`(
+`id` bigint(20) NOT NULL AUTO_INCREMENT,
 `did` bigint(20) DEFAULT NULL COMMENT '业务ID',
 `lock_id` bigint(20) DEFAULT NULL COMMENT '设备锁十进制ID',
 `receiveTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '开关锁时间',
 `lockStatus` tinyint(4) DEFAULT 0 COMMENT '状态 1 关闭 2 打开',
 `localTime` datetime  DEFAULT NULL COMMENT '保存到本地的时间',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关锁记录表';
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关锁状态表';
+-- ----------------------------
+-- Table structure for t_lock_record
+-- ----------------------------
+DROP TABLE IF EXISTS `t_lock_record`;
+CREATE TABLE `t_lock_record` (
+`id` bigint(20) NOT NULL AUTO_INCREMENT,
+`did` bigint(20) DEFAULT NULL COMMENT '业务ID',
+`lock_id` bigint(20) DEFAULT NULL COMMENT '设备锁十进制ID',
+`csq` int(11) DEFAULT NULL COMMENT '信号指标',
+`temp` int(11) DEFAULT NULL COMMENT '温度',
+`charge` int(11) DEFAULT NULL COMMENT '充电电压(原值:vbus)',
+`voltage` int(11) DEFAULT NULL COMMENT '电池电压(原值:vbattery)',
+`electric` int(11) DEFAULT NULL COMMENT '充电电流(原值:iCharge)',
+`battery_stat` tinyint(4) DEFAULT NULL COMMENT '剩余电量',
+`lock_status` tinyint(4)  DEFAULT NULL COMMENT '锁状态 1:关 2:开 (助力车 3:中间态 ) 4代表开锁机械故障、5代表关锁机械故障，6代表锁端本地时间不在限制时间范围内',
+`last_refresh` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '最后上报时间',
+`crtTime` datetime DEFAULT NULL COMMENT '创建时间',
+UNIQUE KEY `index_did` (`did`) COMMENT '唯一业务ID索引',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁记录表'
 
 

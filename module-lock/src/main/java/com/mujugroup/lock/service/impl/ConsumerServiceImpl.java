@@ -6,10 +6,8 @@ import com.google.gson.JsonParser;
 import com.mujugroup.lock.model.LockDid;
 import com.mujugroup.lock.model.LockInfo;
 import com.mujugroup.lock.model.LockRecord;
-import com.mujugroup.lock.service.ConsumerService;
-import com.mujugroup.lock.service.LockDidService;
-import com.mujugroup.lock.service.LockInfoService;
-import com.mujugroup.lock.service.LockRecordService;
+import com.mujugroup.lock.model.LockSwitch;
+import com.mujugroup.lock.service.*;
 import com.mujugroup.lock.service.feign.ModuleWxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
@@ -23,16 +21,18 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     private final LockInfoService lockInfoService;
     private final ModuleWxService moduleWxService;
-    private final LockRecordService lockRecordService;
+    private final LockSwitchService lockSwitchService;
     private final LockDidService lockDidService;
+    private final LockRecordService lockRecordService;
 
     @Autowired
     public ConsumerServiceImpl(LockInfoService lockInfoService
-            , ModuleWxService moduleWxService, LockRecordService lockRecordService, LockDidService lockDidService) {
+            , ModuleWxService moduleWxService, LockSwitchService lockSwitchService, LockDidService lockDidService, LockRecordService lockRecordService) {
         this.lockInfoService = lockInfoService;
         this.moduleWxService = moduleWxService;
-        this.lockRecordService = lockRecordService;
+        this.lockSwitchService = lockSwitchService;
         this.lockDidService = lockDidService;
+        this.lockRecordService = lockRecordService;
     }
 
     @Override
@@ -43,6 +43,7 @@ public class ConsumerServiceImpl implements ConsumerService {
             switch (json.get("msgType").getAsInt()) {
                 case 200:
                     switchLock(json.getAsJsonObject("result"), true);
+                    insertLockSwitch(json.getAsJsonObject("result"));
                     insertLockRecord(json.getAsJsonObject("result"));
                     break;//开关锁
                 case 201:
@@ -53,6 +54,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                     break;//其他信息上报
                 case 1000:
                     switchLock(json.getAsJsonObject("result"), false);
+                    insertLockRecord(json.getAsJsonObject("result"));
                     break;//普通上报消息（普通锁）
                 case 2000:
                     break;//普通上报消息（助力锁）
@@ -68,7 +70,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     private LockInfo formatLockInfo(JsonObject info, LockInfo lockInfo) {
         lockInfo.setBrand(1); // 设置品牌连旅
         if (info.has("id")) {
-            lockInfo.setDid(info.get("id").getAsLong());
+            lockInfo.setLockId(info.get("id").getAsLong());
         }
         if (info.has("mac")) {
             lockInfo.setMac(info.get("mac").getAsString());
@@ -119,30 +121,67 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     private void switchLock(JsonObject result, boolean isNotify) {
-        LockInfo lockInfo = lockInfoService.getLockInfoByDid(result.get("id").getAsString());
+        LockInfo lockInfo = lockInfoService.getLockInfoByBid(result.get("id").getAsString());
         if (lockInfo == null) {
             lockInfoService.insert(formatLockInfo(result, lockInfo = new LockInfo()));
         } else {
             lockInfoService.update(formatLockInfo(result, lockInfo));
         }
         if (isNotify) {
-            moduleWxService.usingNotify(String.valueOf(lockInfo.getDid()), String.valueOf(lockInfo.getLockStatus()));
+            moduleWxService.usingNotify(String.valueOf(lockInfo.getLockId()), String.valueOf(lockInfo.getLockStatus()));
         }
     }
 
-    private void insertLockRecord(JsonObject result) {
-        LockRecord lockRecord = new LockRecord();
+    private void insertLockSwitch(JsonObject result) {
+        LockSwitch lockSwitch = new LockSwitch();
         String lockId = result.get("id").getAsString();
         LockDid lockDid = lockDidService.getLockDidByBid(lockId);
         //设置bid(锁编号)
-        lockRecord.setLockId(Long.parseLong(lockId));
+        lockSwitch.setLockId(Long.parseLong(lockId));
         //设置did
-        lockRecord.setDid(lockDid.getDid());
-        lockRecord.setReceiveTime(new Date(result.get("lastRefresh").getAsLong()));
-        lockRecord.setLockStatus(result.get("lockStatus").getAsInt());
+        lockSwitch.setDid(lockDid.getDid());
+        lockSwitch.setReceiveTime(new Date(result.get("lastRefresh").getAsLong()));
+        lockSwitch.setLockStatus(result.get("lockStatus").getAsInt());
         //保存到服务器的时间
-        lockRecord.setLocalTime(new Date());
+        lockSwitch.setLocalTime(new Date());
+        lockSwitchService.add(lockSwitch);
+    }
 
+    private void insertLockRecord(JsonObject info) {
+        LockRecord lockRecord = new LockRecord();
+        String lockId = info.get("id").getAsString();
+        LockDid lockDid = lockDidService.getLockDidByBid(lockId);
+        lockRecord.setDid(lockDid.getDid());
+        lockRecord.setLockId(Long.parseLong(lockId));
+        if (info.has("csq")) {
+            lockRecord.setCsq(info.get("csq").getAsInt());
+        }
+        if (info.has("temp")) {
+            lockRecord.setTemp(info.get("temp").getAsInt());
+        }
+        if (info.has("vbus")) {
+            lockRecord.setCharge(info.get("vbus").getAsInt());
+        }
+        if (info.has("vbattery")) {
+            lockRecord.setVoltage(info.get("vbattery").getAsInt());
+        }
+        if (info.has("iCharge")) {
+            lockRecord.setElectric(info.get("iCharge").getAsInt());
+        }
+
+        if (info.has("batteryStat")) {
+            lockRecord.setBatteryStat(info.get("batteryStat").getAsInt());
+        }
+        if (info.has("lockStatus")) {
+            lockRecord.setLockStatus(info.get("lockStatus").getAsInt());
+        }
+        if (info.has("lastRefresh")) {
+            lockRecord.setLastRefresh(new Date(info.get("lastRefresh").getAsLong()));
+        }
+        //设置创建时间
+        lockRecord.setCrtTime(new Date());
         lockRecordService.add(lockRecord);
     }
+
+
 }
