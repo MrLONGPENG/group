@@ -4,14 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.core.mapper.BeanMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
@@ -25,27 +24,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
 
-    private final BeanMapper beanMapper;
     private final DeviceMapper deviceMapper;
     private final HospitalMapper hospitalMapper;
     private final MapperFactory mapperFactory;
 
 
     @Autowired
-    public DeviceServiceImpl(DeviceMapper deviceMapper, BeanMapper beanMapper, HospitalMapper hospitalMapper, MapperFactory mapperFactory) {
+    public DeviceServiceImpl(DeviceMapper deviceMapper, HospitalMapper hospitalMapper, MapperFactory mapperFactory) {
         this.deviceMapper = deviceMapper;
-        this.beanMapper = beanMapper;
         this.hospitalMapper = hospitalMapper;
         this.mapperFactory = mapperFactory;
     }
+
+
+    @Override
+    public InfoTo getDeviceInfo(String did, String bid) {
+        return deviceMapper.getDeviceInfo(did, bid);
+    }
+
 
     @Override
     @Transactional
@@ -85,6 +87,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(pageList, DeviceBO.class);
     }
+
 
 
     @Override
@@ -152,16 +155,6 @@ public class DeviceServiceImpl implements DeviceService {
         device.setCrtTime(new Date());
         device.setUpdateTime(new Date());
         return deviceMapper.insert(device);
-    }
-
-    @Override
-    public DeviceBean findDeviceBeanByDid(String did) {
-        return beanMapper.findDeviceBeanByDid(did);
-    }
-
-    @Override
-    public List<Device> findListAll(String did, String bid, String bed, String aid, String hid, String oid, int status) {
-        return deviceMapper.findListAll(did, bid, bed, aid, hid, oid, status);
     }
 
 

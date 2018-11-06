@@ -4,13 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
-import com.mujugroup.core.model.Department;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBO;
-import com.mujugroup.core.service.AuthDataService;
-import com.mujugroup.core.service.DepartmentService;
-import com.mujugroup.core.service.FeignService;
-import com.mujugroup.core.service.HospitalService;
+import com.mujugroup.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +18,16 @@ import java.util.*;
 @Service("feignService")
 public class FeignServiceImpl implements FeignService {
 
+    private final DeviceService deviceService;
     private final HospitalService hospitalService;
     private final AuthDataService authDataService;
     private final DepartmentService departmentService;
     private final Logger logger = LoggerFactory.getLogger(FeignServiceImpl.class);
 
     @Autowired
-    public FeignServiceImpl(HospitalService hospitalService, AuthDataService authDataService
+    public FeignServiceImpl(DeviceService deviceService, HospitalService hospitalService, AuthDataService authDataService
             , DepartmentService departmentService) {
+        this.deviceService = deviceService;
         this.hospitalService = hospitalService;
         this.authDataService = authDataService;
         this.departmentService = departmentService;
@@ -94,6 +93,11 @@ public class FeignServiceImpl implements FeignService {
     @Override
     public String getHospitalName(int id) {
         return hospitalService.getHospitalName(id);
+    }
+
+    @Override
+    public InfoTo getDeviceInfo(String did, String bid) {
+        return deviceService.getDeviceInfo(did, bid);
     }
 }
 

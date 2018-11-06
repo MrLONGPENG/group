@@ -1,11 +1,11 @@
 package com.mujugroup.core.controller;
 
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +24,19 @@ public class FeignController {
         this.feignService = feignService;
     }
 
+
+    /**
+     * 根据DID或BID获取基本设备信息情况
+     * @param did 业务ID
+     * @param bid 锁设备ID
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getDeviceInfo", method = RequestMethod.POST
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public InfoTo getDeviceInfo(@RequestParam(value = "did", required = false) String did
+            , @RequestParam(value = "bid", required = false) String bid){
+        return feignService.getDeviceInfo(did, bid);
+    }
     /**
      * 根据代理商ID获取医院ID 以及医院名称
      *
@@ -83,11 +96,12 @@ public class FeignController {
      * @return
      */
     @RequestMapping(value = "/findOidByHid",method = RequestMethod.POST)
-    Map<Integer,String> findOidByHid(@RequestParam(value = "hid") String hid){
+    public Map<Integer,String> findOidByHid(@RequestParam(value = "hid") String hid){
         return  feignService.findOidByHid(hid);
     }
+
     @RequestMapping(value = "/findName")
-    String getHospitalName(@RequestParam(value = "id") Integer id){
+    public String getHospitalName(@RequestParam(value = "id") Integer id){
         return  feignService.getHospitalName(id);
     }
 }

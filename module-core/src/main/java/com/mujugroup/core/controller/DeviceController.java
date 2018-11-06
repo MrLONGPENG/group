@@ -1,14 +1,10 @@
 package com.mujugroup.core.controller;
 
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.bean.DeviceBean;
-import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
@@ -21,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
@@ -34,17 +29,6 @@ public class DeviceController {
     @Autowired
     public DeviceController(DeviceService deviceService) {
         this.deviceService = deviceService;
-    }
-
-    @ApiOperation(value = "查询设备信息", notes = "根据DID查询指定设备信息")
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public String query(String did) {
-        logger.info("device--query");
-        DeviceBean bean = deviceService.findDeviceBeanByDid(did);
-        if (bean != null) {
-            return ResultUtil.success(bean);
-        }
-        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
 

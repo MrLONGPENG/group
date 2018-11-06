@@ -1,11 +1,11 @@
 package com.mujugroup.core.mapper;
 
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
 import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.bo.DeviceBO;
 import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -143,4 +143,18 @@ public interface DeviceMapper {
     @Select("SELECT * FROM t_device WHERE depart= #{oid} AND `status`=14")
     @ResultMap("device")
     List<Device> getDeviceListByOid(@Param(value = "oid") String id);
+
+
+    @Results(value={@Result(column="did",property="did",javaType=String.class)
+            ,@Result(column="bid",property="bid",javaType=String.class)
+            ,@Result(column="aid",property="aid",javaType=Integer.class)
+            ,@Result(column="hid",property="hid",javaType=Integer.class)
+            ,@Result(column="oid",property="oid",javaType=Integer.class)
+            ,@Result(column="bed",property="bed",javaType=String.class)
+            ,@Result(column="address",property="address",javaType=String.class)
+            ,@Result(column="hidName",property="hospital",javaType=String.class)
+            ,@Result(column="oidName",property="department",javaType=String.class)
+    })
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceInfo")
+    InfoTo getDeviceInfo(@Param(value = "did") String did, @Param(value = "bid") String bid);
 }

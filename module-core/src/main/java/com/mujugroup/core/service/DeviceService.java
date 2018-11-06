@@ -1,9 +1,9 @@
 package com.mujugroup.core.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.to.PageTO;
 import com.mujugroup.core.model.Device;
-import com.mujugroup.core.objeck.bean.DeviceBean;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
@@ -16,12 +16,6 @@ import java.util.List;
 
 public interface DeviceService {
     boolean insert(int uid, AddVo deviceVo) throws ParamException;
-
-    DeviceBean findDeviceBeanByDid(String did);
-
-    List<Device> findListAll(String did, String bid
-            , String bed, String aid, String hid
-            , String oid, int status);
 
     List<Device> findListByStatus(int status);
 
@@ -40,4 +34,7 @@ public interface DeviceService {
             , String oid, int status, int pageNum, int pageSize);
 
     List<DeviceBO> toDeviceBO(List<Device> pageList);
+
+
+    InfoTo getDeviceInfo(String did, String bid);
 }

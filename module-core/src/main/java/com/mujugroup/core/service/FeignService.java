@@ -1,9 +1,7 @@
 package com.mujugroup.core.service;
 
 
-import com.mujugroup.core.model.Department;
-
-import java.util.List;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +19,10 @@ public interface FeignService {
 
     //通过医院ID获取所属科室ID
    Map<Integer,String> findOidByHid(String hid);
+
    //通过医院ID获取医院名称
    String getHospitalName(int id);
+
+   //通过业务ID或设备ID获取基本信息
+    InfoTo getDeviceInfo(String did, String bid);
 }
