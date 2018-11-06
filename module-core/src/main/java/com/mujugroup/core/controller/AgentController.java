@@ -49,12 +49,7 @@ public class AgentController {
         if (userAgentList == null || userAgentList.size() == 0) {
             List<DBMap> auth = authDataService.getAuthData(uid);
             if (auth != null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))) {
-                List<SelectVo> list = agentService.getTheAgentList();
-                if (list != null) {
-                    return ResultUtil.success(list);
-                } else {
-                    return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-                }
+                return ResultUtil.success(agentService.getTheAgentList());
             } else {
                 return ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY);
             }
