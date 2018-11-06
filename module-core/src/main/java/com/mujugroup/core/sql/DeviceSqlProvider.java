@@ -134,9 +134,10 @@ public class DeviceSqlProvider {
         return new SQL() {{
             SELECT("*");
             FROM("t_device");
-            WHERE("`status`=14");
             if (status!=0) {
-                AND().WHERE("`status`= #{status}");
+               WHERE("`status`= #{status}");
+            }else{
+                WHERE("`status`=14");
             }
             if (!StringUtil.isEmpty(did)) {
                 AND().WHERE("did=#{did}");

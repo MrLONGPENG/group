@@ -52,9 +52,10 @@ public class DepartmentSqlProvider {
             FROM("t_department t");
             LEFT_OUTER_JOIN("t_dict_department dict ON t.mid=dict.id");
             INNER_JOIN("t_hospital h  ON t.hospital_id=h.id");
-            WHERE("t.status=1");
             if (!StringUtil.isEmpty(status)) {
-                AND().WHERE("t.status= #{status}");
+                WHERE("t.status= #{status}");
+            }else {
+                WHERE("t.status=1");
             }
             if (!StringUtil.isEmpty(name)) {
                 AND().WHERE("t.name like concat(concat('%',#{name}),'%')");
