@@ -3,8 +3,8 @@ package com.mujugroup.lock.controller;
 
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.lock.model.LockRecord;
-import com.mujugroup.lock.service.LockRecordService;
+import com.mujugroup.lock.model.LockSwitch;
+import com.mujugroup.lock.service.LockSwitchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,15 +21,15 @@ import java.util.List;
  * @author leolaurel
  */
 @RestController
-@RequestMapping("/lockRecord")
+@RequestMapping("/lockSwitch")
 @Api(description = "开关锁记录接口")
-public class LockRecordController {
+public class LockSwitchController {
 
-    private final LockRecordService lockRecordService;
+    private final LockSwitchService lockSwitchService;
 
     @Autowired
-    public LockRecordController(LockRecordService lockRecordService) {
-        this.lockRecordService = lockRecordService;
+    public LockSwitchController(LockSwitchService lockSwitchService) {
+        this.lockSwitchService = lockSwitchService;
     }
 
     @ApiOperation(value = "获取最近的十次开关锁记录", notes = "获取最近的十次开关锁记录")
@@ -37,9 +37,9 @@ public class LockRecordController {
     public String list(@ApiParam(value = "业务编号") @RequestParam(value = "did", required = false, defaultValue = "") String did
             , @ApiParam(value = "锁编号") @RequestParam(value = "bid", required = false, defaultValue = "") String bid
     ) throws BaseException {
-        List<LockRecord> lockRecordList = lockRecordService.getLockStatusList(did,bid);
-        if (lockRecordList != null && lockRecordList.size() > 0) {
-            return ResultUtil.success(lockRecordList);
+        List<LockSwitch> lockSwitchList = lockSwitchService.getLockStatusList(did,bid);
+        if (lockSwitchList != null && lockSwitchList.size() > 0) {
+            return ResultUtil.success(lockSwitchList);
         } else {
             return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         }
