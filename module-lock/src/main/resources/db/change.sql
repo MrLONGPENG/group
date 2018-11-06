@@ -1,0 +1,1 @@
+alter table t_lock_info CHANGE did lock_id  bigint(20) DEFAULT NULL COMMENT '锁设备ID';

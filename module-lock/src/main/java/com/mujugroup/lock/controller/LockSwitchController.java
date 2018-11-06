@@ -21,7 +21,7 @@ import java.util.List;
  * @author leolaurel
  */
 @RestController
-@RequestMapping("/lockSwitch")
+@RequestMapping("/switch")
 @Api(description = "开关锁记录接口")
 public class LockSwitchController {
 
@@ -37,11 +37,7 @@ public class LockSwitchController {
     public String list(@ApiParam(value = "业务编号") @RequestParam(value = "did", required = false, defaultValue = "") String did
             , @ApiParam(value = "锁编号") @RequestParam(value = "bid", required = false, defaultValue = "") String bid
     ) throws BaseException {
-        List<LockSwitch> lockSwitchList = lockSwitchService.getLockStatusList(did,bid);
-        if (lockSwitchList != null && lockSwitchList.size() > 0) {
-            return ResultUtil.success(lockSwitchList);
-        } else {
-            return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
-        }
+        List<LockSwitch> lockSwitchList = lockSwitchService.getLockStatusList(did, bid);
+        return ResultUtil.success(lockSwitchList);
     }
 }
