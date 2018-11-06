@@ -18,4 +18,5 @@ public class InfoTo {
     private String hospital;
     private String department;
     private String address;
+    private boolean illegal;
 }
