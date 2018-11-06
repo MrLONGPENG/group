@@ -45,7 +45,12 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public InfoTo getDeviceInfo(String did, String bid) {
-        return deviceMapper.getDeviceInfo(did, bid);
+        InfoTo infoTo = deviceMapper.getDeviceInfo(did, bid);
+        if(infoTo == null) {
+            infoTo = new InfoTo();
+            infoTo.setIllegal(true);
+        }
+        return infoTo;
     }
 
 

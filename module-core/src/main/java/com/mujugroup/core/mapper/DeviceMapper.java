@@ -147,9 +147,9 @@ public interface DeviceMapper {
 
     @Results(value={@Result(column="did",property="did",javaType=String.class)
             ,@Result(column="bid",property="bid",javaType=String.class)
-            ,@Result(column="aid",property="aid",javaType=Integer.class)
-            ,@Result(column="hid",property="hid",javaType=Integer.class)
-            ,@Result(column="oid",property="oid",javaType=Integer.class)
+            ,@Result(column="aid",property="aid",javaType=String.class)
+            ,@Result(column="hid",property="hid",javaType=String.class)
+            ,@Result(column="oid",property="oid",javaType=String.class)
             ,@Result(column="bed",property="bed",javaType=String.class)
             ,@Result(column="address",property="address",javaType=String.class)
             ,@Result(column="hidName",property="hospital",javaType=String.class)

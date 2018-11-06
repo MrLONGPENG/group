@@ -165,12 +165,12 @@ public class DeviceSqlProvider {
             SELECT("d.did, d.bid, d.agentId as aid, h.id as hid, o.id as oid, d.hospitalBed as bed" +
                     ", h.`name` as hidName , o.`name` as oidName, h.address");
             FROM("t_device d,t_hospital h, t_department o");
-            WHERE("d.hospitalId = h.id AND d.depart = o.id AND `d.status`=14");
+            WHERE("d.`hospitalId` = h.id AND d.`depart` = o.id AND d.`status`=14");
             if (!StringUtil.isEmpty(did)) {
-                AND().WHERE("`d.did`=#{did}");
+                AND().WHERE("d.`did`=#{did}");
             }
             if (!StringUtil.isEmpty(bid)) {
-                AND().WHERE("`d.bid`=#{bid}");
+                AND().WHERE("d.`bid`=#{bid}");
             }
         }}.toString();
     }
