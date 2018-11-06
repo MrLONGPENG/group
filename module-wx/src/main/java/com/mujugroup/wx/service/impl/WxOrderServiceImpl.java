@@ -2,7 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.util.DateUtil;
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -211,7 +211,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
-    public List<WxOrder> findList(AidHidOidTO dto) {
+    public List<WxOrder> findList(RequestTo dto) {
         return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd()
                 , dto.getTradeNo(), dto.getOrderType());
     }

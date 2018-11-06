@@ -1,8 +1,8 @@
 package com.mujugroup.data.service.impl;
 
 import com.github.wxiaoqi.merge.annonation.MergeResult;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.mujugroup.data.objeck.bo.OrderBO;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.mujugroup.data.objeck.bo.OrderBo;
 import com.mujugroup.data.service.OrderService;
 import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @MergeResult
-    public List<OrderBO> mergeOrderBO(List<OrderTO> list) {
-        mapperFactory.classMap(OrderTO.class, OrderBO.class)
+    public List<OrderBo> mergeOrderBO(List<OrderTo> list) {
+        mapperFactory.classMap(OrderTo.class, OrderBo.class)
                 .field("aid","agent")
                 .field("hid","hospital")
                 .field("oid","department")
@@ -38,6 +38,6 @@ public class OrderServiceImpl implements OrderService {
                 .fieldMap("payPrice").converter("rmbPriceConvert").add()
                 .fieldMap("orderType").converter("orderTypeConvert").add()
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().mapAsList(list, OrderBO.class);
+        return mapperFactory.getMapperFacade().mapAsList(list, OrderBo.class);
     }
 }

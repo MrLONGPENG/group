@@ -1,7 +1,7 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.Agent;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.sql.AgentSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -50,13 +50,13 @@ public interface AgentMapper {
     @Results({@Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getAgentList();
+    List<SelectVo> getAgentList();
 
     @Select("SELECT a.id as id,a.name as name From t_agent a ")
     @Results(id = "agentVo", value = {@Result(id = true, column = "id", property = "id", javaType = Integer.class)
             , @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getTheAgentList();
+    List<SelectVo> getTheAgentList();
 
     /**
      * 通过用户ID获取代理商
@@ -67,11 +67,11 @@ public interface AgentMapper {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
             @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getAgentListByUid(@Param("uid") long uid);
+    List<SelectVo> getAgentListByUid(@Param("uid") long uid);
 
     @Select("Select d.rid as id, a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.id AND d.`type`=2  AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("authAgentList")
-    List<SelectVO> getAgentHospitalByUid(@Param("uid") long uid);
+    List<SelectVo> getAgentHospitalByUid(@Param("uid") long uid);
 
     @Select("Select COUNT(*) FROM t_agent a,t_hospital b WHERE a.id=b.agentid AND a.id=#{id} limit 1")
     @ResultType(boolean.class)

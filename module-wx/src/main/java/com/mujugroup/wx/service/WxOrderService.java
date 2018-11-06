@@ -1,6 +1,6 @@
 package com.mujugroup.wx.service;
 
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxGoods;
@@ -42,7 +42,7 @@ public interface WxOrderService {
 
     List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType);
 
-    List<WxOrder> findList(AidHidOidTO dto);
+    List<WxOrder> findList(RequestTo dto);
 
 
 

@@ -1,7 +1,7 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.DictDepartment;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.ListVo;
 import com.mujugroup.core.sql.DictDepartmentSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -56,7 +56,7 @@ public interface DictDepartmentMapper {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
             @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getDictDepartmentList(@Param(value = "name") String name);
+    List<SelectVo> getDictDepartmentList(@Param(value = "name") String name);
 
     @SelectProvider(type = DictDepartmentSqlProvider.class, method = "findAll")
     @Results(id = "listVo", value = {

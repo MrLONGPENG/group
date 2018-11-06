@@ -2,7 +2,7 @@ package com.lveqia.cloud.zuul.service.impl;
 
 import com.lveqia.cloud.zuul.mapper.SysMenuMapper;
 import com.lveqia.cloud.zuul.model.SysMenu;
-import com.lveqia.cloud.zuul.objeck.vo.MenuVO;
+import com.lveqia.cloud.zuul.objeck.vo.MenuVo;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,14 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
-    public List<MenuVO> getMenusByUserId(Long id) {
-        MenuVO tree;
-        List<MenuVO> children;
-        List<MenuVO> trees = new ArrayList<>();
+    public List<MenuVo> getMenusByUserId(Long id) {
+        MenuVo tree;
+        List<MenuVo> children;
+        List<MenuVo> trees = new ArrayList<>();
         List<SysMenu> main = sysMenuMapper.getMainMenus(); // 获取一级菜单
         List<SysMenu> list = id == 1 ? sysMenuMapper.getMenusByAdmin() : sysMenuMapper.getMenusByUserId(id);
         for (SysMenu sysMenu : main){
-            tree = new MenuVO(); // 当一级菜单拥有有权限的子菜单时候，放出一级菜单
+            tree = new MenuVo(); // 当一级菜单拥有有权限的子菜单时候，放出一级菜单
             children = getChildren(list, sysMenu.getId());
             if (children != null && children.size() > 0) {
                 tree.setId(sysMenu.getId());
@@ -54,12 +54,12 @@ public class SysMenuServiceImpl implements SysMenuService {
         return trees;
     }
 
-    private List<MenuVO> getChildren(List<SysMenu> list, Integer parentId) {
-        MenuVO tree;
-        List<MenuVO> trees = new ArrayList<>();
+    private List<MenuVo> getChildren(List<SysMenu> list, Integer parentId) {
+        MenuVo tree;
+        List<MenuVo> trees = new ArrayList<>();
         for (SysMenu sysMenu : list) {
             if (parentId.equals(sysMenu.getParentId())){
-                tree = new MenuVO();
+                tree = new MenuVo();
                 tree.setId(sysMenu.getId());
                 tree.setName(sysMenu.getName());
                 tree.setPath(sysMenu.getPath());

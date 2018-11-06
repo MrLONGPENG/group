@@ -6,8 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.mapper.AuthDataMapper;
-import com.mujugroup.core.objeck.bo.TreeBO;
-import com.mujugroup.core.objeck.vo.TreeVO;
+import com.mujugroup.core.objeck.bo.TreeBo;
+import com.mujugroup.core.objeck.vo.TreeVo;
 import com.mujugroup.core.service.AuthDataService;
 import ma.glasnost.orika.MapperFactory;
 import org.slf4j.Logger;
@@ -96,7 +96,7 @@ public class AuthDataServiceImpl implements AuthDataService {
 
     @Override
     @MergeResult
-    public List<TreeBO> getAllAgentList() {
+    public List<TreeBo> getAllAgentList() {
         return authDataMapper.getAllAgentList();
     }
 
@@ -111,46 +111,46 @@ public class AuthDataServiceImpl implements AuthDataService {
 
     @Override
     @MergeResult
-    public List<TreeBO> getAgentAuthData(long id) {
+    public List<TreeBo> getAgentAuthData(long id) {
         return authDataMapper.getAgentAuthData(id);
     }
 
     @Override
     @MergeResult
-    public List<TreeBO> getHospitalAuthData(long id) {
+    public List<TreeBo> getHospitalAuthData(long id) {
         return authDataMapper.getHospitalAuthData(id);
     }
 
 
     @Override
     @MergeResult
-    public List<TreeBO> getDepartmentAuthData(long id) {
+    public List<TreeBo> getDepartmentAuthData(long id) {
         return authDataMapper.getDepartmentAuthData(id);
     }
 
 
     @Override
     @MergeResult
-    public List<TreeBO> getAuthTreeByAid(String aid) {
+    public List<TreeBo> getAuthTreeByAid(String aid) {
         return authDataMapper.getAuthTreeByAid(aid);
     }
 
     @Override
     @MergeResult
-    public List<TreeBO> getAuthTreeByHid(String hid) {
+    public List<TreeBo> getAuthTreeByHid(String hid) {
         return authDataMapper.getAuthTreeByHid(hid);
     }
 
     @Override
-    public List<TreeVO> treeBoToVo(List<TreeBO> list) {
-        mapperFactory.classMap(TreeBO.class, TreeVO.class)
+    public List<TreeVo> treeBoToVo(List<TreeBo> list) {
+        mapperFactory.classMap(TreeBo.class, TreeVo.class)
                 .fieldMap("children").converter("strToJsonArray").add()
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().mapAsList(list, TreeVO.class);
+        return mapperFactory.getMapperFacade().mapAsList(list, TreeVo.class);
     }
 
     @Override
-    public String toJsonString(List<TreeBO> list) {
+    public String toJsonString(List<TreeBo> list) {
         return gson.toJson(treeBoToVo(list));
     }
 

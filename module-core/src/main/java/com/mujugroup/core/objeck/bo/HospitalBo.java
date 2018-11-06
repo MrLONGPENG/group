@@ -1,6 +1,6 @@
 package com.mujugroup.core.objeck.bo;
 
-public class HospitalBO {
+public class HospitalBo {
 
     private String aid;
     private String hid;

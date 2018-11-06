@@ -3,25 +3,19 @@ package com.lveqia.cloud.zuul.objeck.vo;
 
 import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.model.SysUser;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 /**
  * 
- * 类名:UserVO
+ * 类名:UserVo
  * 创建人:leolaurel
  * 创建时间:20180725
  */
 
-public class UserVO implements Serializable {
+public class UserVo implements Serializable {
 
     private Integer id;
     private String name;
@@ -69,13 +63,13 @@ public class UserVO implements Serializable {
 	}
 
 	private List<SysRole> roles;
-	private List<UserVO> children;
+	private List<UserVo> children;
 
-	public List<UserVO> getChildren() {
+	public List<UserVo> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<UserVO> children) {
+	public void setChildren(List<UserVo> children) {
 		this.children = children;
 	}
 

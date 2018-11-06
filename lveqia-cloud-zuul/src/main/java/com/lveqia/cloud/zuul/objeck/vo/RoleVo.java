@@ -1,7 +1,7 @@
 package com.lveqia.cloud.zuul.objeck.vo;
 
 
-public class RoleVO {
+public class RoleVo {
     private Integer id;
     private String name;
     private String remark;

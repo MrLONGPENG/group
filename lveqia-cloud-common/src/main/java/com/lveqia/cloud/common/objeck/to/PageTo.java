@@ -9,16 +9,16 @@ import java.util.List;
  * 分页数据-传输对象
  * @param <T>
  */
-public class PageTO<T> {
+public class PageTo<T> {
 
     private PageInfo pageInfo;
 
     private List<T> pageList;
 
     /** 远程调用空参数构造函数为必须 */
-    public PageTO(){}
+    public PageTo(){}
 
-    public PageTO(PageInfo pageInfo, List<T> pageList) {
+    public PageTo(PageInfo pageInfo, List<T> pageList) {
         this.pageInfo = pageInfo;
         this.pageList = pageList;
     }

@@ -3,11 +3,11 @@ package com.mujugroup.core.service;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.objeck.bo.HospitalBO;
+import com.mujugroup.core.objeck.bo.HospitalBo;
 import com.mujugroup.core.objeck.vo.hospital.AddVo;
 import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.objeck.vo.hospital.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,17 +17,17 @@ import java.util.Map;
  */
 public interface HospitalService {
 
-    List<SelectVO> getHospitalList(int aid, String name);
+    List<SelectVo> getHospitalList(int aid, String name);
 
-    List<SelectVO> getHospitalListByUid(String type, long uid);
+    List<SelectVo> getHospitalListByUid(String type, long uid);
 
-    List<SelectVO> getAgentHospitalListByUid(String type, long uid);
+    List<SelectVo> getAgentHospitalListByUid(String type, long uid);
 
     List<Hospital> findListByAid(String aid);
 
     List<Hospital> getHospitalByRegion(String pid, String cid);
 
-    List<HospitalBO> getHospitalBoByIds(String[] array);
+    List<HospitalBo> getHospitalBoByIds(String[] array);
 
     String getHospitalName(int id);
 
@@ -43,7 +43,7 @@ public interface HospitalService {
 
     List<ListVo> findAll(Map<String,String> map,int uid, String aid, String name, int provinceId, int cityId, int enable) throws DataException;
 
-    List<SelectVO> selectAll();
+    List<SelectVo> selectAll();
 
     /**
      * 根据AID查询HID，多个逗号分隔

@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.DeviceMapper;
@@ -14,7 +14,7 @@ import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.bean.StatusAidBean;
 import com.mujugroup.core.objeck.bean.StatusHidBean;
 import com.mujugroup.core.objeck.bean.StatusOidBean;
-import com.mujugroup.core.objeck.bo.DeviceBO;
+import com.mujugroup.core.objeck.bo.DeviceBo;
 import com.mujugroup.core.objeck.vo.device.AddVo;
 import com.mujugroup.core.objeck.vo.device.PutVo;
 import com.mujugroup.core.service.DeviceService;
@@ -68,19 +68,19 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public PageTO<Device>  findDeviceList(String did, String bid
+    public PageTo<Device> findDeviceList(String did, String bid
             , String bed, String aid, String hid
             , String oid, int status, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Device> list = deviceMapper.findListAll(did, bid, bed, aid, hid, oid, status);
-        return new PageTO<>(PageInfo.of(list), list);
+        return new PageTo<>(PageInfo.of(list), list);
 
     }
 
     @Override
     @MergeResult
-    public List<DeviceBO> toDeviceBO(List<Device> pageList) {
-        mapperFactory.classMap(Device.class, DeviceBO.class)
+    public List<DeviceBo> toDeviceBO(List<Device> pageList) {
+        mapperFactory.classMap(Device.class, DeviceBo.class)
                 .field("crtId", "name")
                 .field("crtId", "crtId")
                 .field("agentId", "agentName")
@@ -90,7 +90,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .field("depart", "departmentName")
                 .field("depart", "depart")
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().mapAsList(pageList, DeviceBO.class);
+        return mapperFactory.getMapperFacade().mapAsList(pageList, DeviceBo.class);
     }
 
 

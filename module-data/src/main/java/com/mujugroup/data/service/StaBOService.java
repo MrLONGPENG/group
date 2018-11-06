@@ -3,7 +3,7 @@ package com.mujugroup.data.service;
 
 import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.exception.ParamException;
-import com.mujugroup.data.objeck.bo.ExcelBO;
+import com.mujugroup.data.objeck.bo.ExcelBo;
 import com.mujugroup.data.objeck.bo.sta.StaActive;
 import com.mujugroup.data.objeck.bo.sta.StaProfit;
 import com.mujugroup.data.objeck.bo.sta.StaUsage;
@@ -24,7 +24,7 @@ public interface StaBOService {
 
     List<StaUsageRate> getUsageRate(String[] ids, int grain, int startTime, int stopTime) throws ParamException;
 
-    List<ExcelBO> getExcelBO(JsonObject info, int grain, int startTime, int stopTime) throws ParamException;
+    List<ExcelBo> getExcelBO(JsonObject info, int grain, int startTime, int stopTime) throws ParamException;
 
 
 

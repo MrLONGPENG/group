@@ -1,12 +1,12 @@
 package com.mujugroup.data.controller;
 
 import com.lveqia.cloud.common.exception.DataException;
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.data.objeck.bo.OrderBO;
+import com.mujugroup.data.objeck.bo.OrderBo;
 import com.mujugroup.data.service.OrderService;
 import com.mujugroup.data.service.StaVOService;
 import com.mujugroup.data.service.feign.ModuleWxService;
@@ -62,10 +62,10 @@ public class OrderController {
         } catch (DataException e) {
             return ResultUtil.error(e.getCode(), e.getMessage());
         }
-        AidHidOidTO to = new AidHidOidTO(ids[0], ids[1], ids[2], orderType, startTime, stopTime, pageNum, pageSize);
-        PageTO<OrderTO> pageTO = moduleWxService.getOrderList(to);
+        RequestTo to = new RequestTo(ids[0], ids[1], ids[2], orderType, startTime, stopTime, pageNum, pageSize);
+        PageTo<OrderTo> pageTO = moduleWxService.getOrderList(to);
         if(pageTO !=null){
-            List<OrderBO> list = orderService.mergeOrderBO(pageTO.getPageList());
+            List<OrderBo> list = orderService.mergeOrderBO(pageTO.getPageList());
             if(list!=null) return ResultUtil.success(list, pageTO.getPageInfo());
         }
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
@@ -84,10 +84,10 @@ public class OrderController {
             , HttpServletResponse response) throws Exception {
         logger.debug("order->excel {} {} {} {} {}", aid, hid, oid, startTime, stopTime);
         String[] ids = staVOService.checkIds(uid, aid, hid, oid);
-        AidHidOidTO aidHidOidTO = new AidHidOidTO(ids[0], ids[1], ids[2], orderType, startTime, stopTime);
-        PageTO<OrderTO> pageTO = moduleWxService.getOrderList(aidHidOidTO);
+        RequestTo aidHidOidTO = new RequestTo(ids[0], ids[1], ids[2], orderType, startTime, stopTime);
+        PageTo<OrderTo> pageTO = moduleWxService.getOrderList(aidHidOidTO);
         if(pageTO !=null){
-            List<OrderBO> list = orderService.mergeOrderBO(pageTO.getPageList());
+            List<OrderBo> list = orderService.mergeOrderBO(pageTO.getPageList());
             ExcelData excelData = new ExcelData();
             excelData.setName("订单统计");
             excelData.setTitles(new String[]{ "订单时间", "订单号", "代理商", "医院", "科室", "病床"

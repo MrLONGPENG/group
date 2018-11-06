@@ -1,6 +1,6 @@
 package com.mujugroup.data.objeck.vo;
 
-public class StaProfitVO {
+public class StaProfitVo {
     private String refDate;
 
     private String profit;

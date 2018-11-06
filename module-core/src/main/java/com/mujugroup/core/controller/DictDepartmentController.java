@@ -3,7 +3,7 @@ package com.mujugroup.core.controller;
 
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.AddVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.PutVo;
 import com.mujugroup.core.service.DictDepartmentService;
@@ -35,7 +35,7 @@ public class DictDepartmentController {
     @ApiOperation(value = "查询木巨科室下拉列表", notes = "查询木巨科室下拉列表，可模糊匹配木巨名字")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String getList(@ApiParam(value = "模糊名称", required = false) @RequestParam(value = "name", required = false, defaultValue = "") String name) throws BaseException {
-        List<SelectVO> list =dictDepartmentService.getDictDepartmentList(name);
+        List<SelectVo> list =dictDepartmentService.getDictDepartmentList(name);
         if (list!=null&&list.size()>0){
             return ResultUtil.success(list);
         }else {

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 概览-使用情况数据，不含今日
  * 总激活数、总用户数、昨日使用数以及使用率
  */
-public class UsageBO implements Serializable {
+public class UsageBo implements Serializable {
 
     @MergeField(feign = ModuleCoreService.class, method = "getTotalActiveCount"
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
@@ -33,7 +33,7 @@ public class UsageBO implements Serializable {
     private String yesterdayUsageRate;
 
 
-    public UsageBO(String aid, String date, long timestamp) {
+    public UsageBo(String aid, String date, long timestamp) {
         // 拼接总用户数 ｛开始时间戳,结束时间戳｝
         this.totalUser = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, timestamp);
         // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝

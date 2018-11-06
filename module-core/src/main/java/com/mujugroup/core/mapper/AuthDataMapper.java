@@ -2,9 +2,8 @@ package com.mujugroup.core.mapper;
 
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.model.AuthData;
-import com.mujugroup.core.objeck.bo.TreeBO;
+import com.mujugroup.core.objeck.bo.TreeBo;
 import com.mujugroup.core.sql.AuthDataSqlProvider;
-import com.mujugroup.core.sql.DeviceSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -54,33 +53,33 @@ public interface AuthDataMapper {
             , @Result(column = "id", property = "children", javaType = String.class)
             , @Result(column = "name", property = "name", javaType = String.class)})
     @Select("SELECT CONCAT('AID',a.id) as id, a.name as name FROM t_agent a  WHERE a.`enable`= 1")
-    List<TreeBO> getAllAgentList();
+    List<TreeBo> getAllAgentList();
 
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('AID',d.rid) as id, a.name as name FROM t_auth_data d, t_agent a" +
             " WHERE d.rid = a.id AND d.`type`=1  AND d.uid = #{uid}")
-    List<TreeBO> getAgentAuthData(@Param("uid") long uid);
+    List<TreeBo> getAgentAuthData(@Param("uid") long uid);
 
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('HID',d.rid) as id, h.name as name FROM t_auth_data d, t_hospital h" +
             " WHERE d.rid = h.id AND d.`type`=2  AND d.uid = #{uid}")
-    List<TreeBO> getHospitalAuthData(@Param("uid") long uid);
+    List<TreeBo> getHospitalAuthData(@Param("uid") long uid);
 
 
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('OID',d.rid) as id, o.name as name FROM t_auth_data d, t_department o" +
             " WHERE d.rid = o.id AND d.`type`=3  AND d.uid = #{uid}")
-    List<TreeBO> getDepartmentAuthData(@Param("uid") long uid);
+    List<TreeBo> getDepartmentAuthData(@Param("uid") long uid);
 
 
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('HID',id) as id, name FROM t_hospital WHERE `enable`=22  AND `agentId` = #{aid}")
-    List<TreeBO> getAuthTreeByAid(@Param("aid") String aid);
+    List<TreeBo> getAuthTreeByAid(@Param("aid") String aid);
 
 
     @ResultMap("treeVO")
     @Select("SELECT CONCAT('OID',id) as id, name FROM t_department WHERE `hospital_id` = #{hid}")
-    List<TreeBO> getAuthTreeByHid(@Param("hid") String hid);
+    List<TreeBo> getAuthTreeByHid(@Param("hid") String hid);
 
 
     @Results({@Result(column="key", property="key", javaType=String.class)

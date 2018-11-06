@@ -4,16 +4,15 @@ import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
-import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.data.objeck.bo.ExcelBO;
-import com.mujugroup.data.objeck.bo.ProfitBO;
+import com.mujugroup.data.objeck.bo.ExcelBo;
+import com.mujugroup.data.objeck.bo.ProfitBo;
 import com.mujugroup.data.objeck.bo.sta.StaProfit;
-import com.mujugroup.data.objeck.vo.ExcelVO;
-import com.mujugroup.data.objeck.vo.ProfitVO;
-import com.mujugroup.data.objeck.vo.StaProfitVO;
+import com.mujugroup.data.objeck.vo.ExcelVo;
+import com.mujugroup.data.objeck.vo.ProfitVo;
+import com.mujugroup.data.objeck.vo.StaProfitVo;
 import com.mujugroup.data.service.ExcelService;
 import com.mujugroup.data.service.StaBOService;
 import com.mujugroup.data.service.StaVOService;
@@ -57,10 +56,10 @@ public class StaVOServiceImpl implements StaVOService {
                 return staBOService.getActive(ids, grain, start, stop);
             case "getStaProfit" : case "get_statistics_profit" :
                List<StaProfit> staProfitList = staBOService.getProfit(ids, grain, start, stop);
-                mapperFactory.classMap(StaProfit.class, StaProfitVO.class)
+                mapperFactory.classMap(StaProfit.class, StaProfitVo.class)
                         .fieldMap("profit").converter("rmbPriceConvert").add()
                         .byDefault().register();
-                return mapperFactory.getMapperFacade().mapAsList(staProfitList, StaProfitVO.class);
+                return mapperFactory.getMapperFacade().mapAsList(staProfitList, StaProfitVo.class);
             case "getStaUsageRate": case "get_statistics_usage_rate" :
                 return staBOService.getUsageRate(ids, grain, start, stop);
         }
@@ -98,27 +97,27 @@ public class StaVOServiceImpl implements StaVOService {
     }
 
     @Override
-    public ProfitVO getProfitVO(ProfitBO profitBO) {
-        mapperFactory.classMap(ProfitBO.class, ProfitVO.class)
+    public ProfitVo getProfitVO(ProfitBo profitBO) {
+        mapperFactory.classMap(ProfitBo.class, ProfitVo.class)
                 .fieldMap("totalProfit").converter("rmbPriceConvert").add()
                 .fieldMap("yesterdayProfit").converter("rmbPriceConvert").add()
                 .byDefault().register();
-        return mapperFactory.getMapperFacade().map(profitBO, ProfitVO.class);
+        return mapperFactory.getMapperFacade().map(profitBO, ProfitVo.class);
     }
 
 
 
 
     @Override
-    public List<ExcelVO> getExcelVO(String uid, String hid, int grain, int startTime, int stopTime)
+    public List<ExcelVo> getExcelVO(String uid, String hid, int grain, int startTime, int stopTime)
             throws BaseException {
         JsonObject info = excelService.getHospitalJson(hid);
         if(info == null) throw new BaseException(ResultUtil.CODE_REMOTE_CALL_FAIL, null);
-        mapperFactory.classMap(ExcelBO.class, ExcelVO.class)
+        mapperFactory.classMap(ExcelBo.class, ExcelVo.class)
                 .fieldMap("profit").converter("rmbPriceConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(staBOService.getExcelBO(info
-                , grain, startTime,stopTime), ExcelVO.class);
+                , grain, startTime,stopTime), ExcelVo.class);
     }
 
 

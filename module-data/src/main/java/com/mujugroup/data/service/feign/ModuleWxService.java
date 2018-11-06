@@ -1,9 +1,9 @@
 package com.mujugroup.data.service.feign;
 
 
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.mujugroup.data.service.feign.error.ModuleWxServiceError;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -54,5 +54,5 @@ public interface ModuleWxService {
 
     @RequestMapping(value = "/feign/getOrderList", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    PageTO<OrderTO> getOrderList(@RequestBody AidHidOidTO aidHidOidDto);
+    PageTo<OrderTo> getOrderList(@RequestBody RequestTo aidHidOidDto);
 }

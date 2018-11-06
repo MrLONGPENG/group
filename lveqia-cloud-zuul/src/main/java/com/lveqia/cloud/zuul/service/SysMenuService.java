@@ -1,7 +1,7 @@
 package com.lveqia.cloud.zuul.service;
 
 import com.lveqia.cloud.zuul.model.SysMenu;
-import com.lveqia.cloud.zuul.objeck.vo.MenuVO;
+import com.lveqia.cloud.zuul.objeck.vo.MenuVo;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public interface SysMenuService {
 
     List<SysMenu> getAllMenuByLength();
 
-    List<MenuVO> getMenusByUserId(Long id);
+    List<MenuVo> getMenusByUserId(Long id);
 }

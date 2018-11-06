@@ -1,13 +1,11 @@
 package com.lveqia.cloud.zuul.mapper;
 
 import com.lveqia.cloud.zuul.model.SysMenu;
-import com.lveqia.cloud.zuul.objeck.vo.MenuVO;
 import com.lveqia.cloud.zuul.sql.SysMenuSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
 package com.mujugroup.core.service.impl;
 
-import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -10,10 +9,9 @@ import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.objeck.bo.TreeBO;
+import com.mujugroup.core.objeck.bo.TreeBo;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.MergeService;
-import ma.glasnost.orika.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -183,7 +181,7 @@ public class MergeServiceImpl implements MergeService {
      * 根据AID或OID查询树结构
      */
     private String getAuthTreeById(String key) {
-        List<TreeBO> list = new ArrayList<>();
+        List<TreeBo> list = new ArrayList<>();
         if (key.startsWith("AID")) list = authDataService.getAuthTreeByAid(key.substring(3));
         // TODO 暂时只处理到医院，如需要到科室，可放出下面
         //if(key.startsWith("HID")) list = authDataService.getAuthTreeByHid(key.substring(3));

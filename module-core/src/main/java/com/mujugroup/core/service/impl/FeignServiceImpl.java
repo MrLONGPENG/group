@@ -6,7 +6,7 @@ import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.objeck.bo.HospitalBO;
+import com.mujugroup.core.objeck.bo.HospitalBo;
 import com.mujugroup.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +65,8 @@ public class FeignServiceImpl implements FeignService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         Gson gson = new GsonBuilder().create();
-        List<HospitalBO> list = hospitalService.getHospitalBoByIds(array);
-        for (HospitalBO bo : list) {
+        List<HospitalBo> list = hospitalService.getHospitalBoByIds(array);
+        for (HospitalBo bo : list) {
             hashMap.put(bo.getHid(), gson.toJson(bo));
         }
         return hashMap;

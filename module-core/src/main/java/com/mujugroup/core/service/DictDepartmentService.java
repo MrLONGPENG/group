@@ -2,8 +2,7 @@ package com.mujugroup.core.service;
 
 
 import com.lveqia.cloud.common.exception.ParamException;
-import com.mujugroup.core.model.DictDepartment;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.AddVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.ListVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.PutVo;
@@ -20,7 +19,7 @@ public interface DictDepartmentService {
 
     boolean delete(String id) throws ParamException;
 
-    List<SelectVO> getDictDepartmentList(String name);
+    List<SelectVo> getDictDepartmentList(String name);
 
     List<ListVo> findAll(String name);
 }

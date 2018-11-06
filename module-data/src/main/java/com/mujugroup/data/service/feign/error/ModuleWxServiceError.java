@@ -1,8 +1,8 @@
 package com.mujugroup.data.service.feign.error;
 
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.mujugroup.data.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public PageTO<OrderTO> getOrderList(AidHidOidTO aidHidOidDto) {
+    public PageTo<OrderTo> getOrderList(RequestTo aidHidOidDto) {
         logger.warn("data->remote wx fail, method:getOrderList param:{}",aidHidOidDto);
         return null;
     }

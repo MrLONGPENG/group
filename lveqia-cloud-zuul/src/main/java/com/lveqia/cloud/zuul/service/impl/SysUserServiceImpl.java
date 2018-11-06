@@ -1,13 +1,12 @@
 package com.lveqia.cloud.zuul.service.impl;
 import com.lveqia.cloud.common.config.CoreConfig;
-import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
-import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.UserVo;
 import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
@@ -174,12 +173,12 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     // TODO: 2018-09-27
-    public List<UserVO> getUserTreeList(int pid) {
-        UserVO tree;
-        List<UserVO> trees = new ArrayList<UserVO>();
+    public List<UserVo> getUserTreeList(int pid) {
+        UserVo tree;
+        List<UserVo> trees = new ArrayList<UserVo>();
         List<SysUser> list = sysUserMapper.getSysUserListByPid(pid);
         for (SysUser sysUser : list) {
-            tree = new UserVO();
+            tree = new UserVo();
             tree.setSysUser(sysUser);
             tree.setChildren(getUserTreeList(sysUser.getId()));
             trees.add(tree);

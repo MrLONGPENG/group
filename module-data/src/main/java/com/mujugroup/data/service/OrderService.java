@@ -1,13 +1,13 @@
 package com.mujugroup.data.service;
 
 
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.mujugroup.data.objeck.bo.OrderBO;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.mujugroup.data.objeck.bo.OrderBo;
 
 import java.util.List;
 
 public interface OrderService {
 
-    List<OrderBO> mergeOrderBO(List<OrderTO> list);
+    List<OrderBo> mergeOrderBO(List<OrderTo> list);
 
 }

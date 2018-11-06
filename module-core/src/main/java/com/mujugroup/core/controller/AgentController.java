@@ -7,7 +7,7 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import io.swagger.annotations.Api;
@@ -41,15 +41,15 @@ public class AgentController {
     @ApiOperation(value = "查询代理商列表", notes = "查询代理商列表")
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String list(@ApiParam(hidden = true) int uid) {
-        List<SelectVO> userAgentList = agentService.getAgentListByUid(uid);
-        List<SelectVO> userHospitalAgentList = agentService.getAgentHospitalByUid(uid);
+        List<SelectVo> userAgentList = agentService.getAgentListByUid(uid);
+        List<SelectVo> userHospitalAgentList = agentService.getAgentHospitalByUid(uid);
         if (userHospitalAgentList != null && userHospitalAgentList.size() > 0) {
-            userAgentList.add(new SelectVO(-1, "其他可选医院"));
+            userAgentList.add(new SelectVo(-1, "其他可选医院"));
         }
         if (userAgentList == null || userAgentList.size() == 0) {
             List<DBMap> auth = authDataService.getAuthData(uid);
             if (auth != null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))) {
-                List<SelectVO> list = agentService.getTheAgentList();
+                List<SelectVo> list = agentService.getTheAgentList();
                 if (list != null) {
                     return ResultUtil.success(list);
                 } else {

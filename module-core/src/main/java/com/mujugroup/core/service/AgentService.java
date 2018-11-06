@@ -5,10 +5,9 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author leolaurel
@@ -24,13 +23,13 @@ public interface AgentService {
 
     Agent findById(Integer id);
 
-    List<SelectVO> getAgentList();
+    List<SelectVo> getAgentList();
 
-    List<SelectVO> getTheAgentList();
+    List<SelectVo> getTheAgentList();
 
-    List<SelectVO> getAgentListByUid(long uid);
+    List<SelectVo> getAgentListByUid(long uid);
 
-    List<SelectVO> getAgentHospitalByUid(long uid);
+    List<SelectVo> getAgentHospitalByUid(long uid);
 
     List<Agent> findAll(String uid,String name,int enable) throws ParamException,DataException;
 

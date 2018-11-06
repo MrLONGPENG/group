@@ -3,7 +3,7 @@ package com.mujugroup.core.objeck.vo;
 import com.google.gson.JsonArray;
 
 
-public class TreeVO {
+public class TreeVo {
 
     private String id;
     private String name;

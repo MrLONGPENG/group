@@ -8,7 +8,7 @@ import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import ma.glasnost.orika.MapperFactory;
@@ -95,12 +95,12 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<SelectVO> getAgentListByUid(long uid) {
+    public List<SelectVo> getAgentListByUid(long uid) {
         return agentMapper.getAgentListByUid(uid);
     }
 
     @Override
-    public List<SelectVO> getAgentHospitalByUid(long uid) {
+    public List<SelectVo> getAgentHospitalByUid(long uid) {
         return agentMapper.getAgentHospitalByUid(uid);
     }
 
@@ -115,7 +115,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<SelectVO> getTheAgentList() {
+    public List<SelectVo> getTheAgentList() {
         return agentMapper.getTheAgentList();
     }
 
@@ -127,7 +127,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<SelectVO> getAgentList() {
+    public List<SelectVo> getAgentList() {
         return agentMapper.getAgentList();
     }
 

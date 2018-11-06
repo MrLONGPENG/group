@@ -1,7 +1,7 @@
 package com.mujugroup.core.service.impl;
 
 import com.mujugroup.core.mapper.RegionMapper;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<SelectVO> getRegionByPid(int pid) {
+    public List<SelectVo> getRegionByPid(int pid) {
         return regionMapper.getRegionByPid(pid);
     }
 }

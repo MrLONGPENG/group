@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 概览-收益数据，不含今日
  * 累计收益、以及昨日收益
  */
-public class ProfitBO implements Serializable {
+public class ProfitBo implements Serializable {
 
     @MergeField(feign = ModuleWxService.class, method = "getTotalProfit"
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
@@ -23,7 +23,7 @@ public class ProfitBO implements Serializable {
     private String yesterdayProfit;
 
 
-    public ProfitBO(String aid, long timestamp) {
+    public ProfitBo(String aid, long timestamp) {
         // 总收益与昨日收益，差异在于开始时间（即总收益无开始时间，默认O）
         this.totalProfit = StringUtil.toLinkByAnd(aid, Constant.DIGIT_ZERO
                 , Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, timestamp);

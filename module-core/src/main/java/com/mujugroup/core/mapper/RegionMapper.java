@@ -1,7 +1,7 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.Region;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.sql.RegionSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -51,5 +51,5 @@ public interface RegionMapper {
     @Results({@Result(id=true, column="id",property="id",javaType=Integer.class)
             ,@Result(column="name",property="name",javaType=String.class)
     })
-    List<SelectVO> getRegionByPid(@Param("pid") int pid);
+    List<SelectVo> getRegionByPid(@Param("pid") int pid);
 }

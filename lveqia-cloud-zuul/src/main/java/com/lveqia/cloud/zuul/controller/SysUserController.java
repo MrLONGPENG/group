@@ -5,7 +5,7 @@ import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.model.SysUser;
-import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.UserVo;
 import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -63,7 +63,7 @@ public class SysUserController {
         logger.debug("/sys/user/sub");
         UserInfo userInfo = sysUserService.getCurrInfo();
         if (userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        List<UserVO> list = sysUserService.getUserTreeList((int) userInfo.getId());
+        List<UserVo> list = sysUserService.getUserTreeList((int) userInfo.getId());
         return ResultUtil.success(list);
     }
 

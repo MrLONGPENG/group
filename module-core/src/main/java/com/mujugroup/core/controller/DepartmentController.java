@@ -7,7 +7,7 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.objeck.vo.department.AddVo;
 import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.DepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class DepartmentController {
     public String select(@ApiParam(value = "医院ID") @RequestParam(value = "hid") int hid
             , @ApiParam(value = "科室名称") @RequestParam(value = "name", required = false
             , defaultValue = "") String name, @ApiParam(hidden = true) int uid) throws BaseException {
-        List<SelectVO> list = departmentService.getSelectList(uid, hid, name);
+        List<SelectVo> list = departmentService.getSelectList(uid, hid, name);
         return ResultUtil.success(list);
 
     }

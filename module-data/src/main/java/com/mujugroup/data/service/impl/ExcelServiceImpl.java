@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.JsonUtil;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.data.objeck.bo.ExcelBO;
+import com.mujugroup.data.objeck.bo.ExcelBo;
 import com.mujugroup.data.service.ExcelService;
 import com.mujugroup.data.service.StaBOService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
@@ -60,7 +60,7 @@ public class ExcelServiceImpl implements ExcelService {
         data.setName(info.get("hospital").getAsString());
         data.setTitles(titles);
         try {
-            List<ExcelBO> list = staBOService.getExcelBO(info, grain, startTime, stopTime);
+            List<ExcelBo> list = staBOService.getExcelBO(info, grain, startTime, stopTime);
             data.setRows(ExcelUtils.toRows(list));
         } catch (ParamException e) {
             e.printStackTrace();

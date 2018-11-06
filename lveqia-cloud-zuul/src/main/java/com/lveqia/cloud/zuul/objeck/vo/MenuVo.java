@@ -2,7 +2,7 @@ package com.lveqia.cloud.zuul.objeck.vo;
 
 import java.util.List;
 
-public class MenuVO {
+public class MenuVo {
 
     private Integer id;
     private String url;
@@ -11,9 +11,9 @@ public class MenuVO {
     private String name;
     private String iconCls;
     private Integer parentId;
-    private List<RoleVO> roles;
-    private List<MenuVO> children;
-    private MetaVO meta;
+    private List<RoleVo> roles;
+    private List<MenuVo> children;
+    private MetaVo meta;
 
     public Integer getId() {
         return id;
@@ -71,32 +71,32 @@ public class MenuVO {
         this.parentId = parentId;
     }
 
-    public List<RoleVO> getRoles() {
+    public List<RoleVo> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleVO> roles) {
+    public void setRoles(List<RoleVo> roles) {
         this.roles = roles;
     }
 
-    public List<MenuVO> getChildren() {
+    public List<MenuVo> getChildren() {
         return children;
     }
 
-    public void setChildren(List<MenuVO> children) {
+    public void setChildren(List<MenuVo> children) {
         this.children = children;
     }
 
-    public MetaVO getMeta() {
+    public MetaVo getMeta() {
         return meta;
     }
 
-    public void setMeta(MetaVO meta) {
+    public void setMeta(MetaVo meta) {
         this.meta = meta;
     }
 
     public void setMeta(Boolean keepAlive, Boolean requireAuth) {
-        this.meta = new MetaVO();
+        this.meta = new MetaVo();
         this.meta.setKeepAlive(keepAlive!=null? keepAlive:false);
         this.meta.setRequireAuth(requireAuth!=null? requireAuth:false);
     }

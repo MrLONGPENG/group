@@ -5,7 +5,7 @@ package com.lveqia.cloud.common.objeck.to;
  *  Service Transfer Object
  * 订单-数据传输对象
  */
-public class OrderTO {
+public class OrderTo {
 
     private String id;
     private String did;

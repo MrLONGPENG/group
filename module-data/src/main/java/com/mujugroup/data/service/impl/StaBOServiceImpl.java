@@ -3,10 +3,9 @@ package com.mujugroup.data.service.impl;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.google.gson.JsonObject;
 import com.lveqia.cloud.common.util.DateUtil;
-import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.config.Constant;
-import com.mujugroup.data.objeck.bo.ExcelBO;
+import com.mujugroup.data.objeck.bo.ExcelBo;
 import com.mujugroup.data.objeck.bo.sta.StaActive;
 import com.mujugroup.data.objeck.bo.sta.StaProfit;
 import com.mujugroup.data.objeck.bo.sta.StaUsage;
@@ -123,12 +122,12 @@ public class StaBOServiceImpl implements StaBOService {
 
     @Override
     @MergeResult
-    public List<ExcelBO> getExcelBO(JsonObject info, int grain, int startTime, int stopTime)
+    public List<ExcelBo> getExcelBO(JsonObject info, int grain, int startTime, int stopTime)
             throws ParamException {
-        List<ExcelBO> list = new ArrayList<>();
+        List<ExcelBo> list = new ArrayList<>();
         List<String> refDate = getRefDate(startTime, stopTime, grain);
         for (String key:refDate){
-            list.add(new ExcelBO(key, info, getEndTimestamp(grain, key, stopTime)));
+            list.add(new ExcelBo(key, info, getEndTimestamp(grain, key, stopTime)));
         }
         return list;
     }

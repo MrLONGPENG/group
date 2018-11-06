@@ -1,8 +1,8 @@
 package com.mujugroup.data.utils;
 
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.data.objeck.bo.ExcelBO;
-import com.mujugroup.data.objeck.bo.OrderBO;
+import com.mujugroup.data.objeck.bo.ExcelBo;
+import com.mujugroup.data.objeck.bo.OrderBo;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import javax.servlet.http.HttpServletResponse;
@@ -151,18 +151,18 @@ public class ExcelUtils {
     }
 
 
-    public static List<String[]> toRows(List<ExcelBO> list) {
+    public static List<String[]> toRows(List<ExcelBo> list) {
         List<String[]>  result  = new ArrayList<>();
-        for (ExcelBO bo: list) {
+        for (ExcelBo bo: list) {
             result.add(new String[]{bo.getRefDate(), bo.getAgent(), bo.getProvince(), bo.getCity(), bo.getHospital()
                     , bo.getActive(), bo.getUsage(), bo.getUsageRate(), StringUtil.changeF2Y(bo.getProfit())});
         }
         return result;
     }
 
-    public static List<String[]> toRowsByOrderBO(List<OrderBO> list) {
+    public static List<String[]> toRowsByOrderBO(List<OrderBo> list) {
         List<String[]>  result  = new ArrayList<>();
-        for (OrderBO bo: list) {
+        for (OrderBo bo: list) {
             result.add(new String[]{bo.getPayTime(), bo.getTradeNo() , bo.getAgent() , bo.getHospital()
                     , bo.getDepartment() , bo.getBedInfo(), bo.getDid(), bo.getOrderType() ,bo.getPayPrice()
                     , bo.getPayStatus() == 2 ? "已完成": "已退款"});

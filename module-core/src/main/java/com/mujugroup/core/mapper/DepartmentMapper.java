@@ -6,7 +6,7 @@ import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.sql.DepartmentSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 
 import java.util.Date;
 import java.util.List;
@@ -87,5 +87,5 @@ public interface DepartmentMapper {
             @Result(column = "name", property = "name", javaType = String.class)
     })
     @SelectProvider(type = DepartmentSqlProvider.class, method = "getSelectList")
-    List<SelectVO> getSelectList(@Param(value = "hid") int hid,@Param(value = "name") String name);
+    List<SelectVo> getSelectList(@Param(value = "hid") int hid, @Param(value = "name") String name);
 }

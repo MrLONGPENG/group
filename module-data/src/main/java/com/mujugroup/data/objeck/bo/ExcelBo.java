@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 表格导出数据
  * 总激活数、总用户数、昨日使用数以及使用率
  */
-public class ExcelBO implements Serializable {
+public class ExcelBo implements Serializable {
 
     private String refDate;
 
@@ -42,7 +42,7 @@ public class ExcelBO implements Serializable {
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String profit;
 
-    public ExcelBO(String refDate, JsonObject info, long end) {
+    public ExcelBo(String refDate, JsonObject info, long end) {
         this.refDate = refDate;
         initInfo(info); // 初始化其信息
         // 拼接总激活数 ｛AID,HID,OID,,结束时间戳｝

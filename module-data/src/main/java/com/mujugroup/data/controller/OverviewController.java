@@ -4,8 +4,8 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.config.Constant;
-import com.mujugroup.data.objeck.bo.ProfitBO;
-import com.mujugroup.data.objeck.bo.UsageBO;
+import com.mujugroup.data.objeck.bo.ProfitBo;
+import com.mujugroup.data.objeck.bo.UsageBo;
 import com.mujugroup.data.service.OverviewService;
 import com.mujugroup.data.service.StaVOService;
 import io.swagger.annotations.Api;
@@ -43,7 +43,7 @@ public class OverviewController {
             , @ApiParam(hidden = true) String uid){
         logger.debug("overview->usage {} {}", aid, timestamp);
         try {
-            UsageBO usageBO = overviewService.usage(uid, aid, timestamp);
+            UsageBo usageBO = overviewService.usage(uid, aid, timestamp);
             if(usageBO!=null) {
                 String percent = StringUtil.getPercent(usageBO.getYesterdayUsageCount(), usageBO.getTotalActive());
                 usageBO.setYesterdayUsageRate(percent);
@@ -66,7 +66,7 @@ public class OverviewController {
             , @ApiParam(hidden = true) String uid){
         logger.debug("overview->profit {} {}", aid, timestamp);
         try {
-            ProfitBO  profitBO = overviewService.profit(uid, aid, timestamp);
+            ProfitBo profitBO = overviewService.profit(uid, aid, timestamp);
             if(profitBO!=null) return ResultUtil.success(staVOService.getProfitVO(profitBO));
             return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         } catch (BaseException e) {

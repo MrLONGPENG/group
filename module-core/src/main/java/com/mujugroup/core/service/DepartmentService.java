@@ -7,11 +7,10 @@ import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.core.objeck.vo.department.AddVo;
 import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface DepartmentService {
@@ -25,7 +24,7 @@ public interface DepartmentService {
 
     List<ListVo> findAll(String hid, String name,String status) throws DataException;
 
-    List<SelectVO> getSelectList(int uid,int hid, String name) throws DataException;
+    List<SelectVo> getSelectList(int uid, int hid, String name) throws DataException;
 
     String checkUserData(int uid, String hid) throws DataException;
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class DeviceBO implements Serializable {
+public class DeviceBo implements Serializable {
 
     @MergeField(feign = LveqiaCloudZuulService.class, method = "getNameByUid"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)

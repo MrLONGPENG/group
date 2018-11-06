@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 订单统计业务对象
  * 组装 订单、医院、支付等信息
  */
-public class OrderBO implements Serializable {
+public class OrderBo implements Serializable {
 
     private String did;
 

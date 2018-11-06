@@ -10,11 +10,11 @@ import com.mujugroup.core.mapper.HospitalMapper;
 import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.objeck.bo.HospitalBO;
+import com.mujugroup.core.objeck.bo.HospitalBo;
 import com.mujugroup.core.objeck.vo.hospital.AddVo;
 import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.objeck.vo.hospital.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.HospitalService;
@@ -50,7 +50,7 @@ public class HospitalServiceImpl implements HospitalService {
 
 
     @Override
-    public List<SelectVO> getAgentHospitalListByUid(String type, long uid) {
+    public List<SelectVo> getAgentHospitalListByUid(String type, long uid) {
         return hospitalMapper.getAgentHospitalListByUid(type, uid);
     }
 
@@ -65,7 +65,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<HospitalBO> getHospitalBoByIds(String[] array) {
+    public List<HospitalBo> getHospitalBoByIds(String[] array) {
         return hospitalMapper.getHospitalBoByIds(StringUtil.toLinkByDouHao((Object[]) array));
     }
 
@@ -109,7 +109,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> selectAll() {
+    public List<SelectVo> selectAll() {
         return hospitalMapper.selectAll();
     }
 
@@ -231,12 +231,12 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<SelectVO> getHospitalListByUid(String type, long uid) {
+    public List<SelectVo> getHospitalListByUid(String type, long uid) {
         return hospitalMapper.getHospitalListByUid(type, uid);
     }
 
     @Override
-    public List<SelectVO> getHospitalList(int aid, String name) {
+    public List<SelectVo> getHospitalList(int aid, String name) {
         return hospitalMapper.getHospitalList(aid, name);
     }
 

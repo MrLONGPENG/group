@@ -4,8 +4,8 @@ package com.mujugroup.core.controller;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.objeck.bo.TreeBO;
-import com.mujugroup.core.objeck.vo.TreeVO;
+import com.mujugroup.core.objeck.bo.TreeBo;
+import com.mujugroup.core.objeck.vo.TreeVo;
 import com.mujugroup.core.service.AuthDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +40,7 @@ public class AuthDataController {
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     public String tree(@ApiParam(value = "userId") @RequestParam(value = "userId", required = false
             , defaultValue = "0") int userId, @ApiParam(hidden = true) int uid) {
-        List<TreeVO> list = getTreeBOList(userId==0 ? uid : userId);
+        List<TreeVo> list = getTreeBOList(userId==0 ? uid : userId);
         return list !=null ? ResultUtil.success(list) : ResultUtil.error(ResultUtil.CODE_DATA_AUTHORITY
                 , "当前用户无数据权限，无法操作，请联系管理员！");
     }
@@ -65,19 +64,19 @@ public class AuthDataController {
     }
 
     //数据权限树
-    private List<TreeVO> getTreeBOList(int id) {
-        List<TreeBO> aidList = authDataService.getAgentAuthData(id);
-        List<TreeBO> hidList = authDataService.getHospitalAuthData(id);
+    private List<TreeVo> getTreeBOList(int id) {
+        List<TreeBo> aidList = authDataService.getAgentAuthData(id);
+        List<TreeBo> hidList = authDataService.getHospitalAuthData(id);
         if (aidList.size() == 0 && hidList.size() == 0) {
             List<DBMap> auth = authDataService.getAuthData(id);
             if(auth!=null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))){
-                List<TreeBO> allList = authDataService.getAllAgentList();
+                List<TreeBo> allList = authDataService.getAllAgentList();
                 return authDataService.treeBoToVo(allList);
             }
             return null;
         }
         if (hidList.size() > 0) {
-            TreeBO treeBO = new TreeBO();
+            TreeBo treeBO = new TreeBo();
             treeBO.setId("AID0");
             treeBO.setName("其他可选医院");
             treeBO.setDisabled(true);

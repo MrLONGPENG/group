@@ -1,6 +1,6 @@
 package com.mujugroup.core.service;
 
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
 public interface RegionService {
 
 
-    List<SelectVO> getRegionByPid(int pid);
+    List<SelectVo> getRegionByPid(int pid);
 }

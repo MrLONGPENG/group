@@ -2,7 +2,7 @@ package com.mujugroup.core.controller;
 
 
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.RegionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class RegionController {
     @RequestMapping(value = "/child", method = RequestMethod.POST)
     public String child(@ApiParam(value="父ID(PID),默认0,即查询国家", required = true)@RequestParam(name="pid"
             , required=false, defaultValue="0") int pid){
-        List<SelectVO> list = regionService.getRegionByPid(pid);
+        List<SelectVo> list = regionService.getRegionByPid(pid);
         if(list!=null) return ResultUtil.success(list);
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }

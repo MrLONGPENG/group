@@ -1,6 +1,6 @@
 package com.lveqia.cloud.zuul.objeck.vo;
 
-public class MetaVO {
+public class MetaVo {
 
     private boolean keepAlive;
     private boolean requireAuth;

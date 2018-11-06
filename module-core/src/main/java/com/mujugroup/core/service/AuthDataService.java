@@ -1,8 +1,8 @@
 package com.mujugroup.core.service;
 
 import com.lveqia.cloud.common.objeck.DBMap;
-import com.mujugroup.core.objeck.bo.TreeBO;
-import com.mujugroup.core.objeck.vo.TreeVO;
+import com.mujugroup.core.objeck.bo.TreeBo;
+import com.mujugroup.core.objeck.vo.TreeVo;
 
 import java.util.List;
 import java.util.Map;
@@ -12,19 +12,19 @@ import java.util.Map;
  */
 public interface AuthDataService {
 
-    List<TreeBO> getAgentAuthData(long id);
+    List<TreeBo> getAgentAuthData(long id);
 
-    List<TreeBO> getHospitalAuthData(long id);
+    List<TreeBo> getHospitalAuthData(long id);
 
-    List<TreeBO> getDepartmentAuthData(long id);
+    List<TreeBo> getDepartmentAuthData(long id);
 
-    List<TreeBO> getAuthTreeByAid(String aid);
+    List<TreeBo> getAuthTreeByAid(String aid);
 
-    List<TreeBO> getAuthTreeByHid(String hid);
+    List<TreeBo> getAuthTreeByHid(String hid);
 
-    List<TreeVO> treeBoToVo(List<TreeBO> list);
+    List<TreeVo> treeBoToVo(List<TreeBo> list);
 
-    String toJsonString(List<TreeBO> list);
+    String toJsonString(List<TreeBo> list);
 
     int addAuthData(int uid, String[] authData);
 
@@ -36,7 +36,7 @@ public interface AuthDataService {
 
     List<DBMap> getAuthData(int uid);
 
-    List<TreeBO> getAllAgentList();
+    List<TreeBo> getAllAgentList();
 
     Map<String, String> getAuthDataByUid(int uid);
 

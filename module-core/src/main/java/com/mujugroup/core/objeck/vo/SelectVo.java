@@ -6,14 +6,14 @@ import java.io.Serializable;
  * Value Object
  * 下拉框  - {id,name}
  */
-public class SelectVO implements Serializable {
+public class SelectVo implements Serializable {
 
     private int id;
     private String name;
 
-    public SelectVO(){}
+    public SelectVo(){}
 
-    public  SelectVO(int id,String name){
+    public SelectVo(int id, String name){
         this.id=id;
         this.name=name;
     }

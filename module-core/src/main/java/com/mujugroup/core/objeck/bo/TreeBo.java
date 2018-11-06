@@ -5,7 +5,7 @@ import com.github.wxiaoqi.merge.annonation.MergeField;
 import com.lveqia.cloud.common.config.Constant;
 import com.mujugroup.core.service.MergeService;
 
-public class TreeBO {
+public class TreeBo {
 
     private String id;
     private String name;

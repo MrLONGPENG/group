@@ -1,7 +1,7 @@
 package com.mujugroup.data.objeck.vo;
 
 
-public class ProfitVO {
+public class ProfitVo {
 
     private String totalProfit;
     private String yesterdayProfit;

@@ -4,7 +4,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.DictDepartmentMapper;
 import com.mujugroup.core.model.DictDepartment;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.AddVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.ListVo;
 import com.mujugroup.core.objeck.vo.dictDepartment.PutVo;
@@ -67,7 +67,7 @@ public class DictDepartmentServiceImpl implements DictDepartmentService {
     }
 
     @Override
-    public List<SelectVO> getDictDepartmentList(String name) {
+    public List<SelectVo> getDictDepartmentList(String name) {
         return dictDepartmentMapper.getDictDepartmentList(name);
     }
 

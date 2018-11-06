@@ -2,9 +2,9 @@ package com.mujugroup.wx.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.FeignService;
 import com.mujugroup.wx.service.WxOrderService;
@@ -32,11 +32,11 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
-    public PageTO<OrderTO> getOrderList(AidHidOidTO dto) { // 分页查询
+    public PageTo<OrderTo> getOrderList(RequestTo dto) { // 分页查询
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<WxOrder> list = wxOrderService.findList(dto);
-        mapperFactory.classMap(WxOrder.class, OrderTO.class).byDefault().register();
-        return new PageTO<>(PageInfo.of(list), mapperFactory.getMapperFacade().mapAsList(list, OrderTO.class));
+        mapperFactory.classMap(WxOrder.class, OrderTo.class).byDefault().register();
+        return new PageTo<>(PageInfo.of(list), mapperFactory.getMapperFacade().mapAsList(list, OrderTo.class));
     }
 
     @Override

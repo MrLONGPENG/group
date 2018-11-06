@@ -15,7 +15,7 @@ import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.vo.department.AddVo;
 import com.mujugroup.core.objeck.vo.department.ListVo;
 import com.mujugroup.core.objeck.vo.department.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.DepartmentService;
 import com.mujugroup.core.service.HospitalService;
@@ -47,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<SelectVO> getSelectList(int uid, int hid, String name) throws DataException {
+    public List<SelectVo> getSelectList(int uid, int hid, String name) throws DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         Hospital hospital = hospitalMapper.findById(hid);

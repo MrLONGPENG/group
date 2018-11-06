@@ -8,8 +8,8 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.data.objeck.bo.ProfitBO;
-import com.mujugroup.data.objeck.bo.UsageBO;
+import com.mujugroup.data.objeck.bo.ProfitBo;
+import com.mujugroup.data.objeck.bo.UsageBo;
 import com.mujugroup.data.service.OverviewService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +30,17 @@ public class OverviewServiceImpl implements OverviewService {
 
     @Override
     @MergeResult
-    public UsageBO usage(String uid, String aid, long timestamp) throws BaseException {
+    public UsageBo usage(String uid, String aid, long timestamp) throws BaseException {
         long delay = checkTimestampAndAddDelay(timestamp);
-        return new UsageBO(checkUserData(uid, aid), DateUtil.timestampToDays(delay - Constant.TIMESTAMP_DAYS_1), delay);
+        return new UsageBo(checkUserData(uid, aid), DateUtil.timestampToDays(delay - Constant.TIMESTAMP_DAYS_1), delay);
     }
 
 
 
     @Override
     @MergeResult
-    public ProfitBO profit(String uid, String aid, long timestamp) throws BaseException {
-        return new ProfitBO(checkUserData(uid, aid), checkTimestampAndAddDelay(timestamp));
+    public ProfitBo profit(String uid, String aid, long timestamp) throws BaseException {
+        return new ProfitBo(checkUserData(uid, aid), checkTimestampAndAddDelay(timestamp));
     }
 
 

@@ -1,7 +1,5 @@
 package com.mujugroup.wx.objeck.vo;
 
-import com.mujugroup.wx.model.WxGoods;
-
 import java.io.Serializable;
 import java.util.List;
 

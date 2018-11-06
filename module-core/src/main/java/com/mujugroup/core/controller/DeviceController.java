@@ -2,7 +2,7 @@ package com.mujugroup.core.controller;
 
 
 import com.lveqia.cloud.common.exception.ParamException;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.core.model.Device;
 import com.mujugroup.core.objeck.vo.device.AddVo;
@@ -46,7 +46,7 @@ public class DeviceController {
             , @RequestParam(name = "oid", required = false, defaultValue = "") String oid
     ) {
         logger.debug("device-list");
-        PageTO<Device> page = deviceService.findDeviceList(did, bid, bed, aid, hid, oid, status, pageNum, pageSize);
+        PageTo<Device> page = deviceService.findDeviceList(did, bid, bed, aid, hid, oid, status, pageNum, pageSize);
         return ResultUtil.success(deviceService.toDeviceBO(page.getPageList()), page.getPageInfo());
     }
 

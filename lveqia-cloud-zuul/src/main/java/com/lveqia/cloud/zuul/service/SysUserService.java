@@ -3,7 +3,7 @@ package com.lveqia.cloud.zuul.service;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.zuul.model.SysUser;
-import com.lveqia.cloud.zuul.objeck.vo.UserVO;
+import com.lveqia.cloud.zuul.objeck.vo.UserVo;
 import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -33,5 +33,5 @@ public interface SysUserService extends UserDetailsService {
     SysUser getUser(int uid);
 
     // TODO: 2018-09-27
-    List<UserVO> getUserTreeList(int pid);
+    List<UserVo> getUserTreeList(int pid);
 }

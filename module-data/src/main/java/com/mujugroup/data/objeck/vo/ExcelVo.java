@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 表格导出数据
  * 总激活数、总用户数、昨日使用数以及使用率
  */
-public class ExcelVO implements Serializable {
+public class ExcelVo implements Serializable {
 
     private String refDate;
 

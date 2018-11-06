@@ -1,8 +1,8 @@
 package com.mujugroup.core.mapper;
 
 import com.mujugroup.core.model.Hospital;
-import com.mujugroup.core.objeck.bo.HospitalBO;
-import com.mujugroup.core.objeck.vo.SelectVO;
+import com.mujugroup.core.objeck.bo.HospitalBo;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.hospital.ListVo;
 import com.mujugroup.core.sql.HospitalSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -85,7 +85,7 @@ public interface HospitalMapper {
             , @Result(column = "name", property = "name", javaType = String.class)
     })
     @SelectProvider(type = HospitalSqlProvider.class, method = "getHospitalList")
-    List<SelectVO> getHospitalList(@Param("aid") int aid, @Param("name") String name);
+    List<SelectVo> getHospitalList(@Param("aid") int aid, @Param("name") String name);
 
     @Select("Select a.id as id,a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.id" +
             " AND d.`type`=#{type} AND a.enable = 22 AND d.uid = #{uid}")
@@ -93,12 +93,12 @@ public interface HospitalMapper {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
             @Result(column = "name", property = "name", javaType = String.class)
     })
-    List<SelectVO> getHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
+    List<SelectVo> getHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
 
     @Select("Select a.id as id,a.name as name  From t_auth_data d, t_hospital a WHERE d.rid = a.agentId" +
             " AND d.`type`=#{type} AND a.enable = 22 AND d.uid = #{uid}")
     @ResultMap("hospitalList")
-    List<SelectVO> getAgentHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
+    List<SelectVo> getAgentHospitalListByUid(@Param("type") String type, @Param("uid") long uid);
 
 
     @Results(value = {@Result(column = "aid", property = "aid", javaType = String.class)
@@ -112,7 +112,7 @@ public interface HospitalMapper {
             ", p.`name` as province , c.`name` as city FROM t_hospital h, t_agent a " +
             ", t_country_province_city p, t_country_province_city c WHERE h.agentId " +
             "= a.id AND h.province = p.id AND h.city = c.id AND h.id in (${ids})")
-    List<HospitalBO> getHospitalBoByIds(@Param("ids") String ids);
+    List<HospitalBo> getHospitalBoByIds(@Param("ids") String ids);
 
     @Select("SELECT `name` FROM t_hospital where id=#{id}")
     @ResultType(String.class)
@@ -156,7 +156,7 @@ public interface HospitalMapper {
 
     @Select("SELECT id,`name` FROM t_hospital WHERE `enable` = 22")
     @ResultMap(value = "hospitalList")
-    List<SelectVO> selectAll();
+    List<SelectVo> selectAll();
 
 
     @ResultType(String.class)

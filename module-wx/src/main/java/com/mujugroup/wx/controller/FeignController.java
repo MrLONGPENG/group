@@ -1,8 +1,8 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
-import com.lveqia.cloud.common.objeck.to.OrderTO;
-import com.lveqia.cloud.common.objeck.to.PageTO;
+import com.lveqia.cloud.common.objeck.to.RequestTo;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.mujugroup.wx.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,8 +25,8 @@ public class FeignController {
     @ResponseBody
     @RequestMapping(value = "/getOrderList", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PageTO<OrderTO> getOrderList(@RequestBody AidHidOidTO aidHidOidDto){
-        return feignService.getOrderList(aidHidOidDto);
+    public PageTo<OrderTo> getOrderList(@RequestBody RequestTo requestTo){
+        return feignService.getOrderList(requestTo);
     }
 
     @RequestMapping(value = "/getCountByUsingDid",method = RequestMethod.GET)
