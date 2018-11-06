@@ -23,9 +23,9 @@ public class LockInfoServiceImpl implements LockInfoService {
 
 
     @Override
-    @Cacheable(value = "lock_info_did", key = "#did", unless="#result == null")
-    public LockInfo getLockInfoByDid(String did) {
-        return lockInfoMapper.getLockInfoByDid(did);
+    @Cacheable(value = "lock_info_lock_id", key = "#bid", unless="#result == null")
+    public LockInfo getLockInfoByBid(String bid) {
+        return lockInfoMapper.getLockInfoByBid(bid);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LockInfoServiceImpl implements LockInfoService {
     }
 
     @Override
-    @CachePut(value = "lock_info_did", key = "#lockInfo.did", unless="#result == null")
+    @CachePut(value = "lock_info_lock_id", key = "#lockInfo.lockId", unless="#result == null")
     public LockInfo update(LockInfo lockInfo) {
         return lockInfoMapper.update(lockInfo)?lockInfo:null;
     }

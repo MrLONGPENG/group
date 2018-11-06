@@ -22,11 +22,11 @@ public class LockInfoController {
     }
 
     @RequestMapping(value = "/query")
-    public String query(String did){
-        logger.debug("info->query did:{}", did);
-        if(did == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
-        if(did.length()>19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
-        LockInfo lockInfo = lockInfoService.getLockInfoByDid(did);
+    public String query(String bid){
+        logger.debug("info->query bid:{}", bid);
+        if(bid == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
+        if(bid.length()>19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        LockInfo lockInfo = lockInfoService.getLockInfoByBid(bid);
         if(lockInfo == null) return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
         return ResultUtil.success(lockInfo);
     }

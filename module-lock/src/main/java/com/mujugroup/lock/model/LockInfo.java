@@ -17,7 +17,7 @@ public class LockInfo implements Serializable {
 
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_lock_info.id
      */
     @Id
@@ -27,11 +27,10 @@ public class LockInfo implements Serializable {
 
     /**
      * 设备ID
-     * 表字段 : t_lock_info.did
+     * 表字段 : t_lock_info.lock_id
      */
-    @Column(name = "did")
-    private Long did;
-
+    @Column(name = "lock_id")
+    private Long lockId;
     /**
      * 设备锁厂商品牌(1:连旅；2:待定)
      * 表字段 : t_lock_info.brand
@@ -53,12 +52,12 @@ public class LockInfo implements Serializable {
     @Column(name = "key")
     private String key;
 
-	/**
-	 * SIM卡ID
-	 * 表字段 : t_lock_info.sim_id
-	 */
-	@Column(name = "sim_id")
-	private String simId;
+    /**
+     * SIM卡ID
+     * 表字段 : t_lock_info.sim_id
+     */
+    @Column(name = "sim_id")
+    private String simId;
 
     /**
      * 固件版本
@@ -67,7 +66,7 @@ public class LockInfo implements Serializable {
     @Column(name = "f_version")
     private Integer fVersion;
 
-	/**
+    /**
      * 硬件版本
      * 表字段 : t_lock_info.h_version
      */
@@ -151,157 +150,156 @@ public class LockInfo implements Serializable {
     @Column(name = "last_refresh")
     private Date lastRefresh;
 
-
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public Long getDid() {
-		return did;
-	}
+    public Long getLockId() {
+        return lockId;
+    }
 
-	public void setDid(Long did) {
-		this.did = did;
-	}
+    public void setLockId(Long lockId) {
+        this.lockId = lockId;
+    }
 
     public Integer getBrand() {
-		return brand;
-	}
+        return brand;
+    }
 
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
+    public void setBrand(Integer brand) {
+        this.brand = brand;
+    }
 
     public String getMac() {
-		return mac;
-	}
+        return mac;
+    }
 
-	public void setMac(String mac) {
-		this.mac = mac;
-	}
+    public void setMac(String mac) {
+        this.mac = mac;
+    }
 
     public String getKey() {
-		return key;
-	}
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public String getSimId() {
-		return simId;
-	}
+    public String getSimId() {
+        return simId;
+    }
 
-	public void setSimId(String simId) {
-		this.simId = simId;
-	}
+    public void setSimId(String simId) {
+        this.simId = simId;
+    }
 
-	public Integer getFVersion() {
-		return fVersion;
-	}
+    public Integer getFVersion() {
+        return fVersion;
+    }
 
-	public void setFVersion(Integer fVersion) {
-		this.fVersion = fVersion;
-	}
+    public void setFVersion(Integer fVersion) {
+        this.fVersion = fVersion;
+    }
 
     public Integer getHVersion() {
-		return hVersion;
-	}
+        return hVersion;
+    }
 
-	public void setHVersion(Integer hVersion) {
-		this.hVersion = hVersion;
-	}
+    public void setHVersion(Integer hVersion) {
+        this.hVersion = hVersion;
+    }
 
     public java.math.BigDecimal getLongitude() {
-		return longitude;
-	}
+        return longitude;
+    }
 
-	public void setLongitude(java.math.BigDecimal longitude) {
-		this.longitude = longitude;
-	}
+    public void setLongitude(java.math.BigDecimal longitude) {
+        this.longitude = longitude;
+    }
 
     public java.math.BigDecimal getLatitude() {
-		return latitude;
-	}
+        return latitude;
+    }
 
-	public void setLatitude(java.math.BigDecimal latitude) {
-		this.latitude = latitude;
-	}
+    public void setLatitude(java.math.BigDecimal latitude) {
+        this.latitude = latitude;
+    }
 
     public Integer getCsq() {
-		return csq;
-	}
+        return csq;
+    }
 
-	public void setCsq(Integer csq) {
-		this.csq = csq;
-	}
+    public void setCsq(Integer csq) {
+        this.csq = csq;
+    }
 
     public Integer getTemp() {
-		return temp;
-	}
+        return temp;
+    }
 
-	public void setTemp(Integer temp) {
-		this.temp = temp;
-	}
+    public void setTemp(Integer temp) {
+        this.temp = temp;
+    }
 
     public Integer getCharge() {
-		return charge;
-	}
+        return charge;
+    }
 
-	public void setCharge(Integer charge) {
-		this.charge = charge;
-	}
+    public void setCharge(Integer charge) {
+        this.charge = charge;
+    }
 
     public Integer getVoltage() {
-		return voltage;
-	}
+        return voltage;
+    }
 
-	public void setVoltage(Integer voltage) {
-		this.voltage = voltage;
-	}
+    public void setVoltage(Integer voltage) {
+        this.voltage = voltage;
+    }
 
     public Integer getElectric() {
-		return electric;
-	}
+        return electric;
+    }
 
-	public void setElectric(Integer electric) {
-		this.electric = electric;
-	}
+    public void setElectric(Integer electric) {
+        this.electric = electric;
+    }
 
     public Integer getUpgrade() {
-		return upgrade;
-	}
+        return upgrade;
+    }
 
-	public void setUpgrade(Integer upgrade) {
-		this.upgrade = upgrade;
-	}
+    public void setUpgrade(Integer upgrade) {
+        this.upgrade = upgrade;
+    }
 
     public Integer getBatteryStat() {
-		return batteryStat;
-	}
+        return batteryStat;
+    }
 
-	public void setBatteryStat(Integer batteryStat) {
-		this.batteryStat = batteryStat;
-	}
+    public void setBatteryStat(Integer batteryStat) {
+        this.batteryStat = batteryStat;
+    }
 
-	public Integer getLockStatus() {
-		return lockStatus;
-	}
+    public Integer getLockStatus() {
+        return lockStatus;
+    }
 
-	public void setLockStatus(Integer lockStatus) {
-		this.lockStatus = lockStatus;
-	}
+    public void setLockStatus(Integer lockStatus) {
+        this.lockStatus = lockStatus;
+    }
 
-	public Date getLastRefresh() {
-		return lastRefresh;
-	}
+    public Date getLastRefresh() {
+        return lastRefresh;
+    }
 
-	public void setLastRefresh(Date lastRefresh) {
-		this.lastRefresh = lastRefresh;
-	}
+    public void setLastRefresh(Date lastRefresh) {
+        this.lastRefresh = lastRefresh;
+    }
 
 }

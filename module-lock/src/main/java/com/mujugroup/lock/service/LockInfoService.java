@@ -5,7 +5,7 @@ import com.mujugroup.lock.model.LockInfo;
 
 public interface LockInfoService {
 
-    LockInfo getLockInfoByDid(String did);
+    LockInfo getLockInfoByBid(String bid);
 
     LockInfo insert(LockInfo lockInfo);
 

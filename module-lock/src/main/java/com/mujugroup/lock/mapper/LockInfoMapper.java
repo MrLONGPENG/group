@@ -31,7 +31,7 @@ public interface LockInfoMapper {
     @Select("SELECT * FROM t_lock_info WHERE id = #{id}")
     @Results(id = "lockInfo", value = {
             @Result(id=true, column = "id", property = "id", javaType = Integer.class)
-            ,@Result(column = "did", property = "did", javaType = Long.class),
+            ,@Result(column = "lock_id", property = "lockId", javaType = Long.class),
             @Result(column = "brand", property = "brand", javaType = Integer.class),
             @Result(column = "mac", property = "mac", javaType = String.class),
             @Result(column = "key", property = "key", javaType = String.class),
@@ -59,8 +59,8 @@ public interface LockInfoMapper {
      * 根据参数查询对象
      * @return LockInfo
      */
-    @Select("SELECT * FROM `t_lock_info` WHERE did = #{did}")
+    @Select("SELECT * FROM `t_lock_info` WHERE lock_id = #{bid}")
     @ResultMap("lockInfo")
-    LockInfo getLockInfoByDid(String did);
+    LockInfo getLockInfoByBid(String bid);
 
 }

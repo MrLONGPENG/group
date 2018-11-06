@@ -32,10 +32,10 @@ public class MergeServiceImpl implements MergeService {
         StringBuilder sb;
         LockInfo lockInfo;
         for (String bid: array) {
-            lockInfo = lockInfoService.getLockInfoByDid(bid);
+            lockInfo = lockInfoService.getLockInfoByBid(bid);
             if(lockInfo!=null){
                 // BID;开锁状态;电池电量;最后上报时间;信号;温度;固件版本;硬件版本;充电电压;电池电压;充电电流
-                sb = new StringBuilder(StringUtil.autoFillDid(lockInfo.getDid()));
+                sb = new StringBuilder(StringUtil.autoFillDid(lockInfo.getLockId()));
                 sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getLockStatus());
                 sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getBatteryStat());
                 sb.append(Constant.SIGN_FEN_HAO).append(lockInfo.getLastRefresh().getTime()/1000);

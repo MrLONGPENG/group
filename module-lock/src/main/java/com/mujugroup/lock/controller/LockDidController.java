@@ -79,7 +79,7 @@ public class LockDidController {
         if(!StringUtil.isNumeric(did)) return null;
         LockDid lockDid = lockDidService.getLockDidByDid(StringUtil.autoFillDid(did));
         if(lockDid == null) return null;
-        LockInfo lockInfo = lockInfoService.getLockInfoByDid(String.valueOf(lockDid.getLockId()));
+        LockInfo lockInfo = lockInfoService.getLockInfoByBid(String.valueOf(lockDid.getLockId()));
         if(lockInfo == null) return null;
         return String.valueOf(lockInfo.getLockStatus());
     }
