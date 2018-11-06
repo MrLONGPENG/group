@@ -1,6 +1,7 @@
 package com.mujugroup.wx.service.feign.error;
 
 
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +15,8 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     private final Logger logger = LoggerFactory.getLogger(ModuleCoreServiceError.class);
 
     @Override
-    public String deviceQuery(String did) {
-        logger.warn("Remote call module-core failure->deviceQuery");
-        return null;
-    }
-
-    @Override
-    public String deviceList(int pageNum, int pageSize, int status) {
-        logger.warn("Remote call module-core failure->deviceList");
+    public InfoTo getDeviceInfo(String did, String bid) {
+        logger.warn("Remote call module-core failure->getDeviceInfo");
         return null;
     }
 

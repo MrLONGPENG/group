@@ -1,7 +1,6 @@
 package com.mujugroup.wx.service.impl;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.objeck.to.AidHidOidTO;
 import com.lveqia.cloud.common.config.Constant;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -93,15 +91,13 @@ public class WxOrderServiceImpl implements WxOrderService {
         if(wxOrder!=null){
             OrderBean orderBean = new OrderBean(wxOrder);
             String did = StringUtil.autoFillDid(wxOrder.getDid());
-            String result = moduleCoreService.deviceQuery(did);
-            if(result!=null){
-                JsonObject returnData = new JsonParser().parse(result).getAsJsonObject();
-                if(returnData.get("code").getAsInt() == 200 && returnData.has("data")) {
-                    JsonObject data = returnData.getAsJsonObject("data");
-                    orderBean.setHospitalBed(data.get("hospitalBed").getAsString());
-                    orderBean.setHospital(data.getAsJsonObject("hospital").get("name").getAsString());
-                    orderBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
-                    orderBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
+            InfoTo result = moduleCoreService.getDeviceInfo(did, null);
+            if(result!=null && !result.isIllegal()){
+                if(!result.isIllegal()) {
+                    orderBean.setAddress(result.getAddress());
+                    orderBean.setHospitalBed(result.getBed());
+                    orderBean.setHospital(result.getHospital());
+                    orderBean.setDepartment(result.getDepartment());
                 }
             }else{
                 orderBean.setAddress("服务器异常，无法取到实时数据");

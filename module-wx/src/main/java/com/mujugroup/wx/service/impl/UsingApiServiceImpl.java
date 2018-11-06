@@ -2,6 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.util.AESUtil;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -84,15 +85,14 @@ public class UsingApiServiceImpl implements UsingApiService {
                     if(did!=null && !realDid.equals(did)) usingBean.setMismatch(true);
                 }
                 usingBean.setDid(realDid);
-                String result = moduleCoreService.deviceQuery(realDid);
+                InfoTo result = moduleCoreService.getDeviceInfo(realDid, null);
                 if(result == null){
                     usingBean.setType(5);
                     usingBean.setInfo("服务器异常,请稍后尝试!");
                     return usingBean;
                 }
-                JsonObject returnData = new JsonParser().parse(result).getAsJsonObject();
-                if(returnData.get("code").getAsInt() == 200 && returnData.has("data")){
-                    JsonObject data = returnData.getAsJsonObject("data");
+
+                if(!result.isIllegal()){
                     if(wxUsing!=null && !openId.equals(wxUsing.getOpenId())) {
                         usingBean.setType(1);
                         usingBean.setPayTime(wxUsing.getPayTime());
@@ -106,17 +106,15 @@ public class UsingApiServiceImpl implements UsingApiService {
                         usingBean.setType(0);
                     }
                     usingBean.setPay(wxUsing!=null);
-                    String aid = data.get("agentId").getAsString();
-                    String hid = data.get("hospitalId").getAsString();
-                    String oid = data.get("departmentId").getAsString();
-                    usingBean.setCode(generateCode(openId, realDid, aid, hid, oid));
-                    usingBean.setHospitalBed(data.get("hospitalBed").getAsString());
-                    usingBean.setHospital(data.getAsJsonObject("hospital").get("name").getAsString());
-                    usingBean.setAddress(data.getAsJsonObject("hospital").get("address").getAsString());
-                    usingBean.setDepartment(data.getAsJsonObject("department").get("name").getAsString());
+                    usingBean.setCode(generateCode(openId, realDid, result.getAid(), result.getHid(), result.getOid()));
+                    usingBean.setHospitalBed(result.getBed());
+                    usingBean.setAddress(result.getAddress());
+                    usingBean.setHospital(result.getHospital());
+                    usingBean.setDepartment(result.getDepartment());
                     // 根据医院ID设置开关锁时间
-                    usingBean.setWxUptime(uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_UPTIME, aid, hid, oid))
-                            , uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, aid, hid, oid)));
+                    usingBean.setWxUptime(uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_UPTIME, result.getAid()
+                            , result.getHid(), result.getOid())), uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY
+                            , result.getAid(), result.getHid(), result.getOid())));
                 }else{
                     usingBean.setType(3);
                     usingBean.setInfo("设备未激活或非法设备");
