@@ -104,7 +104,7 @@ public class ResultUtil {
             case CODE_UNAUTHORIZED   : return "账户无权限, 无法操作，请联系管理员!";
             case CODE_ACCOUNT_DISABLE: return "账户被禁用，登录失败，请联系管理员!";
             case CODE_PASSWORD_ERROR:  return "用户名或密码输入错误，登录失败!";
-            case CODE_NOT_FIND_DATA:   return "没有找到数据或请求参数错误";
+            case CODE_NOT_FIND_DATA:   return "无法找到数据，请检查请求条件！";
             case CODE_NOT_FIND_PATH:   return "接口路径没有找到，请检查路由!";
             case CODE_UNKNOWN_ERROR:   return "未知错误";
         }
