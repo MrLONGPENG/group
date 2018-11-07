@@ -90,7 +90,7 @@ public interface AuthDataMapper {
 
 
     @ResultType(String.class)
-    @Select("SELECT CONCAT(CASE `type` WHEN 1 THEN 'AID' WHEN 2 THEN 'HID' ELSE 'OID' END, `rid`) AS ids" +
-            " FROM `t_auth_data` WHERE `uid`=#{uid}")
+    @Select("SELECT CONCAT(CASE `type` WHEN 0 THEN 'ALL' WHEN 1 THEN 'AID' WHEN 2 THEN 'HID' ELSE 'OID' END" +
+            ", `rid`) AS ids FROM `t_auth_data` WHERE `uid`=#{uid}")
     List<String> getAuthDataList(@Param("uid")int uid);
 }

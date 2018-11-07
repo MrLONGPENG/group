@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,6 +49,7 @@ public class AuthDataController {
     @RequestMapping(value = "/put", method = RequestMethod.PUT)
     public String put(@RequestParam("userId") int userId, @ApiParam(value = "数据权限")
             @RequestParam(value = "authData", required = false) String[] authData) {
+        // TODO 此处没有判断当前用户是否能更改当前权限
         int result = authDataService.updateAuthData(userId, authData);
         if (result > 0) {
             return ResultUtil.success("修改权限成功!");
@@ -65,25 +66,28 @@ public class AuthDataController {
 
     //数据权限树
     private List<TreeVo> getTreeBOList(int id) {
+        List<TreeBo> allList = new ArrayList<>();
+        List<DBMap> auth = authDataService.getAuthData(id);
+        if(auth!=null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))){
+            allList.add(getTreeBo("ALL0","全部代理商",false, authDataService.getAllAgentList()));
+            return authDataService.treeBoToVo(allList);
+        }
         List<TreeBo> aidList = authDataService.getAgentAuthData(id);
         List<TreeBo> hidList = authDataService.getHospitalAuthData(id);
-        if (aidList.size() == 0 && hidList.size() == 0) {
-            List<DBMap> auth = authDataService.getAuthData(id);
-            if(auth!=null && auth.stream().anyMatch(dbMap -> CoreConfig.AUTH_DATA_ALL.equals(dbMap.getKey()))){
-                List<TreeBo> allList = authDataService.getAllAgentList();
-                return authDataService.treeBoToVo(allList);
-            }
-            return null;
-        }
+        if (aidList.size() == 0 && hidList.size() == 0) return null;
         if (hidList.size() > 0) {
-            TreeBo treeBO = new TreeBo();
-            treeBO.setId("AID0");
-            treeBO.setName("其他可选医院");
-            treeBO.setDisabled(true);
-            treeBO.setChildren(authDataService.toJsonString(hidList));
-            aidList.add(treeBO);
+            aidList.add(getTreeBo("AID0", "其他可选医院", true,  hidList));
         }
         return authDataService.treeBoToVo(aidList);
+    }
+
+    private TreeBo getTreeBo(String id, String name, boolean disabled, List<TreeBo> children) {
+        TreeBo treeBO = new TreeBo();
+        treeBO.setId(id);
+        treeBO.setName(name);
+        treeBO.setDisabled(disabled);
+        treeBO.setChildren(authDataService.toJsonString(children));
+        return treeBO;
     }
 
 }
