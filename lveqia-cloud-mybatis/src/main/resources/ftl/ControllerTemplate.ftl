@@ -21,9 +21,4 @@ public class ${tables.className}Controller {
         this.${tables.fieldName}Service = ${tables.fieldName}Service;
     }
 
-    @RequestMapping(value = "/test")
-    public String test(){
-        return ${tables.fieldName}Service.test();
-    }
-
 }

@@ -1,6 +1,6 @@
 package ${baseInfo.packageName}.model;
 
-
+import lombok.Data;
 import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -11,6 +11,7 @@ import javax.persistence.*;
  * 创建人:${baseInfo.author}
  * 创建时间:${baseInfo.createTime}
  */
+@Data
 @SuppressWarnings("serial")
 @Table(name = "${tables.tableName}")
 public class ${tables.className} implements Serializable {
@@ -32,6 +33,7 @@ public class ${tables.className} implements Serializable {
 
 </#list>
 
+<#--
 <#list columns as columnData>
 
     public ${columnData.filedType} get${columnData.filedName?cap_first}() {
@@ -42,5 +44,6 @@ public class ${tables.className} implements Serializable {
 		this.${columnData.filedName} = ${columnData.filedName};
 	}
 </#list>
+-->
 
 }
