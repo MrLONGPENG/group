@@ -79,7 +79,6 @@ CREATE TABLE `t_lock_record` (
 `lock_status` tinyint(4)  DEFAULT NULL COMMENT '锁状态 1:关 2:开 (助力车 3:中间态 ) 4代表开锁机械故障、5代表关锁机械故障，6代表锁端本地时间不在限制时间范围内',
 `last_refresh` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '最后上报时间',
 `crtTime` datetime DEFAULT NULL COMMENT '创建时间',
-UNIQUE KEY `index_did` (`did`) COMMENT '唯一业务ID索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁记录表'
 
