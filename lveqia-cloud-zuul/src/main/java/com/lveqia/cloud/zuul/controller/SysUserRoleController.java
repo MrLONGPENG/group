@@ -1,10 +1,8 @@
 package com.lveqia.cloud.zuul.controller;
 
 
-import com.lveqia.cloud.common.objeck.info.UserInfo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
-import com.lveqia.cloud.zuul.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,12 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description="用户与角色关系相关接口")
 public class SysUserRoleController {
 
-    private final SysUserService sysUserService;
     private final SysUserRoleService sysUserRoleService;
     private final Logger logger = LoggerFactory.getLogger(SysUserRoleController.class);
     @Autowired
-    public SysUserRoleController(SysUserService sysUserService, SysUserRoleService sysUserRoleService) {
-        this.sysUserService = sysUserService;
+    public SysUserRoleController(SysUserRoleService sysUserRoleService) {
         this.sysUserRoleService = sysUserRoleService;
     }
 
@@ -42,8 +38,6 @@ public class SysUserRoleController {
             , @ApiParam(value="授权或取消,默认取消") @RequestParam(name="isChecked"
             , defaultValue = "false") boolean isChecked){
         logger.debug("change put uid:{} rid:{}", uid, rid);
-        UserInfo userInfo = sysUserService.getCurrInfo();
-        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         if(sysUserRoleService.change(uid, rid, isChecked) == 1) return ResultUtil.success();
         return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }
@@ -54,8 +48,6 @@ public class SysUserRoleController {
     public String putRidToUid(@ApiParam(value="用户ID", required = true) @RequestParam(name="userId") int userId
             , @ApiParam(value="角色ID组", required = true) @RequestParam(name="roles") int[] roles){
         logger.debug("put uid:{} rid:{}", userId, roles);
-        UserInfo userInfo = sysUserService.getCurrInfo();
-        if(userInfo == null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
         if(sysUserRoleService.putRidToUid(userId, roles) == roles.length) return ResultUtil.success();
         return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }

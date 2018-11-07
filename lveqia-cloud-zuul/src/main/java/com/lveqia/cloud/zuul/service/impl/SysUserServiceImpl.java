@@ -1,13 +1,17 @@
 package com.lveqia.cloud.zuul.service.impl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.zuul.mapper.SysUserMapper;
 import com.lveqia.cloud.zuul.model.SysUser;
 import com.lveqia.cloud.zuul.objeck.vo.UserVo;
-import com.lveqia.cloud.zuul.objeck.vo.user.UserAddVo;
+import com.lveqia.cloud.zuul.objeck.vo.user.AddVo;
+import com.lveqia.cloud.zuul.objeck.vo.user.ListVo;
 import com.lveqia.cloud.zuul.service.SysUserRoleService;
 import com.lveqia.cloud.zuul.service.SysUserService;
 import com.lveqia.cloud.zuul.service.feign.ModuleCoreService;
@@ -69,12 +73,11 @@ public class SysUserServiceImpl implements SysUserService {
 
 
     @Override
-    public boolean modify(UserInfo userInfo, String oldPassword, String newPassword) throws BaseException {
-        SysUser user = (SysUser) loadUserByUsername(userInfo.getUsername());
+    public boolean modify(int uid, String oldPassword, String newPassword) throws BaseException {
+        SysUser user = getUser(uid);
         if (!encoder.matches(oldPassword, user.getPassword())) {
             throw new BaseException(ResultUtil.CODE_VALIDATION_FAIL, "原始密码错误，无法修改");
         }
-
         user.setPassword(encoder.encode(newPassword));
         return sysUserMapper.update(user) == 1;
     }
@@ -85,13 +88,15 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public List<SysUser> getSysUserList(boolean fuzzy, String name, String username) {
-        return sysUserMapper.getSysUserList(fuzzy, name, username);
+    public PageTo<SysUser> getSysUserList(ListVo listVo) {
+        PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
+        List<SysUser> list = sysUserMapper.getSysUserList(listVo.isFuzzy(), listVo.getName(), listVo.getUsername());
+        return new PageTo<>(PageInfo.of(list), list);
     }
 
     @Override
     @Transactional
-    public int addUser(long crtId, UserAddVo userAddVo) throws BaseException {
+    public int addUser(long crtId, AddVo userAddVo) throws BaseException {
         if (StringUtil.isNumeric(userAddVo.getUsername())) {
             throw new BaseException(ResultUtil.CODE_REQUEST_FORMAT, "用户名不能全为数字");
         }
@@ -128,7 +133,7 @@ public class SysUserServiceImpl implements SysUserService {
         return result;
     }
 
-    private SysUser getSysUser(int crtId, UserAddVo userAddVo) {
+    private SysUser getSysUser(int crtId, AddVo userAddVo) {
         SysUser sysUser = new SysUser();
         sysUser.setName(userAddVo.getName());
         sysUser.setPhone(userAddVo.getPhone());
@@ -163,8 +168,8 @@ public class SysUserServiceImpl implements SysUserService {
 
 
     @Override
-    public boolean update(UserInfo userInfo, String name, String email, String address, String password) {
-        SysUser sysUser = (SysUser) loadUserByUsername(userInfo.getUsername());
+    public boolean update(int uid, String name, String email, String address, String password) {
+        SysUser sysUser = getUser(uid);
         if (!StringUtil.isEmpty(name)) sysUser.setName(name);
         if (!StringUtil.isEmpty(email)) sysUser.setEmail(email);
         if (!StringUtil.isEmpty(address)) sysUser.setAddress(address);
@@ -172,19 +177,22 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserMapper.update(sysUser) == 1;
     }
 
-    // TODO: 2018-09-27
-    public List<UserVo> getUserTreeList(int pid) {
+    public PageTo<UserVo> getUserTreeList(int pid, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<SysUser> list = sysUserMapper.getSysUserListByPid(pid);
+        return new PageTo<>(PageInfo.of(list), getUserVoList(list));
+    }
+
+    private List<UserVo> getUserVoList(List<SysUser> list){
         UserVo tree;
         List<UserVo> trees = new ArrayList<UserVo>();
-        List<SysUser> list = sysUserMapper.getSysUserListByPid(pid);
         for (SysUser sysUser : list) {
             tree = new UserVo();
             tree.setSysUser(sysUser);
-            tree.setChildren(getUserTreeList(sysUser.getId()));
+            tree.setChildren(getUserVoList(sysUserMapper.getSysUserListByPid(sysUser.getId())));
             trees.add(tree);
         }
         return trees;
     }
-
 
 }

@@ -8,8 +8,8 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 
 @Data
-@ApiModel(value = "UserAddVo", description = "系统用户或运营账号添加VO")
-public class UserAddVo implements Serializable {
+@ApiModel(value = "AddVo", description = "系统用户或运营账号添加VO")
+public class AddVo implements Serializable {
 
     @NotNull(message = "账号类型不能为空")
     @ApiModelProperty(value = "账号类型 0:系统账号 1：普通账号", required = true)
