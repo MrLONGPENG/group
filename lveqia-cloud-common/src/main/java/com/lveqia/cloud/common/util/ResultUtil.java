@@ -3,6 +3,7 @@ package com.lveqia.cloud.common.util;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lveqia.cloud.common.objeck.to.PageTo;
 
 import java.lang.reflect.Type;
 
@@ -61,6 +62,10 @@ public class ResultUtil {
      * 返回正常的结果，带数据
      */
     public static String success(Object object) {
+        if(object instanceof PageTo){
+            PageTo pageTo = (PageTo)object;
+            return success(pageTo.getPageList(), pageTo.getPageInfo(), null);
+        }
         return success(object, null, null);
     }
 

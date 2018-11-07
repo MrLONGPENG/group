@@ -2,7 +2,10 @@ package com.lveqia.cloud.common.util;
 
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.info.UserInfo;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.*;
@@ -80,8 +83,8 @@ public class AuthUtil implements Serializable {
         Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        } catch (ClaimJwtException e) {
-            claims = e.getClaims();
+        } catch (Exception e) {
+            return null;
         }
         return claims;
     }
