@@ -10,6 +10,7 @@ import java.util.HashSet;
 @Component
 public class ZuulAuthFilter extends AuthFilter {
     public ZuulAuthFilter() { // 指定放行Url
-        super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs","/authority"))));
+        super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs","/wx/**", "/core/**"
+                , "/data/**", "/lock/**"))));
     }
 }

@@ -5,6 +5,9 @@ import com.lveqia.cloud.common.util.AuthUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +18,7 @@ import java.util.Set;
 public class AuthFilter implements Filter {
 
     private Set<String> ALLOWED_PATHS;
+    private PathMatcher matcher = new AntPathMatcher();
     private static Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 
     public AuthFilter(Set<String> set){
@@ -32,7 +36,9 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String uri = httpServletRequest.getRequestURI();
-        if(ALLOWED_PATHS.contains(uri) || uri.startsWith("/feign") || uri.startsWith("/merge")){ // 放行URL
+
+        if(ALLOWED_PATHS.stream().anyMatch(pattern-> matcher.match(pattern,uri))
+                || uri.startsWith("/feign") || uri.startsWith("/merge")){ // 放行URL
             logger.debug("AuthFilter->allowed {}", uri);
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
