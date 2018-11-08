@@ -28,7 +28,7 @@ public interface LockRecordMapper {
     boolean deleteById(int id);
 
     @Select("SELECT * FROM t_lock_record WHERE id = #{id}")
-    @Results(id = "lockRecord", value = {
+    @Results(id = "record", value = {
          @Result(id=true, column="id",property="id",javaType=Integer.class)
              ,@Result(column="did",property="did",javaType=Long.class)
              ,@Result(column="lock_id",property="lockId",javaType=Long.class)
@@ -45,7 +45,7 @@ public interface LockRecordMapper {
     LockRecord findById(Integer id);
 
     @Select("SELECT * FROM t_lock_record")
-    @ResultMap("lockRecord")
+    @ResultMap("record")
     List<LockRecord> findListAll();
 
 }

@@ -36,7 +36,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    @JmsListener(destination = "lockRecord")
+    @JmsListener(destination = "record")
     public String getInfo(String info) {
         try {
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();

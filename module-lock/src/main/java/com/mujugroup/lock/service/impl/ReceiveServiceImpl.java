@@ -15,7 +15,7 @@ import javax.jms.Queue;
 public class ReceiveServiceImpl implements ReceiveService {
     private final Logger logger = LoggerFactory.getLogger(ReceiveServiceImpl.class);
     private final JmsMessagingTemplate jmsMessagingTemplate;
-    private Queue queue = new ActiveMQQueue("lockRecord");
+    private Queue queue = new ActiveMQQueue("record");
 
 
     @Autowired
