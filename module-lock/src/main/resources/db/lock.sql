@@ -107,28 +107,29 @@ PRIMARY KEY (`id`)
 -- ----------------------------
 DROP TABLE IF EXISTS `t_lock_dict`;
 CREATE TABLE `t_lock_dict` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`dict_type`varchar(20) DEFAULT NULL COMMENT '故障类型',
-`dict_name` varchar(20) DEFAULT NULL COMMENT '故障名称',
-`dict_key` tinyint(4) DEFAULT NULL,
-`pid` int(11) DEFAULT NULL,
-UNIQUE KEY `index_type_key`(`dict_type`,`dict_key`)  COMMENT '唯一联合索引',
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='故障字典表';
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail','电量异常',1,0);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail','信号异常',2,0);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail','开关锁异常',4,0);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','低电量',1,1);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','电量下降异常',2,1);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','无法充电',3,1);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','无信号',4,2);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','信号波动异常',5,2);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','开锁机械故障',6,3);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','关锁机械故障',7,3);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','超时未关锁',8,3);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','无订单异常开锁',9,3);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Error','非使用时段开锁',10,3);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Resolve','没电',1,1);
-insert into t_lock_dict(dict_type,dict_name,dict_key,pid)values ('Fail_Resolve','信号接收器故障',2,2);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dict_type` varchar(20) DEFAULT NULL COMMENT '故障类型',
+  `dict_name` varchar(20) DEFAULT NULL COMMENT '故障名称',
+  `dict_code` varchar(20) DEFAULT NULL COMMENT '故障编码',
+  `dict_key` tinyint(4) DEFAULT NULL,
+  `dict_pid` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_type_key` (`dict_type`,`dict_key`) COMMENT '唯一联合索引'
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='故障字典表';
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail','电量异常','F_Power',1,null);
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail','信号异常','F_Signal',2,null);
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid)values ('Fail','开关锁异常','F_Switch',4,null );
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','低电量','FE_PW_Low',1,'F_Power');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','电量下降异常','FE_PW_Down',2,'F_Power');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','无法充电','FE_PW_Charge',3,'F_Power');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','无信号','FE_SG_Null',4,'F_Signal');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','信号波动异常','FE_SG_Wave',5,'F_Signal');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','开锁机械故障','FE_SW_Open',6,'F_Switch');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','关锁机械故障','FE_SW_Close',7,'F_Switch');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','超时未关锁','FE_SW_Timeout',8,'F_Switch');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','无订单异常开锁','FE_SW_Order',9,'F_Switch');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','非使用时段开锁','FE_SW_Using',10,'F_Switch');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Resolve','没电','FR_PW_Power',1,'F_Power');
+insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Resolve','信号接收器故障','FR_SG_Receive',2,'F_Signal');
 
 
