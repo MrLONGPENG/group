@@ -83,7 +83,7 @@ public class StaVOServiceImpl implements StaVoService {
             return  ids;
         }
         Map<String, String> map = moduleCoreService.getAuthData(uid);
-        if(map.size() ==0 ) throw new DataException("当前用户无数据权限，请联系管理员！");
+        if(map.size() ==0 ) throw new DataException(DataException.NO_AUTHORITY);
         if(Constant.DIGIT_ZERO.equals(aid)){
             if(map.containsKey(CoreConfig.AUTH_DATA_AGENT)) ids[0] = map.get(CoreConfig.AUTH_DATA_AGENT);
         }
