@@ -88,4 +88,12 @@ public interface DepartmentMapper {
     })
     @SelectProvider(type = DepartmentSqlProvider.class, method = "getSelectList")
     List<SelectVo> getSelectList(@Param(value = "hid") int hid, @Param(value = "name") String name);
+
+
+
+    @ResultType(Integer.class)
+    @Select("SELECT DISTINCT IFNULL(d.id,-1) FROM t_auth_data a LEFT JOIN t_hospital  h ON (a.type = 0)" +
+            " OR (a.type = 1 AND a.rid = h.agentId) OR (a.type = 2 AND a.rid = h.id) LEFT JOIN t_department d " +
+            " ON h.id = d.hospital_id WHERE a.uid = #{uid}")
+    List<Integer> getOidByUid(@Param(value = "uid")Integer uid);
 }

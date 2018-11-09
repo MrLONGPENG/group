@@ -119,6 +119,11 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
+    public List<Integer> getHidByUid(Integer uid) {
+        return hospitalMapper.getHidByUid(uid);
+    }
+
+    @Override
     public boolean remove(int uid, String hid) throws ParamException, DataException {
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         //判断当前用户有无数据权限

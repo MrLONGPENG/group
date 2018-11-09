@@ -27,4 +27,6 @@ public interface DepartmentService {
     List<SelectVo> getSelectList(int uid, int hid, String name) throws DataException;
 
     String checkUserData(int uid, String hid) throws DataException;
+
+    List<Integer> getOidByUid(Integer uid);
 }

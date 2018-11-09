@@ -1,9 +1,12 @@
 package com.mujugroup.core.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -80,6 +83,18 @@ public class FeignController {
     @RequestMapping(value = "/getAuthData", method = RequestMethod.POST)
     public Map<String, String> getAuthData(@RequestParam(value = "uid") int uid) {
         return feignService.getAuthData(uid);
+    }
+
+
+    /**
+     * 给指定用户查询指定级别数据权限（只查询指定级别权限）
+     * @param authVo  请求VO
+     * @return  返回 -1 数据为存在不完整的代理商或医院等权限
+     */
+    @RequestMapping(value = "/getAuthLevel", method = RequestMethod.POST
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PageInfo<Integer> getAuthLevel(@Validated @ModelAttribute AuthVo authVo) {
+        return feignService.getAuthLevel(authVo);
     }
 
     /**

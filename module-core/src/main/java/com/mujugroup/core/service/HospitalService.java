@@ -49,4 +49,10 @@ public interface HospitalService {
      * 根据AID查询HID，多个逗号分隔
      */
     String getHidByAid(String aid);
+
+    /**
+     *
+     * 根据UID查询当前用户拥有权限的全部医院ID
+     */
+    List<Integer> getHidByUid(Integer uid);
 }

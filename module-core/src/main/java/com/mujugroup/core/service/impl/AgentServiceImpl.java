@@ -115,6 +115,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public List<Integer> getAidByUid(Integer uid) {
+        return agentMapper.getAidByUid(uid);
+    }
+
+    @Override
     public List<SelectVo> getTheAgentList() {
         return agentMapper.getTheAgentList();
     }

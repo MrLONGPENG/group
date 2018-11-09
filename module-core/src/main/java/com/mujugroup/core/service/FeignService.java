@@ -1,7 +1,10 @@
 package com.mujugroup.core.service;
 
 
+import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.vo.AuthVo;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -25,4 +28,6 @@ public interface FeignService {
 
    //通过业务ID或设备ID获取基本信息
     InfoTo getDeviceInfo(String did, String bid);
+
+    PageInfo<Integer> getAuthLevel(AuthVo authVo);
 }

@@ -1,10 +1,14 @@
 package com.mujugroup.core.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBo;
 import com.mujugroup.core.service.*;
@@ -18,6 +22,7 @@ import java.util.*;
 @Service("feignService")
 public class FeignServiceImpl implements FeignService {
 
+    private final AgentService agentService;
     private final DeviceService deviceService;
     private final HospitalService hospitalService;
     private final AuthDataService authDataService;
@@ -25,8 +30,9 @@ public class FeignServiceImpl implements FeignService {
     private final Logger logger = LoggerFactory.getLogger(FeignServiceImpl.class);
 
     @Autowired
-    public FeignServiceImpl(DeviceService deviceService, HospitalService hospitalService, AuthDataService authDataService
+    public FeignServiceImpl(AgentService agentService, DeviceService deviceService, HospitalService hospitalService, AuthDataService authDataService
             , DepartmentService departmentService) {
+        this.agentService = agentService;
         this.deviceService = deviceService;
         this.hospitalService = hospitalService;
         this.authDataService = authDataService;
@@ -98,6 +104,25 @@ public class FeignServiceImpl implements FeignService {
     @Override
     public InfoTo getDeviceInfo(String did, String bid) {
         return deviceService.getDeviceInfo(did, bid);
+    }
+
+    @Override
+    public PageInfo<Integer> getAuthLevel(AuthVo authVo) {
+        List<Integer> list;
+        PageHelper.startPage(authVo.getPageNum(), authVo.getPageSize());
+        switch (authVo.getLevel()){
+            case CoreConfig.AUTH_DATA_AGENT:
+                list = agentService.getAidByUid(authVo.getUid());
+                break;
+            case CoreConfig.AUTH_DATA_HOSPITAL:
+                list = hospitalService.getHidByUid(authVo.getUid());
+                break;
+            case CoreConfig.AUTH_DATA_DEPARTMENT:
+                list = departmentService.getOidByUid(authVo.getUid());
+                break;
+            default: list = new ArrayList<>();
+        }
+        return PageInfo.of(list);
     }
 }
 

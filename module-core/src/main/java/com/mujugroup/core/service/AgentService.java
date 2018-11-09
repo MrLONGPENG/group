@@ -33,4 +33,5 @@ public interface AgentService {
 
     List<Agent> findAll(String uid,String name,int enable) throws ParamException,DataException;
 
+    List<Integer> getAidByUid(Integer uid);
 }

@@ -162,4 +162,10 @@ public interface HospitalMapper {
     @ResultType(String.class)
     @Select("SELECT group_concat(`id`) as ids FROM t_hospital WHERE `enable` = 22 AND `agentId` in (${aid})")
     String getHidByAid(@Param(value = "aid") String aid);
+
+
+    @ResultType(Integer.class)
+    @Select("SELECT DISTINCT IFNULL(h.id,-1) FROM t_auth_data a LEFT JOIN t_hospital h ON (a.type = 0)" +
+            " OR (a.type = 1 AND a.rid = h.agentId) OR (a.type = 2 AND a.rid = h.id) WHERE a.uid = #{uid}")
+    List<Integer> getHidByUid(@Param(value = "uid")Integer uid);
 }
