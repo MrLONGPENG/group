@@ -11,6 +11,6 @@ import java.util.HashSet;
 public class CoreAuthFilter extends AuthFilter {
     public CoreAuthFilter() { // 指定放行Url
         super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs","/receive/data"
-                ,"/device/unlock","/device/query","/device/beep","/device/ble"))));
+                ,"/device/**","/did/**"))));
     }
 }

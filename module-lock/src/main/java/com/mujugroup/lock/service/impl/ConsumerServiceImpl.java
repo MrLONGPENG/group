@@ -140,10 +140,17 @@ public class ConsumerServiceImpl implements ConsumerService {
         lockSwitch.setLockId(Long.parseLong(lockId));
         //设置did
         lockSwitch.setDid(lockDid.getDid());
-        lockSwitch.setReceiveTime(new Date(result.get("lastRefresh").getAsLong()));
-        lockSwitch.setLockStatus(result.get("lockStatus").getAsInt());
-        //保存到服务器的时间
-        lockSwitch.setLocalTime(new Date());
+        lockSwitch.setLocalTime(new Date());         //保存到服务器的时间
+        if (result.has("lastRefresh")) {
+            lockSwitch.setReceiveTime(new Date(result.get("lastRefresh").getAsLong()));
+        }else{
+            lockSwitch.setReceiveTime(lockSwitch.getLocalTime());
+        }
+        if (result.has("lockStatus")) {
+            lockSwitch.setLockStatus(result.get("lockStatus").getAsInt());
+        }else{
+            lockSwitch.setLockStatus(0);
+        }
         lockSwitchService.add(lockSwitch);
     }
 
