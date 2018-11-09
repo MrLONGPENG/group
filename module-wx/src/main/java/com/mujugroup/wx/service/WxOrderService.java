@@ -44,6 +44,8 @@ public interface WxOrderService {
 
     List<WxOrder> findList(RequestTo dto);
 
+    String getOrderEndTimeByDid(String did);
+
 
 
 }

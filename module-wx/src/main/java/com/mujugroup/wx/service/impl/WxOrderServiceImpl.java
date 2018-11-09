@@ -211,6 +211,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
+    public String getOrderEndTimeByDid(String did) {
+        return  wxOrderMapper.getOrderEndTimeByDid(did);
+    }
+
+    @Override
     public List<WxOrder> findList(RequestTo dto) {
         return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd()
                 , dto.getTradeNo(), dto.getOrderType());

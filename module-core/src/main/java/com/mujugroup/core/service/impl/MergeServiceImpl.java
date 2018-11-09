@@ -7,6 +7,7 @@ import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
+import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.TreeBo;
@@ -16,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("mergeService")
 public class MergeServiceImpl implements MergeService {
@@ -99,8 +97,8 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            if (StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
-            hashMap.put(key, agentMapper.findById(Integer.parseInt(key)).getName());
+            checkHasMap(hashMap, key, Optional.ofNullable(agentMapper.findById(Integer.parseInt(key)))
+                    .map(Agent::getName).orElse(null));
         }
         return hashMap;
     }
@@ -111,8 +109,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            if (StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
-            hashMap.put(key, hospitalMapper.getHospitalById(key));
+            checkHasMap(hashMap, key, hospitalMapper.getHospitalById(key));
         }
         return hashMap;
     }
@@ -123,8 +120,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            if (StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
-            hashMap.put(key, hospitalMapper.getProvinceByHid(key));
+            checkHasMap(hashMap, key, hospitalMapper.getProvinceByHid(key));
         }
         return hashMap;
     }
@@ -135,8 +131,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            if (StringUtil.isEmpty(key) || key.equals(Constant.DIGIT_ZERO)) continue;
-            hashMap.put(key, hospitalMapper.getCityByHid(key));
+            checkHasMap(hashMap, key,  hospitalMapper.getCityByHid(key));
         }
         return hashMap;
     }
@@ -147,8 +142,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            if (StringUtil.isEmpty(key)) continue;
-            hashMap.put(key, departmentMapper.getDepartmentNameById(key));
+            checkHasMap(hashMap, key,  departmentMapper.getDepartmentNameById(key));
         }
         return hashMap;
     }
@@ -159,10 +153,14 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String did : array) {
-            if (StringUtil.isEmpty(did)) continue;
-            hashMap.put(did, deviceMapper.getBedInfoByDid(did));
+            checkHasMap(hashMap, did, deviceMapper.getBedInfoByDid(did));
         }
         return hashMap;
+    }
+
+    private void checkHasMap(HashMap<String, String> hashMap, String key, String value) {
+        if (StringUtil.isEmpty(key) || StringUtil.isEmpty(value) || key.equals(Constant.DIGIT_ZERO)) return;
+        hashMap.put(key, value);
     }
 
     @Override

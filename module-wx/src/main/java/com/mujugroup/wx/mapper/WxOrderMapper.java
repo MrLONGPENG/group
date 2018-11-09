@@ -104,4 +104,8 @@ public interface WxOrderMapper {
     String getTotalProfit(@Param("aid")String aid, @Param("hid") String hid, @Param("oid")String oid
             , @Param("did")String did, @Param("tradeNo") String tradeNo, @Param("orderType") int orderType
             , @Param("start") long start, @Param("end") long end);
+
+    @ResultType(String.class)
+    @Select("SELECT `end_time` FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID DESC LIMIT 1")
+    String getOrderEndTimeByDid(String did);
 }
