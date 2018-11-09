@@ -84,7 +84,7 @@ public class LockFailSqlProvider {
                 if (sql.length() > 0) sql.append(" OR ");
                 sql.append("oid = #{oid} ");
             }
-            AND().WHERE(sql.toString());
+            if (sql.length() > 0) AND().WHERE(sql.toString());
             GROUP_BY("dict_code");
         }}.toString();
 
