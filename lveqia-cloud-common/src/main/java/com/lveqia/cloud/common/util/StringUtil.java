@@ -175,7 +175,12 @@ public class StringUtil {
         nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点
         return nf.format( count/total);
     }
-
+    //计算百分数，不保留两位小数
+    public static String Percent(Double count, Double total) {
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(0);//控制保留小数点后几位，0:不保留两位小数 2：表示保留2位小数点
+        return nf.format( count/total);
+    }
     /**
      * 获取按时间的Excel文件名字
      */

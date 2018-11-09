@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -266,7 +267,8 @@ public class MergeCore {
      * @param value
      */
     private Map<String,String> addDefaultKey(Map<String,String> map, String value) {
-        if(!"".equals(value)) map.put(DEFAULT_KEY, value);
+        if(map == null) map = new HashMap<>();
+        if(!StringUtil.isEmpty(value)) map.put(DEFAULT_KEY, value);
         return map;
     }
 

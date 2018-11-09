@@ -112,7 +112,10 @@ public class DateUtil {
     private static Date getCurrentDate() {
         return new Date();
     }
-
+    public static  String dateConvert(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH点mm分ss秒");
+        return sdf.format(date);
+    }
 
     /**
      * 获取不含日期的时间戳
