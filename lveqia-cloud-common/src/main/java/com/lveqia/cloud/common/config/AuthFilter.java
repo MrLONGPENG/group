@@ -13,16 +13,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AuthFilter implements Filter {
 
+    private boolean isSystem;
     private Set<String> ALLOWED_PATHS;
     private PathMatcher matcher = new AntPathMatcher();
     private static Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 
+    public AuthFilter(){
+        this(false);
+    }
+
     public AuthFilter(Set<String> set){
+        this(set, false);
+    }
+
+    public AuthFilter(boolean isSystem){
+        this(new HashSet<>(), isSystem);
+    }
+
+    private AuthFilter(Set<String> set, boolean isSystem){
         this.ALLOWED_PATHS = set;
+        this.isSystem = isSystem;
     }
 
     @Override
@@ -38,7 +53,8 @@ public class AuthFilter implements Filter {
         String uri = httpServletRequest.getRequestURI();
 
         if(ALLOWED_PATHS.stream().anyMatch(pattern-> matcher.match(pattern,uri))
-                || uri.startsWith("/feign") || uri.startsWith("/merge")){ // 放行URL
+                || uri.startsWith("/feign") || uri.startsWith("/merge")  // 内部调用放行
+                || (isSystem && !uri.startsWith("/sys"))){               // 权限模块非自己接口放行
             logger.debug("AuthFilter->allowed {}", uri);
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
