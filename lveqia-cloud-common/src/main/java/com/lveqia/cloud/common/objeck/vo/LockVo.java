@@ -33,5 +33,9 @@ public class LockVo {
     private String batteryStat;
     //最后上报时间
     private String lastRefresh;
+    //硬件版本
+    private Integer hVersion;
+    //固件版本
+    private Integer fVersion;
 
 }

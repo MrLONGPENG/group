@@ -59,6 +59,12 @@ public class DeviceServcieImpl implements DeviceServcie {
 
     private LockVo lockToToVo(LockTo lockTo, Class<?> toType) {
         LockVo lockVo = new LockVo();
+        lockVo.setBid(lockTo.getBid());
+        lockVo.setDid(lockTo.getDid());
+        lockVo.setDictName(lockTo.getDictName());
+        lockVo.setTemp(lockTo.getTemp());
+        lockVo.setCharge(lockTo.getCharge());
+        lockVo.setVoltage(lockTo.getVoltage());
         lockVo.setLockStatus(lockTo.getLockStatus() == 1 ? "关锁" : "开锁");
         //电量百分数
         lockVo.setBatteryStat(StringUtil.Percent(lockTo.getBatteryStat().doubleValue(), 100.0));
@@ -66,6 +72,8 @@ public class DeviceServcieImpl implements DeviceServcie {
         //日期转换
         lockVo.setLastRefresh(DateUtil.dateConvert(lockTo.getLastRefresh()));
         lockVo.setElectric(lockTo.getElectric() == 0 ? "未充电" : "充电中");
+        lockVo.setFVersion(lockTo.getFVersion());
+        lockVo.setHVersion(lockTo.getHVersion());
         return lockVo;
 
     }
@@ -73,8 +81,12 @@ public class DeviceServcieImpl implements DeviceServcie {
 
     private PayInfoVo payInfoToVo(PayInfoTo payInfoTo, Class<?> toType) {
         PayInfoVo payInfoVo = new PayInfoVo();
+        payInfoVo.setName(payInfoTo.getName());
+        payInfoVo.setDid(payInfoTo.getDid());
+        payInfoVo.setGid(payInfoTo.getGid());
+        payInfoVo.setPrice(payInfoTo.getPrice());
         payInfoVo.setStartTime(DateUtil.dateConvert(payInfoTo.getStartTime()));
-        payInfoVo.setEndTime(DateUtil.timestampToString(payInfoTo.getEndTime(),"yyyy年MM月dd日 HH点mm分ss秒"));
+        payInfoVo.setEndTime(DateUtil.timestampToString(payInfoTo.getEndTime(), "yyyy年MM月dd日 HH点mm分ss秒"));
         String source = payInfoTo.getOrderType() == 1 ? "晚休" : payInfoTo.getOrderType() == 2 ? "午休" : "未知";
         payInfoVo.setOrderType(source);
         return payInfoVo;

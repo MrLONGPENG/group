@@ -33,5 +33,10 @@ public class LockTo {
     private Integer batteryStat;
     //最后上报时间
     private Date lastRefresh;
+    //硬件版本
+    private Integer hVersion;
+    //固件版本
+    private Integer fVersion;
+
 
 }

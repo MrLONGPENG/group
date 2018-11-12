@@ -65,7 +65,7 @@ public interface LockInfoMapper {
     @ResultMap("lockInfo")
     LockInfo getLockInfoByBid(String bid);
 
-    @Select("SELECT csq,temp,charge,voltage,electric,battery_stat batteryStat,lock_status lockStatus,last_refresh lastRefresh FROM `t_lock_info` WHERE lock_id = #{bid}")
+    @Select("SELECT csq,temp,charge,voltage,electric,battery_stat batteryStat,lock_status lockStatus,last_refresh lastRefresh,f_version fVersion,h_version hVersion FROM `t_lock_info` WHERE lock_id = #{bid}")
     LockTo getInfoByBid(@Param(value = "bid") String bid);
 
 }
