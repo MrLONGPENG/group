@@ -1,12 +1,12 @@
 package com.mujugroup.lock.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
-import com.lveqia.cloud.common.objeck.to.PageTo;
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.lock.mapper.LockFailMapper;
+import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
 import com.mujugroup.lock.objeck.vo.fail.TotalVo;
@@ -38,12 +38,24 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public List<TotalVo> getFailCount(String uid) throws DataException {
+    public TotalVo getFailCount(String uid) throws DataException {
+        TotalVo totalVo = new TotalVo();
         Map<String, String> map = moduleCoreService.getAuthData(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        return lockFailMapper.getFailCount(map.get(CoreConfig.AUTH_DATA_AGENT)
+        List<DBMap> list= lockFailMapper.getFailCount(map.get(CoreConfig.AUTH_DATA_AGENT)
                 , map.get(CoreConfig.AUTH_DATA_HOSPITAL)
                 , map.get(CoreConfig.AUTH_DATA_DEPARTMENT));
+        for (DBMap dbMap:list){
+            switch (dbMap.getKey()){
+                case LockFail.FAIL_TYPE_POWER:
+                    totalVo.setPowerCount(Integer.parseInt(dbMap.getValue())); break;
+                case LockFail.FAIL_TYPE_SIGNAL:
+                    totalVo.setSignalCount(Integer.parseInt(dbMap.getValue())); break;
+                case LockFail.FAIL_TYPE_SWITCH:
+                    totalVo.setSwitchCount(Integer.parseInt(dbMap.getValue())); break;
+            }
+        }
+        return totalVo;
     }
 
     @Override

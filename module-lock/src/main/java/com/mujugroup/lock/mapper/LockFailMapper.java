@@ -1,8 +1,8 @@
 package com.mujugroup.lock.mapper;
 
+import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
-import com.mujugroup.lock.objeck.vo.fail.TotalVo;
 import com.mujugroup.lock.sql.LockFailSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -54,8 +54,8 @@ public interface LockFailMapper {
     List<LockFail> findListAll();
 
     @SelectProvider(type = LockFailSqlProvider.class, method = "getFailCount")
-    @ResultType(TotalVo.class)
-    List<TotalVo> getFailCount(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid);
+    @ResultType(DBMap.class)
+    List<DBMap> getFailCount(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid);
 
 
     @SelectProvider(type = LockFailSqlProvider.class, method = "getFailInfoList")

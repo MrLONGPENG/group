@@ -16,6 +16,9 @@ import javax.persistence.*;
 @Table(name = "t_lock_fail")
 public class LockFail implements Serializable {
 
+    public static final String FAIL_TYPE_POWER = "1";
+    public static final String FAIL_TYPE_SIGNAL = "2";
+    public static final String FAIL_TYPE_SWITCH = "4";
     /**
      * 主键
      * 

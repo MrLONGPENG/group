@@ -13,7 +13,7 @@ import java.util.Map;
  * @author leolaurel
  */
 public interface LockFailService {
-    List<TotalVo> getFailCount(String uid) throws DataException;
+    TotalVo getFailCount(String uid) throws DataException;
     List<FailBo> getFailInfoList(Map<String, String> map,int pageNum, int pageSize, int type) throws DataException;
     List<FailVo> toFailVo(List<FailBo> list);
 

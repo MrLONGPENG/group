@@ -60,10 +60,9 @@ public class LockFailSqlProvider {
     public String getFailCount(@Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid) {
         return new SQL() {{
-            SELECT("dict_code AS `key`, COUNT(*) AS `value`");
+            SELECT("fail_type AS `key`, COUNT(*) AS `value`");
             FROM("t_lock_fail");
-            INNER_JOIN("t_lock_dict ON fail_type=dict_key ");
-            WHERE("`status` != 3 AND dict_type='Fail'");
+            WHERE("`status` != 3");
             StringBuilder sql = new StringBuilder();
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
                 sql.append("aid in (").append(aid).append(")");
@@ -85,7 +84,7 @@ public class LockFailSqlProvider {
                 sql.append("oid = #{oid} ");
             }
             if (sql.length() > 0) AND().WHERE(sql.toString());
-            GROUP_BY("dict_code");
+            GROUP_BY("fail_type");
         }}.toString();
 
     }
