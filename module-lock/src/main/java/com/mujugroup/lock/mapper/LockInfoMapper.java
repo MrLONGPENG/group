@@ -1,6 +1,7 @@
 package com.mujugroup.lock.mapper;
 
 
+import com.lveqia.cloud.common.objeck.to.LockTo;
 import com.mujugroup.lock.model.LockInfo;
 import com.mujugroup.lock.sql.LockInfoSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -16,7 +17,7 @@ import java.util.List;
  * 创建时间:20180621
  */
 @Mapper
-@Component(value ="lockInfoMapper")
+@Component(value = "lockInfoMapper")
 public interface LockInfoMapper {
 
     @InsertProvider(type = LockInfoSqlProvider.class, method = "insert")
@@ -30,8 +31,8 @@ public interface LockInfoMapper {
 
     @Select("SELECT * FROM t_lock_info WHERE id = #{id}")
     @Results(id = "lockInfo", value = {
-            @Result(id=true, column = "id", property = "id", javaType = Integer.class)
-            ,@Result(column = "lock_id", property = "lockId", javaType = Long.class),
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "lock_id", property = "lockId", javaType = Long.class),
             @Result(column = "brand", property = "brand", javaType = Integer.class),
             @Result(column = "mac", property = "mac", javaType = String.class),
             @Result(column = "key", property = "key", javaType = String.class),
@@ -57,10 +58,14 @@ public interface LockInfoMapper {
 
     /**
      * 根据参数查询对象
+     *
      * @return LockInfo
      */
     @Select("SELECT * FROM `t_lock_info` WHERE lock_id = #{bid}")
     @ResultMap("lockInfo")
     LockInfo getLockInfoByBid(String bid);
+
+    @Select("SELECT csq,temp,charge,voltage,electric,battery_stat batteryStat,lock_status lockStatus,last_refresh lastRefresh FROM `t_lock_info` WHERE lock_id = #{bid}")
+    LockTo getInfoByBid(@Param(value = "bid") String bid);
 
 }

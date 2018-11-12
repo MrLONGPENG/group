@@ -1,5 +1,6 @@
 package com.mujugroup.wx.controller;
 
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PageTo;
@@ -25,13 +26,20 @@ public class FeignController {
     @ResponseBody
     @RequestMapping(value = "/getOrderList", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PageTo<OrderTo> getOrderList(@RequestBody RequestTo requestTo){
+    public PageTo<OrderTo> getOrderList(@RequestBody RequestTo requestTo) {
         return feignService.getOrderList(requestTo);
     }
 
-    @RequestMapping(value = "/getCountByUsingDid",method = RequestMethod.GET)
-    public    int  getCountByUsingDid(String did,long time){
-        return  feignService.getCountByUsingDid(did,time);
+    @RequestMapping(value = "/getCountByUsingDid", method = RequestMethod.GET)
+    public int getCountByUsingDid(String did, long time) {
+        return feignService.getCountByUsingDid(did, time);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getPayInfoByDid", method = RequestMethod.POST
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did) {
+        return feignService.getPayInfoByDid(did);
     }
 
 }

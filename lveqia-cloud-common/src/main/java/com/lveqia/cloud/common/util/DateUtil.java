@@ -94,7 +94,9 @@ public class DateUtil {
         return dateToString(new Date(timestamp*1000L), type);
     }
 
-
+    public static String timestampToString(long timestamp, String strFormat) {
+        return dateToString(new Date(timestamp*1000L), strFormat);
+    }
     public static String dateToString(int type) {
         return dateToString(getCurrentDate(), type);
     }

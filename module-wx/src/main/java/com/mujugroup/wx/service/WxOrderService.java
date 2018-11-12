@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service;
 
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.wx.bean.OrderBean;
@@ -46,6 +47,6 @@ public interface WxOrderService {
 
     String getOrderEndTimeByDid(String did);
 
-
+    PayInfoTo getPayInfoByDid(String did);
 
 }

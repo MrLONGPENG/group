@@ -2,6 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PageTo;
@@ -42,5 +43,10 @@ public class FeignServiceImpl implements FeignService {
     @Override
     public int getCountByUsingDid(String did, long time) {
         return wxUsingService.getCountByUsingDid(did,time);
+    }
+
+    @Override
+    public PayInfoTo getPayInfoByDid(String did) {
+        return wxOrderService.getPayInfoByDid(did);
     }
 }

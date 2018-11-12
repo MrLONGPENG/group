@@ -1,5 +1,6 @@
 package com.mujugroup.data.service.feign.error;
 
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PageTo;
@@ -43,6 +44,12 @@ public class ModuleWxServiceError implements ModuleWxService {
     @Override
     public PageTo<OrderTo> getOrderList(RequestTo aidHidOidDto) {
         logger.warn("data->remote wx fail, method:getOrderList param:{}",aidHidOidDto);
+        return null;
+    }
+
+    @Override
+    public PayInfoTo getPayInfoByDid(String did) {
+        logger.warn("data->remote wx fail, method:getPayInfoByDid param:{}",did);
         return null;
     }
 

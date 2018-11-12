@@ -1,19 +1,17 @@
-package com.lveqia.cloud.common.objeck.to;
+package com.lveqia.cloud.common.objeck.vo;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class PayInfoTo {
+public class PayInfoVo {
     //唯一业务ID
     private Long did;
     //套餐类型
-    private Integer orderType;
+    private String orderType;
     //开始时间
-    private Date startTime;
+    private String startTime;
     //结束时间
-    private long endTime;
+    private String endTime;
     //商品名称
     private String name;
     //价格

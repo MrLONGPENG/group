@@ -1,5 +1,6 @@
 package com.mujugroup.data.service.feign.error;
 
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,5 +84,11 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     public Map<String, String> getHospitalJson(String hid) {
         logger.warn("data->remote core fail, method:getHospitalJson param:{}",hid);
         return EMPTY_MAP;
+    }
+
+    @Override
+    public InfoTo getDeviceInfo(String did, String bid) {
+        logger.warn("data->remote core fail, method:getDeviceInfo param:{}",did,bid);
+        return null;
     }
 }

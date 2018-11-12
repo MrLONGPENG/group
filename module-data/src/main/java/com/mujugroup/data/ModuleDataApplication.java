@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+
 @EnableHystrix
 @EnableAceMerge
 @EnableScheduling
@@ -73,7 +75,7 @@ public class ModuleDataApplication {
                     }
                     @Override
                     public Integer convertFrom(String source, Type<Integer> destinationType) {
-                        return "晚修".equals(source) ? 1 : "午休".equals(source) ? 2 : 0;
+                        return "晚休".equals(source) ? 1 : "午休".equals(source) ? 2 : 0;
                     }
                 });
         return defaultMapperFactory;
