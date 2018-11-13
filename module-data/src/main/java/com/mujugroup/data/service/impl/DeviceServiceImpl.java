@@ -56,7 +56,7 @@ public class DeviceServiceImpl implements DeviceService {
             temp.fieldMap("lastRefresh").converter("dateConvert").add();
             temp.fieldMap("lockStatus").converter("lockStatusConvert").add();
             temp.fieldMap("electric").converter("electricConvert").add();
-            temp.fieldMap("batteryStat", "battery");
+            temp.fieldMap("batteryStat", "battery").add();
         }else if(obj instanceof PayInfoTo){
             temp.fieldMap("orderType").converter("orderTypeConvert").add();
             temp.fieldMap("payTime").converter("timestampConvert").add();
