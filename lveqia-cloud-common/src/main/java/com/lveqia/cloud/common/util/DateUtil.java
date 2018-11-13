@@ -20,9 +20,11 @@ public class DateUtil {
     public static final int TYPE_DATETIME_14 = 5;
     public static final int TYPE_DAY_HOUR = 6;
     public static final int TYPE_MONTH = 7;
+    public static final int TYPE_CHINESE_FORMAT = 8;
 
     private static final String[] FORMAT = {"yyyy-MM-dd","yyyyMMdd", "HH:mm:ss","HHmmss"
-            ,"yyyy-MM-dd HH:mm:ss", "yyyyMMddHHmmss", "ddHH", "yyyyMM"};
+            , "yyyy-MM-dd HH:mm:ss", "yyyyMMddHHmmss", "ddHH", "yyyyMM"
+            , "yyyy年MM月dd日 HH点mm分ss秒"};
 
     public static Date stringToDate(String date, int type) {
         return stringToDate(date, FORMAT[type]);
@@ -101,7 +103,7 @@ public class DateUtil {
         return dateToString(getCurrentDate(), type);
     }
 
-    private static String dateToString(Date date, int type) {
+    public static String dateToString(Date date, int type) {
         return dateToString(date, FORMAT[type]);
     }
 

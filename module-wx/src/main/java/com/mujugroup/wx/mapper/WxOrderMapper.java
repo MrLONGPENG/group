@@ -109,14 +109,5 @@ public interface WxOrderMapper {
     String getOrderEndTimeByDid(String did);
 
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getPayInfoByDid")
-    /*@Results(id = "payinfo",value = {
-            @Result(column = "did", property = "did", javaType = Long.class)
-            ,@Result(column = "order_type", property = "orderType", javaType = Integer.class)
-            ,@Result(column = "crtTime", property = "startTime", javaType = String.class)
-            ,@Result(column = "end_time", property = "endTime", javaType = String.class)
-            ,@Result(column = "name", property = "name", javaType = String.class)
-            ,@Result(column = "pay_price", property = "price", javaType = String.class)
-            ,@Result(column = "gid", property = "gid", javaType = String.class)
-    })*/
     PayInfoTo getPayInfoByDid(@Param(value = "did") String did);
 }
