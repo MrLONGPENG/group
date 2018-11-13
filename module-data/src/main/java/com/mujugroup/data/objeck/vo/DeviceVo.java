@@ -23,7 +23,7 @@ public class DeviceVo implements Serializable {
     private Integer csq;        //信号指标
     private String lockStatus;  //锁状态
     private String electric;    //充电状态
-    private String battery; //剩余电量百分比
+    private Integer battery;    //剩余电量百分比
     private Integer temp;       //温度
     private Integer charge;     //充电电压
     private Integer voltage;    //电池电压

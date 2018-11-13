@@ -115,19 +115,6 @@ public class ModuleDataApplication {
                         return "未充电".equals(source) ? 0 : 1;
                     }
                 });
-        // 电量百分数转换
-        defaultMapperFactory.getConverterFactory().registerConverter("batteryConvert"
-                , new BidirectionalConverter<Integer, String>(){
-                    @Override
-                    public String convertTo(Integer source, Type<String> destinationType) {
-                        return source + "%";
-                    }
-                    @Override
-                    public Integer convertFrom(String source, Type<Integer> destinationType) {
-                        return source==null ||  !source.endsWith("%") ? 0
-                                : Integer.valueOf(source.replaceAll("%",""));
-                    }
-                });
         return defaultMapperFactory;
     }
 
