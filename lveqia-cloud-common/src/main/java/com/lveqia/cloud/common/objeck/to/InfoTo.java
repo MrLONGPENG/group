@@ -19,4 +19,8 @@ public class InfoTo {
     private String department;
     private String address;
     private boolean illegal;
+    //是否商用
+    private Integer run;
+    //是否响铃
+    private Integer bell;
 }
