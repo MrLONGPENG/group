@@ -1,9 +1,6 @@
 package com.lveqia.cloud.zuul.config.filter;
 
-import com.lveqia.cloud.common.util.AuthUtil;
-import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.zuul.config.auth.AppToken;
-import com.lveqia.cloud.zuul.config.auth.AuthException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;

@@ -16,7 +16,7 @@ public class AppToken extends AbstractAuthenticationToken {
         setAuthenticated(false);
     }
 
-    public AppToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    AppToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
