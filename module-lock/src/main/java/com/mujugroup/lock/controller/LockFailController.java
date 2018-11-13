@@ -9,6 +9,7 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.service.LockFailService;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/fail")
+@Api(description = "故障数量接口")
 public class LockFailController {
 
     private LockFailService lockFailService;

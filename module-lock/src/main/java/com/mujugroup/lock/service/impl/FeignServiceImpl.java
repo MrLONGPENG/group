@@ -22,8 +22,12 @@ public class FeignServiceImpl implements FeignService {
 
 
     @Override
-    public LockTo getLockInfo(String bid) {
-        return lockInfoMapper.getInfoByBid(bid);
+    public LockTo getLockInfo(String did) {
+        LockTo lockTo = lockInfoMapper.getInfoByDid(did);
+        if(lockTo != null){
+            lockTo.setDictName(getFailNameByDid(did));
+        }
+        return lockTo;
     }
 
     @Override

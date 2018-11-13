@@ -23,4 +23,5 @@ public class InfoTo {
     private Integer run;
     //是否响铃
     private Integer bell;
+
 }

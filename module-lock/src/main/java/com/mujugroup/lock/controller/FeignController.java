@@ -24,8 +24,8 @@ public class FeignController {
     @ResponseBody
     @RequestMapping(value = "/getLockInfo", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public LockTo getLockInfo(@RequestParam(value = "bid") String bid) {
-        return feignService.getLockInfo(bid);
+    public LockTo getLockInfo(@RequestParam(value = "did") String did) {
+        return feignService.getLockInfo(did);
     }
     @RequestMapping(value = "/getFailNameByDid", method = RequestMethod.POST)
     public List<String> getFailNameByDid(@RequestParam(value = "did") String did) {
