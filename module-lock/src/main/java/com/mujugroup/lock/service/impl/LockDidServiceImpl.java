@@ -127,7 +127,7 @@ public class LockDidServiceImpl implements LockDidService {
         LockDid lockDid = new LockDid();
         lockDid.setBrand(brand);
         lockDid.setDid(did);
-        lockDid.setLockId(bid);
+        lockDid.setLockId(String.valueOf(bid));
         lockDid.setLockHex(Long.toHexString(bid));
         return lockDid;
     }

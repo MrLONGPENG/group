@@ -45,7 +45,7 @@ public class LockDid implements Serializable {
      * 表字段 : t_lock_did.lock_id
      */
     @Column(name = "lock_id")
-    private Long lockId;
+    private String lockId;
 
     /**
      * 设备锁十六进制ID
@@ -85,15 +85,15 @@ public class LockDid implements Serializable {
 		this.brand = brand;
 	}
 
-    public Long getLockId() {
+	public String getLockId() {
 		return lockId;
 	}
 
-	public void setLockId(Long lockId) {
+	public void setLockId(String lockId) {
 		this.lockId = lockId;
 	}
 
-    public String getLockHex() {
+	public String getLockHex() {
 		return lockHex;
 	}
 

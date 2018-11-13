@@ -33,7 +33,7 @@ public interface LockDidMapper {
             @Result(id=true, column="id",property="id",javaType=Integer.class)
             ,@Result(column="did",property="did",javaType=Long.class)
             ,@Result(column="brand",property="brand",javaType=Integer.class)
-            ,@Result(column="lock_id",property="lockId",javaType=Long.class)
+            ,@Result(column="lock_id",property="lockId",javaType=String.class)
             ,@Result(column="lock_hex",property="lockHex",javaType=String.class)
             ,@Result(column="update_time",property="updateTime",javaType=Date.class)
     })

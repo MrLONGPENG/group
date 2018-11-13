@@ -103,7 +103,7 @@ public class DeviceServiceImpl implements DeviceService {
         if(did.length() == 19) return did;
         if(did.length() < 9 ) did = StringUtil.autoFillDid(did);
         LockDid lockDid = lockDidService.getLockDidByDid(did);
-        if(lockDid != null) return StringUtil.autoFillDid(lockDid.getLockId(),19);
+        if(lockDid != null) return lockDid.getLockId();
         return null;
 
     }
