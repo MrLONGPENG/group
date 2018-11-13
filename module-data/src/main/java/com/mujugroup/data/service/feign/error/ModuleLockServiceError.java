@@ -19,8 +19,8 @@ public class ModuleLockServiceError implements ModuleLockService {
     }
 
     @Override
-    public LockTo getLockInfo(String bid) {
-        logger.warn("data->remote lock fail, method:getLockInfo param:{}", bid);
+    public LockTo getLockInfo(String did) {
+        logger.warn("data->remote lock fail, method:getLockInfo param:{}", did);
         return null;
     }
 }

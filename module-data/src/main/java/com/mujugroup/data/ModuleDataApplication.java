@@ -36,6 +36,19 @@ public class ModuleDataApplication {
     @Bean
     public MapperFactory getFactory(){
         DefaultMapperFactory defaultMapperFactory = new DefaultMapperFactory.Builder().build();
+
+        //时间戳转时间
+        defaultMapperFactory.getConverterFactory().registerConverter("dateConvert"
+                , new BidirectionalConverter<Date, String>(){
+                    @Override
+                    public String convertTo(Date source, Type<String> destinationType) {
+                        return DateUtil.dateToString(source, DateUtil.TYPE_CHINESE_FORMAT );
+                    }
+                    @Override
+                    public Date convertFrom(String source, Type<Date> destinationType) {
+                        return DateUtil.stringToDate(source, DateUtil.TYPE_CHINESE_FORMAT);
+                    }
+                });
         //时间戳转时间
         defaultMapperFactory.getConverterFactory().registerConverter("timestampConvert"
                 , new BidirectionalConverter<Long, String>(){
@@ -76,6 +89,43 @@ public class ModuleDataApplication {
                     @Override
                     public Integer convertFrom(String source, Type<Integer> destinationType) {
                         return "晚休".equals(source) ? 1 : "午休".equals(source) ? 2 : 0;
+                    }
+                });
+        // 锁状态转换
+        defaultMapperFactory.getConverterFactory().registerConverter("lockStatusConvert"
+                , new BidirectionalConverter<Integer, String>(){
+                    @Override
+                    public String convertTo(Integer source, Type<String> destinationType) {
+                        return source==1 ? "关锁": source == 2 ? "开锁" :"未知";
+                    }
+                    @Override
+                    public Integer convertFrom(String source, Type<Integer> destinationType) {
+                        return "关锁".equals(source) ? 1 : "开锁".equals(source) ? 2 : 0;
+                    }
+                });
+        // 充电状态转换
+        defaultMapperFactory.getConverterFactory().registerConverter("electricConvert"
+                , new BidirectionalConverter<Integer, String>(){
+                    @Override
+                    public String convertTo(Integer source, Type<String> destinationType) {
+                        return source> 0 ? "充电中": "未充电";
+                    }
+                    @Override
+                    public Integer convertFrom(String source, Type<Integer> destinationType) {
+                        return "未充电".equals(source) ? 0 : 1;
+                    }
+                });
+        // 电量百分数转换
+        defaultMapperFactory.getConverterFactory().registerConverter("batteryConvert"
+                , new BidirectionalConverter<Integer, String>(){
+                    @Override
+                    public String convertTo(Integer source, Type<String> destinationType) {
+                        return source + "%";
+                    }
+                    @Override
+                    public Integer convertFrom(String source, Type<Integer> destinationType) {
+                        return source==null ||  !source.endsWith("%") ? 0
+                                : Integer.valueOf(source.replaceAll("%",""));
                     }
                 });
         return defaultMapperFactory;
