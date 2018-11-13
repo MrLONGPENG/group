@@ -75,7 +75,7 @@ INSERT INTO `t_sys_menu` VALUES ('19', '/rule/*', '/rule/goods', 'RuleGoods', '�
 INSERT INTO `t_sys_menu` VALUES ('20', '/rule/*', '/rule/uptime', 'RuleUptime', '时间配置', 'fa fa-clock-o fa-fw', null, '1', '7', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('21', '/device/*', '/device/list', 'DeviceList', '木巨柜管理', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('22', '/info/*', '/info/hospital', 'InfoHospital', '医院管理', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('23', '/info/*', '/info/department', 'InfoDepartment', '木巨科室', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('23', '/info/*', '/info/department', 'InfoDepartment', '科室管理', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role
