@@ -81,7 +81,7 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "删除科室", notes = "删除科室")
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public String deleteDepartment(@ApiParam(value = "科室ID") @PathVariable(value = "id") String id
             , @ApiParam(hidden = true) int uid) throws BaseException {
         if (departmentService.delete(uid, id)) {

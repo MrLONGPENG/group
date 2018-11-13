@@ -98,7 +98,7 @@ public class HospitalController {
     }
 
     @ApiOperation(value = "删除医院", notes = "删除医院")
-    @RequestMapping(value = "/delete/{hid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{hid}", method = RequestMethod.DELETE)
     public String removeHospital(@ApiParam(hidden = true) int uid, @ApiParam(value = "医院ID") @PathVariable(value = "hid") String hid) throws BaseException {
         if (hospitalService.remove(uid, hid)) {
             return ResultUtil.success();

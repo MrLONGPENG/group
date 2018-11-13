@@ -92,7 +92,7 @@ public class AgentController {
     }
 
     @ApiOperation(value = "删除代理商", notes = "删除代理商")
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public String deleteAgent(@ApiParam(hidden = true) String uid, @ApiParam(value = "选中的代理商ID", required = true) @RequestParam(name = "id") String id) {
         try {
             if (agentService.deleteById(uid, id)) {
