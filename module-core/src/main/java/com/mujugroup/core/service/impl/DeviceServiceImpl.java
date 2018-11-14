@@ -105,7 +105,7 @@ public class DeviceServiceImpl implements DeviceService {
         Device model = deviceVoToDevice(putVo, PutVo.class);   //将VO对象转为实体对象
         if ((putVo.getAid() != null && !putVo.getAid().equals(device.getAgentId()))
                 || (putVo.getHid() != null && !putVo.getHid().equals(device.getHospitalId()))
-                || (putVo.getOid() != null && !putVo.getOid().equals(model.getDepart()))) {
+                || (putVo.getOid() != null && !putVo.getOid().equals(device.getDepart()))) {
             //将原有数据的状态设置为删除状态
             Date lastTime = deviceMapper.findLastDeleteTime(device.getDid(), Device.TYPE_DELETE);
             if (lastTime != null && lastTime.getTime() / 1000 > DateUtil.getTimesMorning()) {
