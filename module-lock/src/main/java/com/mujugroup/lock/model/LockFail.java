@@ -16,35 +16,36 @@ import javax.persistence.*;
 @Table(name = "t_lock_fail")
 public class LockFail implements Serializable {
 
-    public static final String FAIL_TYPE_POWER = "1";
-    public static final String FAIL_TYPE_SIGNAL = "2";
-    public static final String FAIL_TYPE_SWITCH = "4";
+    public static final String FAIL_TYPE_POWER = "F_Power";
+    public static final String FAIL_TYPE_SIGNAL = "F_Signal";
+    public static final String FAIL_TYPE_SWITCH = "F_Switch";
     //低电量
-    public static final String FE_PW_LOW = "1";
+    public static final String FE_PW_LOW = "FE_PW_Low";
     //电量下降异常
-    public static final String FE_PW_DOWN = "2";
+    public static final String FE_PW_DOWN = "FE_PW_Down";
     //无法充电
-    public static final String FE_PW_CHARGE = "3";
-    //低信号
-    public static final String FE_SG_NULL ="4" ;
-    //信号波动异常
-    public static final String FE_SG_WAVE = "5";
-    //开锁机械故障
-    public static final String FE_SW_OPEN = "6";
-    //关锁机械故障
-    public static final String FE_SW_CLOSE = "7";
-    //超时未关锁
-    public static final String FE_SW_TIMEOUT = "8";
-    //无订单异常开锁
-    public static final String FE_SW_ORDER = "9";
-    //非使用时段开锁
-    public static final String FE_SW_USING = "10";
-    //没电
-    public static final String FR_PW_POWER = "1";
-    //信号接收器故障
-    public static final String FR_SG_RECEIVE = "2";
+    public static final String FE_PW_CHARGE = "FE_PW_Charge";
     //离线状态
-    public static final String FE_SG_OFFLINE = "11";
+    public static final String FE_SG_OFFLINE = "FE_SG_Offline";
+    //低信号
+    public static final String FE_SG_NULL ="FE_SG_Low" ;
+    //信号波动异常
+    public static final String FE_SG_WAVE = "FE_SG_Wave";
+    //开锁机械故障
+    public static final String FE_SW_OPEN = "FE_SW_Open";
+    //关锁机械故障
+    public static final String FE_SW_CLOSE = "FE_SW_Close";
+    //超时未关锁
+    public static final String FE_SW_TIMEOUT = "FE_SW_Timeout";
+    //无订单异常开锁
+    public static final String FE_SW_ORDER = "FE_SW_Order";
+    //非使用时段开锁
+    public static final String FE_SW_USING = "FE_SW_Using";
+    //没电
+    public static final String FR_PW_POWER = "FR_PW_Power";
+    //信号接收器故障
+    public static final String FR_SG_RECEIVE = "FR_SG_Receive";
+
     /**
      * 主键
      * 
@@ -92,17 +93,17 @@ public class LockFail implements Serializable {
 
     /**
      * 故障类型 1:电量异常 2:信号异常 4:开关锁异常
-     * 表字段 : t_lock_fail.fail_type
+     * 表字段 : t_lock_fail.fail_code
      */
-    @Column(name = "fail_type")
-    private Integer failType;
+    @Column(name = "fail_code")
+    private String failCode;
 
     /**
      * 错误类型 1:低电量 2:电量下降异常 3:无法充电
-     * 表字段 : t_lock_fail.error_type
+     * 表字段 : t_lock_fail.error_code
      */
-    @Column(name = "error_type")
-    private Integer errorType;
+    @Column(name = "error_code")
+    private String errorCode;
 
     /**
      * 故障上报时间
@@ -134,10 +135,10 @@ public class LockFail implements Serializable {
 
     /**
      * 造成故障类型 1:没电了
-     * 表字段 : t_lock_fail.resolve_type
+     * 表字段 : t_lock_fail.resolve_code
      */
-    @Column(name = "resolve_type")
-    private Integer resolveType;
+    @Column(name = "resolve_code")
+    private Integer resolveCode;
 
     /**
      * 异常产生原因及解决方法

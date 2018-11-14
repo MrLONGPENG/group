@@ -100,13 +100,13 @@ public class FailTask {
             }
         }
         if (hasError) {
-            LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                    , Integer.parseInt(LockFail.FE_PW_CHARGE));
+            LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_POWER
+                    , LockFail.FE_PW_CHARGE);
             if (lockFail == null) {
                 lockFail = new LockFail();
                 lockFailService.getModel(lockFail, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                        , Integer.parseInt(LockFail.FE_PW_CHARGE), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , recordList.get(0).getDid(), LockFail.FAIL_TYPE_POWER
+                        , LockFail.FE_PW_CHARGE, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockFail);
             } else if (!info.getAid().equals(lockFail.getAid()) || !info.getHid().equals(lockFail.getHid())
                     || !info.getOid().equals(lockFail.getOid())) {
@@ -136,13 +136,13 @@ public class FailTask {
                 if (payInfoTo != null && DateUtil.getTimesMorning() < payInfoTo.getEndTime()) {
                     if (recordList.get(0).getLastRefresh().getTime() / 1000 > payInfoTo.getEndTime()) {
                         //获得非使用时间异常开锁数据
-                        LockFail lockFailUsing = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                                , Integer.parseInt(LockFail.FE_SW_USING));
+                        LockFail lockFailUsing = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_SWITCH
+                                , LockFail.FE_SW_USING);
                         if (lockFailUsing == null) {
                             lockFailUsing = new LockFail();
                             lockFailService.getModel(lockFailUsing, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                    , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                                    , Integer.parseInt(LockFail.FE_SW_USING), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                                    , recordList.get(0).getDid(), LockFail.FAIL_TYPE_SWITCH
+                                    , LockFail.FE_SW_USING, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                             lockFailService.insert(lockFailUsing);
                         } else if (!info.getAid().equals(lockFailUsing.getAid()) || !info.getHid().equals(lockFailUsing.getHid())
                                 || !info.getOid().equals(lockFailUsing.getOid())) {
@@ -150,13 +150,13 @@ public class FailTask {
                         }
                     } else {
                         //获得超时未关锁的异常数据
-                        LockFail lockFailTimeOut = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                                , Integer.parseInt(LockFail.FE_SW_TIMEOUT));
+                        LockFail lockFailTimeOut = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_SWITCH
+                                , LockFail.FE_SW_TIMEOUT);
                         if (lockFailTimeOut == null) {
                             lockFailTimeOut = new LockFail();
                             lockFailService.getModel(lockFailTimeOut, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                    , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                                    , Integer.parseInt(LockFail.FE_SW_TIMEOUT), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                                    , recordList.get(0).getDid(), LockFail.FAIL_TYPE_SWITCH
+                                    , LockFail.FE_SW_TIMEOUT, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                             lockFailService.insert(lockFailTimeOut);
                         } else if (!info.getAid().equals(lockFailTimeOut.getAid()) || !info.getHid().equals(lockFailTimeOut.getHid())
                                 || !info.getOid().equals(lockFailTimeOut.getOid())) {
@@ -179,13 +179,13 @@ public class FailTask {
 
     private void addNoOrderFail(InfoTo info, LockRecord lockRecord) {
         //获得无订单异常开锁数据
-        LockFail lockFailOrder = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                , Integer.parseInt(LockFail.FE_SW_ORDER));
+        LockFail lockFailOrder = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_SWITCH
+                , LockFail.FE_SW_ORDER);
         if (lockFailOrder == null) {
             lockFailOrder = new LockFail();
             lockFailService.getModel(lockFailOrder, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                    , lockRecord.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SWITCH)
-                    , Integer.parseInt(LockFail.FE_SW_ORDER), lockRecord.getLastRefresh(), lockRecord.getLockId());
+                    , lockRecord.getDid(), LockFail.FAIL_TYPE_SWITCH
+                    , LockFail.FE_SW_ORDER, lockRecord.getLastRefresh(), lockRecord.getLockId());
             lockFailService.insert(lockFailOrder);
         } else if (!info.getAid().equals(lockFailOrder.getAid()) || !info.getHid().equals(lockFailOrder.getHid())
                 || !info.getOid().equals(lockFailOrder.getOid())) {
@@ -209,13 +209,13 @@ public class FailTask {
             hasError &= result;
         }
         if (hasError) {
-            LockFail lockFailPowerDown = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                    , Integer.parseInt(LockFail.FE_PW_DOWN));
+            LockFail lockFailPowerDown = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_POWER
+                    , LockFail.FE_PW_DOWN);
             if (lockFailPowerDown == null) {
                 lockFailPowerDown = new LockFail();
                 lockFailService.getModel(lockFailPowerDown, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                        , Integer.parseInt(LockFail.FE_PW_DOWN), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , recordList.get(0).getDid(), LockFail.FAIL_TYPE_POWER
+                        , LockFail.FE_PW_DOWN, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockFailPowerDown);
             } else if (!info.getAid().equals(lockFailPowerDown.getAid()) || !info.getHid().equals(lockFailPowerDown.getHid())
                     || !info.getOid().equals(lockFailPowerDown.getOid())) {
@@ -241,13 +241,13 @@ public class FailTask {
             }
         }
         if (hasError) {
-            LockFail lockFailSignal = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                    , Integer.parseInt(LockFail.FE_SG_WAVE));
+            LockFail lockFailSignal = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_SIGNAL
+                    , LockFail.FE_SG_WAVE);
             if (lockFailSignal == null) {
                 lockFailSignal = new LockFail();
                 lockFailService.getModel(lockFailSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                        , Integer.parseInt(LockFail.FE_SG_WAVE), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , recordList.get(0).getDid(), LockFail.FAIL_TYPE_SIGNAL
+                        , LockFail.FE_SG_WAVE, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockFailSignal);
             } else if (!info.getAid().equals(lockFailSignal.getAid()) || !info.getHid().equals(lockFailSignal.getHid())
                     || !info.getOid().equals(lockFailSignal.getOid())) {
@@ -268,13 +268,13 @@ public class FailTask {
         for (int i = 1; i < recordList.size(); i++) {
             if (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
                 if (recordList.get(i).getCsq().equals(CSQ_NUM)) {
-                    LockFail lockNoSignal = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                            , Integer.parseInt(LockFail.FE_SG_NULL));
+                    LockFail lockNoSignal = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_SIGNAL
+                            , LockFail.FE_SG_NULL);
                     if (lockNoSignal == null) {
                         lockNoSignal = new LockFail();
                         lockFailService.getModel(lockNoSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                                , Integer.parseInt(LockFail.FE_SG_NULL), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                                , recordList.get(0).getDid(), LockFail.FAIL_TYPE_SIGNAL
+                                , LockFail.FE_SG_NULL, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                         lockFailService.insert(lockNoSignal);
                     } else if (!info.getAid().equals(lockNoSignal.getAid()) || !info.getHid().equals(lockNoSignal.getHid())
                             || !info.getOid().equals(lockNoSignal.getOid())) {
@@ -296,13 +296,12 @@ public class FailTask {
 
         if (recordList.size() < 3) return;
         if (recordList.get(0).getBatteryStat() < LOW_POWER) {
-            LockFail lockLowPower = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                    , Integer.parseInt(LockFail.FE_PW_LOW));
+            LockFail lockLowPower = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FAIL_TYPE_POWER , LockFail.FE_PW_LOW);
             if (lockLowPower == null) {
                 lockLowPower = new LockFail();
                 lockFailService.getModel(lockLowPower, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), Integer.parseInt(LockFail.FAIL_TYPE_POWER)
-                        , Integer.parseInt(LockFail.FE_PW_LOW), recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , recordList.get(0).getDid(), LockFail.FAIL_TYPE_POWER
+                        , LockFail.FE_PW_LOW, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockLowPower);
             } else if (!info.getAid().equals(lockLowPower.getAid()) || !info.getHid().equals(lockLowPower.getHid())
                     || !info.getOid().equals(lockLowPower.getOid())) {
@@ -319,13 +318,13 @@ public class FailTask {
 
     //添加离线记录
     private void addSignal(InfoTo info, LockRecord lockRecord) {
-        LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                , Integer.parseInt(LockFail.FE_SG_OFFLINE));
+        LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(),LockFail.FAIL_TYPE_SIGNAL
+                , LockFail.FE_SG_OFFLINE);
         if (lockFail == null) {
             lockFail = new LockFail();
             lockFailService.getModel(lockFail, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                    , lockRecord.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                    , Integer.parseInt(LockFail.FE_SG_OFFLINE), lockRecord.getLastRefresh(), lockRecord.getLockId());
+                    , lockRecord.getDid(), LockFail.FAIL_TYPE_SIGNAL
+                    , LockFail.FE_SG_OFFLINE, lockRecord.getLastRefresh(), lockRecord.getLockId());
             lockFailService.insert(lockFail);
         }else if (!info.getAid().equals(lockFail.getAid()) || !info.getHid().equals(lockFail.getHid())
                 || !info.getOid().equals(lockFail.getOid())) {

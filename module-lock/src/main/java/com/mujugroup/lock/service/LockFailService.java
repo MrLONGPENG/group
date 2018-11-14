@@ -21,13 +21,13 @@ public interface LockFailService {
 
     List<FailVo> toFailVo(List<FailBo> list);
 
-    LockFail getFailInfoByDid(String did, Integer failType, Integer errorType);
+    LockFail getFailInfoByDid(String did, String failCode, String errorCode);
 
     boolean insert(LockFail lockFail);
 
     boolean update(LockFail lockFail);
 
-    void getModel(LockFail lockFail, int aid, int hid, int oid, long did, int failType, int errorType, Date time, long bid);
+    void getModel(LockFail lockFail, int aid, int hid, int oid, long did, String failCode, String errorCode, Date time, long bid);
 
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
 }

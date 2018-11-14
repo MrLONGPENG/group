@@ -38,13 +38,13 @@ public interface LockFailMapper {
             , @Result(column = "aid", property = "aid", javaType = Integer.class)
             , @Result(column = "hid", property = "hid", javaType = Integer.class)
             , @Result(column = "oid", property = "oid", javaType = Integer.class)
-            , @Result(column = "fail_type", property = "failType", javaType = Integer.class)
-            , @Result(column = "error_type", property = "errorType", javaType = Integer.class)
+            , @Result(column = "fail_code", property = "failCode", javaType = String.class)
+            , @Result(column = "error_code", property = "errorCode", javaType = String.class)
             , @Result(column = "last_refresh", property = "lastRefresh", javaType = Date.class)
             , @Result(column = "finish_time", property = "finishTime", javaType = Date.class)
             , @Result(column = "status", property = "status", javaType = Integer.class)
             , @Result(column = "resolve_man", property = "resolveMan", javaType = Integer.class)
-            , @Result(column = "resolve_type", property = "resolveType", javaType = Integer.class)
+            , @Result(column = "resolve_code", property = "resolveCode", javaType = String.class)
             , @Result(column = "explain", property = "explain", javaType = String.class)
     })
     LockFail findById(Integer id);
@@ -69,16 +69,16 @@ public interface LockFailMapper {
             , @Result(column = "bed", property = "bed", javaType = String.class)
             , @Result(column = "endTime", property = "endTime", javaType = String.class)
     })
-    List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid, @Param(value = "type") int type);
+    List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid, @Param(value = "failCode") String failCode);
 
-    @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.fail_type=d.dict_key AND f.did= #{did}")
+    @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.fail_code=d.dict_code AND f.did= #{did}")
     @ResultType(String.class)
     List<String> getFailNameByDid(@Param(value = "did") String did);
 
-    @Select("SELECT * FROM t_lock_fail WHERE did= #{did} AND `status`!=3 AND fail_type= #{failType}" +
-            " AND error_type= #{errorType}  ORDER BY id  DESC LIMIT 1")
+    @Select("SELECT * FROM t_lock_fail WHERE did= #{did} AND `status`!=3 AND fail_code= #{failCode}" +
+            " AND error_code= #{errorCode}  ORDER BY id  DESC LIMIT 1")
     @ResultMap("lockFail")
-    LockFail getFailInfoByDid(@Param(value = "did") String did  , @Param(value = "failType")Integer failType
-            ,@Param(value = "errorType")Integer errorType);
+    LockFail getFailInfoByDid(@Param(value = "did") String did  , @Param(value = "failCode")String failCode
+            ,@Param(value = "errorCode")String errorCode);
 
 }

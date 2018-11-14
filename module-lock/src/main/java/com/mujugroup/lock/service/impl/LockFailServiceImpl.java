@@ -67,9 +67,10 @@ public class LockFailServiceImpl implements LockFailService {
     public List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int type) throws DataException {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         PageHelper.startPage(pageNum, pageSize);
+
         return lockFailMapper.getFailInfoList(map.get(CoreConfig.AUTH_DATA_AGENT)
                 , map.get(CoreConfig.AUTH_DATA_HOSPITAL)
-                , map.get(CoreConfig.AUTH_DATA_DEPARTMENT), type);
+                , map.get(CoreConfig.AUTH_DATA_DEPARTMENT), type == 1 ? LockFail.FAIL_TYPE_POWER : type == 2 ? LockFail.FAIL_TYPE_SIGNAL : type == 4 ? LockFail.FAIL_TYPE_SWITCH : null);
     }
 
     public List<FailVo> toFailVo(List<FailBo> list) {
@@ -86,8 +87,8 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public LockFail getFailInfoByDid(String did, Integer failType, Integer errorType) {
-        return lockFailMapper.getFailInfoByDid(did, failType, errorType);
+    public LockFail getFailInfoByDid(String did, String failCode, String errorCode) {
+        return lockFailMapper.getFailInfoByDid(did, failCode, errorCode);
     }
 
     @Override
@@ -96,22 +97,22 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, int failType, int errorType, Date time, long bid) {
+    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, String failCode, String errorCode, Date time, long bid) {
         lockFail.setAid(aid);
         lockFail.setHid(hid);
         lockFail.setOid(oid);
         lockFail.setLockId(bid);
         lockFail.setDid(did);
-        lockFail.setFailType(failType);
-        lockFail.setErrorType(errorType);
+        lockFail.setFailCode(failCode);
+        lockFail.setErrorCode(errorCode);
         lockFail.setLastRefresh(time);
     }
 
     @Override
     public void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date) {
         lockFail.setAid(Integer.parseInt(aid));
-        lockFail.setAid(Integer.parseInt(hid));
-        lockFail.setAid(Integer.parseInt(oid));
+        lockFail.setHid(Integer.parseInt(hid));
+        lockFail.setOid(Integer.parseInt(oid));
         lockFail.setLastRefresh(date);
         lockFailMapper.update(lockFail);
     }

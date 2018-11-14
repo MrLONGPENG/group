@@ -92,13 +92,13 @@ CREATE TABLE `t_lock_fail` (
 `aid` int(11) DEFAULT NULL COMMENT '代理商id',
   `hid` int(11) DEFAULT NULL COMMENT '医院id',
  `oid` int(11) DEFAULT NULL COMMENT '科室id',
- `fail_type` tinyint(4) DEFAULT NULL COMMENT '故障类型 1:电量异常 2:信号异常 4:开关锁异常',
- `error_type` tinyint(4) DEFAULT NULL COMMENT '错误类型 1:低电量 2:电量下降异常 3:无法充电 4:无信号 5:信号波动异常 6:开锁机械故障 7:关锁机械故障 8:超时未关锁 9:无订单异常开锁 10:非使用时段开锁',
+ `fail_code` varchar(20) DEFAULT NULL COMMENT '故障编码 1:电量异常 2:信号异常 4:开关锁异常',
+ `error_code` varchar(20) DEFAULT NULL COMMENT '错误编码',
 `last_refresh` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '故障上报时间',
 `finish_time` datetime DEFAULT NULL COMMENT '解决时间',
 `status` tinyint(4) DEFAULT '1' COMMENT '故障状态 1:产生异常 2:解决中 3:已解决 4:未解决',
 `resolve_man`int(11) DEFAULT NULL COMMENT '处理人',
-`resolve_type` tinyint(4) DEFAULT NULL COMMENT '造成故障类型 1:没电了',
+`resolve_code` varchar(20) DEFAULT NULL COMMENT '造成故障编码 1:没电了',
 `explain` varchar(200) DEFAULT NULL COMMENT '异常产生原因及解决方法',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁故障表';
@@ -107,30 +107,29 @@ PRIMARY KEY (`id`)
 -- ----------------------------
 DROP TABLE IF EXISTS `t_lock_dict`;
 CREATE TABLE `t_lock_dict` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dict_type` varchar(20) DEFAULT NULL COMMENT '故障类型',
-  `dict_name` varchar(20) DEFAULT NULL COMMENT '故障名称',
-  `dict_code` varchar(20) DEFAULT NULL COMMENT '故障编码',
-  `dict_key` tinyint(4) DEFAULT NULL,
-  `dict_pid` varchar(20) DEFAULT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `dict_type` VARCHAR(20) DEFAULT NULL COMMENT '故障类型',
+  `dict_name` VARCHAR(20) DEFAULT NULL COMMENT '故障名称',
+  `dict_code` VARCHAR(20) DEFAULT NULL COMMENT '故障编码',
+  `dict_pid` VARCHAR(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_code` (`dict_code`) COMMENT '唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='故障字典表';
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail','电量异常','F_Power',1,null);
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail','信号异常','F_Signal',2,null);
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid)values ('Fail','开关锁异常','F_Switch',4,null );
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','低电量','FE_PW_Low',1,'F_Power');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','电量下降异常','FE_PW_Down',2,'F_Power');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','无法充电','FE_PW_Charge',3,'F_Power');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','低信号','FE_SG_Null',4,'F_Signal');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','信号波动异常','FE_SG_Wave',5,'F_Signal');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','开锁机械故障','FE_SW_Open',6,'F_Switch');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','关锁机械故障','FE_SW_Close',7,'F_Switch');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','超时未关锁','FE_SW_Timeout',8,'F_Switch');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','无订单异常开锁','FE_SW_Order',9,'F_Switch');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','非使用时段开锁','FE_SW_Using',10,'F_Switch');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Error','离线','FE_SG_Offline',11,'F_Signal');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Resolve','没电','FR_PW_Power',1,'F_Power');
-insert into t_lock_dict(dict_type,dict_name,dict_code,dict_key,dict_pid) values ('Fail_Resolve','信号接收器故障','FR_SG_Receive',2,'F_Signal');
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='故障字典表';
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail','电量异常','F_Power',NULL);
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail','信号异常','F_Signal',NULL);
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid)VALUES ('Fail','开关锁异常','F_Switch',NULL );
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','低电量','FE_PW_Low','F_Power');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','电量下降异常','FE_PW_Down','F_Power');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','无法充电','FE_PW_Charge','F_Power');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','离线','FE_SG_Offline','F_Signal');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','低信号','FE_SG_Low','F_Signal');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','信号波动异常','FE_SG_Wave','F_Signal');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','开锁机械故障','FE_SW_Open','F_Switch');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','关锁机械故障','FE_SW_Close','F_Switch');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','超时未关锁','FE_SW_Timeout','F_Switch');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','无订单异常开锁','FE_SW_Order','F_Switch');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Error','非使用时段开锁','FE_SW_Using','F_Switch');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Resolve','没电','FR_PW_Power','F_Power');
+INSERT INTO t_lock_dict(dict_type,dict_name,dict_code,dict_pid) VALUES ('Fail_Resolve','信号接收器故障','FR_SG_Receive','F_Signal');
 
 
