@@ -27,6 +27,7 @@ public class FeignController {
     public LockTo getLockInfo(@RequestParam(value = "did") String did) {
         return feignService.getLockInfo(did);
     }
+
     @RequestMapping(value = "/getFailNameByDid", method = RequestMethod.POST)
     public List<String> getFailNameByDid(@RequestParam(value = "did") String did) {
         return feignService.getFailNameByDid(did);

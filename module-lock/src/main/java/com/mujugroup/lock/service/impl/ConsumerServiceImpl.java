@@ -51,9 +51,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();
             LockInfo lockInfo = getLockInfo(json.getAsJsonObject("result"));
             LockDid lockDid = lockDidService.getLockDidByBid(String.valueOf(lockInfo.getLockId()));
+
             switch (json.get("msgType").getAsInt()) {
                 case 200:
                     switchLock(lockInfo, true);
+                    if(lockDid == null)  return null;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
                     insertLockRecord(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
@@ -61,12 +63,14 @@ public class ConsumerServiceImpl implements ConsumerService {
                 case 201:
                     break;//定位信息上报
                 case 400:
+                    if(lockDid == null)  return null;
                     insertSwitchLockFail(lockDid.getDid(), lockInfo);// 记录开关锁机械异常
                     break;//故障信息上报
                 case 401:
                     break;//其他信息上报
                 case 1000:
                     switchLock(lockInfo, false);
+                    if(lockDid == null)  return null;
                     insertLockRecord(lockDid.getDid(), lockInfo);
                     break;//普通上报消息（普通锁）
                 case 2000:

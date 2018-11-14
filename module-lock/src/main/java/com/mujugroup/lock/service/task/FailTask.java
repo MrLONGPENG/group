@@ -48,13 +48,13 @@ public class FailTask {
     //每十分钟执行一次
     @Scheduled(cron = "0 0/1 * * * *")
     public void onCron() {
-        logger.debug("FailTask date: {start}", System.currentTimeMillis());
+        long start = System.currentTimeMillis();
         getLockRecord(1, 5);
-        logger.debug("FailTask date: {end}", System.currentTimeMillis());
+        logger.debug("FailTask date: {}", System.currentTimeMillis() - start);
 
     }
 
-    public void getLockRecord(int pageNum, int pageSize) {
+    private void getLockRecord(int pageNum, int pageSize) {
         //远程获取所有激活设备集合
         List<InfoTo> infoTos = moduleCoreService.getActivateInfoTo(pageNum, pageSize);
         for (InfoTo info : infoTos) {
