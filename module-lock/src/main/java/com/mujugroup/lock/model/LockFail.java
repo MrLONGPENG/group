@@ -19,6 +19,32 @@ public class LockFail implements Serializable {
     public static final String FAIL_TYPE_POWER = "1";
     public static final String FAIL_TYPE_SIGNAL = "2";
     public static final String FAIL_TYPE_SWITCH = "4";
+    //低电量
+    public static final String FE_PW_LOW = "1";
+    //电量下降异常
+    public static final String FE_PW_DOWN = "2";
+    //无法充电
+    public static final String FE_PW_CHARGE = "3";
+    //无信号
+    public static final String FE_SG_NULL ="4" ;
+    //信号波动异常
+    public static final String FE_SG_WAVE = "5";
+    //开锁机械故障
+    public static final String FE_SW_OPEN = "6";
+    //关锁机械故障
+    public static final String FE_SW_CLOSE = "7";
+    //超时未关锁
+    public static final String FE_SW_TIMEOUT = "8";
+    //无订单异常开锁
+    public static final String FE_SW_ORDER = "9";
+    //非使用时段开锁
+    public static final String FE_SW_USING = "10";
+    //没电
+    public static final String FR_PW_POWER = "1";
+    //信号接收器故障
+    public static final String FR_SG_RECEIVE = "2";
+    //离线状态
+    public static final String FE_SG_OFFLINE = "11";
     /**
      * 主键
      * 

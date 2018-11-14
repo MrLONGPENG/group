@@ -46,7 +46,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public InfoTo getDeviceInfo(String did, String bid) {
         InfoTo infoTo = deviceMapper.getDeviceInfo(did, bid);
-        if(infoTo == null) {
+        if (infoTo == null) {
             infoTo = new InfoTo();
             infoTo.setIllegal(true);
         }
@@ -64,7 +64,6 @@ public class DeviceServiceImpl implements DeviceService {
         device.setStatus(Device.TYPE_DELETE);
         return deviceMapper.update(device);
     }
-
 
 
     @Override
@@ -92,7 +91,6 @@ public class DeviceServiceImpl implements DeviceService {
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(pageList, DeviceBo.class);
     }
-
 
 
     @Override
@@ -172,6 +170,11 @@ public class DeviceServiceImpl implements DeviceService {
     @MergeResult
     public List<StatusAidBean> findGroupByAid(int aid) {
         return deviceMapper.findGroupByAid(aid);
+    }
+
+    @Override
+    public List<InfoTo> getActivateInfoTo() {
+        return deviceMapper.getDeviceInfoList();
     }
 
     @Override

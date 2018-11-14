@@ -16,6 +16,7 @@ import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,17 +43,20 @@ public class LockFailServiceImpl implements LockFailService {
         TotalVo totalVo = new TotalVo();
         Map<String, String> map = moduleCoreService.getAuthData(uid);
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        List<DBMap> list= lockFailMapper.getFailCount(map.get(CoreConfig.AUTH_DATA_AGENT)
+        List<DBMap> list = lockFailMapper.getFailCount(map.get(CoreConfig.AUTH_DATA_AGENT)
                 , map.get(CoreConfig.AUTH_DATA_HOSPITAL)
                 , map.get(CoreConfig.AUTH_DATA_DEPARTMENT));
-        for (DBMap dbMap:list){
-            switch (dbMap.getKey()){
+        for (DBMap dbMap : list) {
+            switch (dbMap.getKey()) {
                 case LockFail.FAIL_TYPE_POWER:
-                    totalVo.setPowerCount(Integer.parseInt(dbMap.getValue())); break;
+                    totalVo.setPowerCount(Integer.parseInt(dbMap.getValue()));
+                    break;
                 case LockFail.FAIL_TYPE_SIGNAL:
-                    totalVo.setSignalCount(Integer.parseInt(dbMap.getValue())); break;
+                    totalVo.setSignalCount(Integer.parseInt(dbMap.getValue()));
+                    break;
                 case LockFail.FAIL_TYPE_SWITCH:
-                    totalVo.setSwitchCount(Integer.parseInt(dbMap.getValue())); break;
+                    totalVo.setSwitchCount(Integer.parseInt(dbMap.getValue()));
+                    break;
             }
         }
         return totalVo;
@@ -79,6 +83,42 @@ public class LockFailServiceImpl implements LockFailService {
                 .fieldMap("lastRefresh").converter("dateConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, FailVo.class);
+    }
+
+    @Override
+    public LockFail getFailInfoByDid(String did, Integer failType, Integer errorType) {
+        return lockFailMapper.getFailInfoByDid(did, failType, errorType);
+    }
+
+    @Override
+    public boolean insert(LockFail lockFail) {
+        return lockFailMapper.insert(lockFail);
+    }
+
+    @Override
+    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, int failType, int errorType, Date time, long bid) {
+        lockFail.setAid(aid);
+        lockFail.setHid(hid);
+        lockFail.setOid(oid);
+        lockFail.setLockId(bid);
+        lockFail.setDid(did);
+        lockFail.setFailType(failType);
+        lockFail.setErrorType(errorType);
+        lockFail.setLastRefresh(time);
+    }
+
+    @Override
+    public void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date) {
+        lockFail.setAid(Integer.parseInt(aid));
+        lockFail.setAid(Integer.parseInt(hid));
+        lockFail.setAid(Integer.parseInt(oid));
+        lockFail.setLastRefresh(date);
+        lockFailMapper.update(lockFail);
+    }
+
+    @Override
+    public boolean update(LockFail lockFail) {
+        return lockFailMapper.update(lockFail);
     }
 
 

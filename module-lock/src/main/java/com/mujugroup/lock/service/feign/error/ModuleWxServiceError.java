@@ -1,5 +1,7 @@
 package com.mujugroup.lock.service.feign.error;
 
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
+import com.lveqia.cloud.common.objeck.to.UptimeTo;
 import com.mujugroup.lock.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,18 @@ public class ModuleWxServiceError implements ModuleWxService {
     public Map<String, String> getOrderEndTimeByDid(String param) {
         logger.warn("Remote call module-wx failure");
         return EMPTY_MAP;
+    }
+
+    @Override
+    public PayInfoTo getPayInfoByDid(String did) {
+        logger.warn("Remote call module-wx getPayInfoByDid,param{}", did);
+        return null;
+    }
+
+    @Override
+    public UptimeTo getUptimeTo(int aid, int hid, int oid) {
+        logger.warn("Remote call module-wx getUptimeTo,param{},param{},param{}", aid, hid, oid);
+        return null;
     }
 
     @Override

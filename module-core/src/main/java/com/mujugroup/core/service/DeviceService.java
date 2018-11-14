@@ -37,4 +37,6 @@ public interface DeviceService {
 
 
     InfoTo getDeviceInfo(String did, String bid);
+
+    List<InfoTo> getActivateInfoTo();
 }

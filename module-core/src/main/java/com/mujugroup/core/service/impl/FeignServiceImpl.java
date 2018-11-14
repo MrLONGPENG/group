@@ -87,13 +87,13 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
-    public Map<Integer,String> findOidByHid(String hid) {
-        HashMap<Integer,String> hashMap=new HashMap<>();
-        List<DBMap> list=departmentService.findOidByHid(hid);
-       for (DBMap map:list){
-           hashMap.put(Integer.parseInt(map.getKey()),map.getValue());
-       }
-       return hashMap;
+    public Map<Integer, String> findOidByHid(String hid) {
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        List<DBMap> list = departmentService.findOidByHid(hid);
+        for (DBMap map : list) {
+            hashMap.put(Integer.parseInt(map.getKey()), map.getValue());
+        }
+        return hashMap;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class FeignServiceImpl implements FeignService {
     public PageInfo<Integer> getAuthLevel(AuthVo authVo) {
         List<Integer> list;
         PageHelper.startPage(authVo.getPageNum(), authVo.getPageSize());
-        switch (authVo.getLevel()){
+        switch (authVo.getLevel()) {
             case CoreConfig.AUTH_DATA_AGENT:
                 list = agentService.getAidByUid(authVo.getUid());
                 break;
@@ -120,9 +120,15 @@ public class FeignServiceImpl implements FeignService {
             case CoreConfig.AUTH_DATA_DEPARTMENT:
                 list = departmentService.getOidByUid(authVo.getUid());
                 break;
-            default: list = new ArrayList<>();
+            default:
+                list = new ArrayList<>();
         }
         return PageInfo.of(list);
+    }
+
+    @Override
+    public List<InfoTo> getActivateInfoTo() {
+        return deviceService.getActivateInfoTo();
     }
 }
 

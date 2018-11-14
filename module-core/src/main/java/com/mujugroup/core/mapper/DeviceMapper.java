@@ -145,16 +145,20 @@ public interface DeviceMapper {
     List<Device> getDeviceListByOid(@Param(value = "oid") String id);
 
 
-    @Results(value={@Result(column="did",property="did",javaType=String.class)
-            ,@Result(column="bid",property="bid",javaType=String.class)
-            ,@Result(column="aid",property="aid",javaType=String.class)
-            ,@Result(column="hid",property="hid",javaType=String.class)
-            ,@Result(column="oid",property="oid",javaType=String.class)
-            ,@Result(column="bed",property="bed",javaType=String.class)
-            ,@Result(column="address",property="address",javaType=String.class)
-            ,@Result(column="hidName",property="hospital",javaType=String.class)
-            ,@Result(column="oidName",property="department",javaType=String.class)
+    @Results(id = "deviceInfo", value = {@Result(column = "did", property = "did", javaType = String.class)
+            , @Result(column = "bid", property = "bid", javaType = String.class)
+            , @Result(column = "aid", property = "aid", javaType = String.class)
+            , @Result(column = "hid", property = "hid", javaType = String.class)
+            , @Result(column = "oid", property = "oid", javaType = String.class)
+            , @Result(column = "bed", property = "bed", javaType = String.class)
+            , @Result(column = "address", property = "address", javaType = String.class)
+            , @Result(column = "hidName", property = "hospital", javaType = String.class)
+            , @Result(column = "oidName", property = "department", javaType = String.class)
     })
     @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceInfo")
     InfoTo getDeviceInfo(@Param(value = "did") String did, @Param(value = "bid") String bid);
+
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceInfoList")
+    @ResultMap("deviceInfo")
+    List<InfoTo> getDeviceInfoList();
 }

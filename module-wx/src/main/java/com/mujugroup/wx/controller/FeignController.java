@@ -1,9 +1,6 @@
 package com.mujugroup.wx.controller;
 
-import com.lveqia.cloud.common.objeck.to.PayInfoTo;
-import com.lveqia.cloud.common.objeck.to.RequestTo;
-import com.lveqia.cloud.common.objeck.to.OrderTo;
-import com.lveqia.cloud.common.objeck.to.PageTo;
+import com.lveqia.cloud.common.objeck.to.*;
 import com.mujugroup.wx.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,6 +37,15 @@ public class FeignController {
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did) {
         return feignService.getPayInfoByDid(did);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getUptimeTo", method = RequestMethod.POST
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public UptimeTo getUptimeTo(@RequestParam(name = "aid") int aid , @RequestParam(name = "hid") int hid
+            , @RequestParam(name = "oid") int oid) {
+        return  feignService.getUptimeTo(aid, hid, oid);
+
     }
 
 }

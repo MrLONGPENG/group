@@ -1,7 +1,9 @@
 package com.mujugroup.core.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +33,7 @@ public class FeignController {
 
     /**
      * 根据DID或BID获取基本设备信息情况
+     *
      * @param did 业务ID
      * @param bid 锁设备ID
      */
@@ -37,9 +41,10 @@ public class FeignController {
     @RequestMapping(value = "/getDeviceInfo", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public InfoTo getDeviceInfo(@RequestParam(value = "did", required = false) String did
-            , @RequestParam(value = "bid", required = false) String bid){
+            , @RequestParam(value = "bid", required = false) String bid) {
         return feignService.getDeviceInfo(did, bid);
     }
+
     /**
      * 根据代理商ID获取医院ID 以及医院名称
      *
@@ -88,8 +93,9 @@ public class FeignController {
 
     /**
      * 给指定用户查询指定级别数据权限（只查询指定级别权限）
-     * @param authVo  请求VO
-     * @return  返回 -1 数据为存在不完整的代理商或医院等权限
+     *
+     * @param authVo 请求VO
+     * @return 返回 -1 数据为存在不完整的代理商或医院等权限
      */
     @RequestMapping(value = "/getAuthLevel", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -107,16 +113,25 @@ public class FeignController {
 
     /**
      * 根据医院ID查询所属科室
+     *
      * @param hid 医院ID
      * @return
      */
-    @RequestMapping(value = "/findOidByHid",method = RequestMethod.POST)
-    public Map<Integer,String> findOidByHid(@RequestParam(value = "hid") String hid){
-        return  feignService.findOidByHid(hid);
+    @RequestMapping(value = "/findOidByHid", method = RequestMethod.POST)
+    public Map<Integer, String> findOidByHid(@RequestParam(value = "hid") String hid) {
+        return feignService.findOidByHid(hid);
     }
 
     @RequestMapping(value = "/findName")
-    public String getHospitalName(@RequestParam(value = "id") Integer id){
-        return  feignService.getHospitalName(id);
+    public String getHospitalName(@RequestParam(value = "id") Integer id) {
+        return feignService.getHospitalName(id);
     }
+
+    @RequestMapping(value = "/getActivateInfoTo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<InfoTo> getActivateInfoTo(@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum
+            , @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
+        PageHelper.startPage(pageNum, pageSize, false);
+        return feignService.getActivateInfoTo();
+    }
+
 }

@@ -174,4 +174,8 @@ public class DeviceSqlProvider {
             }
         }}.toString();
     }
+
+    public String getDeviceInfoList() {
+      return getDeviceInfo(null, null);
+    }
 }

@@ -74,4 +74,11 @@ public interface LockFailMapper {
     @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.fail_type=d.dict_key AND f.did= #{did}")
     @ResultType(String.class)
     List<String> getFailNameByDid(@Param(value = "did") String did);
+
+    @Select("SELECT * FROM t_lock_fail WHERE did= #{did} AND `status`!=3 AND fail_type= #{failType}" +
+            " AND error_type= #{errorType}  ORDER BY id  DESC LIMIT 1")
+    @ResultMap("lockFail")
+    LockFail getFailInfoByDid(@Param(value = "did") String did  , @Param(value = "failType")Integer failType
+            ,@Param(value = "errorType")Integer errorType);
+
 }
