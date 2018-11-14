@@ -105,7 +105,7 @@ public interface WxOrderMapper {
             , @Param("start") long start, @Param("end") long end);
 
     @ResultType(String.class)
-    @Select("SELECT `end_time` FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID DESC LIMIT 1")
+    @Select("SELECT `end_time` endTime  FROM t_wx_order WHERE did = #{did} AND pay_status = 2 ORDER BY ID DESC LIMIT 1")
     String getOrderEndTimeByDid(String did);
 
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getPayInfoByDid")

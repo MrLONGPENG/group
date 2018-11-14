@@ -25,7 +25,7 @@ public class LockFail implements Serializable {
     public static final String FE_PW_DOWN = "2";
     //无法充电
     public static final String FE_PW_CHARGE = "3";
-    //无信号
+    //低信号
     public static final String FE_SG_NULL ="4" ;
     //信号波动异常
     public static final String FE_SG_WAVE = "5";

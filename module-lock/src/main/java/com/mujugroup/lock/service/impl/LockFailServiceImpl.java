@@ -76,11 +76,11 @@ public class LockFailServiceImpl implements LockFailService {
         mapperFactory.classMap(FailBo.class, FailVo.class)
                 .field("oid", "department")
                 .field("bed", "bed")
-                .field("endTime", "endTime")
                 .fieldMap("battery").converter("getPercentConvert").add()
                 .fieldMap("status").converter("statusTypeConvert").add()
                 .fieldMap("electric").converter("electricConvert").add()
-                .fieldMap("lastRefresh").converter("dateConvert").add()
+                .fieldMap("lastRefresh").converter("dateConvertStr").add()
+                .fieldMap("endTime").converter("dateConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, FailVo.class);
     }

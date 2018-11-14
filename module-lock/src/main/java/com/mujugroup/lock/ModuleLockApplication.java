@@ -69,7 +69,7 @@ public class ModuleLockApplication {
 
                     @Override
                     public String convertTo(Integer source, Type<String> destinationType) {
-                        return StringUtil.Percent(source.doubleValue(),100.0);
+                        return StringUtil.Percent(source.doubleValue(), 100.0);
                     }
 
                     @Override
@@ -111,10 +111,25 @@ public class ModuleLockApplication {
                 });
         // 日期转换
         defaultMapperFactory.getConverterFactory().registerConverter("dateConvert"
+                , new BidirectionalConverter<String, String>() {
+
+                    @Override
+                    public String convertTo(String source, Type<String> destinationType) {
+                        return DateUtil.timestampToString(Long.parseLong(source), DateUtil.TYPE_CHINESE_FORMAT);
+                    }
+
+                    @Override
+                    public String convertFrom(String source, Type<String> destinationType) {
+                        return null;
+                    }
+                });
+        defaultMapperFactory.getConverterFactory().registerConverter("dateConvertStr"
                 , new BidirectionalConverter<Date, String>() {
+
+
                     @Override
                     public String convertTo(Date source, Type<String> destinationType) {
-                        return DateUtil.dateConvert(source);
+                        return DateUtil.dateToString(source, DateUtil.TYPE_CHINESE_FORMAT);
                     }
 
                     @Override

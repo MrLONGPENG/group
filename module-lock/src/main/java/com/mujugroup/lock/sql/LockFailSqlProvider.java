@@ -88,23 +88,13 @@ public class LockFailSqlProvider {
         }}.toString();
 
     }
-   /* public String getFailInfoList() {
-        return new SQL() {{
-            SELECT("f.did,d.dict_name,i.lock_status,i.battery_stat,i.electric, i.last_refresh" +
-                    ", f.oid, f.did as bed, f.did as endTime");
-            FROM("t_lock_fail f,t_lock_dict d,t_lock_info i");
-            WHERE("f.fail_type=d.dict_key AND d.dict_type='Fail' " +
-                    "AND f.lock_id= i.lock_id AND f.`status` != 3");
-        }}.toString();
-
-    }*/
 
     public String getFailInfoList(@Param(value = "aid") String aid,@Param(value = "hid") String hid,@Param(value = "oid") String oid,@Param(value = "type")int type) {
         return new SQL() {{
             SELECT("f.did,d.dict_name,i.lock_status,i.battery_stat,i.electric, i.last_refresh" +
                     ", f.oid, f.did as bed, f.did as endTime");
             FROM("t_lock_fail f,t_lock_dict d,t_lock_info i");
-            WHERE("f.fail_type=d.dict_key AND d.dict_type='Fail' " +
+            WHERE("f.error_type=d.dict_key AND d.dict_type='Fail_Error' " +
                     "AND f.lock_id= i.lock_id AND f.`status` != 3" );
             if (type!=0){
                 AND().WHERE("f.fail_type= #{type}");
