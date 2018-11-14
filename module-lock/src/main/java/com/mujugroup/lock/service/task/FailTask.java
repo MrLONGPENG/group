@@ -25,8 +25,7 @@ public class FailTask {
     private final ModuleCoreService moduleCoreService;
     private final LockRecordMapper lockRecordMapper;
     private final ModuleWxService moduleWxService;
-    //private final LockFailMapper lockFailMapper;
-    private final  LockFailService lockFailService;
+    private final LockFailService lockFailService;
     //每次从数据库获取的数据记录条数
     private static final int LIMIT_COUNT = 5;
     //时间间隔(单位：毫秒)（当前间隔为:30分钟）
@@ -116,6 +115,7 @@ public class FailTask {
             }
         }
     }
+
     /**
      * 订单状态下开关锁异常
      */
@@ -285,6 +285,7 @@ public class FailTask {
 
         }
     }
+
     /**
      * 低电量异常
      *
@@ -318,11 +319,18 @@ public class FailTask {
 
     //添加离线记录
     private void addSignal(InfoTo info, LockRecord lockRecord) {
-        LockFail lockFail = new LockFail();
-        lockFailService.getModel(lockFail, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                , lockRecord.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
-                , Integer.parseInt(LockFail.FE_SG_OFFLINE), lockRecord.getLastRefresh(), lockRecord.getLockId());
-        lockFailService.insert(lockFail);
+        LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
+                , Integer.parseInt(LockFail.FE_SG_OFFLINE));
+        if (lockFail == null) {
+            lockFail = new LockFail();
+            lockFailService.getModel(lockFail, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
+                    , lockRecord.getDid(), Integer.parseInt(LockFail.FAIL_TYPE_SIGNAL)
+                    , Integer.parseInt(LockFail.FE_SG_OFFLINE), lockRecord.getLastRefresh(), lockRecord.getLockId());
+            lockFailService.insert(lockFail);
+        }else if (!info.getAid().equals(lockFail.getAid()) || !info.getHid().equals(lockFail.getHid())
+                || !info.getOid().equals(lockFail.getOid())) {
+            lockFailService.modifyModel(lockFail, info.getAid(), info.getHid(), info.getOid(), new Date());
+        }
     }
 }
 
