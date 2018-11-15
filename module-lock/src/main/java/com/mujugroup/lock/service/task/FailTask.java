@@ -67,7 +67,8 @@ public class FailTask {
 
     private void checkFail(InfoTo info) {
         List<LockRecord> recordList = lockRecordMapper.findByDid(info.getDid(), LIMIT_COUNT);
-        if (recordList.size() > 0 && isOffline(recordList.get(0))) {
+        if(recordList.size() == 0) return;
+        if (isOffline(recordList.get(0))) {
             addSignal(info, recordList.get(0));
             return;
         }
@@ -75,7 +76,7 @@ public class FailTask {
         checkPowerDown(info, recordList);//电量下降异常
         checkLockWithOrder(info, recordList);//订单状态下开关锁异常
         checkSignalWave(info, recordList);//信号波动异常
-        checkLockNoCsq(info, recordList);//低信号
+        checkLockNoCsq(info, recordList.get(0));//低信号
         checkPowerLow(info, recordList);//低电量
     }
 
@@ -84,18 +85,18 @@ public class FailTask {
      * 无法充电异常
      *
      * @param info
-     * @param recordList
+     * @param list
      */
-    private void checkPowerNoElectric(InfoTo info, List<LockRecord> recordList) {
-        if (recordList.size() < 3) return;
+    private void checkPowerNoElectric(InfoTo info, List<LockRecord> list) {
+        if (list.size() < 3) return;
         //获取所有无法充电的异常数据
         boolean hasError = true;
-        for (int i = 1; i < recordList.size(); i++) {
-            if (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i).getLastRefresh().getTime() - list.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
                 //设备充电电流不为0且当前设备剩余电量不为百分之百(设备正在充电中)
-                if (recordList.get(i).getElectric() != 0 && recordList.get(i).getBatteryStat() != 100) {
+                if (isNoEqual(list.get(i).getElectric(),0) && isNoEqual(list.get(i).getBatteryStat(),100)) {
                     //当前索引的设备剩余电量与最后一个设备剩余电量相同,则充电异常(无法充电)
-                    hasError &= recordList.get(i).getBatteryStat().equals(recordList.get(0).getBatteryStat());
+                    hasError &= list.get(i).getBatteryStat().equals(list.get(0).getBatteryStat());
                 }
             }
         }
@@ -105,8 +106,8 @@ public class FailTask {
             if (lockFail == null) {
                 lockFail = new LockFail();
                 lockFailService.getModel(lockFail, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), LockFail.FailType.TYPE_POWER
-                        , LockFail.FE_PW_CHARGE, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , list.get(0).getDid(), LockFail.FailType.TYPE_POWER
+                        , LockFail.FE_PW_CHARGE, list.get(0).getLastRefresh(), list.get(0).getLockId());
                 lockFailService.insert(lockFail);
             } else if (!info.getAid().equals(lockFail.getAid()) || !info.getHid().equals(lockFail.getHid())
                     || !info.getOid().equals(lockFail.getOid())) {
@@ -117,32 +118,39 @@ public class FailTask {
     }
 
     /**
+     * 判断不相等，避免空指针
+     */
+    private boolean isNoEqual(Integer i, int j) {
+        return i!=null && i!=j;
+    }
+
+    /**
      * 订单状态下开关锁异常
      */
-    private void checkLockWithOrder(InfoTo info, List<LockRecord> recordList) {
-        if (recordList.size() < 3) return;
+    private void checkLockWithOrder(InfoTo info, List<LockRecord> list) {
+        if (list.size() < 3) return;
         //当前设备处于开锁状态
-        if (recordList.get(0).getLockStatus().equals(2)) {
+        if (list.get(0).getLockStatus()!= null && list.get(0).getLockStatus().equals(2)) {
             //远程获取微信端订单明细
             PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(info.getDid());
             //获得使用时间
             UptimeTo uptimeTo = moduleWxService.getUptimeTo(Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid()));
 
-            long seconds = recordList.get(0).getLastRefresh().getTime() / 1000 - DateUtil.getTimesMorning();
+            long seconds = list.get(0).getLastRefresh().getTime() / 1000 - DateUtil.getTimesMorning();
             //当前设备使用时间不在运行时间之内
             if ((seconds < uptimeTo.getNoonStartTime() && seconds > uptimeTo.getStopTime())
                     || (seconds > uptimeTo.getNoonStopTime() && seconds < uptimeTo.getStartTime())) {
                 //拥有订单明细(非使用时段开锁)
                 if (payInfoTo != null && DateUtil.getTimesMorning() < payInfoTo.getEndTime()) {
-                    if (recordList.get(0).getLastRefresh().getTime() / 1000 > payInfoTo.getEndTime()) {
+                    if (list.get(0).getLastRefresh().getTime() / 1000 > payInfoTo.getEndTime()) {
                         //获得非使用时间异常开锁数据
                         LockFail lockFailUsing = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FailType.TYPE_SWITCH
                                 , LockFail.FE_SW_USING);
                         if (lockFailUsing == null) {
                             lockFailUsing = new LockFail();
                             lockFailService.getModel(lockFailUsing, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                    , recordList.get(0).getDid(), LockFail.FailType.TYPE_SWITCH
-                                    , LockFail.FE_SW_USING, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                                    , list.get(0).getDid(), LockFail.FailType.TYPE_SWITCH
+                                    , LockFail.FE_SW_USING, list.get(0).getLastRefresh(), list.get(0).getLockId());
                             lockFailService.insert(lockFailUsing);
                         } else if (!info.getAid().equals(lockFailUsing.getAid()) || !info.getHid().equals(lockFailUsing.getHid())
                                 || !info.getOid().equals(lockFailUsing.getOid())) {
@@ -155,8 +163,8 @@ public class FailTask {
                         if (lockFailTimeOut == null) {
                             lockFailTimeOut = new LockFail();
                             lockFailService.getModel(lockFailTimeOut, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                    , recordList.get(0).getDid(), LockFail.FailType.TYPE_SWITCH
-                                    , LockFail.FE_SW_TIMEOUT, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                                    , list.get(0).getDid(), LockFail.FailType.TYPE_SWITCH
+                                    , LockFail.FE_SW_TIMEOUT, list.get(0).getLastRefresh(), list.get(0).getLockId());
                             lockFailService.insert(lockFailTimeOut);
                         } else if (!info.getAid().equals(lockFailTimeOut.getAid()) || !info.getHid().equals(lockFailTimeOut.getHid())
                                 || !info.getOid().equals(lockFailTimeOut.getOid())) {
@@ -164,13 +172,13 @@ public class FailTask {
                         }
                     }
                 } else { //无订单开锁
-                    addNoOrderFail(info, recordList.get(0));
+                    addNoOrderFail(info, list.get(0));
 
                 }
             } else {
                 // 正常时间无订单开锁
-                if (payInfoTo == null || payInfoTo.getEndTime() < recordList.get(0).getLastRefresh().getTime() / 1000) {
-                    addNoOrderFail(info, recordList.get(0));
+                if (payInfoTo == null || payInfoTo.getEndTime() < list.get(0).getLastRefresh().getTime() / 1000) {
+                    addNoOrderFail(info, list.get(0));
                 }
 
             }
@@ -205,7 +213,8 @@ public class FailTask {
         for (int i = 1; i < recordList.size(); i++) {
             //如果相邻数据记录的时间差小于30分钟,且相邻数据的剩余电量的差值大于20，则认为是电量下降异常
             boolean result = (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN)
-                    && (recordList.get(i).getBatteryStat() - recordList.get(i - 1).getBatteryStat() > DOWN_NUM);
+                    && recordList.get(i).getBatteryStat()!=null && recordList.get(i - 1).getBatteryStat()!=null
+                    && Math.abs(recordList.get(i).getBatteryStat() - recordList.get(i - 1).getBatteryStat()) > DOWN_NUM;
             hasError &= result;
         }
         if (hasError) {
@@ -213,8 +222,8 @@ public class FailTask {
                     , LockFail.FE_PW_DOWN);
             if (lockFailPowerDown == null) {
                 lockFailPowerDown = new LockFail();
-                lockFailService.getModel(lockFailPowerDown, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), LockFail.FailType.TYPE_POWER
+                lockFailService.getModel(lockFailPowerDown, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid())
+                        , Integer.parseInt(info.getOid()), recordList.get(0).getDid(), LockFail.FailType.TYPE_POWER
                         , LockFail.FE_PW_DOWN, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockFailPowerDown);
             } else if (!info.getAid().equals(lockFailPowerDown.getAid()) || !info.getHid().equals(lockFailPowerDown.getHid())
@@ -234,9 +243,11 @@ public class FailTask {
         for (int i = 1; i < recordList.size(); i++) {
             if (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
                 //设备信号量不为0
-                if (recordList.get(i).getCsq() != 0) {
+                if (isNoEqual(recordList.get(i).getCsq(),0)) {
                     //当前索引的设备信号量与其相邻设备信号量差值大于20,则表明信号波动异常
-                    hasError &= recordList.get(i).getCsq() - recordList.get(i - 1).getCsq() > CSQ_NUM;
+                    hasError &= Math.abs(recordList.get(i).getCsq() - recordList.get(i - 1).getCsq()) > CSQ_NUM;
+                }else {
+                    hasError = false;
                 }
             }
         }
@@ -245,8 +256,8 @@ public class FailTask {
                     , LockFail.FE_SG_WAVE);
             if (lockFailSignal == null) {
                 lockFailSignal = new LockFail();
-                lockFailService.getModel(lockFailSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), LockFail.FailType.TYPE_SIGNAL
+                lockFailService.getModel(lockFailSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid())
+                        , Integer.parseInt(info.getOid()) , recordList.get(0).getDid(), LockFail.FailType.TYPE_SIGNAL
                         , LockFail.FE_SG_WAVE, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
                 lockFailService.insert(lockFailSignal);
             } else if (!info.getAid().equals(lockFailSignal.getAid()) || !info.getHid().equals(lockFailSignal.getHid())
@@ -259,30 +270,21 @@ public class FailTask {
 
     /**
      * 低信号
-     *
-     * @param info
-     * @param recordList
      */
-    private void checkLockNoCsq(InfoTo info, List<LockRecord> recordList) {
-        if (recordList.size() < 3) return;
-        for (int i = 1; i < recordList.size(); i++) {
-            if (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
-                if (recordList.get(i).getCsq().equals(CSQ_NUM)) {
-                    LockFail lockNoSignal = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FailType.TYPE_SIGNAL
-                            , LockFail.FE_SG_NULL);
-                    if (lockNoSignal == null) {
-                        lockNoSignal = new LockFail();
-                        lockFailService.getModel(lockNoSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                                , recordList.get(0).getDid(), LockFail.FailType.TYPE_SIGNAL
-                                , LockFail.FE_SG_NULL, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
-                        lockFailService.insert(lockNoSignal);
-                    } else if (!info.getAid().equals(lockNoSignal.getAid()) || !info.getHid().equals(lockNoSignal.getHid())
-                            || !info.getOid().equals(lockNoSignal.getOid())) {
-                        lockFailService.modifyModel(lockNoSignal, info.getAid(), info.getHid(), info.getOid(), new Date());
-                    }
-                }
+    private void checkLockNoCsq(InfoTo info, LockRecord lockRecord) {
+        if (lockRecord!=null && lockRecord.getCsq()<= CSQ_NUM && lockRecord.getCsq()> 0) {
+            LockFail lockNoSignal = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FailType.TYPE_SIGNAL
+                    , LockFail.FE_SG_LOW);
+            if (lockNoSignal == null) {
+                lockNoSignal = new LockFail();
+                lockFailService.getModel(lockNoSignal, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
+                        , lockRecord.getDid(), LockFail.FailType.TYPE_SIGNAL
+                        , LockFail.FE_SG_LOW, lockRecord.getLastRefresh(), lockRecord.getLockId());
+                lockFailService.insert(lockNoSignal);
+            } else if (!info.getAid().equals(lockNoSignal.getAid()) || !info.getHid().equals(lockNoSignal.getHid())
+                    || !info.getOid().equals(lockNoSignal.getOid())) {
+                lockFailService.modifyModel(lockNoSignal, info.getAid(), info.getHid(), info.getOid(), new Date());
             }
-
         }
     }
 
@@ -290,18 +292,17 @@ public class FailTask {
      * 低电量异常
      *
      * @param info
-     * @param recordList
+     * @param list
      */
-    private void checkPowerLow(InfoTo info, List<LockRecord> recordList) {
-
-        if (recordList.size() < 3) return;
-        if (recordList.get(0).getBatteryStat() < LOW_POWER) {
+    private void checkPowerLow(InfoTo info, List<LockRecord> list) {
+        if (list.size() < 3) return;
+        if (list.get(0).getBatteryStat()!=null && list.get(0).getBatteryStat() < LOW_POWER) {
             LockFail lockLowPower = lockFailService.getFailInfoByDid(info.getDid(), LockFail.FailType.TYPE_POWER , LockFail.FE_PW_LOW);
             if (lockLowPower == null) {
                 lockLowPower = new LockFail();
                 lockFailService.getModel(lockLowPower, Integer.parseInt(info.getAid()), Integer.parseInt(info.getHid()), Integer.parseInt(info.getOid())
-                        , recordList.get(0).getDid(), LockFail.FailType.TYPE_POWER
-                        , LockFail.FE_PW_LOW, recordList.get(0).getLastRefresh(), recordList.get(0).getLockId());
+                        , list.get(0).getDid(), LockFail.FailType.TYPE_POWER
+                        , LockFail.FE_PW_LOW, list.get(0).getLastRefresh(), list.get(0).getLockId());
                 lockFailService.insert(lockLowPower);
             } else if (!info.getAid().equals(lockLowPower.getAid()) || !info.getHid().equals(lockLowPower.getHid())
                     || !info.getOid().equals(lockLowPower.getOid())) {

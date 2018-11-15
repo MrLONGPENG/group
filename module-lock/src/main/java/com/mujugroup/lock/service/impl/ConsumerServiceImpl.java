@@ -204,21 +204,18 @@ public class ConsumerServiceImpl implements ConsumerService {
     public void insertSwitchLockFail(long did, LockInfo lockInfo) {
         InfoTo infoTo = moduleCoreService.getDeviceInfo(String.valueOf(did), "");
         if (infoTo != null) {
-            //校验时间差是否超过30分钟
-            if (new Date().getTime() - lockInfo.getLastRefresh().getTime() < FailTask.TIME_SPAN) {
-                //开锁机械故障
-                if (lockInfo.getLockStatus().equals(4)) {
-                    LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH,LockFail.FE_SW_OPEN);
-                    if (lockFailOpen == null) {
-                        lockFailOpen = new LockFail();
-                        lockFailService.getModel(lockFailOpen, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
-                                , LockFail.FE_SW_OPEN, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
-                        lockFailService.insert(lockFailOpen);
-                    } else if (!infoTo.getAid().equals(lockFailOpen.getAid()) || !infoTo.getHid().equals(lockFailOpen.getHid())
-                            || !infoTo.getOid().equals(lockFailOpen.getOid())) {
-                        lockFailService.modifyModel(lockFailOpen, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
-                    }
+            //开锁机械故障
+            if (lockInfo.getLockStatus().equals(4)) {
+                LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH,LockFail.FE_SW_OPEN);
+                if (lockFailOpen == null) {
+                    lockFailOpen = new LockFail();
+                    lockFailService.getModel(lockFailOpen, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
+                            , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
+                            , LockFail.FE_SW_OPEN, new Date(), Long.parseLong(infoTo.getBid()));
+                    lockFailService.insert(lockFailOpen);
+                } else if (!infoTo.getAid().equals(lockFailOpen.getAid()) || !infoTo.getHid().equals(lockFailOpen.getHid())
+                        || !infoTo.getOid().equals(lockFailOpen.getOid())) {
+                    lockFailService.modifyModel(lockFailOpen, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
                 }
             }
             //关锁机械故障
@@ -228,7 +225,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                     lockFailClose = new LockFail();
                     lockFailService.getModel(lockFailClose, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
                             , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
-                            , LockFail.FE_SW_CLOSE, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
+                            , LockFail.FE_SW_CLOSE, new Date(), Long.parseLong(infoTo.getBid()));
                     lockFailService.insert(lockFailClose);
                 } else if (!infoTo.getAid().equals(lockFailClose.getAid()) || !infoTo.getHid().equals(lockFailClose.getHid())
                         || !infoTo.getOid().equals(lockFailClose.getOid())) {
@@ -239,26 +236,23 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     private void insertLockOffLineFail(long did, LockInfo lockInfo) {
-        InfoTo infoTo = moduleCoreService.getDeviceInfo(String.valueOf(did), "");
-        if (infoTo != null) {
-            //校验时间差
-            if (new Date().getTime() - lockInfo.getLastRefresh().getTime() < FailTask.TIME_SPAN) {
-                //当前设备无信号
-                if (lockInfo.getCsq().equals(-1)) {
-                    LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SIGNAL, LockFail.FE_SG_OFFLINE);
-                    if (lockFailOffline == null) {
-                        lockFailOffline = new LockFail();
-                        lockFailService.getModel(lockFailOffline, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()),  LockFail.FailType.TYPE_SIGNAL
-                                , LockFail.FE_SG_OFFLINE, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
-                        lockFailService.insert(lockFailOffline);
-                    } else if (!infoTo.getAid().equals(lockFailOffline.getAid()) || !infoTo.getHid().equals(lockFailOffline.getHid())
-                            || !infoTo.getOid().equals(lockFailOffline.getOid())) {
-                        lockFailService.modifyModel(lockFailOffline, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
-                    }
-                }
+            //当前设备无信号
+           if (lockInfo.getCsq()!= null && lockInfo.getCsq()== -1) {
+               InfoTo infoTo = moduleCoreService.getDeviceInfo(String.valueOf(did), "");
+               if (infoTo != null) {
+               LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SIGNAL, LockFail.FE_SG_OFFLINE);
+               if (lockFailOffline == null) {
+                   lockFailOffline = new LockFail();
+                   lockFailService.getModel(lockFailOffline, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
+                           , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()),  LockFail.FailType.TYPE_SIGNAL
+                           , LockFail.FE_SG_OFFLINE, new Date(), Long.parseLong(infoTo.getBid()));
+                   lockFailService.insert(lockFailOffline);
+               } else if (!infoTo.getAid().equals(lockFailOffline.getAid()) || !infoTo.getHid().equals(lockFailOffline.getHid())
+                       || !infoTo.getOid().equals(lockFailOffline.getOid())) {
+                   lockFailService.modifyModel(lockFailOffline, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
+               }}
             }
-        }
+
     }
 
 }

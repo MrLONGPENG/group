@@ -57,7 +57,7 @@ public class LockFail implements Serializable {
     //离线状态
     public static final String FE_SG_OFFLINE = "FE_SG_Offline";
     //低信号
-    public static final String FE_SG_NULL = "FE_SG_Low";
+    public static final String FE_SG_LOW = "FE_SG_Low";
     //信号波动异常
     public static final String FE_SG_WAVE = "FE_SG_Wave";
     //开锁机械故障
