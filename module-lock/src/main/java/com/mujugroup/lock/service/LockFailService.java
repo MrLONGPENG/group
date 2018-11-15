@@ -1,6 +1,7 @@
 package com.mujugroup.lock.service;
 
 import com.lveqia.cloud.common.exception.DataException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
@@ -30,4 +31,6 @@ public interface LockFailService {
     void getModel(LockFail lockFail, int aid, int hid, int oid, long did, String failCode, String errorCode, Date time, long bid);
 
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
+
+    boolean modify(int uid,int type, String did, String failCode, String errorCode, String explain) throws ParamException;
 }

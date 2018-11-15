@@ -56,8 +56,25 @@ public class LockFailController {
             , @ApiParam(value = "异常类型") @RequestParam(value = "type", required = false, defaultValue = "0") int type
     ) throws BaseException {
         Map<String, String> map = moduleCoreService.getAuthData(uid);
-        List<FailBo> list = lockFailService.getFailInfoList(map,pageNum,pageSize,type);
+        List<FailBo> list = lockFailService.getFailInfoList(map, pageNum, pageSize, type);
         return ResultUtil.success(lockFailService.toFailVo(list), PageInfo.of(list));
+    }
+
+    @ApiOperation(value = "巡查反馈", notes = "巡查反馈")
+    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
+    public String feedbackFail(@ApiParam(value = "业务编号") @RequestParam(value = "did") String did
+            , @ApiParam(value = "故障解决状态(3:已解决 4:未解决)") @RequestParam(value = "type", defaultValue = "4") int type
+            , @ApiParam(value = "维修人") @RequestParam(value = "uid") int uid
+            , @ApiParam(value = "故障编码") @RequestParam(value = "failCode") String failCode
+            , @ApiParam(value = "错误编码") @RequestParam(value = "errorCode") String errorCode
+            , @ApiParam(value = "异常产生原因及解决方法") @RequestParam(value = "explain", required = false, defaultValue = "") String explain
+    ) throws BaseException{
+
+        if (lockFailService.modify(uid,type,did,failCode,errorCode,explain)){
+            return ResultUtil.success();
+        }else {
+            return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
+        }
     }
 
 }
