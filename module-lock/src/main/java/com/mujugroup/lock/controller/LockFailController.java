@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
+import com.mujugroup.lock.objeck.vo.fail.ListVo;
 import com.mujugroup.lock.objeck.vo.fail.PutVo;
 import com.mujugroup.lock.service.LockFailService;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
@@ -45,23 +46,18 @@ public class LockFailController {
 
     @ApiOperation(value = "获取异常", notes = "获取异常")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String getFailInfoList(
-            @ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum
-            , @ApiParam(value = "每页显示") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
-            , @ApiParam(hidden = true) String uid
-            , @ApiParam(value = "异常类型") @RequestParam(value = "type", required = false, defaultValue = "0") int type
-    ) throws BaseException {
-        Map<String, String> map = moduleCoreService.getAuthData(uid);
-        List<FailBo> list = lockFailService.getFailInfoList(map, pageNum, pageSize, type);
+    public String getFailInfoList( @ModelAttribute ListVo listVo ) throws BaseException {
+        Map<String, String> map = moduleCoreService.getAuthData(String.valueOf(listVo.getUid()));
+        List<FailBo> list = lockFailService.getFailInfoList(map, listVo.getPageNum(), listVo.getPageSize(), listVo.getType(), listVo.getResolveStatus());
         return ResultUtil.success(lockFailService.toFailVo(list), PageInfo.of(list));
     }
 
     @ApiOperation(value = "巡查反馈", notes = "巡查反馈")
     @RequestMapping(value = "/modify", method = RequestMethod.PUT)
-    public String feedbackFail(@ModelAttribute PutVo putVo) throws BaseException{
-        if (lockFailService.modify(putVo)){
+    public String feedbackFail(@ModelAttribute PutVo putVo) throws BaseException {
+        if (lockFailService.modify(putVo)) {
             return ResultUtil.success();
-        }else {
+        } else {
             return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
         }
     }

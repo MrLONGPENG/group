@@ -18,17 +18,17 @@ import java.util.Map;
 public interface LockFailService {
     TotalVo getFailCount(String uid) throws DataException;
 
-    List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int type) throws DataException;
+    List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int flag,int resolveStatus) throws DataException;
 
     List<FailVo> toFailVo(List<FailBo> list);
 
-    LockFail getFailInfoByDid(String did, String failCode, String errorCode);
+    LockFail getFailInfoByDid(String did, LockFail.FailType failFlag, String errorCode);
 
     boolean insert(LockFail lockFail);
 
     boolean update(LockFail lockFail);
 
-    void getModel(LockFail lockFail, int aid, int hid, int oid, long did, String failCode, String errorCode, Date time, long bid);
+    void getModel(LockFail lockFail, int aid, int hid, int oid, long did, LockFail.FailType failCode, String errorCode, Date time, long bid);
 
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
 

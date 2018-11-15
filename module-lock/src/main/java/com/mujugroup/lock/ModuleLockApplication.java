@@ -1,6 +1,7 @@
 package com.mujugroup.lock;
 
 import com.github.wxiaoqi.merge.EnableAceMerge;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import ma.glasnost.orika.MapperFactory;
@@ -109,12 +110,26 @@ public class ModuleLockApplication {
                         return "关锁".equals(source) ? 1 : "开锁".equals(source) ? 2 : 0;
                     }
                 });
+
+        defaultMapperFactory.getConverterFactory().registerConverter("resolveTypeConvert"
+                , new BidirectionalConverter<Integer, String>() {
+                    @Override
+                    public String convertTo(Integer source, Type<String> destinationType) {
+                        return source == 1 ? "产生异常" : source == 2 ? "解决中" : source == 4 ? "已解决" : "未解决";
+                    }
+
+                    @Override
+                    public Integer convertFrom(String source, Type<Integer> destinationType) {
+                        return null;
+                    }
+                });
         // 日期转换
         defaultMapperFactory.getConverterFactory().registerConverter("dateConvert"
                 , new BidirectionalConverter<String, String>() {
 
                     @Override
                     public String convertTo(String source, Type<String> destinationType) {
+                        if (Constant.DIGIT_ZERO.equals(source)) return "无订单信息";
                         return DateUtil.timestampToString(Long.parseLong(source), DateUtil.TYPE_CHINESE_FORMAT);
                     }
 

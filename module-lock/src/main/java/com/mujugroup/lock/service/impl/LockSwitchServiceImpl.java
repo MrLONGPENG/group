@@ -35,8 +35,8 @@ public class LockSwitchServiceImpl implements LockSwitchService {
     }
 
     @Override
-    public List<LockSwitch> getLockStatusList(String did, String bid) {
-        return lockSwitchMapper.getLockStatusList(did,bid);
+    public List<LockSwitch> getLockStatusList(String did, String bid, String startTime, String endTime) {
+        return lockSwitchMapper.getLockStatusList(did, bid, startTime, endTime);
     }
 
     @Override

@@ -19,6 +19,6 @@ public class FailVo implements Serializable {
     private String bed;
     private String endTime;
     //故障解决状态
-    private String resoveStatus;
+    private String resolveStatus;
 
 }

@@ -46,6 +46,7 @@ public interface LockSwitchMapper {
 
     @SelectProvider(type = LockSwitchSqlProvider.class,method = "getLockStatusList")
     @ResultMap("lockSwitch")
-    List<LockSwitch> getLockStatusList(@Param(value = "did") String did, @Param(value = "bid") String bid);
+    List<LockSwitch> getLockStatusList(@Param(value = "did") String did, @Param(value = "bid") String bid
+            ,@Param(value = "startTime") String startTime,@Param(value = "endTime")String endTime);
 
 }

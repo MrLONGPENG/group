@@ -14,7 +14,7 @@ public interface LockSwitchService {
 
     boolean add(LockSwitch lockSwitch);
 
-    List<LockSwitch> getLockStatusList(String did,String bid) throws ParamException;
+    List<LockSwitch> getLockStatusList(String did,String bid,String startTime,String endTime) throws ParamException;
 
     List<SwitchVo> convert(List<LockSwitch> lockSwitchList);
 }

@@ -20,7 +20,7 @@ public class FailBo implements Serializable {
     private Integer electric;
     private Date lastRefresh;
     //故障解决状态
-    private Integer resoveStatus;
+    private Integer resolveStatus;
     @MergeField(feign = ModuleCoreService.class, method = "getDepartmentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
     private String oid;
@@ -30,7 +30,7 @@ public class FailBo implements Serializable {
     private String bed;
 
     @MergeField(feign = ModuleWxService.class, method = "getOrderEndTimeByDid"
-            , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
+            , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
     private String endTime;
 
 }

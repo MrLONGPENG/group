@@ -1,6 +1,7 @@
 package com.mujugroup.lock.model;
 
 import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -15,10 +16,38 @@ import javax.persistence.*;
 @SuppressWarnings("serial")
 @Table(name = "t_lock_fail")
 public class LockFail implements Serializable {
-
     public static final String FAIL_TYPE_POWER = "F_Power";
     public static final String FAIL_TYPE_SIGNAL = "F_Signal";
     public static final String FAIL_TYPE_SWITCH = "F_Switch";
+
+    public enum FailType {
+        TYPE_POWER("F_Power", 1),
+        TYPE_SIGNAL("F_Signal", 2),
+        TYPE_SWITCH("F_Switch", 4);
+        // 成员变量
+        private final String code;
+        private int type;
+
+        // 构造方法
+        FailType(String code, int type) {
+            this.code = code;
+            this.type = type;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+    }
+
     //低电量
     public static final String FE_PW_LOW = "FE_PW_Low";
     //电量下降异常
@@ -28,7 +57,7 @@ public class LockFail implements Serializable {
     //离线状态
     public static final String FE_SG_OFFLINE = "FE_SG_Offline";
     //低信号
-    public static final String FE_SG_NULL ="FE_SG_Low" ;
+    public static final String FE_SG_NULL = "FE_SG_Low";
     //信号波动异常
     public static final String FE_SG_WAVE = "FE_SG_Wave";
     //开锁机械故障
@@ -48,7 +77,7 @@ public class LockFail implements Serializable {
 
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_lock_fail.id
      */
     @Id
@@ -91,6 +120,8 @@ public class LockFail implements Serializable {
     @Column(name = "oid")
     private Integer oid;
 
+    @Column(name = "fail_flag")
+    private Integer failFlag;
     /**
      * 故障类型 1:电量异常 2:信号异常 4:开关锁异常
      * 表字段 : t_lock_fail.fail_code
@@ -146,7 +177,6 @@ public class LockFail implements Serializable {
      */
     @Column(name = "explain")
     private String explain;
-
 
 
 }

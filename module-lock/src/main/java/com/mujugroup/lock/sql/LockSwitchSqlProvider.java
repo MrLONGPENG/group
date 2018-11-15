@@ -1,9 +1,13 @@
 package com.mujugroup.lock.sql;
 
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.model.LockSwitch;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
+
+
+import java.util.Date;
 
 /**
  * 开关锁记录表,SQL语句组装类
@@ -40,7 +44,8 @@ public class LockSwitchSqlProvider {
         }}.toString();
     }
 
-    public String getLockStatusList(@Param(value = "did") String did,@Param(value = "bid") String bid) {
+    public String getLockStatusList(@Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime) {
         return new SQL() {{
             SELECT("*");
             FROM("t_lock_switch");
@@ -50,8 +55,10 @@ public class LockSwitchSqlProvider {
             }
             if (!StringUtil.isEmpty(bid)) {
                 AND().WHERE("lock_id= #{bid}");
-            };
-            ORDER_BY("`localTime` DESC");
+            }
+            if (!StringUtil.isEmpty(startTime)) AND().WHERE("`localTime` >= #{startTime}");
+            if (!StringUtil.isEmpty(endTime)) AND().WHERE("`localTime` < #{endTime}");
+            ORDER_BY("`id` DESC");
         }}.toString();
 
     }

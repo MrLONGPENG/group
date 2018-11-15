@@ -6,7 +6,6 @@ import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.DBMap;
-import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.mapper.LockFailMapper;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
@@ -67,13 +66,12 @@ public class LockFailServiceImpl implements LockFailService {
 
     @Override
     @MergeResult
-    public List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int type) throws DataException {
+    public List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int flag, int resolveStatus) throws DataException {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         PageHelper.startPage(pageNum, pageSize);
-
         return lockFailMapper.getFailInfoList(map.get(CoreConfig.AUTH_DATA_AGENT)
                 , map.get(CoreConfig.AUTH_DATA_HOSPITAL)
-                , map.get(CoreConfig.AUTH_DATA_DEPARTMENT), type == 1 ? LockFail.FAIL_TYPE_POWER : type == 2 ? LockFail.FAIL_TYPE_SIGNAL : type == 4 ? LockFail.FAIL_TYPE_SWITCH : null);
+                , map.get(CoreConfig.AUTH_DATA_DEPARTMENT), flag, resolveStatus);
     }
 
     public List<FailVo> toFailVo(List<FailBo> list) {
@@ -85,13 +83,14 @@ public class LockFailServiceImpl implements LockFailService {
                 .fieldMap("electric").converter("electricConvert").add()
                 .fieldMap("lastRefresh").converter("dateConvertStr").add()
                 .fieldMap("endTime").converter("dateConvert").add()
+                .fieldMap("resolveStatus").converter("resolveTypeConvert").add()
                 .byDefault().register();
         return mapperFactory.getMapperFacade().mapAsList(list, FailVo.class);
     }
 
     @Override
-    public LockFail getFailInfoByDid(String did, String failCode, String errorCode) {
-        return lockFailMapper.getFailInfoByDid(did, failCode, errorCode);
+    public LockFail getFailInfoByDid(String did, LockFail.FailType failFlag, String errorCode) {
+        return lockFailMapper.getFailInfoByDid(did, failFlag.getType(), errorCode);
     }
 
     @Override
@@ -100,13 +99,14 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, String failCode, String errorCode, Date time, long bid) {
+    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, LockFail.FailType failCode, String errorCode, Date time, long bid) {
         lockFail.setAid(aid);
         lockFail.setHid(hid);
         lockFail.setOid(oid);
         lockFail.setLockId(bid);
         lockFail.setDid(did);
-        lockFail.setFailCode(failCode);
+        lockFail.setFailCode(failCode.getCode());
+        lockFail.setFailFlag(failCode.getType());
         lockFail.setErrorCode(errorCode);
         lockFail.setLastRefresh(time);
     }

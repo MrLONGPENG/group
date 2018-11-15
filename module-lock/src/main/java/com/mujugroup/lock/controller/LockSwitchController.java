@@ -35,7 +35,7 @@ public class LockSwitchController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String list(@ModelAttribute ListVo listVo) throws BaseException {
         PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
-        List<LockSwitch> lockSwitchList = lockSwitchService.getLockStatusList(listVo.getDid(), listVo.getBid());
+        List<LockSwitch> lockSwitchList = lockSwitchService.getLockStatusList(listVo.getDid(), listVo.getBid(),listVo.getStartTime(),listVo.getEndTime());
         return ResultUtil.success(lockSwitchService.convert(lockSwitchList), PageInfo.of(lockSwitchList));
     }
 }

@@ -24,6 +24,7 @@ public class LockFailSqlProvider {
             if (lockFail.getAid() != null) VALUES("`aid`", "#{aid}");
             if (lockFail.getHid() != null) VALUES("`hid`", "#{hid}");
             if (lockFail.getOid() != null) VALUES("`oid`", "#{oid}");
+            if (lockFail.getFailFlag() != null) VALUES("fail_flag", "#{failFlag}");
             if (lockFail.getFailCode() != null) VALUES("`fail_code`", "#{failCode}");
             if (lockFail.getErrorCode() != null) VALUES("`error_code`", "#{errorCode}");
             if (lockFail.getLastRefresh() != null) VALUES("`last_refresh`", "#{lastRefresh}");
@@ -45,6 +46,7 @@ public class LockFailSqlProvider {
             if (lockFail.getAid() != null) SET("`aid` = #{aid}");
             if (lockFail.getHid() != null) SET("`hid` = #{hid}");
             if (lockFail.getOid() != null) SET("`oid` = #{oid}");
+            if (lockFail.getFailFlag() != null) SET("`fail_flag` = #{failFlag}");
             if (lockFail.getFailCode() != null) SET("`fail_code` = #{failCode}");
             if (lockFail.getErrorCode() != null) SET("`error_code` = #{errorCode}");
             if (lockFail.getLastRefresh() != null) SET("`last_refresh` = #{lastRefresh}");
@@ -89,15 +91,19 @@ public class LockFailSqlProvider {
 
     }
 
-    public String getFailInfoList(@Param(value = "aid") String aid,@Param(value = "hid") String hid,@Param(value = "oid") String oid,@Param(value = "failCode")String failCode) {
+    public String getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid, @Param(value = "flag") int flag
+            , @Param(value = "resolveStatus") int resolveStatus) {
         return new SQL() {{
-            SELECT("f.id,f.did,d.dict_name,i.lock_status,i.battery_stat,i.electric, i.last_refresh" +
+            SELECT("f.id,f.did,d.dict_name,i.lock_status,f.status AS resolveStatus,i.battery_stat,i.electric, i.last_refresh" +
                     ", f.oid, f.did as bed, f.did as endTime");
             FROM("t_lock_fail f,t_lock_dict d,t_lock_info i");
             WHERE("f.error_code=d.dict_code AND d.dict_type='Fail_Error' " +
-                    "AND f.lock_id= i.lock_id AND f.`status` != 3" );
-            if (!StringUtil.isEmpty(failCode)){
-                AND().WHERE("f.fail_code= #{failCode}");
+                    "AND f.lock_id= i.lock_id");
+            if (resolveStatus != 0) {
+                AND().WHERE("f.`status` & #{resolveStatus}");
+            }
+            if (flag != 0) {
+                AND().WHERE("f.fail_flag & #{flag}");
             }
             StringBuilder sql = new StringBuilder();
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
@@ -119,7 +125,7 @@ public class LockFailSqlProvider {
                 if (sql.length() > 0) sql.append(" OR ");
                 sql.append("f.oid = #{oid} ");
             }
-            AND().WHERE(sql.toString());
+            if (sql.length() > 0) AND().WHERE(sql.toString());
         }}.toString();
 
     }

@@ -208,11 +208,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (new Date().getTime() - lockInfo.getLastRefresh().getTime() < FailTask.TIME_SPAN) {
                 //开锁机械故障
                 if (lockInfo.getLockStatus().equals(4)) {
-                    LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FAIL_TYPE_SWITCH,LockFail.FE_SW_OPEN);
+                    LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH,LockFail.FE_SW_OPEN);
                     if (lockFailOpen == null) {
                         lockFailOpen = new LockFail();
                         lockFailService.getModel(lockFailOpen, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FAIL_TYPE_SWITCH
+                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
                                 , LockFail.FE_SW_OPEN, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
                         lockFailService.insert(lockFailOpen);
                     } else if (!infoTo.getAid().equals(lockFailOpen.getAid()) || !infoTo.getHid().equals(lockFailOpen.getHid())
@@ -223,11 +223,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             }
             //关锁机械故障
             if (lockInfo.getLockStatus().equals(5)) {
-                LockFail lockFailClose = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FAIL_TYPE_SWITCH, LockFail.FE_SW_CLOSE);
+                LockFail lockFailClose = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH, LockFail.FE_SW_CLOSE);
                 if (lockFailClose == null) {
                     lockFailClose = new LockFail();
                     lockFailService.getModel(lockFailClose, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                            , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FAIL_TYPE_SWITCH
+                            , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
                             , LockFail.FE_SW_CLOSE, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
                     lockFailService.insert(lockFailClose);
                 } else if (!infoTo.getAid().equals(lockFailClose.getAid()) || !infoTo.getHid().equals(lockFailClose.getHid())
@@ -245,11 +245,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (new Date().getTime() - lockInfo.getLastRefresh().getTime() < FailTask.TIME_SPAN) {
                 //当前设备无信号
                 if (lockInfo.getCsq().equals(-1)) {
-                    LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FAIL_TYPE_SIGNAL, LockFail.FE_SG_OFFLINE);
+                    LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SIGNAL, LockFail.FE_SG_OFFLINE);
                     if (lockFailOffline == null) {
                         lockFailOffline = new LockFail();
                         lockFailService.getModel(lockFailOffline, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FAIL_TYPE_SIGNAL
+                                , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()),  LockFail.FailType.TYPE_SIGNAL
                                 , LockFail.FE_SG_OFFLINE, lockInfo.getLastRefresh(), Long.parseLong(infoTo.getBid()));
                         lockFailService.insert(lockFailOffline);
                     } else if (!infoTo.getAid().equals(lockFailOffline.getAid()) || !infoTo.getHid().equals(lockFailOffline.getHid())
