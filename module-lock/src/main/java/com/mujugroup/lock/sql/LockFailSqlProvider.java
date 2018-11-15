@@ -64,7 +64,7 @@ public class LockFailSqlProvider {
         return new SQL() {{
             SELECT("fail_code AS `key`, COUNT(*) AS `value`");
             FROM("t_lock_fail");
-            WHERE("`status` != 3");
+            WHERE("`status` & 11");
             StringBuilder sql = new StringBuilder();
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
                 sql.append("aid in (").append(aid).append(")");
