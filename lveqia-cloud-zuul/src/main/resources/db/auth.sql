@@ -76,6 +76,12 @@ INSERT INTO `t_sys_menu` VALUES ('20', '/rule/*', '/rule/uptime', 'RuleUptime', 
 INSERT INTO `t_sys_menu` VALUES ('21', '/device/*', '/device/list', 'DeviceList', '木巨柜管理', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('22', '/info/*', '/info/hospital', 'InfoHospital', '医院管理', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('23', '/info/*', '/info/department', 'InfoDepartment', '科室管理', 'fa fa-hospital-o fa-fw', null, '1', '6', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('24', '/device/*', '/device/lock', 'DeviceLock', '锁设备管理', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('25', '/device/*', '/device/state', 'DeviceState', '柜状态记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('26', '/device/*', '/device/fault', 'DeviceFault', '柜故障记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('27', '/device/*', '/device/switch', 'DeviceSwitch', '开关锁记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
+
+
 
 -- ----------------------------
 -- Table structure for t_sys_role
