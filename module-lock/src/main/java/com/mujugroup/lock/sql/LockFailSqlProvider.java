@@ -91,7 +91,7 @@ public class LockFailSqlProvider {
 
     public String getFailInfoList(@Param(value = "aid") String aid,@Param(value = "hid") String hid,@Param(value = "oid") String oid,@Param(value = "failCode")String failCode) {
         return new SQL() {{
-            SELECT("f.did,d.dict_name,i.lock_status,i.battery_stat,i.electric, i.last_refresh" +
+            SELECT("f.id,f.did,d.dict_name,i.lock_status,i.battery_stat,i.electric, i.last_refresh" +
                     ", f.oid, f.did as bed, f.did as endTime");
             FROM("t_lock_fail f,t_lock_dict d,t_lock_info i");
             WHERE("f.error_code=d.dict_code AND d.dict_type='Fail_Error' " +

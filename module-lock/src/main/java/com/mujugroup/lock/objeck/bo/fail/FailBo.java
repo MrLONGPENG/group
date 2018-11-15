@@ -11,14 +11,16 @@ import java.util.Date;
 
 @Data
 public class FailBo implements Serializable {
-
+    private long id;
     private String did;
     private String name;
+    //开关锁状态
     private Integer status;
     private Integer battery;
     private Integer electric;
     private Date lastRefresh;
-
+    //故障解决状态
+    private Integer resoveStatus;
     @MergeField(feign = ModuleCoreService.class, method = "getDepartmentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
     private String oid;

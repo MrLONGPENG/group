@@ -59,7 +59,9 @@ public interface LockFailMapper {
 
 
     @SelectProvider(type = LockFailSqlProvider.class, method = "getFailInfoList")
-    @Results(value = {@Result(column = "did", property = "did", javaType = String.class)
+    @Results(value = {
+            @Result(id = true, column = "id", property = "id", javaType = Long.class)
+            , @Result(column = "did", property = "did", javaType = String.class)
             , @Result(column = "oid", property = "oid", javaType = String.class)
             , @Result(column = "dict_name", property = "name", javaType = String.class)
             , @Result(column = "lock_status", property = "status", javaType = Integer.class)
@@ -78,7 +80,7 @@ public interface LockFailMapper {
     @Select("SELECT * FROM t_lock_fail WHERE did= #{did} AND `status`!=3 AND fail_code= #{failCode}" +
             " AND error_code= #{errorCode}  ORDER BY id  DESC LIMIT 1")
     @ResultMap("lockFail")
-    LockFail getFailInfoByDid(@Param(value = "did") String did  , @Param(value = "failCode")String failCode
-            ,@Param(value = "errorCode")String errorCode);
+    LockFail getFailInfoByDid(@Param(value = "did") String did, @Param(value = "failCode") String failCode
+            , @Param(value = "errorCode") String errorCode);
 
 }

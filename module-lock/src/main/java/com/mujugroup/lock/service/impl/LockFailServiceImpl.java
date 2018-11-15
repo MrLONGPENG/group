@@ -11,6 +11,7 @@ import com.mujugroup.lock.mapper.LockFailMapper;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
+import com.mujugroup.lock.objeck.vo.fail.PutVo;
 import com.mujugroup.lock.objeck.vo.fail.TotalVo;
 import com.mujugroup.lock.service.LockFailService;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
@@ -120,19 +121,14 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public boolean modify(int uid, int type, String did, String failCode, String errorCode, String explain) throws ParamException {
-        if (StringUtil.isEmpty(did) || StringUtil.isEmpty(failCode) || StringUtil.isEmpty(errorCode))
-            throw new ParamException("请输入did,故障编码,错误编码");
-        if (type==3||type==4){
-            LockFail lockFail = lockFailMapper.getFailInfoByDid(did, failCode, errorCode);
-            if (lockFail == null) throw new ParamException("该异常不存在");
-            lockFail.setStatus(type);
-            lockFail.setExplain(explain);
-            lockFail.setResolveMan(uid);
-            lockFail.setFinishTime(new Date());
-            return lockFailMapper.update(lockFail);
-        }
-        throw new ParamException("目前仅支持已解决和未解决两种状态");
+    public boolean modify(PutVo putVo) throws ParamException {
+        LockFail lockFail = lockFailMapper.findById((int) putVo.getId());
+        if (lockFail == null) throw new ParamException("该异常不存在");
+        lockFail.setStatus(putVo.getType());
+        lockFail.setExplain(putVo.getExplain());
+        lockFail.setFinishTime(new Date());
+        lockFail.setResolveMan(putVo.getResolveMan() == 0 ? putVo.getUid() : putVo.getResolveMan());
+        return lockFailMapper.update(lockFail);
     }
 
     @Override

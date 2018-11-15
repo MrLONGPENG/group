@@ -1,22 +1,18 @@
 package com.mujugroup.lock.controller;
 
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.common.objeck.to.PageTo;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
+import com.mujugroup.lock.objeck.vo.fail.PutVo;
 import com.mujugroup.lock.service.LockFailService;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -62,15 +58,8 @@ public class LockFailController {
 
     @ApiOperation(value = "巡查反馈", notes = "巡查反馈")
     @RequestMapping(value = "/modify", method = RequestMethod.PUT)
-    public String feedbackFail(@ApiParam(value = "业务编号") @RequestParam(value = "did") String did
-            , @ApiParam(value = "故障解决状态(3:已解决 4:未解决)") @RequestParam(value = "type", defaultValue = "4") int type
-            , @ApiParam(value = "维修人") @RequestParam(value = "uid") int uid
-            , @ApiParam(value = "故障编码") @RequestParam(value = "failCode") String failCode
-            , @ApiParam(value = "错误编码") @RequestParam(value = "errorCode") String errorCode
-            , @ApiParam(value = "异常产生原因及解决方法") @RequestParam(value = "explain", required = false, defaultValue = "") String explain
-    ) throws BaseException{
-
-        if (lockFailService.modify(uid,type,did,failCode,errorCode,explain)){
+    public String feedbackFail(@ModelAttribute PutVo putVo) throws BaseException{
+        if (lockFailService.modify(putVo)){
             return ResultUtil.success();
         }else {
             return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);
