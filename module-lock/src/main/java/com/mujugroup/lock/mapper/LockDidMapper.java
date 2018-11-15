@@ -40,7 +40,7 @@ public interface LockDidMapper {
     LockDid findById(Integer id);
     /**
      * 查询全部List
-     * @return List<LockDid>
+     * @return ListVo<LockDid>
      */
     @Select("SELECT * FROM `t_lock_did` limit 100")
     @ResultMap("lockDid")
@@ -49,7 +49,7 @@ public interface LockDidMapper {
 
     /**
      * 根据参数查询对象
-     * @return List<LockDid>
+     * @return ListVo<LockDid>
      */
     @Select("SELECT * FROM `t_lock_did` WHERE did = #{did}")
     @ResultMap("lockDid")
@@ -57,7 +57,7 @@ public interface LockDidMapper {
 
     /**
      * 根据参数查询对象
-     * @return List<LockDid>
+     * @return ListVo<LockDid>
      */
     @Select("SELECT * FROM `t_lock_did` WHERE lock_id = #{bid}")
     @ResultMap("lockDid")

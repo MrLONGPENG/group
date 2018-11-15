@@ -51,7 +51,7 @@ public class LockSwitchSqlProvider {
             if (!StringUtil.isEmpty(bid)) {
                 AND().WHERE("lock_id= #{bid}");
             };
-            ORDER_BY("`localTime`  DESC LIMIT 10");
+            ORDER_BY("`localTime` DESC");
         }}.toString();
 
     }
