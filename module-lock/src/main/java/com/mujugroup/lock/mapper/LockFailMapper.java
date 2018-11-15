@@ -77,7 +77,7 @@ public interface LockFailMapper {
             , @Param(value = "oid") String oid, @Param(value = "flag") int flag
             , @Param(value = "status") int status);
 
-    @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.error_code=d.dict_code AND f.did= #{did}")
+    @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.error_code=d.dict_code AND `status` & 11 AND f.did= #{did}")
     @ResultType(String.class)
     List<String> getFailNameByDid(@Param(value = "did") String did);
 

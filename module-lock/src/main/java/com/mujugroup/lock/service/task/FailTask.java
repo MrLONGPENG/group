@@ -97,6 +97,8 @@ public class FailTask {
                 if (isNoEqual(list.get(i).getElectric(),0) && isNoEqual(list.get(i).getBatteryStat(),100)) {
                     //当前索引的设备剩余电量与最后一个设备剩余电量相同,则充电异常(无法充电)
                     hasError &= list.get(i).getBatteryStat().equals(list.get(0).getBatteryStat());
+                }else {
+                    hasError = false;
                 }
             }
         }
