@@ -61,6 +61,7 @@ public class DeviceServiceImpl implements DeviceService {
             temp.fieldMap("orderType").converter("orderTypeConvert").add();
             temp.fieldMap("payTime").converter("timestampConvert").add();
             temp.fieldMap("endTime").converter("timestampConvert").add();
+            temp.fieldMap("price").converter("rmbPriceConvert").add();
         }
         temp.mapNulls(false); // NULL值不映射
         temp.byDefault().register();
