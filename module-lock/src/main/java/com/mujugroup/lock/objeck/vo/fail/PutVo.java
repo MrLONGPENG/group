@@ -14,11 +14,9 @@ public class PutVo implements Serializable {
     @NotNull(message = "故障更新必须指定id")
     @ApiModelProperty(value = "id", notes = "主键ID")
     private long id;
-    @ApiModelProperty(value = "type", notes = "故障解决状态(3:已解决 4:未解决)")
-    @Range(min = 3, max = 4, message = "状态可选[3,4]")
+    @ApiModelProperty(value = "type", notes = "故障解决状态(4:已解决 8:未解决)")
+    @Range(min = 4, max = 8, message = "状态可选[4,8]")
     private int type;
-    @ApiModelProperty(value = "uid", hidden = true)
-    private int uid;
     @ApiModelProperty(value = "resolveMan", notes = "可选的维修人员")
     private int resolveMan;
     @ApiModelProperty(value = "explain", notes = "异常产生原因及解决方法")

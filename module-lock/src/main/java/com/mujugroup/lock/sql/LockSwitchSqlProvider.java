@@ -56,8 +56,10 @@ public class LockSwitchSqlProvider {
             if (!StringUtil.isEmpty(bid)) {
                 AND().WHERE("lock_id= #{bid}");
             }
-            if (!StringUtil.isEmpty(startTime)) AND().WHERE("`localTime` >= #{startTime}");
-            if (!StringUtil.isEmpty(endTime)) AND().WHERE("`localTime` < #{endTime}");
+            if (!StringUtil.isEmpty(startTime) && !Constant.DIGIT_ZERO.equals(startTime))
+                AND().WHERE("`localTime` >= #{startTime}");
+            if (!StringUtil.isEmpty(endTime) && !Constant.DIGIT_ZERO.equals(endTime))
+                AND().WHERE("`localTime` < #{endTime}");
             ORDER_BY("`id` DESC");
         }}.toString();
 

@@ -73,8 +73,9 @@ public interface LockFailMapper {
             , @Result(column = "bed", property = "bed", javaType = String.class)
             , @Result(column = "endTime", property = "endTime", javaType = String.class)
     })
-    List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid, @Param(value = "oid") String oid, @Param(value = "flag") int flag
-            , @Param(value = "resolveStatus") int resolveStatus);
+    List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid
+            , @Param(value = "oid") String oid, @Param(value = "flag") int flag
+            , @Param(value = "status") int status);
 
     @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.error_code=d.dict_code AND f.did= #{did}")
     @ResultType(String.class)

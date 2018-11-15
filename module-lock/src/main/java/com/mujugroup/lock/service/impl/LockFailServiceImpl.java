@@ -10,6 +10,7 @@ import com.mujugroup.lock.mapper.LockFailMapper;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
+import com.mujugroup.lock.objeck.vo.fail.ListVo;
 import com.mujugroup.lock.objeck.vo.fail.PutVo;
 import com.mujugroup.lock.objeck.vo.fail.TotalVo;
 import com.mujugroup.lock.service.LockFailService;
@@ -66,12 +67,12 @@ public class LockFailServiceImpl implements LockFailService {
 
     @Override
     @MergeResult
-    public List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int flag, int resolveStatus) throws DataException {
+    public List<FailBo> getFailInfoList(Map<String, String> map, ListVo listVo) throws DataException {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
         return lockFailMapper.getFailInfoList(map.get(CoreConfig.AUTH_DATA_AGENT)
-                , map.get(CoreConfig.AUTH_DATA_HOSPITAL)
-                , map.get(CoreConfig.AUTH_DATA_DEPARTMENT), flag, resolveStatus);
+                , map.get(CoreConfig.AUTH_DATA_HOSPITAL) , map.get(CoreConfig.AUTH_DATA_DEPARTMENT)
+                , listVo.getType(), listVo.getStatus());
     }
 
     public List<FailVo> toFailVo(List<FailBo> list) {
@@ -121,13 +122,13 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public boolean modify(PutVo putVo) throws ParamException {
+    public boolean modify(int uid, PutVo putVo) throws ParamException {
         LockFail lockFail = lockFailMapper.findById((int) putVo.getId());
         if (lockFail == null) throw new ParamException("该异常不存在");
         lockFail.setStatus(putVo.getType());
         lockFail.setExplain(putVo.getExplain());
         lockFail.setFinishTime(new Date());
-        lockFail.setResolveMan(putVo.getResolveMan() == 0 ? putVo.getUid() : putVo.getResolveMan());
+        lockFail.setResolveMan(putVo.getResolveMan() == 0 ? uid : putVo.getResolveMan());
         return lockFailMapper.update(lockFail);
     }
 

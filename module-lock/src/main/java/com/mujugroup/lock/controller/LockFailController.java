@@ -46,16 +46,17 @@ public class LockFailController {
 
     @ApiOperation(value = "获取异常", notes = "获取异常")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String getFailInfoList( @ModelAttribute ListVo listVo ) throws BaseException {
-        Map<String, String> map = moduleCoreService.getAuthData(String.valueOf(listVo.getUid()));
-        List<FailBo> list = lockFailService.getFailInfoList(map, listVo.getPageNum(), listVo.getPageSize(), listVo.getType(), listVo.getResolveStatus());
+    public String getFailInfoList( @ModelAttribute ListVo listVo, @ApiParam(hidden = true)String uid)
+            throws BaseException {
+        Map<String, String> map = moduleCoreService.getAuthData(uid);
+        List<FailBo> list = lockFailService.getFailInfoList(map, listVo);
         return ResultUtil.success(lockFailService.toFailVo(list), PageInfo.of(list));
     }
 
     @ApiOperation(value = "巡查反馈", notes = "巡查反馈")
     @RequestMapping(value = "/modify", method = RequestMethod.PUT)
-    public String feedbackFail(@ModelAttribute PutVo putVo) throws BaseException {
-        if (lockFailService.modify(putVo)) {
+    public String feedbackFail(@ModelAttribute PutVo putVo, @ApiParam(hidden = true) int uid) throws BaseException {
+        if (lockFailService.modify(uid, putVo)) {
             return ResultUtil.success();
         } else {
             return ResultUtil.error(ResultUtil.CODE_DB_STORAGE_FAIL);

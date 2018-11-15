@@ -5,6 +5,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
+import com.mujugroup.lock.objeck.vo.fail.ListVo;
 import com.mujugroup.lock.objeck.vo.fail.PutVo;
 import com.mujugroup.lock.objeck.vo.fail.TotalVo;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 public interface LockFailService {
     TotalVo getFailCount(String uid) throws DataException;
 
-    List<FailBo> getFailInfoList(Map<String, String> map, int pageNum, int pageSize, int flag,int resolveStatus) throws DataException;
+    List<FailBo> getFailInfoList(Map<String, String> map, ListVo listVo) throws DataException;
 
     List<FailVo> toFailVo(List<FailBo> list);
 
@@ -32,5 +33,5 @@ public interface LockFailService {
 
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
 
-    boolean modify(PutVo putVo) throws ParamException;
+    boolean modify(int uid, PutVo putVo) throws ParamException;
 }

@@ -4,6 +4,7 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.mapper.LockSwitchMapper;
 import com.mujugroup.lock.model.LockSwitch;
+import com.mujugroup.lock.objeck.vo.unlock.ListVo;
 import com.mujugroup.lock.objeck.vo.unlock.SwitchVo;
 import com.mujugroup.lock.service.LockSwitchService;
 import ma.glasnost.orika.MapperFactory;
@@ -35,8 +36,9 @@ public class LockSwitchServiceImpl implements LockSwitchService {
     }
 
     @Override
-    public List<LockSwitch> getLockStatusList(String did, String bid, String startTime, String endTime) {
-        return lockSwitchMapper.getLockStatusList(did, bid, startTime, endTime);
+    public List<LockSwitch> getLockStatusList(ListVo listVo) {
+        return lockSwitchMapper.getLockStatusList(listVo.getDid(), listVo.getBid()
+                , listVo.getStartTime(), listVo.getEndTime());
     }
 
     @Override
