@@ -60,7 +60,8 @@ CREATE TABLE `t_lock_switch`(
 `receiveTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '开关锁时间',
 `lockStatus` tinyint(4) DEFAULT 0 COMMENT '状态 1 关闭 2 打开',
 `localTime` datetime  DEFAULT NULL COMMENT '保存到本地的时间',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id`),
+ INDEX  `index_did` (`did`) COMMENT '索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关锁状态表';
 -- ----------------------------
 -- Table structure for t_lock_record
@@ -79,7 +80,8 @@ CREATE TABLE `t_lock_record` (
 `lock_status` tinyint(4)  DEFAULT NULL COMMENT '锁状态 1:关 2:开 (助力车 3:中间态 ) 4代表开锁机械故障、5代表关锁机械故障，6代表锁端本地时间不在限制时间范围内',
 `last_refresh` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '最后上报时间',
 `crtTime` datetime DEFAULT NULL COMMENT '创建时间',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id`),
+ INDEX  `index_did` (`did`) COMMENT '索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁记录表';
 -- ----------------------------
 -- Table structure for t_lock_fail

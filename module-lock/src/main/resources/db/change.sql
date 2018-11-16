@@ -1,1 +1,2 @@
-alter table t_lock_info CHANGE did lock_id  bigint(20) DEFAULT NULL COMMENT '锁设备ID';
+alter table t_lock_record ADD INDEX index_did ( `did` );
+alter table t_lock_switch ADD INDEX index_did ( `did` );
