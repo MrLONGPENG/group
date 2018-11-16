@@ -63,6 +63,6 @@ public interface ModuleWxService {
 
     @RequestMapping(value = "/feign/getPayInfoByDid", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did);
+    PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did, @RequestParam(value = "orderType") int orderType);
 
 }

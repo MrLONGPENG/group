@@ -41,7 +41,7 @@ public class DeviceServiceImpl implements DeviceService {
         LockTo lockTo = moduleLockService.getLockInfo(did);
         addToDeviceVo(deviceVo, lockTo, LockTo.class);
 
-        PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(did);
+        PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(did, PayInfoTo.TYPE_ALL);
         addToDeviceVo(deviceVo, payInfoTo, PayInfoTo.class);
         return deviceVo;
     }

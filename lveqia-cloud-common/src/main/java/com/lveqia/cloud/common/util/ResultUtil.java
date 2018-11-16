@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 
 public class ResultUtil {
 
-    private final static String VERSION = "20181116";
+    private final static String VERSION = "20181116.1";
     private final static String SUCCESS = "Success";
 
     public final static int CODE_SUCCESS = 200;

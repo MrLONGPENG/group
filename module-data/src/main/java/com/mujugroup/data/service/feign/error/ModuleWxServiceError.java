@@ -48,7 +48,7 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public PayInfoTo getPayInfoByDid(String did) {
+    public PayInfoTo getPayInfoByDid(String did, int orderType){
         logger.warn("data->remote wx fail, method:getPayInfoByDid param:{}",did);
         return null;
     }
