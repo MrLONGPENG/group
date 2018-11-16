@@ -52,4 +52,9 @@ public class LockSwitchServiceImpl implements LockSwitchService {
         return mapperFactory.getMapperFacade().mapAsList(lockSwitchList, SwitchVo.class);
     }
 
+    @Override
+    public LockSwitch getLastOpenRecord(Long did) {
+        return lockSwitchMapper.getLastOpenRecord(did);
+    }
+
 }

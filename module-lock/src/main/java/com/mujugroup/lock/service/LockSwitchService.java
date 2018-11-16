@@ -19,4 +19,5 @@ public interface LockSwitchService {
 
     List<SwitchVo> convert(List<LockSwitch> lockSwitchList);
 
+    LockSwitch getLastOpenRecord(Long did);
 }

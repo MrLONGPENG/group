@@ -4,10 +4,12 @@ import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.UptimeTo;
 import com.lveqia.cloud.common.util.DateUtil;
-import com.mujugroup.lock.mapper.LockRecordMapper;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.model.LockRecord;
+import com.mujugroup.lock.model.LockSwitch;
 import com.mujugroup.lock.service.LockFailService;
+import com.mujugroup.lock.service.LockRecordService;
+import com.mujugroup.lock.service.LockSwitchService;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
 import com.mujugroup.lock.service.feign.ModuleWxService;
 import org.slf4j.Logger;
@@ -17,15 +19,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class FailTask {
     private final Logger logger = LoggerFactory.getLogger(FailTask.class);
-    private final ModuleCoreService moduleCoreService;
-    private final LockRecordMapper lockRecordMapper;
-    private final ModuleWxService moduleWxService;
+    private final Map<String, UptimeTo> uptimeMap = new HashMap<>();
     private final LockFailService lockFailService;
+    private final LockSwitchService lockSwitchService;
+    private final LockRecordService lockRecordService;
+    private final ModuleWxService moduleWxService;
+    private final ModuleCoreService moduleCoreService;
+
+
     //每次从数据库获取的数据记录条数
     private static final int LIMIT_COUNT = 5;
     //时间间隔(单位：毫秒)（当前间隔为:30分钟）
@@ -38,17 +46,20 @@ public class FailTask {
     private static final int LOW_POWER = 20;
 
     @Autowired
-    public FailTask(ModuleCoreService moduleCoreService, LockRecordMapper lockRecordMapper
-            , ModuleWxService moduleWxService, LockFailService lockFailService) {
-        this.moduleCoreService = moduleCoreService;
-        this.lockRecordMapper = lockRecordMapper;
-        this.moduleWxService = moduleWxService;
+    public FailTask(LockFailService lockFailService, LockSwitchService lockSwitchService
+            , LockRecordService lockRecordService, ModuleWxService moduleWxService
+            , ModuleCoreService moduleCoreService){
         this.lockFailService = lockFailService;
+        this.lockSwitchService = lockSwitchService;
+        this.lockRecordService = lockRecordService;
+        this.moduleWxService = moduleWxService;
+        this.moduleCoreService = moduleCoreService;
     }
 
     //每分钟执行一次
     @Scheduled(cron = "0 0/1 * * * *")
     public void onCron() {
+        uptimeMap.clear();
         long start = System.currentTimeMillis();
         getLockRecord(1, 5);
         logger.debug("FailTask date: {}", System.currentTimeMillis() - start);
@@ -59,6 +70,7 @@ public class FailTask {
         //远程获取所有激活设备集合
         List<InfoTo> infoTos = moduleCoreService.getActivateInfoTo(pageNum, pageSize);
         for (InfoTo info : infoTos) {
+            if(info.isIllegal()) return; // 未激活设备直接返回
             checkFail(info);
         }
         if (infoTos.size() == pageSize) {
@@ -67,27 +79,24 @@ public class FailTask {
     }
 
     private void checkFail(InfoTo info) {
-        if(info.isIllegal()) return; // 未激活设备直接返回
-        List<LockRecord> recordList = lockRecordMapper.findByDid(info.getDid(), LIMIT_COUNT);
+        List<LockRecord> recordList = lockRecordService.findByDid(info.getDid(), LIMIT_COUNT);
         if(recordList.size() == 0) return;
         if (isOffline(recordList.get(0))) {
             addSignal(info, recordList.get(0));
             return;
         }
-        checkPowerNoElectric(info, recordList);//无法充电异常
         checkPowerDown(info, recordList);//电量下降异常
-        checkLockWithOrder(info, recordList);//订单状态下开关锁异常
         checkSignalWave(info, recordList);//信号波动异常
+        checkPowerNoElectric(info, recordList);//无法充电异常
+        checkLockWithOrder(info, recordList.get(0));//订单状态下开关锁异常
         checkLockNoCsq(info, recordList.get(0));//低信号
-        checkPowerLow(info, recordList);//低电量
+        checkPowerLow(info, recordList.get(0));//低电量
     }
 
 
     /**
      * 无法充电异常
      *
-     * @param info
-     * @param list
      */
     private void checkPowerNoElectric(InfoTo info, List<LockRecord> list) {
         if (list.size() < 3) return;
@@ -117,64 +126,70 @@ public class FailTask {
         }
     }
 
-    /**
-     * 判断不相等，避免空指针
-     */
-    private boolean isNoEqual(Integer i, int j) {
-        return i!=null && i!=j;
-    }
 
     /**
      * 订单状态下开关锁异常
      */
-    private void checkLockWithOrder(InfoTo info, List<LockRecord> list) {
-        if (list.size() < 3) return;
+    private void checkLockWithOrder(InfoTo info, LockRecord record) {
         //当前设备处于开锁状态
-        if (list.get(0).getLockStatus()!= null && list.get(0).getLockStatus().equals(2)) {
+        if (record.getLockStatus()!= null && record.getLockStatus().equals(2)) {
             //远程获取微信端订单明细
-            PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(info.getDid());
+            PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(info.getDid(), PayInfoTo.TYPE_NIGHT);
             //获得使用时间
-            UptimeTo uptimeTo = moduleWxService.getUptimeTo(info.getAid(), info.getHid(), info.getOid());
+            UptimeTo uptimeTo = getUptimeTo(info);
             if(uptimeTo == null) return;
-            long seconds = list.get(0).getLastRefresh().getTime() / 1000 - DateUtil.getTimesMorning();
+            long seconds = DateUtil.getTimesNoDate(record.getLastRefresh());
+            boolean isNoonTime = uptimeTo.isNoonTime(seconds);
+            boolean isUsingTime = uptimeTo.isUsingTime(seconds);
             //当前设备使用时间不在运行时间之内
-            if ((seconds < uptimeTo.getNoonStartTime() && seconds > uptimeTo.getStopTime())
-                    || (seconds > uptimeTo.getNoonStopTime() && seconds < uptimeTo.getStartTime())) {
+            if(!isNoonTime && !isUsingTime){
                 //拥有订单明细(非使用时段开锁)
                 if (payInfoTo != null && DateUtil.getTimesMorning() < payInfoTo.getEndTime()) {
-                    if (list.get(0).getLastRefresh().getTime() / 1000 > payInfoTo.getEndTime()) {
-                        //获得非使用时间异常开锁数据
-                        LockFail lockFailUsing = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_SWITCH_USING);
-                        if (lockFailUsing == null) {
-                            lockFailUsing = new LockFail();
-                            lockFailService.getModel(lockFailUsing, LockFail.ErrorType.TYPE_SWITCH_USING, info, list.get(0));
-                            lockFailService.insert(lockFailUsing);
-                        } else if (isChange(info, lockFailUsing)) {
-                            lockFailService.modifyModel(lockFailUsing, info.getAid(), info.getHid(), info.getOid(), new Date());
-                        }
-                    } else {
+                    LockSwitch lockSwitch = lockSwitchService.getLastOpenRecord(record.getDid());
+                    long openTime = DateUtil.getTimesNoDate(lockSwitch.getLocalTime());
+                    if (uptimeTo.isNoonTime(openTime) || uptimeTo.isUsingTime(openTime)) {
                         //获得超时未关锁的异常数据
                         LockFail lockFailTimeOut = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_SWITCH_TIMEOUT);
                         if (lockFailTimeOut == null) {
                             lockFailTimeOut = new LockFail();
-                            lockFailService.getModel(lockFailTimeOut, LockFail.ErrorType.TYPE_SWITCH_TIMEOUT, info, list.get(0));
+                            lockFailService.getModel(lockFailTimeOut, LockFail.ErrorType.TYPE_SWITCH_TIMEOUT, info, record);
                             lockFailService.insert(lockFailTimeOut);
                         } else if (isChange(info, lockFailTimeOut)) {
                             lockFailService.modifyModel(lockFailTimeOut, info.getAid(), info.getHid(), info.getOid(), new Date());
                         }
+                    } else {
+                        //获得非使用时间异常开锁数据
+                        LockFail lockFailUsing = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_SWITCH_USING);
+                        if (lockFailUsing == null) {
+                            lockFailUsing = new LockFail();
+                            lockFailService.getModel(lockFailUsing, LockFail.ErrorType.TYPE_SWITCH_USING, info, record);
+                            lockFailService.insert(lockFailUsing);
+                        } else if (isChange(info, lockFailUsing)) {
+                            lockFailService.modifyModel(lockFailUsing, info.getAid(), info.getHid(), info.getOid(), new Date());
+                        }
+
                     }
                 } else { //无订单开锁
-                    addNoOrderFail(info, list.get(0));
+                    addNoOrderFail(info, record);
 
                 }
-            } else {
-                // 正常时间无订单开锁
-                if (payInfoTo == null || payInfoTo.getEndTime() < list.get(0).getLastRefresh().getTime() / 1000) {
-                    addNoOrderFail(info, list.get(0));
+            } else if(isUsingTime){  // 非午休运行时间无订单开锁
+                if (payInfoTo == null || payInfoTo.getEndTime() < record.getLastRefresh().getTime() / 1000) {
+                    addNoOrderFail(info, record);
                 }
-
             }
         }
+    }
+
+    /**
+     * 缓存运行时间（生命周期单次运行）
+     */
+    private UptimeTo getUptimeTo(InfoTo info) {
+        String key = info.getAid() + "-" + info.getHid() + "-" + info.getOid();
+        if (uptimeMap.containsKey(key)) return uptimeMap.get(key);
+        UptimeTo uptimeTo = moduleWxService.getUptimeTo(info.getAid(), info.getHid(), info.getOid());
+        uptimeMap.put(key, uptimeTo);
+        return uptimeTo;
     }
 
     private void addNoOrderFail(InfoTo info, LockRecord lockRecord) {
@@ -270,15 +285,14 @@ public class FailTask {
      * 低电量异常
      *
      * @param info
-     * @param list
+     * @param lockRecord
      */
-    private void checkPowerLow(InfoTo info, List<LockRecord> list) {
-        if (list.size() < 3) return;
-        if (list.get(0).getBatteryStat()!=null && list.get(0).getBatteryStat() < LOW_POWER) {
+    private void checkPowerLow(InfoTo info, LockRecord lockRecord) {
+        if (lockRecord.getBatteryStat()!=null && lockRecord.getBatteryStat() < LOW_POWER) {
             LockFail lockLowPower = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_POWER_LOW);
             if (lockLowPower == null) {
                 lockLowPower = new LockFail();
-                lockFailService.getModel(lockLowPower, LockFail.ErrorType.TYPE_POWER_LOW, info, list.get(0));
+                lockFailService.getModel(lockLowPower, LockFail.ErrorType.TYPE_POWER_LOW, info, lockRecord);
                 lockFailService.insert(lockLowPower);
             } else if (isChange(info, lockLowPower)) {
                 lockFailService.modifyModel(lockLowPower, info.getAid(), info.getHid(), info.getOid(), new Date());
@@ -304,6 +318,13 @@ public class FailTask {
         }
     }
 
+
+    /**
+     * 判断不相等，避免空指针
+     */
+    private boolean isNoEqual(Integer i, int j) {
+        return i!=null && i!=j;
+    }
 
     /**
      * 代理商/医院/科室 关系改变

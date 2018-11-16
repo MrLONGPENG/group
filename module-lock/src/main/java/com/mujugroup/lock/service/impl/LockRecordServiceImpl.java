@@ -6,6 +6,8 @@ import com.mujugroup.lock.service.LockRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author leolaurel
  */
@@ -24,5 +26,10 @@ public class LockRecordServiceImpl implements LockRecordService {
     @Override
     public boolean add(LockRecord lockRecord) {
         return lockRecordMapper.insert(lockRecord);
+    }
+
+    @Override
+    public List<LockRecord> findByDid(String did, int limitCount) {
+        return lockRecordMapper.findByDid(did, limitCount);
     }
 }

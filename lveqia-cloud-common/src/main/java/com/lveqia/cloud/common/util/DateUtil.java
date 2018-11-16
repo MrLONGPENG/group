@@ -126,10 +126,19 @@ public class DateUtil {
      * @return 时+分+秒 （单位秒）
      */
     public static int getTimesNoDate(){
-        Calendar c = Calendar.getInstance();
-        return getTimesNoDate(new int[]{c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND)});
+        return getTimesNoDate(new Date());
     }
 
+
+    /**
+     * 获取不含日期的时间戳
+     * @return 时+分+秒 （单位秒）
+     */
+    public static int getTimesNoDate(Date date){
+        Calendar c = Calendar.getInstance();
+        if(date != null) c.setTime(date);
+        return getTimesNoDate(new int[]{c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND)});
+    }
 
     /**
      * 获取不含日期的时间戳
