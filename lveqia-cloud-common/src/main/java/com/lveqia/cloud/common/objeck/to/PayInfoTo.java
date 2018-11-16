@@ -2,10 +2,12 @@ package com.lveqia.cloud.common.objeck.to;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class PayInfoTo {
+    /*** 支付类型-晚休-晚上套餐 */
+    public static final Integer TYPE_NIGHT  = 1;
+    /*** 支付类型-午休-中午套餐 */
+    public static final Integer TYPE_MIDDAY = 2;
     //唯一业务ID
     private Long did;
     //套餐类型

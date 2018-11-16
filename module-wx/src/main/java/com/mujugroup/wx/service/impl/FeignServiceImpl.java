@@ -52,10 +52,10 @@ public class FeignServiceImpl implements FeignService {
     public UptimeTo getUptimeTo(int aid, int hid, int oid) {
         UptimeTo uptimeTo=new UptimeTo();
         int[] ints = new int[]{0, aid, hid, oid};
-        WxUptime midday = wxUptimeService.findByXid(ints, WxRelation.TYPE_MIDDAY);
+        WxUptime midday = wxUptimeService.findByXid(ints, WxRelation.TYPE_MIDDAY, true);
         uptimeTo.setNoonStartTime(midday.getStartTime());
         uptimeTo.setNoonStopTime(midday.getStopTime());
-        WxUptime uptime = wxUptimeService.findByXid(ints, WxRelation.TYPE_UPTIME);
+        WxUptime uptime = wxUptimeService.findByXid(ints, WxRelation.TYPE_UPTIME, true);
         uptimeTo.setStartTime(uptime.getStartTime());
         uptimeTo.setStopTime(uptime.getStopTime());
         return uptimeTo;
