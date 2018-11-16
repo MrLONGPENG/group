@@ -57,7 +57,7 @@ public class FailTask {
     }
 
     //每分钟执行一次
-    @Scheduled(cron = "0 0/1 * * * *")
+    @Scheduled(cron = "0 0/10 * * * *")
     public void onCron() {
         uptimeMap.clear();
         long start = System.currentTimeMillis();
