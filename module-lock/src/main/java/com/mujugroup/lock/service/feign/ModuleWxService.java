@@ -25,7 +25,7 @@ public interface ModuleWxService {
 
     @RequestMapping(value = "/feign/getPayInfoByDid", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did);
+    PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did,@RequestParam(value = "orderType") int orderType);
 
     @RequestMapping(value = "/feign/getUptimeTo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     UptimeTo getUptimeTo(@RequestParam(name = "aid") String aid, @RequestParam(name = "hid") String hid
