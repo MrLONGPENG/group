@@ -122,7 +122,7 @@ public interface DeviceMapper {
             , @Param("start") String start, @Param("end") String end);
 
     @ResultType(String.class)
-    @Select("SELECT `hospitalBed` FROM `t_device` WHERE `did` = #{did}")
+    @Select("SELECT `hospitalBed` FROM `t_device` WHERE `did` = #{did} AND `status`=14  LIMIT 1")
     String getBedInfoByDid(@Param("did") String did);
 
     @ResultType(Integer.class)
