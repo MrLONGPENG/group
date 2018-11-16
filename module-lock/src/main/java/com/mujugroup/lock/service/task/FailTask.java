@@ -15,16 +15,16 @@ import com.mujugroup.lock.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class FailTask {
+    private static final String TASK_NAME = "Scheduled_Lock_FailTask";
     private final Logger logger = LoggerFactory.getLogger(FailTask.class);
     private final Map<String, UptimeTo> uptimeMap = new HashMap<>();
     private final LockFailService lockFailService;
@@ -32,7 +32,7 @@ public class FailTask {
     private final LockRecordService lockRecordService;
     private final ModuleWxService moduleWxService;
     private final ModuleCoreService moduleCoreService;
-
+    private final StringRedisTemplate stringRedisTemplate;
 
     //每次从数据库获取的数据记录条数
     private static final int LIMIT_COUNT = 5;
@@ -48,18 +48,30 @@ public class FailTask {
     @Autowired
     public FailTask(LockFailService lockFailService, LockSwitchService lockSwitchService
             , LockRecordService lockRecordService, ModuleWxService moduleWxService
-            , ModuleCoreService moduleCoreService){
+            , ModuleCoreService moduleCoreService, StringRedisTemplate stringRedisTemplate){
         this.lockFailService = lockFailService;
         this.lockSwitchService = lockSwitchService;
         this.lockRecordService = lockRecordService;
         this.moduleWxService = moduleWxService;
         this.moduleCoreService = moduleCoreService;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     //每分钟执行一次
     @Scheduled(cron = "0 0/10 * * * *")
     public void onCron() {
         uptimeMap.clear();
+        try {
+            Thread.sleep(new Random().nextInt(1000) + 300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(stringRedisTemplate.boundValueOps(TASK_NAME).get()!=null){
+            logger.info("已经存在任务，避免重复执行->{}", new Date());
+            return;
+        }
+        logger.info("执行任务->{}->{}", TASK_NAME, new Date());
+        stringRedisTemplate.boundValueOps(TASK_NAME).set(TASK_NAME, 5, TimeUnit.MINUTES);
         long start = System.currentTimeMillis();
         getLockRecord(1, 5);
         logger.debug("FailTask date: {}", System.currentTimeMillis() - start);
