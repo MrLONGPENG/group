@@ -115,7 +115,7 @@ public class LockFailServiceImpl implements LockFailService {
         }else{
             lockFail.setDid(record.getDid());
             lockFail.setLockId(record.getLockId());
-            lockFail.setLastRefresh(record.getLastRefresh());
+            lockFail.setLastRefresh(record.getCrtTime());
         }
 
     }

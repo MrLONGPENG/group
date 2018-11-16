@@ -215,7 +215,7 @@ public class FailTask {
         boolean hasError = true;
         for (int i = 1; i < recordList.size(); i++) {
             //如果相邻数据记录的时间差小于30分钟,且相邻数据的剩余电量的差值大于20，则认为是电量下降异常
-            boolean result = (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN)
+            boolean result = (recordList.get(i).getCrtTime().getTime() - recordList.get(i - 1).getCrtTime().getTime() < TIME_SPAN)
                     && recordList.get(i).getBatteryStat()!=null && recordList.get(i - 1).getBatteryStat()!=null
                     && Math.abs(recordList.get(i).getBatteryStat() - recordList.get(i - 1).getBatteryStat()) > DOWN_NUM;
             hasError &= result;
@@ -240,9 +240,9 @@ public class FailTask {
         if (recordList.size() < 3) return;
         boolean hasError = true;
         for (int i = 1; i < recordList.size(); i++) {
-            if (recordList.get(i).getLastRefresh().getTime() - recordList.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
+            if (recordList.get(i).getCrtTime().getTime() - recordList.get(i - 1).getCrtTime().getTime() < TIME_SPAN) {
                 //设备信号量不为0
-                if (isNoEqual(recordList.get(i).getCsq(),0)) {
+                if (isNoEqual(recordList.get(i).getCsq(),0) && recordList.get(i - 1).getCsq()!= null) {
                     //当前索引的设备信号量与其相邻设备信号量差值大于20,则表明信号波动异常
                     hasError &= Math.abs(recordList.get(i).getCsq() - recordList.get(i - 1).getCsq()) > CSQ_NUM;
                 }else {
@@ -303,7 +303,7 @@ public class FailTask {
     //判断是否离线
     private boolean isOffline(LockRecord lockRecord) {
         //获取最近一次的上传时间与当前时间的时间差
-        return new Date().getTime() - lockRecord.getLastRefresh().getTime() > TIME_SPAN;
+        return new Date().getTime() - lockRecord.getCrtTime().getTime() > TIME_SPAN;
     }
 
     //添加离线记录

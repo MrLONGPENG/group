@@ -96,7 +96,7 @@ public class LockFailSqlProvider {
             , @Param(value = "status") int status) {
         return new SQL() {{
             SELECT("f.id,f.did,d.dict_name,i.lock_status,f.status AS resolveStatus,i.battery_stat" +
-                    ",i.electric, i.last_refresh, f.oid, f.did as bed, f.did as endTime");
+                    ",i.electric, f.last_refresh, f.oid, f.did as bed, f.did as endTime");
             FROM("t_lock_fail f,t_lock_dict d,t_lock_info i");
             WHERE("f.error_code=d.dict_code AND d.dict_type='Fail_Error' " +
                     "AND f.lock_id= i.lock_id");

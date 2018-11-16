@@ -57,7 +57,6 @@ public class ConsumerServiceImpl implements ConsumerService {
                     switchLock(lockInfo, true);
                     if(lockDid == null)  return null;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
-                    insertLockRecord(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
                     break;//开关锁
                 case 201:
