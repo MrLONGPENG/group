@@ -28,7 +28,7 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public UptimeTo getUptimeTo(int aid, int hid, int oid) {
+    public UptimeTo getUptimeTo(String aid, String hid, String oid) {
         logger.warn("Remote call module-wx getUptimeTo,param{},param{},param{}", aid, hid, oid);
         return null;
     }

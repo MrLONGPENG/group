@@ -28,6 +28,6 @@ public interface ModuleWxService {
     PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did);
 
     @RequestMapping(value = "/feign/getUptimeTo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    UptimeTo getUptimeTo(@RequestParam(name = "aid") int aid, @RequestParam(name = "hid") int hid
-            , @RequestParam(name = "oid") int oid);
+    UptimeTo getUptimeTo(@RequestParam(name = "aid") String aid, @RequestParam(name = "hid") String hid
+            , @RequestParam(name = "oid") String oid);
 }

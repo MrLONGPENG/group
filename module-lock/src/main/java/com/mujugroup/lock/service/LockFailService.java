@@ -2,7 +2,9 @@ package com.mujugroup.lock.service;
 
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.lock.model.LockFail;
+import com.mujugroup.lock.model.LockRecord;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
 import com.mujugroup.lock.objeck.vo.fail.ListVo;
@@ -23,13 +25,13 @@ public interface LockFailService {
 
     List<FailVo> toFailVo(List<FailBo> list);
 
-    LockFail getFailInfoByDid(String did, LockFail.FailType failFlag, String errorCode);
+    LockFail getFailInfoByDid(String did, LockFail.ErrorType errorType);
 
     boolean insert(LockFail lockFail);
 
     boolean update(LockFail lockFail);
 
-    void getModel(LockFail lockFail, int aid, int hid, int oid, long did, LockFail.FailType failCode, String errorCode, Date time, long bid);
+    void getModel(LockFail lockFail, LockFail.ErrorType errorType, InfoTo info, LockRecord lockRecord);
 
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
 

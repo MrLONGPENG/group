@@ -26,50 +26,47 @@ public class LockFail implements Serializable {
         TYPE_SWITCH("F_Switch", 4);
         // 成员变量
         private final String code;
-        private int type;
-
+        private int flag;
         // 构造方法
-        FailType(String code, int type) {
+        FailType(String code, int flag) {
             this.code = code;
-            this.type = type;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
+            this.flag = flag;
         }
     }
 
-    //低电量
-    public static final String FE_PW_LOW = "FE_PW_Low";
-    //电量下降异常
-    public static final String FE_PW_DOWN = "FE_PW_Down";
-    //无法充电
-    public static final String FE_PW_CHARGE = "FE_PW_Charge";
-    //离线状态
-    public static final String FE_SG_OFFLINE = "FE_SG_Offline";
-    //低信号
-    public static final String FE_SG_LOW = "FE_SG_Low";
-    //信号波动异常
-    public static final String FE_SG_WAVE = "FE_SG_Wave";
-    //开锁机械故障
-    public static final String FE_SW_OPEN = "FE_SW_Open";
-    //关锁机械故障
-    public static final String FE_SW_CLOSE = "FE_SW_Close";
-    //超时未关锁
-    public static final String FE_SW_TIMEOUT = "FE_SW_Timeout";
-    //无订单异常开锁
-    public static final String FE_SW_ORDER = "FE_SW_Order";
-    //非使用时段开锁
-    public static final String FE_SW_USING = "FE_SW_Using";
+    public enum  ErrorType{
+        TYPE_POWER_LOW(FailType.TYPE_POWER, "FE_PW_Low"), //低电量
+        TYPE_POWER_DOWN(FailType.TYPE_POWER, "FE_PW_Down"),  //电量下降异常
+        TYPE_POWER_CHARGE(FailType.TYPE_POWER, "FE_PW_Charge"),  //无法充电
+        TYPE_SIGNAL_OFFLINE(FailType.TYPE_SIGNAL, "FE_SG_Offline"),  //离线状态
+        TYPE_SIGNAL_LOW(FailType.TYPE_SIGNAL, "FE_SG_Low"),    //低信号
+        TYPE_SIGNAL_WAVE(FailType.TYPE_SIGNAL, "FE_SG_Wave"),       //信号波动异常
+        TYPE_SWITCH_OPEN(FailType.TYPE_SWITCH, "FE_SW_Open"),    //开锁机械故障
+        TYPE_SWITCH_CLOSE(FailType.TYPE_SWITCH, "FE_SW_Close"),     //关锁机械故障
+        TYPE_SWITCH_TIMEOUT(FailType.TYPE_SWITCH, "FE_SW_Timeout"),    //超时未关锁
+        TYPE_SWITCH_ORDER(FailType.TYPE_SWITCH, "FE_SW_Order"),    //无订单异常开锁
+        TYPE_SWITCH_USING(FailType.TYPE_SWITCH, "FE_SW_Using");    //非使用时段开锁
+        // 成员变量
+        private final FailType failType;
+        private String errorCode;
+        // 构造方法
+        ErrorType(FailType failType, String errorCode) {
+            this.failType = failType;
+            this.errorCode = errorCode;
+        }
+        public int getFailFlag(){
+            return failType.flag;
+        }
+        public String getFailCode() {
+            return failType.code;
+        }
+
+        public String getErrorCode() {
+            return errorCode;
+        }
+
+    }
+
     //没电
     public static final String FR_PW_POWER = "FR_PW_Power";
     //信号接收器故障

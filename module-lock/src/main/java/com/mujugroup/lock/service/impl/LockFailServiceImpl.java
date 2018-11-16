@@ -6,8 +6,10 @@ import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.lock.mapper.LockFailMapper;
 import com.mujugroup.lock.model.LockFail;
+import com.mujugroup.lock.model.LockRecord;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.objeck.vo.fail.FailVo;
 import com.mujugroup.lock.objeck.vo.fail.ListVo;
@@ -89,8 +91,8 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public LockFail getFailInfoByDid(String did, LockFail.FailType failFlag, String errorCode) {
-        return lockFailMapper.getFailInfoByDid(did, failFlag.getType(), errorCode);
+    public LockFail getFailInfoByDid(String did, LockFail.ErrorType errorType) {
+        return lockFailMapper.getFailInfoByDid(did, errorType.getFailFlag(), errorType.getErrorCode());
     }
 
     @Override
@@ -99,16 +101,23 @@ public class LockFailServiceImpl implements LockFailService {
     }
 
     @Override
-    public void getModel(LockFail lockFail, int aid, int hid, int oid, long did, LockFail.FailType failCode, String errorCode, Date time, long bid) {
-        lockFail.setAid(aid);
-        lockFail.setHid(hid);
-        lockFail.setOid(oid);
-        lockFail.setLockId(bid);
-        lockFail.setDid(did);
-        lockFail.setFailCode(failCode.getCode());
-        lockFail.setFailFlag(failCode.getType());
-        lockFail.setErrorCode(errorCode);
-        lockFail.setLastRefresh(time);
+    public void getModel(LockFail lockFail, LockFail.ErrorType errorType, InfoTo info, LockRecord record) {
+        lockFail.setAid(Integer.valueOf(info.getAid()));
+        lockFail.setHid(Integer.valueOf(info.getHid()));
+        lockFail.setOid(Integer.valueOf(info.getOid()));
+        lockFail.setFailCode(errorType.getFailCode());
+        lockFail.setFailFlag(errorType.getFailFlag());
+        lockFail.setErrorCode(errorType.getErrorCode());
+        if(record == null){
+            lockFail.setDid(Long.parseLong(info.getAid()));
+            lockFail.setLockId(Long.parseLong(info.getBid()));
+            lockFail.setLastRefresh(new Date());
+        }else{
+            lockFail.setDid(record.getDid());
+            lockFail.setLockId(record.getLockId());
+            lockFail.setLastRefresh(record.getLastRefresh());
+        }
+
     }
 
     @Override

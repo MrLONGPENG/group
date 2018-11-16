@@ -198,37 +198,29 @@ public class ConsumerServiceImpl implements ConsumerService {
     /**
      * 开关锁机械故障
      *
-     * @param did
-     * @param lockInfo
      */
-    public void insertSwitchLockFail(long did, LockInfo lockInfo) {
+    private void insertSwitchLockFail(long did, LockInfo lockInfo) {
         InfoTo infoTo = moduleCoreService.getDeviceInfo(String.valueOf(did), "");
         if (infoTo != null) {
             //开锁机械故障
             if (lockInfo.getLockStatus().equals(4)) {
-                LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH,LockFail.FE_SW_OPEN);
+                LockFail lockFailOpen = lockFailService.getFailInfoByDid(infoTo.getDid(),LockFail.ErrorType.TYPE_SWITCH_OPEN);
                 if (lockFailOpen == null) {
                     lockFailOpen = new LockFail();
-                    lockFailService.getModel(lockFailOpen, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                            , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
-                            , LockFail.FE_SW_OPEN, new Date(), Long.parseLong(infoTo.getBid()));
+                    lockFailService.getModel(lockFailOpen, LockFail.ErrorType.TYPE_SWITCH_OPEN, infoTo, null);
                     lockFailService.insert(lockFailOpen);
-                } else if (!infoTo.getAid().equals(lockFailOpen.getAid()) || !infoTo.getHid().equals(lockFailOpen.getHid())
-                        || !infoTo.getOid().equals(lockFailOpen.getOid())) {
+                } else if (isChange(infoTo, lockFailOpen)) {
                     lockFailService.modifyModel(lockFailOpen, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
                 }
             }
             //关锁机械故障
             if (lockInfo.getLockStatus().equals(5)) {
-                LockFail lockFailClose = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SWITCH, LockFail.FE_SW_CLOSE);
+                LockFail lockFailClose = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.ErrorType.TYPE_SWITCH_CLOSE);
                 if (lockFailClose == null) {
                     lockFailClose = new LockFail();
-                    lockFailService.getModel(lockFailClose, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                            , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()), LockFail.FailType.TYPE_SWITCH
-                            , LockFail.FE_SW_CLOSE, new Date(), Long.parseLong(infoTo.getBid()));
+                    lockFailService.getModel(lockFailClose, LockFail.ErrorType.TYPE_SWITCH_CLOSE, infoTo, null);
                     lockFailService.insert(lockFailClose);
-                } else if (!infoTo.getAid().equals(lockFailClose.getAid()) || !infoTo.getHid().equals(lockFailClose.getHid())
-                        || !infoTo.getOid().equals(lockFailClose.getOid())) {
+                } else if (isChange(infoTo, lockFailClose)) {
                     lockFailService.modifyModel(lockFailClose, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
                 }
             }
@@ -240,19 +232,25 @@ public class ConsumerServiceImpl implements ConsumerService {
            if (lockInfo.getCsq()!= null && lockInfo.getCsq()== -1) {
                InfoTo infoTo = moduleCoreService.getDeviceInfo(String.valueOf(did), "");
                if (infoTo != null) {
-               LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.FailType.TYPE_SIGNAL, LockFail.FE_SG_OFFLINE);
+               LockFail lockFailOffline = lockFailService.getFailInfoByDid(infoTo.getDid(), LockFail.ErrorType.TYPE_SIGNAL_OFFLINE);
                if (lockFailOffline == null) {
                    lockFailOffline = new LockFail();
-                   lockFailService.getModel(lockFailOffline, Integer.parseInt(infoTo.getAid()), Integer.parseInt(infoTo.getHid())
-                           , Integer.parseInt(infoTo.getOid()), Long.parseLong(infoTo.getDid()),  LockFail.FailType.TYPE_SIGNAL
-                           , LockFail.FE_SG_OFFLINE, new Date(), Long.parseLong(infoTo.getBid()));
+                   lockFailService.getModel(lockFailOffline, LockFail.ErrorType.TYPE_SIGNAL_OFFLINE, infoTo, null);
                    lockFailService.insert(lockFailOffline);
-               } else if (!infoTo.getAid().equals(lockFailOffline.getAid()) || !infoTo.getHid().equals(lockFailOffline.getHid())
-                       || !infoTo.getOid().equals(lockFailOffline.getOid())) {
+               } else if (isChange(infoTo, lockFailOffline)) {
                    lockFailService.modifyModel(lockFailOffline, infoTo.getAid(), infoTo.getHid(), infoTo.getOid(), new Date());
                }}
             }
 
     }
 
+
+    /**
+     * 代理商/医院/科室 关系改变
+     */
+    private boolean isChange(InfoTo info, LockFail fail) {
+        return !info.getAid().equals(String.valueOf(fail.getAid()))
+                || !info.getHid().equals(String.valueOf(fail.getHid()))
+                || !info.getOid().equals(String.valueOf(fail.getOid()));
+    }
 }
