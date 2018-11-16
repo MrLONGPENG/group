@@ -79,7 +79,6 @@ public class LockFailServiceImpl implements LockFailService {
         mapperFactory.classMap(FailBo.class, FailVo.class)
                 .field("oid", "department")
                 .field("bed", "bed")
-                .fieldMap("battery").converter("getPercentConvert").add()
                 .fieldMap("status").converter("statusTypeConvert").add()
                 .fieldMap("electric").converter("electricConvert").add()
                 .fieldMap("lastRefresh").converter("dateConvertStr").add()
