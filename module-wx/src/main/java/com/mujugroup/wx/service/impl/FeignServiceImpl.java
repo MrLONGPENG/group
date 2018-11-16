@@ -62,7 +62,7 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
-    public PayInfoTo getPayInfoByDid(String did) {
-        return wxOrderService.getPayInfoByDid(did);
+    public PayInfoTo getPayInfoByDid(String did, int orderType) {
+        return wxOrderService.getPayInfoByDid(did,orderType);
     }
 }

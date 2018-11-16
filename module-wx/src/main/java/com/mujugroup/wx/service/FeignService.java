@@ -9,7 +9,7 @@ public interface FeignService {
 
     int getCountByUsingDid(String did, long time);
 
-    PayInfoTo getPayInfoByDid(String did);
+    PayInfoTo getPayInfoByDid(String did, int orderType);
 
     UptimeTo getUptimeTo(int aid, int hid, int oid);
 }

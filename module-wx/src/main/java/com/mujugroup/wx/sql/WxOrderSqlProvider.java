@@ -143,12 +143,15 @@ public class WxOrderSqlProvider {
         }}.toString();
     }
 
-    public String getPayInfoByDid(@Param(value = "did") String did) {
+    public String getPayInfoByDid(@Param(value = "did") String did, @Param(value = "type") int orderType) {
         return new SQL() {{
             SELECT("r.did, r.pay_time as payTime,r.end_time as endTime, r.order_type as orderType" +
                     ",r.pay_price as price, r.gid ,s.name,s.days ");
             FROM("t_wx_order r,t_wx_goods s");
-            WHERE(" s.id=r.gid  AND  r. did = #{did} AND pay_status = 2 ");
+            WHERE(" s.id=r.gid  AND  r. did = #{did} AND pay_status = 2");
+            if (orderType != 0) {
+                AND().WHERE("r.order_type= #{type}");
+            }
             ORDER_BY("r.id  DESC LIMIT 1");
         }}.toString();
     }

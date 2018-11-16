@@ -47,6 +47,6 @@ public interface WxOrderService {
 
     String getOrderEndTimeByDid(String did);
 
-    PayInfoTo getPayInfoByDid(String did);
+    PayInfoTo getPayInfoByDid(String did, int orderType);
 
 }

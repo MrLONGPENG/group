@@ -49,7 +49,7 @@ public interface LockRecordMapper {
     @ResultMap("record")
     List<LockRecord> findListAll();
 
-    @Select("SELECT * from t_lock_record where did= #{did} order by `last_refresh` desc limit #{limitNum}")
+    @Select("SELECT * from t_lock_record where did= #{did} order by `id` desc limit #{limitNum}")
     @ResultMap("record")
     List<LockRecord> findByDid(@Param(value = "did") String did, @Param(value = "limitNum") Integer limitNum);
 

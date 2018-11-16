@@ -212,8 +212,8 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
-    public PayInfoTo getPayInfoByDid(String did) {
-        return wxOrderMapper.getPayInfoByDid(did);
+    public PayInfoTo getPayInfoByDid(String did, int orderType) {
+        return wxOrderMapper.getPayInfoByDid(did,orderType);
     }
 
     @Override

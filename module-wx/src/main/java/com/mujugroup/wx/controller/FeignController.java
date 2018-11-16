@@ -35,16 +35,16 @@ public class FeignController {
     @ResponseBody
     @RequestMapping(value = "/getPayInfoByDid", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did) {
-        return feignService.getPayInfoByDid(did);
+    public PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did, @RequestParam(value = "orderType") int orderType) {
+        return feignService.getPayInfoByDid(did, orderType);
     }
 
     @ResponseBody
     @RequestMapping(value = "/getUptimeTo", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public UptimeTo getUptimeTo(@RequestParam(name = "aid") int aid , @RequestParam(name = "hid") int hid
+    public UptimeTo getUptimeTo(@RequestParam(name = "aid") int aid, @RequestParam(name = "hid") int hid
             , @RequestParam(name = "oid") int oid) {
-        return  feignService.getUptimeTo(aid, hid, oid);
+        return feignService.getUptimeTo(aid, hid, oid);
 
     }
 
