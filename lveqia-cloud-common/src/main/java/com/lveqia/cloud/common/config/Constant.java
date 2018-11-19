@@ -40,6 +40,9 @@ public class Constant {
     /** 字符串--未知  */
     public static final String STRING_UNKNOWN = "未知";
 
+    /** 时间戳-- 0.5 hour  */
+    public static final long TIMESTAMP_HOUR_HALF = 30*60;
+
     /** 时间戳-- 3 hour  */
     public static final long TIMESTAMP_HOUR_3 = 3*60*60;
 
