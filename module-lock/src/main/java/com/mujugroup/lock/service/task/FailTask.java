@@ -115,7 +115,7 @@ public class FailTask {
         //获取所有无法充电的异常数据
         boolean hasError = true;
         for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getLastRefresh().getTime() - list.get(i - 1).getLastRefresh().getTime() < TIME_SPAN) {
+            if (list.get(i).getCrtTime().getTime() - list.get(i - 1).getCrtTime().getTime() < TIME_SPAN) {
                 //设备充电电流不为0且当前设备剩余电量不为百分之百(设备正在充电中)
                 if (isNoEqual(list.get(i).getElectric(),0) && isNoEqual(list.get(i).getBatteryStat(),100)) {
                     //当前索引的设备剩余电量与最后一个设备剩余电量相同,则充电异常(无法充电)
@@ -150,7 +150,7 @@ public class FailTask {
             //获得使用时间
             UptimeTo uptimeTo = getUptimeTo(info);
             if(uptimeTo == null) return;
-            long seconds = DateUtil.getTimesNoDate(record.getLastRefresh());
+            long seconds = DateUtil.getTimesNoDate(record.getCrtTime());
             boolean isNoonTime = uptimeTo.isNoonTime(seconds);
             boolean isUsingTime = uptimeTo.isUsingTime(seconds);
             //当前设备使用时间不在运行时间之内
@@ -186,7 +186,7 @@ public class FailTask {
 
                 }
             } else if(isUsingTime){  // 非午休运行时间无订单开锁
-                if (payInfoTo == null || payInfoTo.getEndTime() < record.getLastRefresh().getTime() / 1000) {
+                if (payInfoTo == null || payInfoTo.getEndTime() < record.getCrtTime().getTime() / 1000) {
                     addNoOrderFail(info, record);
                 }
             }
