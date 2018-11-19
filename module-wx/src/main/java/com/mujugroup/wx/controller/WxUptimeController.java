@@ -73,7 +73,7 @@ public class WxUptimeController {
     }
 
     @ApiOperation(value = "医院开锁时间新增或更新接口", notes = "根据类型(代理商;医院;科室)更新医院开锁时间")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public String update(@ApiParam(value = "时间类型(2:运行时间 3:午休时间)", required = true) @RequestParam(name = "type"
             , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)
