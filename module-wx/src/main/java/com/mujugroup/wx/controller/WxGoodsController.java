@@ -88,7 +88,7 @@ public class WxGoodsController {
     }
 
     @ApiOperation(value = "医院商品删除接口", notes = "根据类型删除商品信息")
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@ApiParam(value = "类型(1:押金 2:套餐 3:午休 4:被子)", required = true) @RequestParam(name = "type"
             , defaultValue = "2") int type, @ApiParam(value = "外键类型(0:默认数据 1:代理商 2:医院 3:科室 4:其他)"
             , required = true) @RequestParam(name = "key") int key, @ApiParam(value = "外键ID", required = true)
