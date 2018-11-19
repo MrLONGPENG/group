@@ -3,6 +3,7 @@ package com.mujugroup.lock.service.impl;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.lock.model.*;
 import com.mujugroup.lock.service.*;
@@ -131,8 +132,13 @@ public class ConsumerServiceImpl implements ConsumerService {
         if (info.has("lockStatus")) {
             lockInfo.setLockStatus(info.get("lockStatus").getAsInt());
         }
-        if (info.has("lastRefresh")) {
-            lockInfo.setLastRefresh(new Date(info.get("lastRefresh").getAsLong()));
+        long lastRefresh;
+        Date date = new Date();
+        if (info.has("lastRefresh") && Math.abs((lastRefresh = info.get("lastRefresh").getAsLong())
+                - date.getTime())< Constant.TIMESTAMP_HOUR_HALF*1000) {
+            lockInfo.setLastRefresh(new Date(lastRefresh));
+        }else {
+            lockInfo.setLastRefresh(date);
         }
         //获取400状态下的fault属性
         if (info.has("fault")) {
