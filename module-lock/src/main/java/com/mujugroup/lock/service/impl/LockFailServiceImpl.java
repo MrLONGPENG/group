@@ -74,7 +74,7 @@ public class LockFailServiceImpl implements LockFailService {
         PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
         return lockFailMapper.getFailInfoList(map.get(CoreConfig.AUTH_DATA_AGENT)
                 , map.get(CoreConfig.AUTH_DATA_HOSPITAL) , map.get(CoreConfig.AUTH_DATA_DEPARTMENT)
-                , listVo.getType(), listVo.getStatus());
+                , listVo.getType(), listVo.getStatus(),listVo.getDid(),listVo.getBid());
     }
 
     public List<FailVo> toFailVo(List<FailBo> list) {

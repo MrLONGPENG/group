@@ -13,6 +13,7 @@ import java.util.Date;
 public class FailBo implements Serializable {
     private long id;
     private String did;
+    private String bid;
     private String name;
     //开关锁状态
     private Integer status;

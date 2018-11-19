@@ -1,4 +1,5 @@
 package com.mujugroup.lock.objeck.vo.fail;
+
 import com.lveqia.cloud.common.objeck.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,4 +14,8 @@ public class ListVo extends PageVo {
     private int type;
     @ApiModelProperty(value = "status", notes = "异常解决状态【1：产生异常，2：解决中，4：已解决，8：未解决】:默认查未解决的异常(状态为11),如果查询全部异常,请传入0")
     private int status = 11;
+    @ApiModelProperty(value = "did", notes = "唯一业务ID")
+    private String did;
+    @ApiModelProperty(value = "bid", notes = "设备编号")
+    private String bid;
 }
