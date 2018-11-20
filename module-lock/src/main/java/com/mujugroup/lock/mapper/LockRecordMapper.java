@@ -55,7 +55,20 @@ public interface LockRecordMapper {
     List<LockRecord> findByDid(@Param(value = "did") String did, @Param(value = "limitNum") Integer limitNum);
 
     @SelectProvider(type = LockRecordSqlProvider.class, method = "getRecordList")
-    @ResultMap("record")
+    @Results(id = "ListVo", value = {
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "did", property = "did", javaType = String.class)
+            , @Result(column = "lock_id", property = "lockId", javaType = String.class)
+            , @Result(column = "csq", property = "csq", javaType = Integer.class)
+            , @Result(column = "temp", property = "temp", javaType = Integer.class)
+            , @Result(column = "charge", property = "charge", javaType = Integer.class)
+            , @Result(column = "voltage", property = "voltage", javaType = Integer.class)
+            , @Result(column = "electric", property = "electric", javaType = Integer.class)
+            , @Result(column = "battery_stat", property = "batteryStat", javaType = Integer.class)
+            , @Result(column = "lock_status", property = "lockStatus", javaType = Integer.class)
+            , @Result(column = "last_refresh", property = "lastRefresh", javaType = Date.class)
+            , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
+    })
     List<ListVo> getRecordList(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime
             , @Param(value = "chargeStart") String chargeStart, @Param(value = "chargeEnd") String chargeEnd);

@@ -45,7 +45,7 @@ public class LockInfoServiceImpl implements LockInfoService {
 
     @Override
     public List<ListVo> getInfoList(ListVo listVo) {
-        return lockInfoMapper.getInfoList(listVo.getDid(), listVo.getLockId() == null ? "" : listVo.getLockId().toString()
+        return lockInfoMapper.getInfoList(listVo.getDid(), listVo.getLockId()
                 , listVo.getFVersion() == null ? "" : listVo.getFVersion().toString(), listVo.getHVersion() == null ? "" : listVo.getHVersion().toString()
                 , listVo.getBatteryStatStart()
                 , listVo.getBatteryStatEnd(), listVo.getCsqStart(), listVo.getCsqEnd()

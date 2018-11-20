@@ -75,7 +75,7 @@ public interface LockInfoMapper {
     @Results(id = "listVo", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
              @Result(column = "did", property = "did", javaType = String.class),
-            @Result(column = "lock_id", property = "lockId", javaType = Long.class),
+            @Result(column = "lock_id", property = "lockId", javaType = String.class),
             @Result(column = "brand", property = "brand", javaType = Integer.class),
             @Result(column = "f_version", property = "fVersion", javaType = Integer.class),
             @Result(column = "h_version", property = "hVersion", javaType = Integer.class),

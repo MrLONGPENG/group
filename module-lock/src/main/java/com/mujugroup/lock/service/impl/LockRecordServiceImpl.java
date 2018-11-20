@@ -37,7 +37,7 @@ public class LockRecordServiceImpl implements LockRecordService {
 
     @Override
     public List<ListVo> getRecordList(ListVo listVo) {
-        return lockRecordMapper.getRecordList(listVo.getDid(), listVo.getLockId() == null ? "" : listVo.getLockId().toString()
+        return lockRecordMapper.getRecordList(listVo.getDid(), listVo.getLockId()
                 , listVo.getStartTime()
                 , listVo.getEndTime()
                 , listVo.getChargeStart()

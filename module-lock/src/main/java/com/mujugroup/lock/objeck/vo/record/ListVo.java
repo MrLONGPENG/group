@@ -20,7 +20,7 @@ public class ListVo extends PageVo implements Serializable {
     private String did;
 
 
-    private Long lockId;
+    private String lockId;
 
 
     private Integer csq;

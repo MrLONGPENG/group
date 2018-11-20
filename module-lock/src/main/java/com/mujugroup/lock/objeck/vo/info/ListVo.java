@@ -18,7 +18,7 @@ public class ListVo extends PageVo implements Serializable {
     private Integer id;
     private String did;
     @ApiModelProperty(value = "lockId", notes = "设备编号")
-    private Long lockId;
+    private String lockId;
     //品牌
     private Integer brand;
     //固件版本
