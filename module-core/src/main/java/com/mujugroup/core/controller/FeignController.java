@@ -3,8 +3,8 @@ package com.mujugroup.core.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -99,7 +99,7 @@ public class FeignController {
      */
     @RequestMapping(value = "/getAuthLevel", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PageInfo<Integer> getAuthLevel(@Validated @ModelAttribute AuthVo authVo) {
+    public PageInfo<SelectVo> getAuthLevel(@Validated @ModelAttribute AuthVo authVo) {
         return feignService.getAuthLevel(authVo);
     }
 

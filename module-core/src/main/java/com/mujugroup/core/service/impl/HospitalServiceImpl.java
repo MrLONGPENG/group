@@ -119,7 +119,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<Integer> getHidByUid(Integer uid) {
+    public List<SelectVo> getHidByUid(Integer uid) {
         return hospitalMapper.getHidByUid(uid);
     }
 

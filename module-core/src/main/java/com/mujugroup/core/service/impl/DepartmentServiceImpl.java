@@ -117,7 +117,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<Integer> getOidByUid(Integer uid) {
+    public List<SelectVo> getOidByUid(Integer uid) {
         return departmentMapper.getOidByUid(uid);
     }
 

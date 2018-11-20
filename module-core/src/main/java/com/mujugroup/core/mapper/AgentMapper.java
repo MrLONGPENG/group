@@ -87,8 +87,8 @@ public interface AgentMapper {
     List<Agent> findAll(@Param(value = "name") String name,@Param(value = "enable")int enable);
 
 
-    @ResultType(Integer.class)
-    @Select("SELECT DISTINCT IFNULL(a.id,-1) FROM t_auth_data d LEFT JOIN t_agent a ON d.type = 0" +
+    @ResultMap("authAgentList")
+    @Select("SELECT DISTINCT IFNULL(a.id,-1),a.name FROM t_auth_data d LEFT JOIN t_agent a ON d.type = 0" +
             " OR (d.type = 1 AND d.rid = a.id) WHERE d.uid = #{uid}")
-    List<Integer> getAidByUid(@Param(value = "uid") Integer uid);
+    List<SelectVo> getAidByUid(@Param(value = "uid") Integer uid);
 }

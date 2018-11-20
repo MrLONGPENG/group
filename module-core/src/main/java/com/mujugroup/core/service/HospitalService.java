@@ -54,5 +54,5 @@ public interface HospitalService {
      *
      * 根据UID查询当前用户拥有权限的全部医院ID
      */
-    List<Integer> getHidByUid(Integer uid);
+    List<SelectVo> getHidByUid(Integer uid);
 }

@@ -91,9 +91,9 @@ public interface DepartmentMapper {
 
 
 
-    @ResultType(Integer.class)
-    @Select("SELECT DISTINCT IFNULL(d.id,-1) FROM t_auth_data a LEFT JOIN t_hospital  h ON (a.type = 0)" +
+    @ResultMap("selectVo")
+    @Select("SELECT DISTINCT IFNULL(d.id,-1),d.name FROM t_auth_data a LEFT JOIN t_hospital  h ON (a.type = 0)" +
             " OR (a.type = 1 AND a.rid = h.agentId) OR (a.type = 2 AND a.rid = h.id) LEFT JOIN t_department d " +
             " ON h.id = d.hospital_id WHERE a.uid = #{uid}")
-    List<Integer> getOidByUid(@Param(value = "uid")Integer uid);
+    List<SelectVo> getOidByUid(@Param(value = "uid")Integer uid);
 }

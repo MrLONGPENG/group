@@ -11,6 +11,7 @@ import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBo;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,8 +108,8 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
-    public PageInfo<Integer> getAuthLevel(AuthVo authVo) {
-        List<Integer> list;
+    public PageInfo<SelectVo> getAuthLevel(AuthVo authVo) {
+        List<SelectVo> list;
         PageHelper.startPage(authVo.getPageNum(), authVo.getPageSize());
         switch (authVo.getLevel()) {
             case CoreConfig.AUTH_DATA_AGENT:
