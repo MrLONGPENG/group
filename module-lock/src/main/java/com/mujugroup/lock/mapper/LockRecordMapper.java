@@ -1,6 +1,7 @@
 package com.mujugroup.lock.mapper;
 
 import com.mujugroup.lock.model.LockRecord;
+import com.mujugroup.lock.objeck.vo.record.ListVo;
 import com.mujugroup.lock.sql.LockRecordSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -52,5 +53,10 @@ public interface LockRecordMapper {
     @Select("SELECT * from t_lock_record where did= #{did} order by `id` desc limit #{limitNum}")
     @ResultMap("record")
     List<LockRecord> findByDid(@Param(value = "did") String did, @Param(value = "limitNum") Integer limitNum);
+
+    @SelectProvider(type = LockRecordSqlProvider.class, method = "getRecordList")
+    List<ListVo> getRecordList(@Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime
+            , @Param(value = "chargeStart") String chargeStart, @Param(value = "chargeEnd") String chargeEnd);
 
 }

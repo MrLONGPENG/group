@@ -1,5 +1,6 @@
 package com.mujugroup.lock.sql;
 
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.model.LockInfo;
 import org.apache.ibatis.annotations.Param;
@@ -62,6 +63,62 @@ public class LockInfoSqlProvider {
             if (lockInfo.getLockStatus() != null) SET("lock_status = #{lockStatus}");
             if (lockInfo.getLastRefresh() != null) SET("last_refresh = #{lastRefresh}");
             WHERE("id = #{id}");
+        }}.toString();
+    }
+
+    public String getInfoList(@Param(value = "did") String did, @Param(value = "bid") String bid, @Param(value = "fVersion") String fVersion
+            , @Param(value = "hVersion") String hVersion, @Param(value = "batteryStatStart") String batteryStatStart
+            , @Param(value = "batteryStatEnd") String batteryStatEnd, @Param(value = "csqStart") String csqStart
+            , @Param(value = "csqEnd") String csqEnd, @Param(value = "failStatus") int failStatus
+            , @Param(value = "lockStatus") int lockStatus, int elecStatus
+            , int lineStatus) {
+        return new SQL() {{
+            SELECT(" i.*, f.status AS failStatus,CASE  WHEN TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800 THEN '离线'   WHEN  TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800 THEN '在线' ELSE NULL END ");
+            FROM("t_lock_info i,t_lock_fail f");
+            WHERE("i.lock_id=f.lock_id");
+            if (!StringUtil.isEmpty(did)) {
+                AND().WHERE("f.did= #{did}");
+            }
+            if (!StringUtil.isEmpty(bid)) {
+                AND().WHERE("i.lock_id= #{bid}");
+            }
+            if (!StringUtil.isEmpty(fVersion)) {
+                AND().WHERE("i.f_version= #{fVersion}");
+            }
+            if (!StringUtil.isEmpty(hVersion)) {
+                AND().WHERE("i.h_version= #{hVersion}");
+            }
+            if ((!StringUtil.isEmpty(batteryStatStart) && !Constant.DIGIT_ZERO.equals(batteryStatStart))
+                    && (!StringUtil.isEmpty(batteryStatEnd) && !Constant.DIGIT_ZERO.equals(batteryStatEnd))) {
+                AND().WHERE("i.battery_stat>= #{batteryStatStart} AND i.battery_stat <= #{batteryStatEnd}");
+            }
+            if (!StringUtil.isEmpty(csqStart)) {
+
+                AND().WHERE("i.csq>= #{csqStart}");
+            }
+            if (!StringUtil.isEmpty(csqEnd)) {
+                AND().WHERE(" i.csq <= #{csqEnd}");
+            }
+            if (failStatus != 0) {
+                AND().WHERE("f.status & #{failStatus}");
+            }
+            if (lockStatus != 0) {
+                AND().WHERE("i.lock_status = #{lockStatus}");
+            }
+            if (elecStatus == 1) {
+                AND().WHERE("i.electric= 1");
+            } else if (elecStatus == 0) {
+                AND().WHERE("i.electric= 0");
+            }
+            //'离线状态(当前时间减去最近一次上传时间的时间差大于等于1800秒)
+            if (lineStatus == 0) {
+                AND().WHERE("TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800");
+            }
+            //在线状态
+            if (lineStatus == 1) {
+                AND().WHERE("TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800");
+            }
+            ORDER_BY("`id` DESC");
         }}.toString();
     }
 }
