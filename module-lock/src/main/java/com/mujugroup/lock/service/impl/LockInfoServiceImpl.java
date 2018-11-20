@@ -49,7 +49,7 @@ public class LockInfoServiceImpl implements LockInfoService {
                 , listVo.getFVersion() == null ? "" : listVo.getFVersion().toString(), listVo.getHVersion() == null ? "" : listVo.getHVersion().toString()
                 , listVo.getBatteryStatStart()
                 , listVo.getBatteryStatEnd(), listVo.getCsqStart(), listVo.getCsqEnd()
-                , listVo.getFailStatus() == null ? 0 : listVo.getFailStatus(), listVo.getLockStatus() == null ? 0 : listVo.getLockStatus()
+                ,  listVo.getLockStatus() == null ? 0 : listVo.getLockStatus()
                 , listVo.getElecStatus() == null ? -1 : listVo.getElecStatus(), listVo.getLineSatatus() == null ? 0 : listVo.getLineSatatus()
         );
     }

@@ -47,8 +47,6 @@ public class ListVo extends PageVo implements Serializable {
     private Integer lockStatus;
     //最后上报时间
     private Date lastRefresh;
-    @ApiModelProperty(value = "failStatus", notes = "异常解决状态【1：产生异常，2：解决中，4：已解决，8：未解决】:默认查全部的异常),如果查询未解决异常,请传入11")
-    private Integer failStatus;
     @ApiModelProperty(value = "elecStatus", notes = "充电状态【0：未充电 1：充电中】,默认查全部，如果选择所有，传入-1)")
     private Integer elecStatus;
     @ApiModelProperty(value = "lineSatatus", notes = "充电状态【0：离线 1：在线】)")

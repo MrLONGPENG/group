@@ -43,9 +43,9 @@ public class LockInfoController {
     @ApiOperation(value = "获取设备信息列表", notes = "获取设备信息列表")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String query(@ModelAttribute ListVo listVo) {
-        List<ListVo> list = lockInfoService.getInfoList(listVo);
         PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
-        return ResultUtil.success(list, PageInfo.of(list));
+        List<ListVo> list = lockInfoService.getInfoList(listVo);
+        return ResultUtil.success(list,PageInfo.of(list));
     }
 
 }

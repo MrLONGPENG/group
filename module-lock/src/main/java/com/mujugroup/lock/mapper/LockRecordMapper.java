@@ -55,6 +55,7 @@ public interface LockRecordMapper {
     List<LockRecord> findByDid(@Param(value = "did") String did, @Param(value = "limitNum") Integer limitNum);
 
     @SelectProvider(type = LockRecordSqlProvider.class, method = "getRecordList")
+    @ResultMap("record")
     List<ListVo> getRecordList(@Param(value = "did") String did, @Param(value = "bid") String bid
             , @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime
             , @Param(value = "chargeStart") String chargeStart, @Param(value = "chargeEnd") String chargeEnd);

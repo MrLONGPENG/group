@@ -69,12 +69,12 @@ public class LockInfoSqlProvider {
     public String getInfoList(@Param(value = "did") String did, @Param(value = "bid") String bid, @Param(value = "fVersion") String fVersion
             , @Param(value = "hVersion") String hVersion, @Param(value = "batteryStatStart") String batteryStatStart
             , @Param(value = "batteryStatEnd") String batteryStatEnd, @Param(value = "csqStart") String csqStart
-            , @Param(value = "csqEnd") String csqEnd, @Param(value = "failStatus") int failStatus
+            , @Param(value = "csqEnd") String csqEnd
             , @Param(value = "lockStatus") int lockStatus, int elecStatus
             , int lineStatus) {
         return new SQL() {{
-            SELECT(" i.*, f.status AS failStatus,f.did, CASE  WHEN TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800 THEN '离线'   WHEN  TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800 THEN '在线' ELSE NULL END ");
-            FROM("t_lock_info i,t_lock_fail f");
+            SELECT(" i.*,f.did, CASE  WHEN TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800 THEN '离线'   WHEN  TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800 THEN '在线' ELSE NULL END ");
+            FROM("t_lock_info i,t_lock_did f");
             WHERE("i.lock_id=f.lock_id");
             if (!StringUtil.isEmpty(did)) {
                 AND().WHERE("f.did= #{did}");
@@ -98,9 +98,6 @@ public class LockInfoSqlProvider {
             }
             if (!StringUtil.isEmpty(csqEnd)) {
                 AND().WHERE(" i.csq <= #{csqEnd}");
-            }
-            if (failStatus != 0) {
-                AND().WHERE("f.status & #{failStatus}");
             }
             if (lockStatus != 0) {
                 AND().WHERE("i.lock_status = #{lockStatus}");

@@ -86,13 +86,12 @@ public interface LockInfoMapper {
             @Result(column = "electric", property = "electric", javaType = Integer.class),
             @Result(column = "battery_stat", property = "batteryStat", javaType = Integer.class),
             @Result(column = "lock_status", property = "lockStatus", javaType = Integer.class),
-            @Result(column = "failStatus", property = "failStatus", javaType = Integer.class),
             @Result(column = "last_refresh", property = "lastRefresh", javaType = Date.class)})
 
     List<ListVo> getInfoList(@Param(value = "did") String did, @Param(value = "bid") String bid, @Param(value = "fVersion") String fVersion
             , @Param(value = "hVersion") String hVersion, @Param(value = "batteryStatStart") String batteryStatStart
             , @Param(value = "batteryStatEnd") String batteryStatEnd, @Param(value = "csqStart") String csqStart
-            , @Param(value = "csqEnd") String csqEnd, @Param(value = "failStatus") int failStatus
+            , @Param(value = "csqEnd") String csqEnd
             , @Param(value = "lockStatus") int lockStatus, int elecStatus
             , int lineStatus);
 }
