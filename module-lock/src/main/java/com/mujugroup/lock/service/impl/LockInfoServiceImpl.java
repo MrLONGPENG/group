@@ -50,7 +50,7 @@ public class LockInfoServiceImpl implements LockInfoService {
                 , listVo.getBatteryStatStart()
                 , listVo.getBatteryStatEnd(), listVo.getCsqStart(), listVo.getCsqEnd()
                 ,  listVo.getLockStatus() == null ? 0 : listVo.getLockStatus()
-                , listVo.getElecStatus() == null ? -1 : listVo.getElecStatus(), listVo.getLineSatatus() == null ? 0 : listVo.getLineSatatus()
+                , listVo.getElecStatus() == null ? -1 : listVo.getElecStatus(), listVo.getLineSatatus() == null ? -1 : listVo.getLineSatatus()
         );
     }
 
