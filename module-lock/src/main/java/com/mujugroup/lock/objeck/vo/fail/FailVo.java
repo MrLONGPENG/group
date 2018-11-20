@@ -20,5 +20,9 @@ public class FailVo implements Serializable {
     private String endTime;
     //故障解决状态
     private String resolveStatus;
+    //查询开始时间
+    private String lastRefreshStart;
+    //查询结束时间
+    private String lastRefreshEnd;
 
 }

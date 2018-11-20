@@ -18,4 +18,8 @@ public class ListVo extends PageVo {
     private String did;
     @ApiModelProperty(value = "bid", notes = "设备编号")
     private String bid;
+    //查询开始时间
+    private String lastRefreshStart;
+    //查询结束时间
+    private String lastRefreshEnd;
 }

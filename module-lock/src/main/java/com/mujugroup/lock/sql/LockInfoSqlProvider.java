@@ -73,7 +73,7 @@ public class LockInfoSqlProvider {
             , @Param(value = "lockStatus") int lockStatus, int elecStatus
             , int lineStatus) {
         return new SQL() {{
-            SELECT(" i.*, f.status AS failStatus,CASE  WHEN TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800 THEN '离线'   WHEN  TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800 THEN '在线' ELSE NULL END ");
+            SELECT(" i.*, f.status AS failStatus,f.did, CASE  WHEN TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) >=1800 THEN '离线'   WHEN  TIMESTAMPDIFF(SECOND,i.last_refresh,NOW()) <1800 THEN '在线' ELSE NULL END ");
             FROM("t_lock_info i,t_lock_fail f");
             WHERE("i.lock_id=f.lock_id");
             if (!StringUtil.isEmpty(did)) {

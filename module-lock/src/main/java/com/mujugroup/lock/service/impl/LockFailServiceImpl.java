@@ -73,8 +73,8 @@ public class LockFailServiceImpl implements LockFailService {
         if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
         PageHelper.startPage(listVo.getPageNum(), listVo.getPageSize());
         return lockFailMapper.getFailInfoList(map.get(CoreConfig.AUTH_DATA_AGENT)
-                , map.get(CoreConfig.AUTH_DATA_HOSPITAL) , map.get(CoreConfig.AUTH_DATA_DEPARTMENT)
-                , listVo.getType(), listVo.getStatus(),listVo.getDid(),listVo.getBid());
+                , map.get(CoreConfig.AUTH_DATA_HOSPITAL), map.get(CoreConfig.AUTH_DATA_DEPARTMENT)
+                , listVo.getType(), listVo.getStatus(), listVo.getDid(), listVo.getBid(), listVo.getLastRefreshStart(), listVo.getLastRefreshEnd());
     }
 
     public List<FailVo> toFailVo(List<FailBo> list) {
@@ -108,11 +108,11 @@ public class LockFailServiceImpl implements LockFailService {
         lockFail.setFailCode(errorType.getFailCode());
         lockFail.setFailFlag(errorType.getFailFlag());
         lockFail.setErrorCode(errorType.getErrorCode());
-        if(record == null){
+        if (record == null) {
             lockFail.setDid(Long.parseLong(info.getAid()));
             lockFail.setLockId(Long.parseLong(info.getBid()));
             lockFail.setLastRefresh(new Date());
-        }else{
+        } else {
             lockFail.setDid(record.getDid());
             lockFail.setLockId(record.getLockId());
             lockFail.setLastRefresh(record.getCrtTime());

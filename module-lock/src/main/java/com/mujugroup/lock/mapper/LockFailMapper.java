@@ -76,7 +76,8 @@ public interface LockFailMapper {
     })
     List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid, @Param(value = "flag") int flag
-            , @Param(value = "status") int status,@Param(value = "did")String did,@Param(value = "bid") String bid);
+            , @Param(value = "status") int status,@Param(value = "did")String did,@Param(value = "bid") String bid
+            ,@Param(value = "lastRefreshStart") String lastRefreshStart, @Param(value = "lastRefreshEnd") String lastRefreshEnd);
 
     @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.error_code=d.dict_code AND `status` & 11 AND f.did= #{did}")
     @ResultType(String.class)

@@ -93,7 +93,8 @@ public class LockFailSqlProvider {
 
     public String getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid, @Param(value = "flag") int flag
-            , @Param(value = "status") int status,@Param(value = "did")String did,@Param(value = "bid") String bid) {
+            , @Param(value = "status") int status, @Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "lastRefreshStart") String lastRefreshStart, @Param(value = "lastRefreshEnd") String lastRefreshEnd) {
         return new SQL() {{
             SELECT("f.id,f.did,f.lock_id as bid,d.dict_name,i.lock_status,f.status AS resolveStatus,i.battery_stat" +
                     ",i.electric, f.last_refresh, f.oid, f.did as bed, f.did as endTime");
@@ -106,11 +107,17 @@ public class LockFailSqlProvider {
             if (flag != 0) {
                 AND().WHERE("f.fail_flag & #{flag}");
             }
-            if (!StringUtil.isEmpty(did)){
+            if (!StringUtil.isEmpty(did)) {
                 AND().WHERE("f.did= #{did}");
             }
-            if (!StringUtil.isEmpty(bid)){
+            if (!StringUtil.isEmpty(bid)) {
                 AND().WHERE("f.lock_id= #{bid}");
+            }
+            if (!StringUtil.isEmpty(lastRefreshStart)) {
+                AND().WHERE("f.last_refresh >= #{lastRefreshStart}");
+            }
+            if (!StringUtil.isEmpty(lastRefreshEnd)) {
+                AND().WHERE("f.last_refresh< #{lastRefreshEnd}");
             }
             StringBuilder sql = new StringBuilder();
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
