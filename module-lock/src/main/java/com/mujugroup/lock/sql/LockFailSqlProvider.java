@@ -140,6 +140,7 @@ public class LockFailSqlProvider {
                 sql.append("f.oid = #{oid} ");
             }
             if (sql.length() > 0) AND().WHERE(sql.toString());
+            ORDER_BY("f.id DESC");
         }}.toString();
 
     }
