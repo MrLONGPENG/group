@@ -1,17 +1,22 @@
 package com.mujugroup.data.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.common.objeck.to.PageTo;
+import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.util.ResultUtil;
+import com.mujugroup.core.objeck.vo.SelectVo;
+import com.mujugroup.data.objeck.bo.ListBo;
 import com.mujugroup.data.objeck.vo.DeviceVo;
+import com.mujugroup.data.objeck.vo.ListVo;
 import com.mujugroup.data.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/device")
@@ -29,5 +34,13 @@ public class DeviceController {
     public String getDeviceDetailByDid(@ApiParam(value = "业务编号") @RequestParam(value = "did") String did) throws BaseException {
         DeviceVo deviceVo = deviceService.getDeviceDetailByDid(did);
         return ResultUtil.success(deviceVo);
+    }
+
+    @ApiOperation(value = "获取激活数量", notes = "获取激活数量")
+    @RequestMapping(value = "/rate", method = RequestMethod.POST)
+    public String getUsageRate(@ApiParam(hidden = true) int uid, @ModelAttribute ListVo listVo) throws BaseException {
+        PageInfo<SelectVo> selectToList = deviceService.getSelectVo(uid, listVo.getId() == null ? 0 : listVo.getId(), listVo.getPageNum(), listVo.getPageSize());
+        List<ListBo> list = deviceService.getUsageRate(listVo.getId() == null ? 0 : listVo.getId(), selectToList.getList());
+        return ResultUtil.success(list,selectToList);
     }
 }

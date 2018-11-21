@@ -22,11 +22,13 @@ public interface DepartmentService {
 
     boolean delete(int uid, String id) throws ParamException, DataException;
 
-    List<ListVo> findAll(String hid, String name,String status) throws DataException;
+    List<ListVo> findAll(String hid, String name, String status) throws DataException;
 
     List<SelectVo> getSelectList(int uid, int hid, String name) throws DataException;
 
     String checkUserData(int uid, String hid) throws DataException;
 
     List<SelectVo> getOidByUid(Integer uid);
+
+    List<SelectVo> getOidByOid(String oid);
 }

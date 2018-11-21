@@ -96,4 +96,8 @@ public interface DepartmentMapper {
             " OR (a.type = 1 AND a.rid = h.agentId) OR (a.type = 2 AND a.rid = h.id) LEFT JOIN t_department d " +
             " ON h.id = d.hospital_id WHERE a.uid = #{uid}")
     List<SelectVo> getOidByUid(@Param(value = "uid")Integer uid);
+
+    @Select("SELECT id ,`name` FROM t_department WHERE `status`= 1 AND id in (${oid}) ")
+    @ResultMap("selectVo")
+    List<SelectVo> getOidByOid(@Param(value = "oid") String oid);
 }

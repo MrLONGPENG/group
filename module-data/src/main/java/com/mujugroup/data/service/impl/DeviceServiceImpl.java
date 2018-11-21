@@ -1,9 +1,15 @@
 package com.mujugroup.data.service.impl;
 
+import com.github.pagehelper.PageInfo;
+import com.github.wxiaoqi.merge.annonation.MergeResult;
+import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.config.CoreConfig;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
-import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.LockTo;
-import com.lveqia.cloud.common.objeck.to.PayInfoTo;
+import com.lveqia.cloud.common.objeck.to.*;
+import com.lveqia.cloud.common.objeck.vo.AuthVo;
+import com.mujugroup.core.objeck.vo.SelectVo;
+import com.mujugroup.data.objeck.bo.ListBo;
 import com.mujugroup.data.objeck.vo.DeviceVo;
 import com.mujugroup.data.service.DeviceService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
@@ -13,6 +19,8 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.metadata.ClassMapBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service(value = "deviceService")
@@ -46,18 +54,41 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceVo;
     }
 
+    @Override
+    @MergeResult
+    public List<ListBo> getUsageRate(int hid, List<SelectVo> list) throws BaseException {
+        List<ListBo> listBos = new ArrayList<>();
+        for (SelectVo bo : list) {
+            listBos.add(new ListBo(hid, bo.getId(), bo.getName()));
+        }
+        return listBos;
+    }
+
+    @Override
+    public PageInfo<SelectVo> getSelectVo(int uid, int hid, int pageNum, int pageSize) {
+        if (hid == 0) {
+            return moduleCoreService.getAuthLevel(uid, CoreConfig.AUTH_DATA_HOSPITAL, pageNum, pageSize);
+        } else if (hid == -1) {
+            Map<String, String> map = moduleCoreService.getAuthData(String.valueOf(uid));
+            return moduleCoreService.getOidByOid(map.get(CoreConfig.AUTH_DATA_DEPARTMENT), pageNum, pageSize);
+        } else {
+            return moduleCoreService.getOidByHid(String.valueOf(hid), pageNum, pageSize);
+        }
+    }
+
+
     /*
-    to对象转Vo
-     */
+        to对象转Vo
+         */
     private void addToDeviceVo(DeviceVo deviceVo, Object obj, Class<?> toType) {
-        if(obj == null) return;
+        if (obj == null) return;
         ClassMapBuilder<?, DeviceVo> temp = mapperFactory.classMap(toType, DeviceVo.class);
-        if(obj instanceof LockTo){
+        if (obj instanceof LockTo) {
             temp.fieldMap("lastRefresh").converter("dateConvert").add();
             temp.fieldMap("lockStatus").converter("lockStatusConvert").add();
             temp.fieldMap("electric").converter("electricConvert").add();
             temp.fieldMap("batteryStat", "battery").add();
-        }else if(obj instanceof PayInfoTo){
+        } else if (obj instanceof PayInfoTo) {
             temp.fieldMap("orderType").converter("orderTypeConvert").add();
             temp.fieldMap("payTime").converter("timestampConvert").add();
             temp.fieldMap("endTime").converter("timestampConvert").add();

@@ -3,8 +3,10 @@ package com.mujugroup.core.service;
 
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.objeck.vo.SelectVo;
+
 
 import java.util.List;
 import java.util.Map;
@@ -35,4 +37,7 @@ public interface FeignService {
 
     //;获取激活设备的did
     List<InfoTo> getActivateInfoTo();
+
+    PageInfo<SelectVo> getOidByHid(String hid, int pageNum, int pageSize);
+    PageInfo<SelectVo> getOidByOid(String oid, int pageNum, int pageSize);
 }

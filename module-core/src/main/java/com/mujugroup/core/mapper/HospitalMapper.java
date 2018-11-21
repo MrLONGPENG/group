@@ -165,7 +165,7 @@ public interface HospitalMapper {
 
 
     @ResultMap(value = "hospitalList")
-    @Select("SELECT DISTINCT IFNULL(h.id,-1),h.name FROM t_auth_data a LEFT JOIN t_hospital h ON (a.type = 0)" +
+    @Select("SELECT DISTINCT IFNULL(h.id,-1) as `id`,h.name FROM t_auth_data a LEFT JOIN t_hospital h ON (a.type = 0)" +
             " OR (a.type = 1 AND a.rid = h.agentId) OR (a.type = 2 AND a.rid = h.id) WHERE a.uid = #{uid}")
     List<SelectVo> getHidByUid(@Param(value = "uid")Integer uid);
 }

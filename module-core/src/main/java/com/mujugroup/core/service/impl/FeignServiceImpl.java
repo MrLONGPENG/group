@@ -8,9 +8,12 @@ import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
+
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.HospitalBo;
+
 import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.*;
 import org.slf4j.Logger;
@@ -108,6 +111,27 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
+    public PageInfo<SelectVo> getOidByOid(String oid, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<SelectVo> list = departmentService.getOidByOid(oid);
+        return PageInfo.of(list);
+    }
+
+    @Override
+    public PageInfo<SelectVo> getOidByHid(String hid, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<DBMap> list = departmentService.findOidByHid(hid);
+        List<SelectVo> selectToList = new ArrayList<>();
+        for (DBMap dbMap : list) {
+            SelectVo selectVo = new SelectVo();
+            selectVo.setId(Integer.parseInt(dbMap.getKey()));
+            selectVo.setName(dbMap.getValue());
+            selectToList.add(selectVo);
+        }
+        return PageInfo.of(selectToList);
+    }
+
+    @Override
     public PageInfo<SelectVo> getAuthLevel(AuthVo authVo) {
         List<SelectVo> list;
         PageHelper.startPage(authVo.getPageNum(), authVo.getPageSize());
@@ -131,5 +155,6 @@ public class FeignServiceImpl implements FeignService {
     public List<InfoTo> getActivateInfoTo() {
         return deviceService.getActivateInfoTo();
     }
+
 }
 

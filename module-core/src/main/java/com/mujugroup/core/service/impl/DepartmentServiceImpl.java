@@ -121,6 +121,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.getOidByUid(uid);
     }
 
+    @Override
+    public List<SelectVo> getOidByOid(String oid) {
+        return departmentMapper.getOidByOid(oid);
+    }
+
     @Autowired
     public DepartmentServiceImpl(DepartmentMapper departmentMapper, MapperFactory mapperFactory, HospitalMapper hospitalMapper, AuthDataService authDataService, HospitalService hospitalService, DeviceMapper deviceMapper) {
         this.departmentMapper = departmentMapper;

@@ -1,15 +1,16 @@
 package com.mujugroup.data.service.feign;
 
 
+import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
+import com.lveqia.cloud.common.objeck.vo.AuthVo;
+
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.data.service.feign.error.ModuleCoreServiceError;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -98,4 +99,13 @@ public interface ModuleCoreService {
     @RequestMapping(value = "/feign/getDeviceInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     InfoTo getDeviceInfo(@RequestParam(value = "did") String did, @RequestParam(value = "bid") String bid);
 
+    @RequestMapping(value = "/feign/getAuthLevel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    PageInfo<SelectVo> getAuthLevel(@RequestParam(value = "uid") int uid, @RequestParam(value = "level") String level
+            , @RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize);
+
+    @RequestMapping(value = "/feign/getOidByHid", method = RequestMethod.POST)
+    PageInfo<SelectVo> getOidByHid(@RequestParam(value = "hid") String hid, @RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize);
+
+    @RequestMapping(value = "/feign/getOidByOid", method = RequestMethod.POST)
+    PageInfo<SelectVo> getOidByOid(@RequestParam(value = "oid") String oid, @RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize);
 }
