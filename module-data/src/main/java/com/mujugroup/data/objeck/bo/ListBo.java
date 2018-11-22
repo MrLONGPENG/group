@@ -24,10 +24,10 @@ public class ListBo implements Serializable {
 
     @MergeField(feign = ModuleWxService.class, method = "getUsageCount"
             , isValueNeedMerge = true, defaultValue = Constant.DIGIT_ZERO)
-    private String UsageCount;
+    private String usageCount;
 
     // 今日使用率
-    private String UsageRate;
+    private String usageRate;
 
     public ListBo(int type, int id, String name) {
         this.id = id;
@@ -36,10 +36,10 @@ public class ListBo implements Serializable {
         if (type == 0) {
             if (id == -1) this.name = "其他科室";
             this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, timeStamp);
-            this.UsageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
+            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
         } else {
             this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, timeStamp);
-            this.UsageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
+            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
         }
     }
 }
