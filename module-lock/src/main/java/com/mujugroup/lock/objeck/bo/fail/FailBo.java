@@ -25,6 +25,9 @@ public class FailBo implements Serializable {
     @MergeField(feign = ModuleCoreService.class, method = "getDepartmentById"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
     private String oid;
+    @MergeField(feign = ModuleCoreService.class, method = "getHospitalById"
+            , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)
+    private String hid;
 
     @MergeField(feign = ModuleCoreService.class, method = "getBedInfoByDid"
             , isValueNeedMerge = true, defaultValue = Constant.STRING_UNKNOWN)

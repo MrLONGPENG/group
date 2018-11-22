@@ -16,6 +16,7 @@ public class FailVo implements Serializable {
     private String electric;
     private String lastRefresh;
     private String department;
+    private String hospital;
     private String bed;
     private String endTime;
     //故障解决状态

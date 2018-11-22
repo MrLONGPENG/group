@@ -29,6 +29,12 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     }
 
     @Override
+    public Map<String, String> getHospitalById(String param) {
+        logger.warn("data->remote core fail, method:getHospitalById param:{}", param);
+        return EMPTY_MAP;
+    }
+
+    @Override
     public Map<String, String> getBedInfoByDid(String param) {
         logger.warn("data->remote core fail, method:getBedInfoByDid param:{}", param);
         return EMPTY_MAP;

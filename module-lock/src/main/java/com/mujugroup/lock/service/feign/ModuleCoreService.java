@@ -27,6 +27,11 @@ public interface ModuleCoreService {
     @RequestMapping(value = "/merge/getDepartmentById", method = RequestMethod.POST)
     Map<String, String> getDepartmentById(@RequestParam(value = "param") String param);
 
+    /**
+     * 根据HID获取医院名字
+     */
+    @RequestMapping(value = "/merge/getHospitalById", method = RequestMethod.POST)
+    Map<String, String> getHospitalById(@RequestParam(value = "param") String param);
 
     /**
      * 根据DID获取床位信息

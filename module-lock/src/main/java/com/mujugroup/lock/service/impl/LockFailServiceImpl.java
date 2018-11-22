@@ -80,6 +80,7 @@ public class LockFailServiceImpl implements LockFailService {
     public List<FailVo> toFailVo(List<FailBo> list) {
         mapperFactory.classMap(FailBo.class, FailVo.class)
                 .field("oid", "department")
+                .field("hid", "hospital")
                 .field("bed", "bed")
                 .fieldMap("status").converter("statusTypeConvert").add()
                 .fieldMap("electric").converter("electricConvert").add()
