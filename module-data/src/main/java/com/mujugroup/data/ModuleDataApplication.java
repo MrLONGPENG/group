@@ -115,6 +115,20 @@ public class ModuleDataApplication {
                         return "未充电".equals(source) ? 0 : 1;
                     }
                 });
+        defaultMapperFactory.getConverterFactory().registerConverter("dateConvertStr"
+                , new BidirectionalConverter<String, String>() {
+
+                    @Override
+                    public String convertTo(String source, Type<String> destinationType) {
+                        if (Constant.DIGIT_ZERO.equals(source)) return "无订单信息";
+                        return DateUtil.timestampToString(Long.parseLong(source), DateUtil.TYPE_CHINESE_FORMAT);
+                    }
+
+                    @Override
+                    public String convertFrom(String source, Type<String> destinationType) {
+                        return null;
+                    }
+                });
         return defaultMapperFactory;
     }
 

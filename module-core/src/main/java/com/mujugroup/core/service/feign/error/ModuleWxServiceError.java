@@ -36,6 +36,12 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
+    public Map<String, String> getOrderEndTimeByDid(String param) {
+        logger.debug("Remote call module-wx-getOrderEndTimeByDid[{}] failure", param);
+        return new HashMap<>();
+    }
+
+    @Override
     public int getCountByUsingDid(String did, long time) {
         return 1;
     }

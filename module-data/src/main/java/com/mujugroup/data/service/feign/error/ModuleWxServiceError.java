@@ -19,38 +19,44 @@ public class ModuleWxServiceError implements ModuleWxService {
 
     @Override
     public Map<String, String> getUserCount(String param) {
-        logger.warn("data->remote wx fail, method:getTotalUserCount param:{}",param);
+        logger.warn("data->remote wx fail, method:getTotalUserCount param:{}", param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getUsageCount(String param) {
-        logger.warn("data->remote wx fail, method:getUsageCount param:{}",param);
+        logger.warn("data->remote wx fail, method:getUsageCount param:{}", param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getUsageRate(String param) {
-        logger.warn("data->remote wx fail, method:getUsageRate param:{}",param);
+        logger.warn("data->remote wx fail, method:getUsageRate param:{}", param);
         return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getTotalProfit(String param) {
-        logger.warn("data->remote wx fail, method:getTotalProfit param:{}",param);
+        logger.warn("data->remote wx fail, method:getTotalProfit param:{}", param);
         return new HashMap<>();
     }
 
     @Override
     public PageTo<OrderTo> getOrderList(RequestTo aidHidOidDto) {
-        logger.warn("data->remote wx fail, method:getOrderList param:{}",aidHidOidDto);
+        logger.warn("data->remote wx fail, method:getOrderList param:{}", aidHidOidDto);
         return null;
     }
 
     @Override
-    public PayInfoTo getPayInfoByDid(String did, int orderType){
-        logger.warn("data->remote wx fail, method:getPayInfoByDid param:{}",did);
+    public PayInfoTo getPayInfoByDid(String did, int orderType) {
+        logger.warn("data->remote wx fail, method:getPayInfoByDid param:{}", did);
         return null;
+    }
+
+    @Override
+    public Map<String, String> getOrderEndTimeByDid(String param) {
+        logger.warn("data->remote wx fail, method:getOrderEndTimeByDid param:{}", param);
+        return new HashMap<>();
     }
 
 }

@@ -2,15 +2,14 @@ package com.mujugroup.data.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
-import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.*;
-import com.lveqia.cloud.common.objeck.vo.AuthVo;
-import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.data.objeck.bo.ListBo;
+import com.mujugroup.data.objeck.bo.device.InfoBo;
 import com.mujugroup.data.objeck.vo.DeviceVo;
+import com.mujugroup.data.objeck.vo.device.InfoVo;
 import com.mujugroup.data.service.DeviceService;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.service.feign.ModuleLockService;
@@ -44,28 +43,69 @@ public class DeviceServiceImpl implements DeviceService {
         DeviceVo deviceVo = new DeviceVo();
         InfoTo infoTo = moduleCoreService.getDeviceInfo(did, "");
         if (infoTo == null || infoTo.isIllegal()) throw new ParamException("该设备不存在!");
-        addToDeviceVo(deviceVo, infoTo, InfoTo.class);
+        addToVo(deviceVo, DeviceVo.class, infoTo, InfoTo.class);
 
         LockTo lockTo = moduleLockService.getLockInfo(did);
-        addToDeviceVo(deviceVo, lockTo, LockTo.class);
+        addToVo(deviceVo, DeviceVo.class, lockTo, LockTo.class);
 
         PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(did, PayInfoTo.TYPE_ALL);
-        addToDeviceVo(deviceVo, payInfoTo, PayInfoTo.class);
+        addToVo(deviceVo, DeviceVo.class, payInfoTo, PayInfoTo.class);
         return deviceVo;
     }
 
     @Override
     @MergeResult
-    public List<ListBo> getUsageRate(int hid, List<SelectVo> list) throws BaseException {
+    public List<ListBo> getUsageRate(int hid, List<SelectTo> list) throws BaseException {
         List<ListBo> listBos = new ArrayList<>();
-        for (SelectVo bo : list) {
+        for (SelectTo bo : list) {
             listBos.add(new ListBo(hid, bo.getId(), bo.getName()));
         }
         return listBos;
     }
 
     @Override
-    public PageInfo<SelectVo> getSelectVo(int uid, int hid, int pageNum, int pageSize) {
+    @MergeResult
+    public List<InfoBo> getInfoById(PageInfo<InfoTo> list) throws ParamException {
+        List<InfoBo> boList = new ArrayList<>();
+        if (list != null && list.getList() != null) {
+            for (InfoTo infoTo : list.getList()) {
+                InfoBo infoBo = new InfoBo();
+                infoBo.setDid(infoTo.getDid());
+                infoBo.setBid(infoTo.getBid());
+                infoBo.setBed(infoTo.getBed());
+                infoBo.setHospital(infoTo.getHospital());
+                infoBo.setDepartment(infoTo.getDepartment());
+                LockTo lockTo = moduleLockService.getLockInfo(infoTo.getDid());
+                infoBo.setBattery(lockTo.getBatteryStat());
+                infoBo.setLockStatus(lockTo.getLockStatus());
+                infoBo.setElectric(lockTo.getElectric());
+                infoBo.setLastRefresh(lockTo.getLastRefresh());
+                infoBo.setEndTime(infoTo.getDid());
+                boList.add(infoBo);
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<InfoVo> boToVo(List<InfoBo> infoBoList) {
+        mapperFactory.classMap(InfoBo.class, InfoVo.class)
+                .fieldMap("lastRefresh").converter("dateConvert").add()
+                .fieldMap("lockStatus").converter("lockStatusConvert").add()
+                .fieldMap("electric").converter("electricConvert").add()
+                .fieldMap("endTime").converter("dateConvertStr").add()
+                .byDefault().register();
+        return mapperFactory.getMapperFacade().mapAsList(infoBoList, InfoVo.class);
+    }
+
+
+    @Override
+    public PageInfo<InfoTo> infoVoList(String id, int pageNum, int pageSize) {
+        return moduleCoreService.getDeviceInfoListByOid(id, pageNum, pageSize);
+    }
+
+    @Override
+    public PageInfo<SelectTo> getSelectVo(int uid, int hid, int pageNum, int pageSize) {
         if (hid == 0) {
             return moduleCoreService.getAuthLevel(uid, CoreConfig.AUTH_DATA_HOSPITAL, pageNum, pageSize);
         } else if (hid == -1) {
@@ -80,9 +120,9 @@ public class DeviceServiceImpl implements DeviceService {
     /*
         to对象转Vo
          */
-    private void addToDeviceVo(DeviceVo deviceVo, Object obj, Class<?> toType) {
+    private void addToVo(Object vo, Class<?> inType, Object obj, Class<?> toType) {
         if (obj == null) return;
-        ClassMapBuilder<?, DeviceVo> temp = mapperFactory.classMap(toType, DeviceVo.class);
+        ClassMapBuilder<?, ?> temp = mapperFactory.classMap(toType, inType);
         if (obj instanceof LockTo) {
             temp.fieldMap("lastRefresh").converter("dateConvert").add();
             temp.fieldMap("lockStatus").converter("lockStatusConvert").add();
@@ -96,7 +136,8 @@ public class DeviceServiceImpl implements DeviceService {
         }
         temp.mapNulls(false); // NULL值不映射
         temp.byDefault().register();
-        mapperFactory.getMapperFacade().map(obj, deviceVo);
+        mapperFactory.getMapperFacade().map(obj, vo);
     }
+
 
 }

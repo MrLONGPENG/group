@@ -65,4 +65,6 @@ public interface ModuleWxService {
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     PayInfoTo getPayInfoByDid(@RequestParam(value = "did") String did, @RequestParam(value = "orderType") int orderType);
 
+    @RequestMapping(value = "/merge/getOrderEndTimeByDid", method = RequestMethod.POST)
+    Map<String, String> getOrderEndTimeByDid(@RequestParam(value = "param") String param);
 }

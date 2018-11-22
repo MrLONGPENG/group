@@ -28,5 +28,8 @@ public interface ModuleWxService {
             , @RequestParam(name = "kid") int kid);
 
     @RequestMapping(value = "/feign/getCountByUsingDid", method = RequestMethod.GET)
-   int  getCountByUsingDid(@RequestParam(value = "did") String did,@RequestParam(value = "time") long time);
+    int getCountByUsingDid(@RequestParam(value = "did") String did, @RequestParam(value = "time") long time);
+
+    @RequestMapping(value = "/merge/getOrderEndTimeByDid", method = RequestMethod.POST)
+    Map<String, String> getOrderEndTimeByDid(@RequestParam(value = "param") String param);
 }

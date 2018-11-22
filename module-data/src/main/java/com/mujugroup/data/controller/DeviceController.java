@@ -2,13 +2,14 @@ package com.mujugroup.data.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.BaseException;
-import com.lveqia.cloud.common.objeck.to.PageTo;
+import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.data.objeck.bo.ListBo;
 import com.mujugroup.data.objeck.vo.DeviceVo;
 import com.mujugroup.data.objeck.vo.ListVo;
+import com.mujugroup.data.objeck.vo.device.InfoVo;
 import com.mujugroup.data.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,11 +37,22 @@ public class DeviceController {
         return ResultUtil.success(deviceVo);
     }
 
-    @ApiOperation(value = "获取激活数量", notes = "获取激活数量")
+    @ApiOperation(value = "获取使用率", notes = "获取使用率")
     @RequestMapping(value = "/rate", method = RequestMethod.POST)
     public String getUsageRate(@ApiParam(hidden = true) int uid, @ModelAttribute ListVo listVo) throws BaseException {
-        PageInfo<SelectVo> selectToList = deviceService.getSelectVo(uid, listVo.getId() == null ? 0 : listVo.getId(), listVo.getPageNum(), listVo.getPageSize());
+        PageInfo<SelectTo> selectToList = deviceService.getSelectVo(uid, listVo.getId() == null ? 0 : listVo.getId(), listVo.getPageNum(), listVo.getPageSize());
         List<ListBo> list = deviceService.getUsageRate(listVo.getId() == null ? 0 : listVo.getId(), selectToList.getList());
-        return ResultUtil.success(list,selectToList);
+        return ResultUtil.success(list, selectToList);
+    }
+
+    @ApiOperation(value = "获取设备数据", notes = "获取设备数据")
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    public String getInfoByDid(@ApiParam(value = "科室ID") @RequestParam(value = "id") String id
+            , @ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum
+            , @ApiParam(value = "每页显示") @RequestParam(name = "pageSize"
+            , required = false, defaultValue = "10") int pageSize) throws ParamException {
+        PageInfo<InfoTo> pageInfo = deviceService.infoVoList(id, pageNum, pageSize);
+        List<InfoVo> list=deviceService.boToVo(deviceService.getInfoById(pageInfo));
+        return ResultUtil.success(list, pageInfo);
     }
 }

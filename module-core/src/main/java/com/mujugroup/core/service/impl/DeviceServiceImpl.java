@@ -178,6 +178,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<InfoTo> getDeviceInfoListByOid(String oid) {
+        return deviceMapper.getDeviceInfoListByOid(oid);
+    }
+
+    @Override
     @MergeResult
     public List<StatusHidBean> findGroupByHid(int aid, int hid) {
         return deviceMapper.findGroupByHid(aid, hid);

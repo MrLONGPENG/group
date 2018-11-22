@@ -3,7 +3,6 @@ package com.mujugroup.core.service;
 
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.objeck.vo.SelectVo;
 
@@ -39,5 +38,8 @@ public interface FeignService {
     List<InfoTo> getActivateInfoTo();
 
     PageInfo<SelectVo> getOidByHid(String hid, int pageNum, int pageSize);
+
     PageInfo<SelectVo> getOidByOid(String oid, int pageNum, int pageSize);
+
+    PageInfo<InfoTo> getDeviceInfoListByOid(String oid, int pageNum, int pageSize);
 }

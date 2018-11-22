@@ -3,7 +3,6 @@ package com.mujugroup.core.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.FeignService;
@@ -140,10 +139,18 @@ public class FeignController {
             , @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
         return feignService.getOidByHid(hid, pageNum, pageSize);
     }
+
     @RequestMapping(value = "/getOidByOid", method = RequestMethod.POST)
     public PageInfo<SelectVo> getOidByOid(@RequestParam(value = "oid") String oid, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum
             , @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
         return feignService.getOidByOid(oid, pageNum, pageSize);
+    }
+
+    @RequestMapping(value = "/getDeviceInfoListByOid", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PageInfo<InfoTo> getDeviceInfoListByOid(@RequestParam(value = "oid") String oid, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum
+            , @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
+        return feignService.getDeviceInfoListByOid(oid, pageNum, pageSize);
+
     }
 
 }

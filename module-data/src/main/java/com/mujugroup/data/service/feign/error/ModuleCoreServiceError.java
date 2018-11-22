@@ -3,14 +3,10 @@ package com.mujugroup.data.service.feign.error;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.objeck.to.SelectTo;
-import com.lveqia.cloud.common.objeck.vo.AuthVo;
-import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -93,17 +89,24 @@ public class ModuleCoreServiceError implements ModuleCoreService {
     }
 
     @Override
-    public PageInfo<SelectVo> getOidByOid(String oid, int pageNum, int pageSize) {
+    public PageInfo<SelectTo> getOidByOid(String oid, int pageNum, int pageSize) {
+        logger.warn("data->remote core fail, method:getOidByOid {},{},{}", oid, pageNum, pageSize);
         return null;
     }
 
     @Override
-    public PageInfo<SelectVo> getAuthLevel(int uid, String level, int pageNum, int pageSize) {
+    public PageInfo<InfoTo> getDeviceInfoListByOid(String oid, int pageNum, int pageSize) {
+        logger.warn("data->remote core fail, method:getDevcieInfoListByOid {},{},{}", oid, pageNum, pageSize);
         return null;
     }
 
     @Override
-    public PageInfo<SelectVo> getOidByHid(String hid, int pageNum, int pageSize) {
+    public PageInfo<SelectTo> getAuthLevel(int uid, String level, int pageNum, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public PageInfo<SelectTo> getOidByHid(String hid, int pageNum, int pageSize) {
         return null;
     }
 

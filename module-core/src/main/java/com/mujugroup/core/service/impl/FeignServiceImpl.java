@@ -8,7 +8,6 @@ import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.SelectTo;
 import com.lveqia.cloud.common.objeck.vo.AuthVo;
 
 import com.mujugroup.core.model.Hospital;
@@ -114,6 +113,13 @@ public class FeignServiceImpl implements FeignService {
     public PageInfo<SelectVo> getOidByOid(String oid, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<SelectVo> list = departmentService.getOidByOid(oid);
+        return PageInfo.of(list);
+    }
+
+    @Override
+    public PageInfo<InfoTo> getDeviceInfoListByOid(String oid, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<InfoTo> list = deviceService.getDeviceInfoListByOid(oid);
         return PageInfo.of(list);
     }
 

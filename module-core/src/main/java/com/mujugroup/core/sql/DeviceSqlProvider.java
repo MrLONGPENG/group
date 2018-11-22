@@ -134,9 +134,9 @@ public class DeviceSqlProvider {
         return new SQL() {{
             SELECT("*");
             FROM("t_device");
-            if (status!=0) {
-               WHERE("`status`= #{status}");
-            }else{
+            if (status != 0) {
+                WHERE("`status`= #{status}");
+            } else {
                 WHERE("`status`=14");
             }
             if (!StringUtil.isEmpty(did)) {
@@ -176,6 +176,19 @@ public class DeviceSqlProvider {
     }
 
     public String getDeviceInfoList() {
-      return getDeviceInfo(null, null);
+        return getDeviceInfo(null, null);
+    }
+
+    public String getDeviceInfoListByOid(@Param(value = "oid") String oid) {
+        return new SQL() {{
+            SELECT("d.did, d.bid, d.agentId as aid, h.id as hid, o.id as oid, d.hospitalBed as bed" +
+                    ", h.`name` as hidName , o.`name` as oidName, h.address");
+            FROM("t_device d,t_hospital h, t_department o");
+            WHERE("d.`hospitalId` = h.id AND d.`depart` = o.id AND d.`status`=14");
+            if (!StringUtil.isEmpty(oid)) {
+                AND().WHERE("d.`depart`=#{oid}");
+            }
+
+        }}.toString();
     }
 }

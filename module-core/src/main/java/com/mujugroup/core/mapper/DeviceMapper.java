@@ -161,4 +161,8 @@ public interface DeviceMapper {
     @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceInfoList")
     @ResultMap("deviceInfo")
     List<InfoTo> getDeviceInfoList();
+
+    @SelectProvider(type = DeviceSqlProvider.class, method = "getDeviceInfoListByOid")
+    @ResultMap("deviceInfo")
+    List<InfoTo> getDeviceInfoListByOid(@Param(value = "oid") String oid);
 }
