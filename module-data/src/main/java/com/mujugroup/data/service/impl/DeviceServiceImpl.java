@@ -76,10 +76,10 @@ public class DeviceServiceImpl implements DeviceService {
                 infoBo.setHospital(infoTo.getHospital());
                 infoBo.setDepartment(infoTo.getDepartment());
                 LockTo lockTo = moduleLockService.getLockInfo(infoTo.getDid());
-                infoBo.setBattery(lockTo.getBatteryStat());
-                infoBo.setLockStatus(lockTo.getLockStatus());
-                infoBo.setElectric(lockTo.getElectric());
-                infoBo.setLastRefresh(lockTo.getLastRefresh());
+                infoBo.setBattery(lockTo==null?0:lockTo.getBatteryStat());
+                infoBo.setLockStatus(lockTo==null?0:lockTo.getLockStatus());
+                infoBo.setElectric(lockTo==null?0:lockTo.getElectric());
+                infoBo.setLastRefresh(lockTo==null?new Date(0):lockTo.getLastRefresh());
                 infoBo.setEndTime(infoTo.getDid());
                 boList.add(infoBo);
             }
@@ -101,7 +101,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public PageInfo<InfoTo> infoVoList(String id, int pageNum, int pageSize) {
-        return moduleCoreService.getDeviceInfoListByOid(id, pageNum, pageSize);
+       PageInfo<InfoTo> list= moduleCoreService.getDeviceInfoListByOid(id, pageNum, pageSize);
+       return list;
     }
 
     @Override

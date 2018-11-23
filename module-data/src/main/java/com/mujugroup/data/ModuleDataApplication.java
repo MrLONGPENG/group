@@ -34,16 +34,18 @@ public class ModuleDataApplication {
     }
 
     @Bean
-    public MapperFactory getFactory(){
+    public MapperFactory getFactory() {
         DefaultMapperFactory defaultMapperFactory = new DefaultMapperFactory.Builder().build();
 
         //时间戳转时间
         defaultMapperFactory.getConverterFactory().registerConverter("dateConvert"
-                , new BidirectionalConverter<Date, String>(){
+                , new BidirectionalConverter<Date, String>() {
                     @Override
                     public String convertTo(Date source, Type<String> destinationType) {
-                        return DateUtil.dateToString(source, DateUtil.TYPE_CHINESE_FORMAT );
+                        if (source.getTime()==0) return "无此记录";
+                        return DateUtil.dateToString(source, DateUtil.TYPE_CHINESE_FORMAT);
                     }
+
                     @Override
                     public Date convertFrom(String source, Type<Date> destinationType) {
                         return DateUtil.stringToDate(source, DateUtil.TYPE_CHINESE_FORMAT);
@@ -51,29 +53,31 @@ public class ModuleDataApplication {
                 });
         //时间戳转时间
         defaultMapperFactory.getConverterFactory().registerConverter("timestampConvert"
-                , new BidirectionalConverter<Long, String>(){
+                , new BidirectionalConverter<Long, String>() {
                     @Override
                     public String convertTo(Long source, Type<String> destinationType) {
-                        return DateUtil.timestampToString(source.intValue(), DateUtil.TYPE_DATETIME_19 );
+                        return DateUtil.timestampToString(source.intValue(), DateUtil.TYPE_DATETIME_19);
                     }
+
                     @Override
                     public Long convertFrom(String source, Type<Long> destinationType) {
-                        return DateUtil.stringToDate(source, DateUtil.TYPE_DATETIME_19).getTime()/1000L;
+                        return DateUtil.stringToDate(source, DateUtil.TYPE_DATETIME_19).getTime() / 1000L;
                     }
                 });
         //价格分转元，带两位小数
         defaultMapperFactory.getConverterFactory().registerConverter("rmbPriceConvert"
-                , new BidirectionalConverter<Object,String>(){
+                , new BidirectionalConverter<Object, String>() {
                     @Override
                     public String convertTo(Object source, Type<String> destinationType) {
                         String val = Constant.DIGIT_ZERO;
-                        if(source instanceof Integer){
+                        if (source instanceof Integer) {
                             val = String.valueOf(source);
-                        }else if(source instanceof String){
-                            val = (String)source;
+                        } else if (source instanceof String) {
+                            val = (String) source;
                         }
                         return StringUtil.changeF2Y(val);
                     }
+
                     @Override
                     public Object convertFrom(String source, Type<Object> destinationType) {
                         return StringUtil.changeY2F(source);
@@ -81,11 +85,12 @@ public class ModuleDataApplication {
                 });
         // 订单类型转换
         defaultMapperFactory.getConverterFactory().registerConverter("orderTypeConvert"
-                , new BidirectionalConverter<Integer, String>(){
+                , new BidirectionalConverter<Integer, String>() {
                     @Override
                     public String convertTo(Integer source, Type<String> destinationType) {
-                        return source==1 ? "晚休": source == 2 ? "午休" :"未知";
+                        return source == 1 ? "晚休" : source == 2 ? "午休" : "未知";
                     }
+
                     @Override
                     public Integer convertFrom(String source, Type<Integer> destinationType) {
                         return "晚休".equals(source) ? 1 : "午休".equals(source) ? 2 : 0;
@@ -93,11 +98,12 @@ public class ModuleDataApplication {
                 });
         // 锁状态转换
         defaultMapperFactory.getConverterFactory().registerConverter("lockStatusConvert"
-                , new BidirectionalConverter<Integer, String>(){
+                , new BidirectionalConverter<Integer, String>() {
                     @Override
                     public String convertTo(Integer source, Type<String> destinationType) {
-                        return source==1 ? "关锁": source == 2 ? "开锁" :"未知";
+                        return source == 1 ? "关锁" : source == 2 ? "开锁" : "未知";
                     }
+
                     @Override
                     public Integer convertFrom(String source, Type<Integer> destinationType) {
                         return "关锁".equals(source) ? 1 : "开锁".equals(source) ? 2 : 0;
@@ -105,11 +111,12 @@ public class ModuleDataApplication {
                 });
         // 充电状态转换
         defaultMapperFactory.getConverterFactory().registerConverter("electricConvert"
-                , new BidirectionalConverter<Integer, String>(){
+                , new BidirectionalConverter<Integer, String>() {
                     @Override
                     public String convertTo(Integer source, Type<String> destinationType) {
-                        return source> 0 ? "充电中": "未充电";
+                        return source > 0 ? "充电中" : "未充电";
                     }
+
                     @Override
                     public Integer convertFrom(String source, Type<Integer> destinationType) {
                         return "未充电".equals(source) ? 0 : 1;
