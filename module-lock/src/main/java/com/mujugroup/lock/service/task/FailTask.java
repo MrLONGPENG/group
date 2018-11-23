@@ -44,11 +44,13 @@ public class FailTask {
     private static final int CSQ_NUM = 5;
     //界定低电量的标准值
     private static final int LOW_POWER = 20;
+    //界定充满电的标准值
+    private static final int POWER_FULL = 95;
 
     @Autowired
     public FailTask(LockFailService lockFailService, LockSwitchService lockSwitchService
             , LockRecordService lockRecordService, ModuleWxService moduleWxService
-            , ModuleCoreService moduleCoreService, StringRedisTemplate stringRedisTemplate){
+            , ModuleCoreService moduleCoreService, StringRedisTemplate stringRedisTemplate) {
         this.lockFailService = lockFailService;
         this.lockSwitchService = lockSwitchService;
         this.lockRecordService = lockRecordService;
@@ -66,7 +68,7 @@ public class FailTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(stringRedisTemplate.boundValueOps(TASK_NAME).get()!=null){
+        if (stringRedisTemplate.boundValueOps(TASK_NAME).get() != null) {
             logger.info("已经存在任务，避免重复执行->{}", new Date());
             return;
         }
@@ -82,7 +84,7 @@ public class FailTask {
         //远程获取所有激活设备集合
         List<InfoTo> infoTos = moduleCoreService.getActivateInfoTo(pageNum, pageSize);
         for (InfoTo info : infoTos) {
-            if(info.isIllegal()) return; // 未激活设备直接返回
+            if (info.isIllegal()) return; // 未激活设备直接返回
             checkFail(info);
         }
         if (infoTos.size() == pageSize) {
@@ -92,7 +94,7 @@ public class FailTask {
 
     private void checkFail(InfoTo info) {
         List<LockRecord> recordList = lockRecordService.findByDid(info.getDid(), LIMIT_COUNT);
-        if(recordList.size() == 0) return;
+        if (recordList.size() == 0) return;
         if (isOffline(recordList.get(0))) {
             addSignal(info, recordList.get(0));
             return;
@@ -108,7 +110,6 @@ public class FailTask {
 
     /**
      * 无法充电异常
-     *
      */
     private void checkPowerNoElectric(InfoTo info, List<LockRecord> list) {
         if (list.size() < 3) return;
@@ -117,12 +118,13 @@ public class FailTask {
         for (int i = 1; i < list.size(); i++) {
             if (list.get(i).getCrtTime().getTime() - list.get(i - 1).getCrtTime().getTime() < TIME_SPAN) {
                 //设备充电电流不为0且当前设备剩余电量不为百分之百(设备正在充电中)
-                if (isNoEqual(list.get(i).getElectric(),0) && isNoEqual(list.get(i).getBatteryStat(),100)) {
+                if (isNoEqual(list.get(i).getElectric(), 0) && isLess(list.get(i).getBatteryStat(), POWER_FULL)) {
                     //当前索引的设备剩余电量与最后一个设备剩余电量相同,则充电异常(无法充电)
                     hasError &= list.get(i).getBatteryStat().equals(list.get(0).getBatteryStat());
-                }else {
+                } else {
                     hasError = false;
                 }
+
             }
         }
         if (hasError) {
@@ -144,17 +146,17 @@ public class FailTask {
      */
     private void checkLockWithOrder(InfoTo info, LockRecord record) {
         //当前设备处于开锁状态
-        if (record.getLockStatus()!= null && record.getLockStatus().equals(2)) {
+        if (record.getLockStatus() != null && record.getLockStatus().equals(2)) {
             //远程获取微信端订单明细
             PayInfoTo payInfoTo = moduleWxService.getPayInfoByDid(info.getDid(), PayInfoTo.TYPE_NIGHT);
             //获得使用时间
             UptimeTo uptimeTo = getUptimeTo(info);
-            if(uptimeTo == null) return;
+            if (uptimeTo == null) return;
             long seconds = DateUtil.getTimesNoDate(record.getCrtTime());
             boolean isNoonTime = uptimeTo.isNoonTime(seconds);
             boolean isUsingTime = uptimeTo.isUsingTime(seconds);
             //当前设备使用时间不在运行时间之内
-            if(!isNoonTime && !isUsingTime){
+            if (!isNoonTime && !isUsingTime) {
                 //拥有订单明细(非使用时段开锁)
                 if (payInfoTo != null && DateUtil.getTimesMorning() < payInfoTo.getEndTime()) {
                     LockSwitch lockSwitch = lockSwitchService.getLastOpenRecord(record.getDid());
@@ -185,7 +187,7 @@ public class FailTask {
                     addNoOrderFail(info, record);
 
                 }
-            } else if(isUsingTime){  // 非午休运行时间无订单开锁
+            } else if (isUsingTime) {  // 非午休运行时间无订单开锁
                 if (payInfoTo == null || payInfoTo.getEndTime() < record.getCrtTime().getTime() / 1000) {
                     addNoOrderFail(info, record);
                 }
@@ -228,7 +230,7 @@ public class FailTask {
         for (int i = 1; i < recordList.size(); i++) {
             //如果相邻数据记录的时间差小于30分钟,且相邻数据的剩余电量的差值大于20，则认为是电量下降异常
             boolean result = (recordList.get(i).getCrtTime().getTime() - recordList.get(i - 1).getCrtTime().getTime() < TIME_SPAN)
-                    && recordList.get(i).getBatteryStat()!=null && recordList.get(i - 1).getBatteryStat()!=null
+                    && recordList.get(i).getBatteryStat() != null && recordList.get(i - 1).getBatteryStat() != null
                     && Math.abs(recordList.get(i).getBatteryStat() - recordList.get(i - 1).getBatteryStat()) > DOWN_NUM;
             hasError &= result;
         }
@@ -254,10 +256,10 @@ public class FailTask {
         for (int i = 1; i < recordList.size(); i++) {
             if (recordList.get(i).getCrtTime().getTime() - recordList.get(i - 1).getCrtTime().getTime() < TIME_SPAN) {
                 //设备信号量不为0
-                if (isNoEqual(recordList.get(i).getCsq(),0) && recordList.get(i - 1).getCsq()!= null) {
+                if (isNoEqual(recordList.get(i).getCsq(), 0) && recordList.get(i - 1).getCsq() != null) {
                     //当前索引的设备信号量与其相邻设备信号量差值大于20,则表明信号波动异常
                     hasError &= Math.abs(recordList.get(i).getCsq() - recordList.get(i - 1).getCsq()) > CSQ_NUM;
-                }else {
+                } else {
                     hasError = false;
                 }
             }
@@ -276,12 +278,11 @@ public class FailTask {
     }
 
 
-
     /**
      * 低信号
      */
     private void checkLockNoCsq(InfoTo info, LockRecord lockRecord) {
-        if (lockRecord!=null && lockRecord.getCsq()<= CSQ_NUM && lockRecord.getCsq()> 0) {
+        if (lockRecord != null && lockRecord.getCsq() <= CSQ_NUM && lockRecord.getCsq() > 0) {
             LockFail lockNoSignal = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_SIGNAL_LOW);
             if (lockNoSignal == null) {
                 lockNoSignal = new LockFail();
@@ -300,7 +301,7 @@ public class FailTask {
      * @param lockRecord
      */
     private void checkPowerLow(InfoTo info, LockRecord lockRecord) {
-        if (lockRecord.getBatteryStat()!=null && lockRecord.getBatteryStat() < LOW_POWER) {
+        if (lockRecord.getBatteryStat() != null && lockRecord.getBatteryStat() < LOW_POWER) {
             LockFail lockLowPower = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_POWER_LOW);
             if (lockLowPower == null) {
                 lockLowPower = new LockFail();
@@ -320,12 +321,12 @@ public class FailTask {
 
     //添加离线记录
     private void addSignal(InfoTo info, LockRecord lockRecord) {
-        LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(),LockFail.ErrorType.TYPE_SIGNAL_OFFLINE);
+        LockFail lockFail = lockFailService.getFailInfoByDid(info.getDid(), LockFail.ErrorType.TYPE_SIGNAL_OFFLINE);
         if (lockFail == null) {
             lockFail = new LockFail();
             lockFailService.getModel(lockFail, LockFail.ErrorType.TYPE_SIGNAL_OFFLINE, info, lockRecord);
             lockFailService.insert(lockFail);
-        }else if (isChange(info, lockFail)) {
+        } else if (isChange(info, lockFail)) {
             lockFailService.modifyModel(lockFail, info.getAid(), info.getHid(), info.getOid(), new Date());
         }
     }
@@ -335,7 +336,18 @@ public class FailTask {
      * 判断不相等，避免空指针
      */
     private boolean isNoEqual(Integer i, int j) {
-        return i!=null && i!=j;
+        return i != null && i != j;
+    }
+
+    /**
+     * 判断当前值是否小于指定值，且不为空
+     *
+     * @param j
+     * @return
+     * @pa
+     */
+    private boolean isLess(Integer i, int j) {
+        return i != null && i < j;
     }
 
     /**
