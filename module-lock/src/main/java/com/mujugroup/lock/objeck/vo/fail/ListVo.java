@@ -22,4 +22,6 @@ public class ListVo extends PageVo {
     private String lastRefreshStart;
     //查询结束时间
     private String lastRefreshEnd;
+    //异常发生原因以及解释说明
+    private String explain;
 }

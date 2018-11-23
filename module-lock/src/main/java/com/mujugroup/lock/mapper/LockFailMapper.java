@@ -73,6 +73,7 @@ public interface LockFailMapper {
             , @Result(column = "electric", property = "electric", javaType = Integer.class)
             , @Result(column = "bed", property = "bed", javaType = String.class)
             , @Result(column = "endTime", property = "endTime", javaType = String.class)
+            , @Result(column = "explain", property = "explain", javaType = String.class)
     })
     List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid, @Param(value = "flag") int flag
