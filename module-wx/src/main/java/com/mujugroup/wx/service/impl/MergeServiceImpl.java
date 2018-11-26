@@ -104,11 +104,13 @@ public class MergeServiceImpl implements MergeService {
         return hashMap;
     }
 
+
     /**
      * 根据条件获取指定时间类的使用数量
      *
      * @param param 代理商ID&医院ID&科室ID&日期字符(代理商、医院皆可使用多个查询，逗号分隔)
-     * @return key:aid&hid&oid&start&end&date value:count
+     *              日期字符串以"no"开头，不使用缓存
+     * @return key:aid&hid&oid&date value:count
      */
     @Override
     public Map<String, String> getUsageCount(String param) {
@@ -123,7 +125,12 @@ public class MergeServiceImpl implements MergeService {
                 logger.error("使用数查询接口改为按日期字符查询");
                 break;
             }
-            map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3]));
+            if(keys[3].startsWith("no")){
+                map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3].substring(2)));
+            }else{
+                map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3]));
+            }
+
         }
         return map;
     }

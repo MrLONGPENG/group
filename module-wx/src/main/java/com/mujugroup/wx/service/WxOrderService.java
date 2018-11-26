@@ -31,6 +31,8 @@ public interface WxOrderService {
 
     String getUsageCount(String aid, String hid, String oid, String date);
 
+    String getUsageCountFromDb(String aid, String hid, String oid, String date);
+
     String getUsageRate(String aid, String hid, String oid, String date);
 
     int getDailyUsage(String aid, String hid, String oid, long usage);

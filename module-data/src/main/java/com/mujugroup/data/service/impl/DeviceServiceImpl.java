@@ -2,10 +2,12 @@ package com.mujugroup.data.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.github.wxiaoqi.merge.annonation.MergeResult;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.*;
+import com.lveqia.cloud.common.util.DateUtil;
 import com.mujugroup.data.objeck.bo.ListBo;
 import com.mujugroup.data.objeck.bo.device.InfoBo;
 import com.mujugroup.data.objeck.vo.DeviceVo;
@@ -57,10 +59,31 @@ public class DeviceServiceImpl implements DeviceService {
     @MergeResult
     public List<ListBo> getUsageRate(int hid, List<SelectTo> list) throws BaseException {
         List<ListBo> listBos = new ArrayList<>();
+        Date date = new Date();
+        long time  = date.getTime()/1000L;
+        String strDate = "no"+ DateUtil.dateToString(date, DateUtil.TYPE_DATE_08);
+        if (DateUtil.getTimesNoDate(date) < Constant.TIMESTAMP_DELAY) {
+            //获取前一天的时间戳
+            strDate = "no"+ DateUtil.timestampToString(time - Constant.TIMESTAMP_DAYS_1, DateUtil.TYPE_DATE_08);
+        }
         for (SelectTo bo : list) {
-            listBos.add(new ListBo(hid, bo.getId(), bo.getName()));
+            listBos.add(new ListBo(hid, bo.getId(), bo.getName(), strDate, time));
         }
         return listBos;
+    }
+
+    /**
+     * 判断当前时间是否大于延迟时间
+     *
+     * @param date
+     * @return
+     */
+    private boolean isBefore(Date date) {
+        //获得每日延迟时间戳
+        long delayTimestamp = DateUtil.getDelayTimestamp(DateUtil.dateToString(date, DateUtil.TYPE_DATE_08));
+        long currentTimestamp = date.getTime() / 1000L;
+        return currentTimestamp > delayTimestamp;
+
     }
 
     @Override
@@ -76,10 +99,10 @@ public class DeviceServiceImpl implements DeviceService {
                 infoBo.setHospital(infoTo.getHospital());
                 infoBo.setDepartment(infoTo.getDepartment());
                 LockTo lockTo = moduleLockService.getLockInfo(infoTo.getDid());
-                infoBo.setBattery(lockTo==null?0:lockTo.getBatteryStat());
-                infoBo.setLockStatus(lockTo==null?0:lockTo.getLockStatus());
-                infoBo.setElectric(lockTo==null?0:lockTo.getElectric());
-                infoBo.setLastRefresh(lockTo==null?new Date(0):lockTo.getLastRefresh());
+                infoBo.setBattery(lockTo == null ? 0 : lockTo.getBatteryStat());
+                infoBo.setLockStatus(lockTo == null ? 0 : lockTo.getLockStatus());
+                infoBo.setElectric(lockTo == null ? 0 : lockTo.getElectric());
+                infoBo.setLastRefresh(lockTo == null ? new Date(0) : lockTo.getLastRefresh());
                 infoBo.setEndTime(infoTo.getDid());
                 boList.add(infoBo);
             }
@@ -101,8 +124,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public PageInfo<InfoTo> infoVoList(String id, int pageNum, int pageSize) {
-       PageInfo<InfoTo> list= moduleCoreService.getDeviceInfoListByOid(id, pageNum, pageSize);
-       return list;
+        PageInfo<InfoTo> list = moduleCoreService.getDeviceInfoListByOid(id, pageNum, pageSize);
+        return list;
     }
 
     @Override

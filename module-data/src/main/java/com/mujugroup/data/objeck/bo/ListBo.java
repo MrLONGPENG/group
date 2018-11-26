@@ -7,9 +7,8 @@ import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.data.service.feign.ModuleCoreService;
 import com.mujugroup.data.service.feign.ModuleWxService;
 import lombok.Data;
-
 import java.io.Serializable;
-import java.util.Date;
+
 
 @Data
 public class ListBo implements Serializable {
@@ -29,17 +28,17 @@ public class ListBo implements Serializable {
     // 今日使用率
     private String usageRate;
 
-    public ListBo(int type, int id, String name) {
+    public ListBo(int type, int id, String name, String date, long time) {
         this.id = id;
         this.name = name;
-        long timeStamp = new Date().getTime() / 1000L;
         if (type == 0) {
             if (id == -1) this.name = "其他科室";
-            this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, timeStamp);
-            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
+            this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, time);
+            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, id, Constant.DIGIT_ZERO, date);
         } else {
-            this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, timeStamp);
-            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_08));
+            this.totalActive = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, time);
+            this.usageCount = StringUtil.toLinkByAnd(Constant.DIGIT_ZERO, Constant.DIGIT_ZERO, id, date);
         }
+
     }
 }
