@@ -26,9 +26,11 @@ public class MergeServiceImpl implements MergeService {
     @Override
     public Map<String, String> getNameByUid(String param) {
         HashMap<String, String> hashMap = new HashMap<>();
-        param = param.replaceAll(Constant.SIGN_FEN_HAO, Constant.SIGN_DOU_HAO);
-        List<DBMap> list = sysUserMapper.getNameByIds(param);
-        list.forEach(dbMap -> dbMap.addTo(hashMap));
+        if(!StringUtil.isEmpty(param)){
+            param = param.replaceAll(Constant.SIGN_FEN_HAO, Constant.SIGN_DOU_HAO);
+            List<DBMap> list = sysUserMapper.getNameByIds(param);
+            list.forEach(dbMap -> dbMap.addTo(hashMap));
+        }
         return hashMap;
 
     }
