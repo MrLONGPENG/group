@@ -3,7 +3,7 @@ package com.mujugroup.wx.service;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxGoods;
-import com.mujugroup.wx.objeck.vo.GoodsVo;
+import com.mujugroup.wx.objeck.vo.goods.GoodsVo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mujugroup.wx.objeck.vo;
+package com.mujugroup.wx.objeck.vo.uptime;
 
 import java.io.Serializable;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.mujugroup.wx.service;
 
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.objeck.vo.UptimeVo;
+import com.mujugroup.wx.objeck.vo.uptime.UptimeVo;
 
 
 /**

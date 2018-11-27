@@ -1,4 +1,4 @@
-package com.mujugroup.wx.objeck.vo;
+package com.mujugroup.wx.objeck.vo.goods;
 
 
 public class GoodsItemVo {

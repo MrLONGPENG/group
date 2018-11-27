@@ -1,7 +1,6 @@
 package com.mujugroup.wx.mapper;
 
 import com.mujugroup.wx.model.WxGoods;
-import com.mujugroup.wx.objeck.vo.GoodsVo;
 import com.mujugroup.wx.sql.WxGoodsSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;

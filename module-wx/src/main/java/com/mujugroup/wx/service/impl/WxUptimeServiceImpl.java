@@ -7,7 +7,7 @@ import com.mujugroup.wx.mapper.WxRelationMapper;
 import com.mujugroup.wx.mapper.WxUptimeMapper;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.objeck.vo.UptimeVo;
+import com.mujugroup.wx.objeck.vo.uptime.UptimeVo;
 import com.mujugroup.wx.service.WxUptimeService;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author leolaurel

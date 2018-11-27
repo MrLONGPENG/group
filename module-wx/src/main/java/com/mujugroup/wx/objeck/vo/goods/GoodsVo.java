@@ -1,4 +1,4 @@
-package com.mujugroup.wx.objeck.vo;
+package com.mujugroup.wx.objeck.vo.goods;
 
 import java.io.Serializable;
 import java.util.List;

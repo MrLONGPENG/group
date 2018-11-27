@@ -5,7 +5,6 @@ import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.model.WxGoods;
-import com.mujugroup.wx.objeck.vo.GoodsVo;
 import com.mujugroup.wx.service.WxGoodsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
