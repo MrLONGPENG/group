@@ -56,6 +56,16 @@ public class AuthFilter implements Filter {
                 || uri.startsWith("/feign") || uri.startsWith("/merge")  // 内部调用放行
                 || (isSystem && !uri.startsWith("/sys"))){               // 权限模块非自己接口放行
             logger.debug("AuthFilter->allowed {}", uri);
+            if(((HttpServletResponse) response).getStatus() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR){
+                logger.error("AuthFilter->has 500 error {}", uri);
+                httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+                httpServletResponse.setContentType("application/json;charset=utf-8");
+                PrintWriter out = httpServletResponse.getWriter();
+                out.write(ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR));
+                out.flush();
+                out.close();
+                return;
+            }
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
