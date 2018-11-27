@@ -110,7 +110,7 @@ public class LockFailServiceImpl implements LockFailService {
         lockFail.setFailFlag(errorType.getFailFlag());
         lockFail.setErrorCode(errorType.getErrorCode());
         if (record == null) {
-            lockFail.setDid(Long.parseLong(info.getAid()));
+            lockFail.setDid(Long.parseLong(info.getDid()));
             lockFail.setLockId(Long.parseLong(info.getBid()));
             lockFail.setLastRefresh(new Date());
         } else {
