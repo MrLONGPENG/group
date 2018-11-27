@@ -41,6 +41,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@Nullable HttpServletRequest request, @Nullable HttpServletResponse response
             , @Nullable  FilterChain filterChain) throws ServletException, IOException {
         if(request == null || response == null || filterChain == null ) return;
+        if(response.getStatus() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            logger.error("AuthTokenFilter has 500 error");
+            return;
+        }
         if ("OPTIONS".equals(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
