@@ -148,7 +148,7 @@ public class WxOrderSqlProvider {
     public String getPayInfoByDid(@Param(value = "did") String did, @Param(value = "type") int orderType) {
         return new SQL() {{
             SELECT("r.did, r.pay_time as payTime,r.end_time as endTime, r.order_type as orderType" +
-                    ",r.pay_price as price, r.gid ,s.name,s.days ");
+                    ",r.pay_price as price, r.gid ,IFNULL(s.name,'未知')as name ,IFNULL(s.days,0) as days");
            /* FROM("t_wx_order r,t_wx_goods s");
             WHERE(" s.id=r.gid  AND  r. did = #{did} AND pay_status = 2");*/
             FROM("t_wx_order r left join t_wx_goods s on s.id=r.gid");
