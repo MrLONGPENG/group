@@ -126,7 +126,7 @@ public class MergeServiceImpl implements MergeService {
                 break;
             }
             if(keys[3].startsWith("no")){
-                map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3].substring(2)));
+                map.put(key, wxOrderService.getUsageCountFromDb(keys[0], keys[1], keys[2], keys[3].substring(2)));
             }else{
                 map.put(key, wxOrderService.getUsageCount(keys[0], keys[1], keys[2], keys[3]));
             }
