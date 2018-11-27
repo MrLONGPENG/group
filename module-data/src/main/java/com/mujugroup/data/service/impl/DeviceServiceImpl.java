@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 
-@Service(value = "deviceService")
+@Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
     private final ModuleCoreService moduleCoreService;
     private final ModuleLockService moduleLockService;

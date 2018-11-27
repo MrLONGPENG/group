@@ -221,8 +221,8 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
-    public List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType) {
-        return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType);
+    public List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType, String did) {
+        return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType, did);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<WxOrder> findList(RequestTo dto) {
         return findList(dto.getAid(), dto.getHid(), dto.getOid(), dto.getStart(), dto.getEnd()
-                , dto.getTradeNo(), dto.getOrderType());
+                , dto.getTradeNo(), dto.getOrderType(), dto.getDid());
     }
 
     /**

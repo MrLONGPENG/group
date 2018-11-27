@@ -28,12 +28,14 @@ public interface WxGoodsService {
 
     boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException;
 
-     boolean insertOrModify(int type,int noon_type, int combo_type, int key, int kid, int gid, String name, double price, int days
+    boolean modifyState(int id);
+
+    boolean insertOrModify(int type, int noon_type, int combo_type, int key, int kid, int gid, String name, double price, int days
             , int state, String explain) throws ParamException;
 
-    GoodsVo getGoodsVoList(int aid,int hid);
+    GoodsVo getGoodsVoList(int aid, int hid);
 
-    boolean add(int key, int kid,  String name, double price, int days, String explain)
+    boolean add(int key, int kid, String name, double price, int days, String explain)
             throws ParamException;
 
     //商品添加(不涉及关系表)

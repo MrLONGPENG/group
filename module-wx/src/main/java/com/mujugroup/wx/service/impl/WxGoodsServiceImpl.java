@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,12 +201,17 @@ public class WxGoodsServiceImpl implements WxGoodsService {
     }
 
     @Override
+    public boolean modifyState(int id) {
+        return wxGoodsMapper.modifyState(id);
+    }
+
+    @Override
     @Transactional
     public boolean delete(int type, int key, int kid, int gid) throws ParamException, BaseException {
         if (key == WxRelation.KEY_DEFAULT) throw new ParamException("默认数据无法删除");
         if (type < 1 || type > 4) throw new ParamException("当前只支持Type类型(1:押金 2:套餐 3:午休 4:被子)");
         List<WxGoods> list = queryList(key, kid, type);
-        if (list != null && list.size() > 0) {
+       /* if (list != null && list.size() > 0) {
             list.stream().filter(goods -> goods.getId() == gid || gid == 0)
                     .mapToInt(WxGoods::getId).forEach(wxGoodsMapper::deleteById);
             boolean isDelete;
@@ -215,6 +221,10 @@ public class WxGoodsServiceImpl implements WxGoodsService {
                 isDelete = wxRelationMapper.deleteByRid(WxRelation.TYPE_GOODS, gid);
             }
             if (isDelete) return true;
+        }*/
+        if (list != null && list.size() > 0) {
+            list.stream().filter(goods -> goods.getId() == gid || gid == 0)
+                    .mapToInt(WxGoods::getId).forEach(wxGoodsMapper::modifyState);
         }
         throw new BaseException(ResultUtil.CODE_NOT_FIND_DATA, "无数据可删除");
     }
@@ -301,9 +311,9 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         //修改自定义商品类型
         if ((noon_type == 1 && type == WxGoods.TYPE_MIDDAY)
                 || (combo_type == 1 && type == WxGoods.TYPE_NIGHT)) {
-            if (goodsList == null||goodsList.size()<=0)
+            if (goodsList == null || goodsList.size() <= 0)
                 throw new ParamException("请确认输入参数是否正确");
-            if(goodsList.stream().filter(goods->goods.getId()==gid).count()<=0){
+            if (goodsList.stream().filter(goods -> goods.getId() == gid).count() <= 0) {
                 throw new ParamException("请确认输入gid是否正确");
             }
             WxGoods model = bindModel(gid, name, type, thePrice, days, state, explain);

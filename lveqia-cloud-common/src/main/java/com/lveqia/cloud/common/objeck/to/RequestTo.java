@@ -15,6 +15,7 @@ public class RequestTo {
     private String aid;
     private String hid;
     private String oid;
+    private String did;
     private long start;
     private long end;
     private int orderType;
@@ -24,14 +25,15 @@ public class RequestTo {
     private int pageNum;
     private int pageSize;
 
-    public RequestTo(){
+    public RequestTo() {
 
     }
+
     /**
      * 不分页数据
      */
     public RequestTo(String aid, String hid, String oid, int orderType, long start, long end) {
-        this(aid, hid, oid, orderType, start, end, 1, 0 );
+        this(aid, hid, oid, orderType, start, end, 1, 0);
     }
 
 
@@ -46,4 +48,16 @@ public class RequestTo {
         this.orderType = orderType;
     }
 
+    public RequestTo(String aid, String hid, String oid, int orderType, long start, long end, int pageNum, int pageSize, String tradeNo, String did) {
+        this.aid = aid;
+        this.hid = hid;
+        this.oid = oid;
+        this.end = end;
+        this.start = start;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+        this.orderType = orderType;
+        this.tradeNo = tradeNo;
+        this.did = did;
+    }
 }

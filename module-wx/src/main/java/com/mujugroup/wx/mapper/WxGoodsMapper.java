@@ -29,6 +29,9 @@ public interface WxGoodsMapper {
     @Delete("delete from t_wx_goods where id= #{id}")
     boolean deleteById(int id);
 
+    @Update("UPDATE t_wx_goods SET `state`=-1 WHERE `id`= #{id}")
+    boolean modifyState(@Param("id") int id);
+
     @Select("SELECT * FROM t_wx_goods WHERE id = #{id}")
     @Results(id = "wxGoods", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class)

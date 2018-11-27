@@ -92,7 +92,8 @@ public class WxOrderSqlProvider {
 
     public String findList(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
             , @Param("start") long start, @Param("end") long end, @Param("tradeNo") String tradeNo
-            , @Param("orderType") int orderType) {
+            , @Param("orderType") int orderType
+            , @Param("did") String did) {
         return new SQL() {{
             SELECT("*");
             FROM("t_wx_order");
@@ -112,6 +113,7 @@ public class WxOrderSqlProvider {
             if (start != 0) AND().WHERE("pay_time >= #{start}");
             if (orderType != 0) AND().WHERE("order_type = #{orderType}");
             if (!StringUtil.isEmpty(tradeNo)) AND().WHERE("trade_no = #{tradeNo}");
+            if (!StringUtil.isEmpty(did)) AND().WHERE("`did`= #{did}");
             ORDER_BY("id desc");
         }}.toString();
     }
@@ -147,8 +149,10 @@ public class WxOrderSqlProvider {
         return new SQL() {{
             SELECT("r.did, r.pay_time as payTime,r.end_time as endTime, r.order_type as orderType" +
                     ",r.pay_price as price, r.gid ,s.name,s.days ");
-            FROM("t_wx_order r,t_wx_goods s");
-            WHERE(" s.id=r.gid  AND  r. did = #{did} AND pay_status = 2");
+           /* FROM("t_wx_order r,t_wx_goods s");
+            WHERE(" s.id=r.gid  AND  r. did = #{did} AND pay_status = 2");*/
+            FROM("t_wx_order r left join t_wx_goods s on s.id=r.gid");
+            WHERE("r. did = #{did} AND pay_status = 2");
             if (orderType != 0) {
                 AND().WHERE("r.order_type= #{type}");
             }
