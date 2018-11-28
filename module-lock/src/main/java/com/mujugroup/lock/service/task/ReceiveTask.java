@@ -1,4 +1,4 @@
-package com.mujugroup.lock.service.impl;
+package com.mujugroup.lock.service.task;
 
 
 import com.google.gson.JsonObject;
@@ -9,18 +9,18 @@ import com.mujugroup.lock.model.*;
 import com.mujugroup.lock.service.*;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
 import com.mujugroup.lock.service.feign.ModuleWxService;
-import com.mujugroup.lock.service.task.FailTask;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.metadata.ClassMapBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Service;
-
-@Service
-public class ConsumerServiceImpl implements ConsumerService {
+@Component
+public class ReceiveTask {
 
     private final LockInfoService lockInfoService;
     private final ModuleWxService moduleWxService;
@@ -31,8 +31,9 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final LockFailService lockFailService;
     private final ModuleCoreService moduleCoreService;
 
+    private final Logger logger = LoggerFactory.getLogger(ReceiveTask.class);
     @Autowired
-    public ConsumerServiceImpl(LockInfoService lockInfoService, ModuleWxService moduleWxService
+    public ReceiveTask(LockInfoService lockInfoService, ModuleWxService moduleWxService
             , LockSwitchService lockSwitchService, LockDidService lockDidService
             , LockRecordService lockRecordService, MapperFactory mapperFactory, LockFailService lockFailService, ModuleCoreService moduleCoreService) {
         this.lockInfoService = lockInfoService;
@@ -45,32 +46,35 @@ public class ConsumerServiceImpl implements ConsumerService {
         this.moduleCoreService = moduleCoreService;
     }
 
-    @Override
-    @JmsListener(destination = "record")
-    public String getInfo(String info) {
+    @Async
+    public void doReceiveData(String info) {
         try {
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();
+            if(!json.has("result")) {
+                logger.debug("{} : {}", Thread.currentThread().getName(), json);
+                return;
+            }
             LockInfo lockInfo = getLockInfo(json.getAsJsonObject("result"));
             LockDid lockDid = lockDidService.getLockDidByBid(String.valueOf(lockInfo.getLockId()));
 
             switch (json.get("msgType").getAsInt()) {
                 case 200:
                     switchLock(lockInfo, true);
-                    if(lockDid == null)  return null;
+                    if(lockDid == null)  return;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
                     break;//开关锁
                 case 201:
                     break;//定位信息上报
                 case 400:
-                    if(lockDid == null)  return null;
+                    if(lockDid == null)  return;
                     insertSwitchLockFail(lockDid.getDid(), lockInfo);// 记录开关锁机械异常
                     break;//故障信息上报
                 case 401:
                     break;//其他信息上报
                 case 1000:
                     switchLock(lockInfo, false);
-                    if(lockDid == null)  return null;
+                    if(lockDid == null)  return;
                     insertLockRecord(lockDid.getDid(), lockInfo);
                     break;//普通上报消息（普通锁）
                 case 2000:
@@ -81,7 +85,6 @@ public class ConsumerServiceImpl implements ConsumerService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     private LockInfo getLockInfo(JsonObject info) {

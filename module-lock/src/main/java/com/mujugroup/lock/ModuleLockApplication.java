@@ -8,25 +8,25 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.annotation.EnableJms;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 
-@EnableJms
+@EnableAsync
 @EnableHystrix
 @EnableSwagger2
 @EnableAceMerge
@@ -37,6 +37,8 @@ import java.util.Date;
 @EnableTransactionManagement
 //@EnableAutoConfiguration(exclude={HibernateJpaAutoConfiguration.class})
 public class ModuleLockApplication {
+
+    private final Logger logger = LoggerFactory.getLogger(ModuleLockApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(ModuleLockApplication.class, args);
@@ -154,5 +156,28 @@ public class ModuleLockApplication {
                 });
         return defaultMapperFactory;
 
+    }
+
+
+    /**
+     * 自定义异步线程池
+     */
+    @Bean
+    public AsyncTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor poolTaskExecutor = new ThreadPoolTaskExecutor();
+        poolTaskExecutor.setThreadNamePrefix("Lock-Executor");
+        poolTaskExecutor.setMaxPoolSize(10);
+        poolTaskExecutor.setCorePoolSize(10);
+        poolTaskExecutor.setQueueCapacity(1000);
+        poolTaskExecutor.setAllowCoreThreadTimeOut(true);
+        poolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        poolTaskExecutor.setRejectedExecutionHandler((r, e) -> logger.error("Lock Task size > 1000, Does nothing"));
+        // 使用预定义的异常处理类 - 使用该策略时，如果线程池队列满了丢掉这个任务并且抛出
+        // poolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        // 使用预定义的异常处理类 - 如果线程池队列满了，会直接丢掉这个任务并且不会有任何异常
+        // poolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        // 使用预定义的异常处理类 - 如果添加到线程池失败，那么主线程会自己去执行该任务，不会等待线程池中的线程去执行
+        // poolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        return poolTaskExecutor;
     }
 }
