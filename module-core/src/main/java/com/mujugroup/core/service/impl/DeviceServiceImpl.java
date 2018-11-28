@@ -109,12 +109,12 @@ public class DeviceServiceImpl implements DeviceService {
             if (lastTime != null && lastTime.getTime() / 1000 > DateUtil.getTimesMorning()) {
                 throw new ParamException("该设备当天已修改过代理商、医院或科室信息，无法再次修改");
             }
-            device.setUpdateTime(new Date());
-            device.setStatus(Device.TYPE_DELETE);
             Device entity = bindDevice(uid, model, device);
             if (getAidOid(entity.getHospitalId(), entity.getDepart()) != entity.getAgentId()) {
                 throw new ParamException("代理商与医院或科室编号有误,请重新输入");
             }
+            device.setUpdateTime(new Date());
+            device.setStatus(Device.TYPE_DELETE);
             //更新原有数据
             boolean result = deviceMapper.update(device);
             result &= deviceMapper.insert(entity);

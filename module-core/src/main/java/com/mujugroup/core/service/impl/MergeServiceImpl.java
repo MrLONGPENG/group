@@ -3,34 +3,36 @@ package com.mujugroup.core.service.impl;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
-import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.mapper.DepartmentMapper;
 import com.mujugroup.core.mapper.DeviceMapper;
 import com.mujugroup.core.mapper.HospitalMapper;
-import com.mujugroup.core.model.Agent;
 import com.mujugroup.core.model.Department;
 import com.mujugroup.core.model.Hospital;
 import com.mujugroup.core.objeck.bo.TreeBo;
+import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import com.mujugroup.core.service.MergeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("mergeService")
 public class MergeServiceImpl implements MergeService {
-    private final AgentMapper agentMapper;
+    private final AgentService agentService;
     private final DeviceMapper deviceMapper;
     private final HospitalMapper hospitalMapper;
     private final DepartmentMapper departmentMapper;
     private final AuthDataService authDataService;
     private final Logger logger = LoggerFactory.getLogger(MergeServiceImpl.class);
 
-    public MergeServiceImpl(AgentMapper agentMapper, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
+    public MergeServiceImpl(AgentService agentService, DeviceMapper deviceMapper, HospitalMapper hospitalMapper
             , DepartmentMapper departmentMapper, AuthDataService authDataService) {
-        this.agentMapper = agentMapper;
+        this.agentService = agentService;
         this.deviceMapper = deviceMapper;
         this.hospitalMapper = hospitalMapper;
         this.departmentMapper = departmentMapper;
@@ -46,7 +48,6 @@ public class MergeServiceImpl implements MergeService {
         for (Hospital hospital : list) {
             map.put(String.valueOf(hospital.getId()), hospital.getName());
         }
-        ;
         return map;
     }
 
@@ -97,8 +98,7 @@ public class MergeServiceImpl implements MergeService {
         HashMap<String, String> hashMap = new HashMap<>();
         String[] array = param.split(Constant.SIGN_FEN_HAO);
         for (String key : array) {
-            checkHasMap(hashMap, key, Optional.ofNullable(agentMapper.findById(Integer.parseInt(key)))
-                    .map(Agent::getName).orElse(null));
+            checkHasMap(hashMap, key,  agentService.getAgentName(key));
         }
         return hashMap;
     }

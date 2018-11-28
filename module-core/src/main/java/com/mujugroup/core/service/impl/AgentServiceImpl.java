@@ -6,15 +6,14 @@ import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.core.mapper.AgentMapper;
 import com.mujugroup.core.model.Agent;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.service.AgentService;
 import com.mujugroup.core.service.AuthDataService;
 import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Date;
 import java.util.List;
@@ -57,7 +56,7 @@ public class AgentServiceImpl implements AgentService {
         if (!StringUtil.isNumeric(id)) throw new ParamException("代理商编号必须为数字!");
         Agent agent = agentMapper.findById(Integer.parseInt(id));
         if (agent == null) throw new ParamException("要删除的代理商不存在,请重新选择");
-        if (exist(Integer.parseInt(id)) == true) throw new ParamException("该代理商下存在相应的医院，无法进行删除!");
+        if (exist(Integer.parseInt(id))) throw new ParamException("该代理商下存在相应的医院，无法进行删除!");
         //将当前代理商状态设置为删除状态
         agent.setEnable(Agent.TYPE_DELETE);
         return agentMapper.update(agent);
@@ -74,8 +73,7 @@ public class AgentServiceImpl implements AgentService {
         //设置代理商状态为启用
         agentVo.setEnable(1);
         Agent agent = agentVoToAgent(agentVo, AgentVo.class);
-        boolean result = agentMapper.insert(agent);
-        return result;
+        return agentMapper.insert(agent);
     }
 
     @Override
@@ -120,6 +118,13 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public String getAgentName(String aid) {
+        if(StringUtil.isEmpty(aid)) return null;
+        Agent agent = agentMapper.findById(Integer.parseInt(aid));
+        return agent!=null ? agent.getName(): null;
+    }
+
+    @Override
     public List<SelectVo> getTheAgentList() {
         return agentMapper.getTheAgentList();
     }
@@ -138,10 +143,6 @@ public class AgentServiceImpl implements AgentService {
 
     /**
      * 将VO对象转为Model
-     *
-     * @param obj
-     * @param voType
-     * @return
      */
     private Agent agentVoToAgent(Object obj, Class<?> voType) {
         mapperFactory.classMap(voType, Agent.class)

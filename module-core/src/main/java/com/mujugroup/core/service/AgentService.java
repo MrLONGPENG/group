@@ -3,9 +3,9 @@ package com.mujugroup.core.service;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.core.model.Agent;
+import com.mujugroup.core.objeck.vo.SelectVo;
 import com.mujugroup.core.objeck.vo.agent.AgentVo;
 import com.mujugroup.core.objeck.vo.agent.PutVo;
-import com.mujugroup.core.objeck.vo.SelectVo;
 
 import java.util.List;
 
@@ -34,4 +34,6 @@ public interface AgentService {
     List<Agent> findAll(String uid,String name,int enable) throws ParamException,DataException;
 
     List<SelectVo> getAidByUid(Integer uid);
+
+    String getAgentName(String aid);
 }
