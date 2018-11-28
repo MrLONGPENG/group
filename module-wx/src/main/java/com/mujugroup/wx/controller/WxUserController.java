@@ -3,6 +3,7 @@ package com.mujugroup.wx.controller;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.model.WxUser;
+import com.mujugroup.wx.objeck.vo.user.UserVo;
 import com.mujugroup.wx.service.WxUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class WxUserController {
 
     @RequestMapping(value = "/onLogin",method = RequestMethod.POST)
     public String onLogin(@RequestParam("code") String code){
-        logger.debug("onLogin: %s", code);
+        logger.debug("onLogin: {}", code);
         String sessionThirdKey = wxUserService.getWeChatSession(myConfig.getAppID(), myConfig.getSecret(),code);
         if(sessionThirdKey !=null){
             logger.info("sessionThirdKey："+ sessionThirdKey);
@@ -38,14 +39,10 @@ public class WxUserController {
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     public String onQuery(String sessionThirdKey){
-        logger.debug("onQuery：%s", sessionThirdKey);
+        logger.debug("onQuery：{}", sessionThirdKey);
         if(sessionThirdKey ==null) return ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID);
-        WxUser wxUser = wxUserService.onQuery(sessionThirdKey);
-        if(wxUser!=null) {
-            wxUser.setId(null);wxUser.setOpenId(null);
-            wxUser.setUnionId(null);wxUser.setSessionKey(null);
-            return ResultUtil.success(wxUser);
-        }
+        UserVo userVo = wxUserService.onQuery(sessionThirdKey);
+        if(userVo!=null)  return ResultUtil.success(userVo);
         return  ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 

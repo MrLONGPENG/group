@@ -2,11 +2,12 @@ package com.mujugroup.wx.service;
 
 
 import com.mujugroup.wx.model.WxUser;
+import com.mujugroup.wx.objeck.vo.user.UserVo;
 
 public interface WxUserService {
     String getWeChatSession(String appId, String secret, String code);
 
-    WxUser onQuery(String sessionThirdKey);
+    UserVo onQuery(String sessionThirdKey);
 
     WxUser onUpdate(String sessionThirdKey, String encryptedDate, String iv);
 

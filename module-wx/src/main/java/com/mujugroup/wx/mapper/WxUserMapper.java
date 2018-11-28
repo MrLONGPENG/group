@@ -1,6 +1,7 @@
 package com.mujugroup.wx.mapper;
 
 import com.mujugroup.wx.model.WxUser;
+import com.mujugroup.wx.objeck.vo.user.UserVo;
 import com.mujugroup.wx.sql.WxUserSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,12 @@ public interface WxUserMapper {
     @Select("SELECT * FROM t_wx_user WHERE open_id = #{openid}")
     @ResultMap("wxUser")
     WxUser findByOpenId(String openid);
+
+
+    @Select("SELECT u.*, IFNULL(d.deposit,0) AS price, IFNULL(d.`status`,0) AS refund FROM t_wx_user u" +
+            " LEFT JOIN t_wx_deposit d ON u.open_id = d.open_id AND d.`status` & 3" +
+            " WHERE u.open_id = #{openid} ORDER BY d.`status` LIMIT 1")
+    UserVo findUserVoByOpenId(String openid);
 
 
     @SelectProvider(type = WxUserSqlProvider.class, method = "getTotalUserCount")

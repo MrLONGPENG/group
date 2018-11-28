@@ -8,6 +8,7 @@ import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.bean.WeChatSession;
 import com.mujugroup.wx.mapper.WxUserMapper;
 import com.mujugroup.wx.model.WxUser;
+import com.mujugroup.wx.objeck.vo.user.UserVo;
 import com.mujugroup.wx.service.SessionService;
 import com.mujugroup.wx.service.WxUserService;
 import org.slf4j.Logger;
@@ -67,8 +68,8 @@ public class WxUserServiceImpl implements WxUserService {
     }
 
     @Override
-    public WxUser onQuery(String sessionThirdKey) {
-        return wxUserMapper.findByOpenId(sessionService.getOpenId(sessionThirdKey));
+    public UserVo onQuery(String sessionThirdKey) {
+        return wxUserMapper.findUserVoByOpenId(sessionService.getOpenId(sessionThirdKey));
     }
 
 
