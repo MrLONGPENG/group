@@ -83,7 +83,7 @@ public class PayApiServiceImpl implements PayApiService {
             WxGoods wxGoods = wxGoodsService.findById(s.getGid());
             if (wxGoods != null) {
                 s.setName(wxGoods.getName());
-                return !wxGoods.getPrice().equals(s.getPrice()) || wxGoods.getType().equals(s.getType());
+                return !wxGoods.getPrice().equals(s.getPrice()) || !wxGoods.getType().equals(s.getType());
             }
             return true;
         });
@@ -101,12 +101,10 @@ public class PayApiServiceImpl implements PayApiService {
             boolean isInsert = wxRecordMainService.insert(wxRecordMain);
             if (isInsert) {
                 logger.info("统一下单成功,NO:{}", orderNo);
-                WxRecordAssist wxRecordAssist;
-                for (int i = 0; i < wxRecordAssists.size(); i++) {
-                    wxRecordAssist = wxRecordAssists.get(i);
-                    wxRecordAssist.setMid(wxRecordMain.getId());
-                    wxRecordAssist.setCrtTime(wxRecordMain.getCrtTime());
-                    wxRecordAssistService.insert(wxRecordAssists.get(i));
+                for (WxRecordAssist assist : wxRecordAssists) {
+                    assist.setMid(wxRecordMain.getId());
+                    assist.setCrtTime(wxRecordMain.getCrtTime());
+                    wxRecordAssistService.insert(assist);
                 }
             }
             return map;
