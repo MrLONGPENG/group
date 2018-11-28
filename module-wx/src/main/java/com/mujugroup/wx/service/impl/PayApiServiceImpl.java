@@ -153,16 +153,18 @@ public class PayApiServiceImpl implements PayApiService {
                 wxRecordAssist.setPrice(wxGoods.getPrice());
                 list.add(wxRecordAssist);
             }
+        }else{
+            String[] strArr = strInfo.split(Constant.SIGN_AND);
+            for (String assist : strArr) {
+                String[] arrItem = assist.split(Constant.SIGN_LINE);
+                wxRecordAssist = new WxRecordAssist();
+                wxRecordAssist.setType(Integer.parseInt(arrItem[0]));
+                wxRecordAssist.setGid(Integer.parseInt(arrItem[1]));
+                wxRecordAssist.setPrice(Integer.parseInt(arrItem[2]));
+                list.add(wxRecordAssist);
+            }
         }
-        String[] strArr = strInfo.split(Constant.SIGN_AND);
-        for (int i = 0; i < strArr.length; i++) {
-            String[] arrItem = strArr[i].split(Constant.SIGN_LINE);
-            wxRecordAssist = new WxRecordAssist();
-            wxRecordAssist.setType(Integer.parseInt(arrItem[0]));
-            wxRecordAssist.setGid(Integer.parseInt(arrItem[1]));
-            wxRecordAssist.setPrice(Integer.parseInt(arrItem[2]));
-            list.add(wxRecordAssist);
-        }
+
         return list;
     }
 
