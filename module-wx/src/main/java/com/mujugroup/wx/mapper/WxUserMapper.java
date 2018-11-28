@@ -51,14 +51,12 @@ public interface WxUserMapper {
     @ResultMap("wxUser")
     List<WxUser> findListAll();
 
-    @Select("SELECT * FROM t_wx_user WHERE open_id = #{openid}")
+    @Select("SELECT * FROM t_wx_user WHERE open_id = #{openid} LIMIT 1")
     @ResultMap("wxUser")
     WxUser findByOpenId(String openid);
 
 
-    @Select("SELECT u.*, IFNULL(d.deposit,0) AS price, IFNULL(d.`status`,0) AS refund FROM t_wx_user u" +
-            " LEFT JOIN t_wx_deposit d ON u.open_id = d.open_id AND d.`status` & 3" +
-            " WHERE u.open_id = #{openid} ORDER BY d.`status` LIMIT 1")
+    @Select("SELECT phone,gender,language,country,province,city FROM t_wx_user WHERE open_id = #{openid} LIMIT 1")
     UserVo findUserVoByOpenId(String openid);
 
 

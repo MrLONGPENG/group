@@ -13,6 +13,4 @@ public class UserVo {
     private String province;
     private String city;
     private String avatarUrl;
-    private Integer price;
-    private Integer refund;
 }
