@@ -103,7 +103,7 @@ public class LockInfoSqlProvider {
                 AND().WHERE("i.lock_status = #{lockStatus}");
             }
             if (elecStatus == 1) {
-                AND().WHERE("i.electric= 1");
+                AND().WHERE("i.electric>0");
             } else if (elecStatus == 0) {
                 AND().WHERE("i.electric= 0");
             }
