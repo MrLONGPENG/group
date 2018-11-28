@@ -34,7 +34,7 @@ public class PayApiServiceImpl implements PayApiService {
     private final ModuleLockService moduleLockService;
     private final WxRecordMainService wxRecordMainService;
     private final WxRecordAssistService wxRecordAssistService;
-    private final  WxDepositService wxDepositService;
+    private final WxDepositService wxDepositService;
     private final static int UNIFIED_ORDER = 1;//统一下单
     private final static int FINISH_PAY = 2;//支付完成
 
@@ -76,14 +76,17 @@ public class PayApiServiceImpl implements PayApiService {
         }
         String orderNo = DateUtil.dateToString(DateUtil.TYPE_DATETIME_14)
                 + StringUtil.getRandomString(6, true);
-       List<WxRecordAssist> wxRecordAssists = parseAssistInfo(strInfo);
-        //如果当前有任意一个商品无法查出,即说明商品信息有误
-        boolean hasError = wxRecordAssists.stream().anyMatch(s->{
+        List<WxRecordAssist> wxRecordAssists = parseAssistInfo(strInfo);
+        //任意一个商品无法查出或商品数据无法匹配,即说明商品信息有误
+        boolean hasError = wxRecordAssists.stream().anyMatch(s -> {
             WxGoods wxGoods = wxGoodsService.findById(s.getGid());
-            if(wxGoods != null) s.setName(wxGoods.getName());
-            return  wxGoods == null || !wxGoods.getPrice().equals(s.getPrice());
+            if (wxGoods != null) {
+                s.setName(wxGoods.getName());
+                return !wxGoods.getPrice().equals(s.getPrice()) || wxGoods.getType().equals(s.getType());
+            }
+            return true;
         });
-        if (!hasError) {
+        if (hasError) {
             result.put("code", "203");
             result.put("info", "商品信息有误");
             return result;
@@ -97,7 +100,7 @@ public class PayApiServiceImpl implements PayApiService {
             boolean isInsert = wxRecordMainService.insert(wxRecordMain);
             if (isInsert) {
                 logger.info("统一下单成功,NO:{}", orderNo);
-                WxRecordAssist wxRecordAssist = new WxRecordAssist();
+                WxRecordAssist wxRecordAssist;
                 for (int i = 0; i < wxRecordAssists.size(); i++) {
                     wxRecordAssist = wxRecordAssists.get(i);
                     wxRecordAssist.setMid(wxRecordMain.getId());
@@ -129,19 +132,30 @@ public class PayApiServiceImpl implements PayApiService {
     private String[] getMainInfo(List<WxRecordAssist> wxRecordAssists) {
         int totalPrice = 0;
         StringBuffer sb = new StringBuffer();
-        for (WxRecordAssist assist :wxRecordAssists){
-            if(sb.length()!=0) sb.append(Constant.SIGN_PLUS);
-            if(assist.getType() == 1) sb.append("押金");
+        for (WxRecordAssist assist : wxRecordAssists) {
+            if (sb.length() != 0) sb.append(Constant.SIGN_PLUS);
+            if (assist.getType() == 1) sb.append("押金");
             else sb.append(assist.getName());
             totalPrice += assist.getPrice();
         }
-        return new String[]{ new String(sb), String.valueOf(totalPrice)};
+        return new String[]{new String(sb), String.valueOf(totalPrice)};
     }
 
     private List<WxRecordAssist> parseAssistInfo(String strInfo) {
-        List<WxRecordAssist> list = new ArrayList<>();
-        String[] strArr = strInfo.split(Constant.SIGN_AND);
         WxRecordAssist wxRecordAssist;
+        List<WxRecordAssist> list = new ArrayList<>();
+        //兼容旧版本
+        if (StringUtil.isNumeric(strInfo)) {
+            WxGoods wxGoods = wxGoodsService.findById(Integer.parseInt(strInfo));
+            if (wxGoods != null) {
+                wxRecordAssist = new WxRecordAssist();
+                wxRecordAssist.setType(wxGoods.getType());
+                wxRecordAssist.setGid(wxGoods.getId());
+                wxRecordAssist.setPrice(wxGoods.getPrice());
+                list.add(wxRecordAssist);
+            }
+        }
+        String[] strArr = strInfo.split(Constant.SIGN_AND);
         for (int i = 0; i < strArr.length; i++) {
             String[] arrItem = strArr[i].split(Constant.SIGN_LINE);
             wxRecordAssist = new WxRecordAssist();
@@ -161,35 +175,46 @@ public class PayApiServiceImpl implements PayApiService {
                 && MyConfig.SUCCESS.equals(map.get("result_code"))
                 && MyConfig.SUCCESS.equals(map.get("return_code"))) {
             String orderNo = map.get("out_trade_no");
+            String transactionId = map.get("transaction_id");
+            String openId = map.get("openid");
             //更新统一支付状态
             WxRecordMain wxRecordMain = wxRecordMainService.findMainRecordByNo(orderNo);
             if (wxRecordMain != null) {
-                wxRecordMain.setTransactionId(map.get("transaction_id"));
+                wxRecordMain.setTransactionId(transactionId);
                 wxRecordMain.setPayStatus(FINISH_PAY);
                 wxRecordMainService.update(wxRecordMain);
             }
-            List<WxRecordAssist> list= wxRecordMain.getAssistList();
-            for (WxRecordAssist assist :list){
-                if(assist.getType() == 1){ // 押金
+            List<WxRecordAssist> list = wxRecordMain.getAssistList();
+            if (list == null) {
+                logger.warn("此处产生了异常,要进行处理!!!");
+            }
+            for (WxRecordAssist assist : list) {
+                if (assist.getType() == 1) { // 押金
+                    WxDeposit wxDeposit = new WxDeposit();
+                    wxDeposit.setCrtTime(new Date());
+                    wxDeposit.setDeposit(assist.getPrice());
+                    wxDeposit.setGid(assist.getGid());
+                    wxDeposit.setOpenId(openId);
+                    wxDeposit.setStatus(FINISH_PAY);
+                    wxDeposit.setTradeNo(orderNo);
+                    wxDepositService.insert(wxDeposit);
 
-                }else if(assist.getType() ==2 || assist.getType() ==3){ //兼容之前的
-                    WxOrder wxOrder = new WxOrder();
+                } else if (assist.getType() == 2 || assist.getType() == 3) { //兼容旧版本
                     long payTime = System.currentTimeMillis() / 1000;
                     long endTime = endTimeCache.get(wxRecordMain.getKey(assist.getGid()));
+                    //将普通商品套餐记录到订单表中
                     //wxOrderService
-                    WxUsing wxUsing = new WxUsing();
-                    wxUsing.setOpenId(map.get("openid"));
-                    wxUsing.setDid(wxOrder.getDid());
-                    wxUsing.setPayCost(wxOrder.getPayPrice());
-                    wxUsing.setPayTime(payTime);
-                    wxUsing.setEndTime(endTime);
-                    wxUsing.setUsing("2".equals(moduleLockService.getStatus(String.valueOf(wxOrder.getDid()))));
+                    WxOrder wxOrder = bindWxOrder(wxRecordMain.getDid(), openId, wxRecordMain.getAid(), wxRecordMain.getHid()
+                            , wxRecordMain.getOid(), orderNo, FINISH_PAY, assist.getType(), payTime, endTime
+                            , assist.getGid(), assist.getPrice(), transactionId);
+                    wxOrderService.insert(wxOrder);
+                    WxUsing wxUsing = bindWxUsing(openId, wxOrder.getDid(), wxOrder.getPayPrice(), payTime, endTime
+                            , "2".equals(moduleLockService.getStatus(String.valueOf(wxOrder.getDid()))));
                     wxUsingService.insert(wxUsing);
                     usingApiService.thirdUnlock(String.valueOf(wxOrder.getDid()));
-                }else{
+                } else {
                     logger.warn("不支持类型:{}, 待处理", assist.getType());
                 }
-
             }
 
         } else {
@@ -237,7 +262,7 @@ public class PayApiServiceImpl implements PayApiService {
         return null;
     }
 
-    private WxRecordMain bindRecordMain(String did, String openId, String aid , String hid, String oid
+    private WxRecordMain bindRecordMain(String did, String openId, String aid, String hid, String oid
             , String orderNo, String totalPrice) {
         WxRecordMain wxRecordMain = new WxRecordMain();
         wxRecordMain.setOpenId(openId);
@@ -255,12 +280,35 @@ public class PayApiServiceImpl implements PayApiService {
         return wxRecordMain;
     }
 
-    private WxRecordAssist bindRecordAssist(WxRecordAssist wxRecordAssist, Long mid, Integer gid, Integer price, Integer type) {
-        wxRecordAssist.setMid(mid);
-        wxRecordAssist.setGid(gid);
-        wxRecordAssist.setPrice(price);
-        wxRecordAssist.setType(type);
-        wxRecordAssist.setCrtTime(new Date());
-        return wxRecordAssist;
+    private WxOrder bindWxOrder(Long did, String openId, Integer aid, Integer hid, Integer oid, String orderNo
+            , Integer payStatus, Integer orderType, long payTime, long endTime, Integer gid, Integer price
+            , String transactionId) {
+        WxOrder wxOrder = new WxOrder();
+        wxOrder.setDid(did);
+        wxOrder.setAid(aid);
+        wxOrder.setHid(hid);
+        wxOrder.setOid(oid);
+        wxOrder.setOpenId(openId);
+        wxOrder.setPayStatus(payStatus);
+        wxOrder.setPayTime(payTime);
+        wxOrder.setEndTime(endTime);
+        wxOrder.setGid(gid);
+        wxOrder.setOrderType(orderType);
+        wxOrder.setPayPrice(price);
+        wxOrder.setTradeNo(orderNo);
+        wxOrder.setTransactionId(transactionId);
+        wxOrder.setCrtTime(new Date());
+        return wxOrder;
+    }
+
+    private WxUsing bindWxUsing(String openId, Long did, Integer price, long payTime, long endTime, boolean isUsing) {
+        WxUsing wxUsing = new WxUsing();
+        wxUsing.setOpenId(openId);
+        wxUsing.setDid(did);
+        wxUsing.setPayCost(price);
+        wxUsing.setPayTime(payTime);
+        wxUsing.setEndTime(endTime);
+        wxUsing.setUsing(isUsing);
+        return wxUsing;
     }
 }

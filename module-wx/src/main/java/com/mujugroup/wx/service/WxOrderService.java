@@ -19,6 +19,8 @@ public interface WxOrderService {
 
     void update(WxOrder wxOrder);
 
+    void insert(WxOrder wxOrder);
+
     List<WxOrder> listSelfOrder(String sessionThirdKey);
 
     OrderBean details(String sessionThirdKey, String tradeNo);

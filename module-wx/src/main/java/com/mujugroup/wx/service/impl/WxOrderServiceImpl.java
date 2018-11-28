@@ -85,6 +85,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
+    public void insert(WxOrder wxOrder) {
+        wxOrderMapper.insert(wxOrder);
+    }
+
+    @Override
     public List<WxOrder> listSelfOrder(String sessionThirdKey) {
         String openId = sessionService.getOpenId(sessionThirdKey);
         return wxOrderMapper.findListBySelf(openId, WxOrder.TYPE_PAY_SUCCESS);

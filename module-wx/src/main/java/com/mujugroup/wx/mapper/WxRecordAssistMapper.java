@@ -43,7 +43,7 @@ public interface WxRecordAssistMapper {
     @ResultMap("wxRecordAssist")
     List<WxRecordAssist> findListAll();
 
-    @Select("Select * from t_wx_record_assist where mid= #{id}")
+    @Select("Select * from t_wx_record_assist where `mid` = #{id}")
     List<WxRecordAssist> getListByMid(@Param(value = "id") long id);
 
 }
