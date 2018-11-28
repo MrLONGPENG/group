@@ -220,7 +220,7 @@ CREATE TABLE `t_wx_record_main` (
   `total_price` INT(11) DEFAULT NULL COMMENT '支付总金额',
   `refund_count` INT(11) DEFAULT NULL COMMENT '退款次数',
   `refund_price` INT(11) DEFAULT NULL COMMENT '退款总金额',
-  `pay_status` TINYINT(4) DEFAULT NULL COMMENT '实际支付状态 1.统一下单 2.支付完成',
+  `pay_status` TINYINT(4) DEFAULT NULL COMMENT '实际支付状态 1.统一下单 2.支付完成 3.支付异常',
   `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `index_union` (`aid`,`hid`,`oid`) USING BTREE,
