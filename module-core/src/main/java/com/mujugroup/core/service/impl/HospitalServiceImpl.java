@@ -125,33 +125,26 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public boolean remove(int uid, String hid) throws ParamException, DataException {
+        Hospital model = hospitalMapper.findById(Integer.parseInt(hid));
+        if (model == null) throw new ParamException("要删除的医院不存在,请重新选择");
         Map<String, String> map = authDataService.getAuthDataByUid(uid);
         //判断当前用户有无数据权限
-        if (map.size() == 0) throw new DataException("当前用户没有数据权限,请联系管理员");
+        if (map.size() == 0) throw new DataException(DataException.NO_AUTHORITY);
         //如果当前用户没有最高数据权限只有代理商分权限
         if (!map.containsKey(CoreConfig.AUTH_DATA_ALL) && map.containsKey(CoreConfig.AUTH_DATA_AGENT)) {
             String[] strArray = map.get(CoreConfig.AUTH_DATA_AGENT).split(Constant.SIGN_DOU_HAO);
-            Hospital model = hospitalMapper.findById(Integer.parseInt(hid));
-            if (model == null) {
-                throw new ParamException("要删除的医院不存在,请重新选择");
-            } else {
-                if (Arrays.stream(strArray).noneMatch(s -> s.equals(model.getAgentId()))) {
-                    throw new DataException("当前医院所属代理商无权限,暂无法进行删除医院的操作");
-                } else {
-                    List<Department> departmentList = departmentMapper.findListByHid(hid);
-                    if (departmentList != null && departmentList.size() > 0) {
-                        throw new ParamException("该医院下存在科室,无法进行删除");
-                    } else {
-                        //变更医院的状态为删除状态
-                        model.setEnable(Hospital.TYPE_DELETE);
-                        return hospitalMapper.update(model);
-                    }
-                }
+            if (Arrays.stream(strArray).noneMatch(s -> s.equals(model.getAgentId()))) {
+                throw new DataException("当前代理商权限不匹配,无法进行删除医院的操作");
             }
-        } else if (map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
-            return hospitalMapper.deleteById(Integer.parseInt(hid));
-        } else {
-            throw new DataException("当前医院所属代理商无权限,暂无法进行添加医院的操作");
+        } else if (!map.containsKey(CoreConfig.AUTH_DATA_ALL)) {
+            throw new DataException("无代理商以上权限,无法进行删除医院的操作");
+        }
+        List<Department> departmentList = departmentMapper.findListByHid(hid);
+        if (departmentList != null && departmentList.size() > 0) {
+            throw new ParamException("该医院下存在科室,无法进行删除");
+        } else { //变更医院的状态为删除状态
+            model.setEnable(Hospital.TYPE_DELETE);
+            return hospitalMapper.update(model);
         }
     }
 
