@@ -55,8 +55,9 @@ public class WxRecordMainSqlProvider {
 
     public String getPayRecordList(@Param(value = "orderNo") String orderNo) {
         return new SQL() {{
-            SELECT("");
-            FROM("");
+            SELECT("did,aid,hid,oid,open_id AS openId,trade_no AS tradeNo,transaction_id AS transactionId,gid,price,`type`");
+            FROM("t_wx_record_main m INNER JOIN t_wx_record_assist t ON m.id=t.mid ");
+            WHERE("m.trade_no= #{orderNo}");
         }}.toString();
     }
 }

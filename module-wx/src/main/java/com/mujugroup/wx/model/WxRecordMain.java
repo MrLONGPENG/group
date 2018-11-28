@@ -1,8 +1,11 @@
 package com.mujugroup.wx.model;
 
+import com.lveqia.cloud.common.config.Constant;
 import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -18,7 +21,7 @@ public class WxRecordMain implements Serializable {
 
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_wx_record_main.id
      */
     @Id
@@ -102,7 +105,6 @@ public class WxRecordMain implements Serializable {
      */
     @Column(name = "pay_status")
     private Integer payStatus;
-
     /**
      * 创建时间
      * 表字段 : t_wx_record_main.crtTime
@@ -111,5 +113,12 @@ public class WxRecordMain implements Serializable {
     private Date crtTime;
 
 
+    private List<WxRecordAssist> assistList;
 
+    public String getKey(int gid) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getAid()).append(Constant.SIGN_AND).append(getHid()).append(Constant.SIGN_AND);
+        sb.append(getOid()).append(Constant.SIGN_AND).append(gid);
+        return new String(sb);
+    }
 }

@@ -29,8 +29,8 @@ public class Constant {
     public static final String SIGN_FEN_HAO = ";";
     /** 符号--井号（#）  */
     public static final String SIGN_NUMBER = "#";
-//    /** 符号--加号（+）  */
-//    public static final String SIGN_PLUS = "+";
+    /** 符号--加号（+）  */
+    public static final String SIGN_PLUS = "+";
 //    /** 符号--减号（-）  */
 //    public static final String SIGN_MINUS = "-";
 

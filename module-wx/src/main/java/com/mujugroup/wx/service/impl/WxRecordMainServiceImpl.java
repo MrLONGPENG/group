@@ -21,6 +21,11 @@ public class WxRecordMainServiceImpl implements WxRecordMainService {
     }
 
     @Override
+    public WxRecordMain findMainRecordByNo(String orderNo) {
+        return wxRecordMainMapper.findMainRecordByNo(orderNo);
+    }
+
+    @Override
     public boolean insert(WxRecordMain wxRecordMain) {
         return wxRecordMainMapper.insert(wxRecordMain);
     }

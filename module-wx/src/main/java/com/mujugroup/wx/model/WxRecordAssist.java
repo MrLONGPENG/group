@@ -62,5 +62,6 @@ public class WxRecordAssist implements Serializable {
     private Integer type;
 
 
+    private String name;
 
 }

@@ -8,6 +8,8 @@ import com.mujugroup.wx.model.WxRecordMain;
 public interface WxRecordMainService {
     boolean insert(WxRecordMain wxRecordMain);
 
+    WxRecordMain findMainRecordByNo(String orderNo);
+
     boolean update(WxRecordMain wxRecordMain);
 
 }
