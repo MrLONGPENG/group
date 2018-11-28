@@ -52,7 +52,8 @@ public class PayApiServiceImpl implements PayApiService {
     @Autowired
     public PayApiServiceImpl(UsingApiService usingApiService, WxUsingService wxUsingService
             , WxGoodsService wxGoodsService, WxOrderService wxOrderService
-            , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService, WxRecordAssistService wxRecordAssistService, WxDepositService wxDepositService) {
+            , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService
+            , WxRecordAssistService wxRecordAssistService, WxDepositService wxDepositService) {
         this.usingApiService = usingApiService;
         this.wxUsingService = wxUsingService;
         this.wxGoodsService = wxGoodsService;
@@ -79,15 +80,8 @@ public class PayApiServiceImpl implements PayApiService {
                 + StringUtil.getRandomString(6, true);
         List<WxRecordAssist> wxRecordAssists = parseAssistInfo(strInfo);
         //任意一个商品无法查出或商品数据无法匹配,即说明商品信息有误
-        boolean hasError = wxRecordAssists.stream().anyMatch(s -> {
-            WxGoods wxGoods = wxGoodsService.findById(s.getGid());
-            if (wxGoods != null) {
-                s.setName(wxGoods.getName());
-                return !wxGoods.getPrice().equals(s.getPrice()) || !wxGoods.getType().equals(s.getType());
-            }
-            return true;
-        });
-        if (hasError) {
+        if (wxRecordAssists.size() == 0 || wxRecordAssists.stream().anyMatch(
+                s -> s.hasError(wxGoodsService.findById(s.getGid())))) {
             result.put("code", "203");
             result.put("info", "商品信息有误");
             return result;

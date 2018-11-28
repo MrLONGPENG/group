@@ -64,4 +64,11 @@ public class WxRecordAssist implements Serializable {
 
     private String name;
 
+    public boolean hasError(WxGoods wxGoods) {
+        if (wxGoods != null) {
+            setName(wxGoods.getName());
+            return !wxGoods.getPrice().equals(getPrice()) || !wxGoods.getType().equals(getType());
+        }
+        return true;
+    }
 }
