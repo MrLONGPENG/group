@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -154,7 +155,7 @@ public class UsingApiServiceImpl implements UsingApiService {
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000, false);
         if(isMidday && wxUsing ==null){
             logger.debug("午休时间开锁，先查询午休是否免费，再查询昨天是否有支付，若有则免费开锁");
-            List<WxGoods> goodsList = wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_NIGHT, arr[2], arr[3], arr[4]);
+            List<WxGoods> goodsList = getGoodsList(true, arr);
             isFree = goodsList.stream().anyMatch(g -> g.getType() == WxGoods.TYPE_MIDDAY && g.getPrice() == 0);
             wxUsing = wxUsingService.findUsingByDid(did, DateUtil.getTimesMorning(), false);
             if(wxUsing==null && !isFree){
@@ -170,7 +171,7 @@ public class UsingApiServiceImpl implements UsingApiService {
         }
         if(wxUsing==null && !isFree) {
             unlockBean.setPayState(1);
-            unlockBean.setGoods(wxGoodsService.findListExcludeType(WxGoods.EXCLUDE_MIDDAY, arr[2], arr[3], arr[4]));
+            unlockBean.setGoods(getGoodsList(false, arr));
         }else if(!isMidday && !arr[0].equals(wxUsing.getOpenId())){
             unlockBean.setPayState(3);
             unlockBean.setInfo("该设备已被别人使用");
@@ -183,6 +184,22 @@ public class UsingApiServiceImpl implements UsingApiService {
             }
         }
         return unlockBean;
+    }
+
+    private List<WxGoods> getGoodsList(boolean isMidday, String[] arr) {
+        List<WxGoods> list = new ArrayList<>();
+        // 检查是否需要押金
+        WxDeposit wxDeposit =  wxDepositService.getFinishDeposit(arr[0]);
+        if(wxDeposit == null){
+            //list.add(wxGoodsService.findList(1, arr[2], arr[3], arr[4]).get(0));
+            list.add(wxGoodsService.getDefaultGoods(1));
+        }
+        if(isMidday){
+            list.add( wxGoodsService.findList(WxGoods.TYPE_MIDDAY, arr[2], arr[3], arr[4]).get(0));
+        }else{
+            list.addAll( wxGoodsService.findList(WxGoods.TYPE_NIGHT, arr[2], arr[3], arr[4]));
+        }
+        return list;
     }
 
     @Override

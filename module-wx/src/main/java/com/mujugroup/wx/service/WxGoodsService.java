@@ -13,8 +13,6 @@ public interface WxGoodsService {
 
     WxGoods getDefaultGoods(int type);
 
-    List<WxGoods> findListExcludeType(int type, String aid, String hid, String oid);
-
     List<WxGoods> findList(int type, String aid, String hid, String oid);
 
     List<WxGoods> findList(int type, int aid, int hid, int oid);

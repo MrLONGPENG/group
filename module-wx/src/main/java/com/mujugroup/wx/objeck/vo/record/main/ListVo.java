@@ -1,4 +1,4 @@
-package com.mujugroup.wx.objeck.vo.recordMain;
+package com.mujugroup.wx.objeck.vo.record.main;
 
 import lombok.Data;
 

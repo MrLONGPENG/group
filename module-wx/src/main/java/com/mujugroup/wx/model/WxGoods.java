@@ -13,12 +13,6 @@ import javax.persistence.*;
 @SuppressWarnings("serial")
 @Table(name = "t_wx_goods")
 public class WxGoods implements Serializable {
-
-	/*** 排除晚上类型商品 */
-	public static final int EXCLUDE_NIGHT = 2;
-	/*** 排除午休类型商品 */
-    public static final int EXCLUDE_MIDDAY = 3;
-
 	/*** 类型-晚上套餐 */
 	public static final int TYPE_NIGHT= 2;
 

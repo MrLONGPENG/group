@@ -79,19 +79,6 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         return wxGoods;
     }
 
-    /**
-     * 排除指定类型，然后依次查询押金/套餐/午休/被子 等类型
-     */
-    @Override
-    public List<WxGoods> findListExcludeType(int type, String aid, String hid, String oid) {
-        List<WxGoods> list = new ArrayList<>();
-        for (int i = 1; i < 4; i++) { //TODO 暂时处理到午休时间
-            if (i == type) continue;
-            list.addAll(findList(i, aid, hid, oid));
-        }
-        return list;
-    }
-
 
     @Override
     public List<WxGoods> findList(int type, String aid, String hid, String oid) {
@@ -111,6 +98,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     /**
      * 依次按照科室/医院/代理商/默认数据 查询
+     * @param type 商品类型(1:押金；2:套餐；3:午休 4:被子)
      */
     @Override
     public List<WxGoods> findListByXid(int[] ints, int type) {

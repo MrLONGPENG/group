@@ -1,7 +1,7 @@
 package com.mujugroup.wx.mapper;
 
 import com.mujugroup.wx.model.WxRecordMain;
-import com.mujugroup.wx.objeck.vo.recordMain.ListVo;
+import com.mujugroup.wx.objeck.vo.record.main.ListVo;
 import com.mujugroup.wx.sql.WxRecordMainSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
