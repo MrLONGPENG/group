@@ -57,7 +57,7 @@ public interface WxDepositMapper {
     WxDeposit findDepositById(@Param(value = "openId") String openId, @Param(value = "id") long id);
 
     @SelectProvider(type = WxDepositSqlProvider.class, method = "getInfoList")
-    @Results(id = "infnVo", value = {
+    @Results(id = "infoVo", value = {
             @Result(id = true, column = "id", property = "id", javaType = Long.class)
             , @Result(column = "gid", property = "gid", javaType = Integer.class)
             , @Result(column = "open_id", property = "openId", javaType = String.class)

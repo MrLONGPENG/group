@@ -39,8 +39,7 @@ public class WxDepositServiceImpl implements WxDepositService {
     @Override
     public WxDeposit getDepositInfo(String sessionThirdKey, String code) throws BaseException {
         String openId = usingApiService.parseCode(sessionThirdKey, code)[0];
-        WxDeposit wxDeposit= wxDepositMapper.getFinishDeposit(openId);
-        return wxDeposit;
+        return wxDepositMapper.getFinishDeposit(openId);
     }
 
     @Override
