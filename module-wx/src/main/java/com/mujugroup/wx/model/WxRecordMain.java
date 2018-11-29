@@ -22,6 +22,9 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 public class WxRecordMain extends WxBase {
 
+    public final static int UNIFIED_ORDER = 1;//统一下单
+    public final static int FINISH_PAY = 2;//支付完成
+    public final static int PAY_ERROR = 3;//支付异常
     /**
      * 主键
      * <p>

@@ -35,9 +35,7 @@ public class PayApiServiceImpl implements PayApiService {
     private final WxGoodsService wxGoodsService;
     private final ModuleLockService moduleLockService;
     private final WxRecordMainService wxRecordMainService;
-    private final static int UNIFIED_ORDER = 1;//统一下单
-    private final static int FINISH_PAY = 2;//支付完成
-    private final static int PAY_ERROR = 3;//支付异常
+
 
     @Value("${wx_url_notify}")
     String notifyUrl;
@@ -155,7 +153,7 @@ public class PayApiServiceImpl implements PayApiService {
             WxRecordMain wxRecordMain = wxRecordMainService.findMainRecordByNo(orderNo);
             if (wxRecordMain != null) {
                 wxRecordMain.setTransactionId(transactionId);
-                wxRecordMain.setPayStatus(FINISH_PAY);
+                wxRecordMain.setPayStatus(WxRecordMain.FINISH_PAY);
                 List<WxRecordAssist> list = wxRecordMain.getAssistList();
                 List<WxBase> wxBaseList = new ArrayList<>();
                 if (list != null) {
@@ -177,7 +175,7 @@ public class PayApiServiceImpl implements PayApiService {
                     }
                 } else {
                     logger.warn("支付完成辅表无记录,要进行处理!!!");
-                    wxRecordMain.setPayStatus(PAY_ERROR);
+                    wxRecordMain.setPayStatus(WxRecordMain.PAY_ERROR);
                 }
                 wxBaseList.add(wxRecordMain);
                 usingApiService.paymentCompleted(wxBaseList); // 统一执行事务
@@ -237,7 +235,7 @@ public class PayApiServiceImpl implements PayApiService {
         wxRecordMain.setTotalPrice(Integer.valueOf(totalPrice));
         wxRecordMain.setCrtTime(new Date());
         //设置当前支付状态为统一下单
-        wxRecordMain.setPayStatus(UNIFIED_ORDER);
+        wxRecordMain.setPayStatus(WxRecordMain.UNIFIED_ORDER);
         wxRecordMain.setRefundCount(0);
         wxRecordMain.setRefundPrice(0);
         return wxRecordMain;
@@ -251,7 +249,7 @@ public class PayApiServiceImpl implements PayApiService {
         wxOrder.setHid(hid);
         wxOrder.setOid(oid);
         wxOrder.setOpenId(openId);
-        wxOrder.setPayStatus(PayApiServiceImpl.FINISH_PAY);
+        wxOrder.setPayStatus(WxOrder.TYPE_PAY_SUCCESS);
         wxOrder.setPayTime(payTime);
         wxOrder.setEndTime(endTime);
         wxOrder.setGid(gid);
@@ -278,7 +276,7 @@ public class PayApiServiceImpl implements PayApiService {
         WxDeposit wxDeposit = new WxDeposit();
         wxDeposit.setGid(gid);
         wxDeposit.setOpenId(openId);
-        wxDeposit.setStatus(PayApiServiceImpl.FINISH_PAY);
+        wxDeposit.setStatus(WxDeposit.PAY_FINISH);
         wxDeposit.setDeposit(deposit);
         wxDeposit.setTradeNo(tradeNo);
         wxDeposit.setCrtTime(new Date());
