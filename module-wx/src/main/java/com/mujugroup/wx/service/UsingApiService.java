@@ -19,7 +19,7 @@ public interface UsingApiService {
 
     String generateCode(String openId, String did, String aid, String hid, String oid);
 
-    String[] parseCode(String sessionThirdKey, String code);
+    String[] parseCode(String sessionThirdKey, String code) throws TokenException;
 
     boolean thirdUnlock(String did);
 

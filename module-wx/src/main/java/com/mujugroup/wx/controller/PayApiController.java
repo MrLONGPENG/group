@@ -1,5 +1,6 @@
 package com.mujugroup.wx.controller;
 
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.IpUtil;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.config.MyConfig;
@@ -32,12 +33,8 @@ public class PayApiController {
     @ApiOperation(value="统一下单接口", notes="支持小程序下单")
     @RequestMapping(value = "/unifiedOrder", method = RequestMethod.POST)
     public String requestPay(HttpServletRequest request, String sessionThirdKey
-            , String did, String code, String goods){
-        logger.info("wx-requestPay");
-        Map<String, String> map =  payApiService.requestPay(sessionThirdKey,did, code, goods, IpUtil.getIpAddr(request));
-        if(map==null) return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
-        if(map.containsKey("code")) return ResultUtil.error(ResultUtil.CODE_VALIDATION_FAIL, map.get("info"));
-        return ResultUtil.success(map);
+            , String did, String code, String goods) throws BaseException {
+        return ResultUtil.success(payApiService.requestPay(sessionThirdKey, did, code, goods, IpUtil.getIpAddr(request)));
     }
 
     // 小程序支付完成回调接口

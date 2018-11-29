@@ -4,7 +4,11 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.lveqia.cloud.common.config.Constant;
+import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.exception.TokenException;
 import com.lveqia.cloud.common.util.DateUtil;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.lveqia.cloud.common.cache.ILocalCache;
 import com.mujugroup.wx.config.MyConfig;
@@ -56,25 +60,18 @@ public class PayApiServiceImpl implements PayApiService {
 
 
     @Override
-    public Map<String, String> requestPay(String sessionThirdKey, String did, String code, String strInfo, String ip) {
+    public Map<String, String> requestPay(String sessionThirdKey, String did, String code, String strInfo
+            , String ip) throws BaseException {
         logger.info("wx-requestPay-ip:" + ip);
         if (ip == null || ip.startsWith("0:")) ip = "116.62.228.47";
-        Map<String, String> result = new HashMap<>();
         String[] arr = usingApiService.parseCode(sessionThirdKey, code);
-        if (arr == null || arr.length < 5) {
-            result.put("code", "203");
-            result.put("info", "Code效验失败");
-            return result;
-        }
         String orderNo = DateUtil.dateToString(DateUtil.TYPE_DATETIME_14)
                 + StringUtil.getRandomString(6, true);
         List<WxRecordAssist> wxRecordAssists = parseAssistInfo(strInfo);
         //任意一个商品无法查出或商品数据无法匹配,即说明商品信息有误
         if (wxRecordAssists.size() == 0 || wxRecordAssists.stream().anyMatch(
                 s -> s.hasError(wxGoodsService.findById(s.getGid())))) {
-            result.put("code", "203");
-            result.put("info", "商品信息有误");
-            return result;
+            throw new ParamException(ParamException.GOODS_INFO_ERROR);
         }
         try {
             String[] mainInfo = getMainInfo(wxRecordAssists);
@@ -85,9 +82,9 @@ public class PayApiServiceImpl implements PayApiService {
                     , wxRecordAssists); // 统一事务执行
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("统一下单错误", e);
+            throw new BaseException(ResultUtil.CODE_UNKNOWN_ERROR);
         }
-        return null;
     }
 
     private Map<String, String> getParamsMap(String ip, String value, String orderNo, String[] mainInfo) {

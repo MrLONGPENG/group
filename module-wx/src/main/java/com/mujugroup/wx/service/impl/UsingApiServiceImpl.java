@@ -247,16 +247,16 @@ public class UsingApiServiceImpl implements UsingApiService {
      *  解析验证Code, 0 openId 1 did 2 aid 3 hid 4 0id
      */
     @Override
-    public String[] parseCode(String sessionThirdKey, String code) {
+    public String[] parseCode(String sessionThirdKey, String code) throws TokenException {
         String openId = sessionService.getOpenId(sessionThirdKey);
         try {
             String content = AESUtil.aesDecrypt(code, openId);
             String[] arr = (openId+ SPLIT + content).split(SPLIT);
             if(arr.length >= 4) return arr;
         } catch (Exception e) {
-            logger.warn("Parse Code error");
+           logger.warn("parseCode has error");
         }
-        return null;
+        throw new TokenException(TokenException.WX_CODE_VALIDATION_FAIL);
     }
 
     @Override
@@ -272,7 +272,6 @@ public class UsingApiServiceImpl implements UsingApiService {
     @Override
     public QueryBean query(String sessionThirdKey, String did, String code, boolean isSync) throws TokenException {
         String[] arr = parseCode(sessionThirdKey, code);
-        if (arr == null) throw new TokenException();
         QueryBean queryBean = new QueryBean();
         WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000
                 , getCount(sessionThirdKey)%3==2 || isSync);
