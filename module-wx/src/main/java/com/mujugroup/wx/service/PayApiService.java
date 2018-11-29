@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface PayApiService {
 
-    Map<String, String> requestPay(String sessionThirdKey, String did, String code, String goods,String ip)
+    Map<String, String> requestPay(String sessionThirdKey, String code, String goods,String ip)
             throws BaseException;
 
     String completePay(String notifyXml) throws Exception;

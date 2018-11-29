@@ -34,7 +34,7 @@ public class PayApiController {
     @RequestMapping(value = "/unifiedOrder", method = RequestMethod.POST)
     public String requestPay(HttpServletRequest request, String sessionThirdKey
             , String did, String code, String goods) throws BaseException {
-        return ResultUtil.success(payApiService.requestPay(sessionThirdKey, did, code, goods, IpUtil.getIpAddr(request)));
+        return ResultUtil.success(payApiService.requestPay(sessionThirdKey, code, goods, IpUtil.getIpAddr(request)));
     }
 
     // 小程序支付完成回调接口
