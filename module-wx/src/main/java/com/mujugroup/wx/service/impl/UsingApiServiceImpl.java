@@ -191,8 +191,7 @@ public class UsingApiServiceImpl implements UsingApiService {
         // 检查是否需要押金
         WxDeposit wxDeposit =  wxDepositService.getFinishDeposit(arr[0]);
         if(wxDeposit == null){
-            //list.add(wxGoodsService.findList(1, arr[2], arr[3], arr[4]).get(0));
-            list.add(wxGoodsService.getDefaultGoods(1));
+            list.add((wxGoodsService.findList(WxGoods.TYPE_DEPOSIT, arr[2], arr[3], arr[4]).get(0)));
         }
         if(isMidday){
             list.add( wxGoodsService.findList(WxGoods.TYPE_MIDDAY, arr[2], arr[3], arr[4]).get(0));

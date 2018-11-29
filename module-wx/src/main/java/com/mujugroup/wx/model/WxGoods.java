@@ -13,6 +13,10 @@ import javax.persistence.*;
 @SuppressWarnings("serial")
 @Table(name = "t_wx_goods")
 public class WxGoods implements Serializable {
+
+	/*** 类型-押金 */
+	public static final int TYPE_DEPOSIT = 1;
+
 	/*** 类型-晚上套餐 */
 	public static final int TYPE_NIGHT= 2;
 
