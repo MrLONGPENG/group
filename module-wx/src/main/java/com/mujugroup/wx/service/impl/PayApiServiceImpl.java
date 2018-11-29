@@ -76,7 +76,7 @@ public class PayApiServiceImpl implements PayApiService {
             Map<String, String> map = wxPay.unifiedOrder(getParamsMap(ip, arr[0], orderNo, mainInfo));
             map.put("out_trade_no", orderNo);
             logger.info("统一下单成功,NO:{}", orderNo);
-            wxRecordMainService.insertRecord(bindRecordMain(did, arr[0], arr[1], arr[2], arr[3], orderNo, mainInfo[1])
+            wxRecordMainService.insertRecord(bindRecordMain(did, arr[0], arr[2], arr[3], arr[4], orderNo, mainInfo[1])
                     , wxRecordAssists); // 统一事务执行
             return map;
         } catch (Exception e) {
