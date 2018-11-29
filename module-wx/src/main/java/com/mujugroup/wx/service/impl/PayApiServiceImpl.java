@@ -31,7 +31,6 @@ public class PayApiServiceImpl implements PayApiService {
     private final WxGoodsService wxGoodsService;
     private final ModuleLockService moduleLockService;
     private final WxRecordMainService wxRecordMainService;
-    private final WxRecordAssistService wxRecordAssistService;
     private final static int UNIFIED_ORDER = 1;//统一下单
     private final static int FINISH_PAY = 2;//支付完成
     private final static int PAY_ERROR = 3;//支付异常
@@ -48,13 +47,11 @@ public class PayApiServiceImpl implements PayApiService {
 
     @Autowired
     public PayApiServiceImpl(UsingApiService usingApiService, WxGoodsService wxGoodsService
-            , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService
-            , WxRecordAssistService wxRecordAssistService) {
-        this.usingApiService = usingApiService;
+            , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService) {
         this.wxGoodsService = wxGoodsService;
+        this.usingApiService = usingApiService;
         this.moduleLockService = moduleLockService;
         this.wxRecordMainService = wxRecordMainService;
-        this.wxRecordAssistService = wxRecordAssistService;
     }
 
 
@@ -83,17 +80,9 @@ public class PayApiServiceImpl implements PayApiService {
             String[] mainInfo = getMainInfo(wxRecordAssists);
             Map<String, String> map = wxPay.unifiedOrder(getParamsMap(ip, arr[0], orderNo, mainInfo));
             map.put("out_trade_no", orderNo);
-            WxRecordMain wxRecordMain = bindRecordMain(did, arr[0], arr[1], arr[2], arr[3], orderNo, mainInfo[1]);
-            //将数据记录到支付主表
-            boolean isInsert = wxRecordMainService.insert(wxRecordMain);
-            if (isInsert) {
-                logger.info("统一下单成功,NO:{}", orderNo);
-                for (WxRecordAssist assist : wxRecordAssists) {
-                    assist.setMid(wxRecordMain.getId());
-                    assist.setCrtTime(wxRecordMain.getCrtTime());
-                    wxRecordAssistService.insert(assist);
-                }
-            }
+            logger.info("统一下单成功,NO:{}", orderNo);
+            wxRecordMainService.insertRecord(bindRecordMain(did, arr[0], arr[1], arr[2], arr[3], orderNo, mainInfo[1])
+                    , wxRecordAssists); // 统一事务执行
             return map;
         } catch (Exception e) {
             e.printStackTrace();
