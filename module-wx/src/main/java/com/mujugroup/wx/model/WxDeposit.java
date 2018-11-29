@@ -20,9 +20,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 public class WxDeposit extends WxBase {
 
+    public final static int PAY_FINISH = 1;//已支付
+    public final static int REFUNDING_MONEY = 2;//退款中
+    public final static int PASS_AUDIT = 4;//审核通过
     /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_wx_deposit.id
      */
     @Id
@@ -78,7 +81,6 @@ public class WxDeposit extends WxBase {
      */
     @Column(name = "updTime")
     private Date updTime;
-
 
 
 }

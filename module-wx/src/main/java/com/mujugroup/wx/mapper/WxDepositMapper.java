@@ -1,6 +1,7 @@
 package com.mujugroup.wx.mapper;
 
 import com.mujugroup.wx.model.WxDeposit;
+import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.sql.WxDepositSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,34 @@ public interface WxDepositMapper {
     @ResultMap("wxDeposit")
     List<WxDeposit> findListAll();
 
-    @Select("SELECT * FROM t_wx_deposit  WHERE  `status`=1 AND open_id= #{openId} LIMIT 1")
+    @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
+            " WHERE  `status` &3 AND open_id= #{openId} order by `status`  LIMIT 1")
     @ResultMap("wxDeposit")
     WxDeposit getFinishDeposit(@Param(value = "openId") String openId);
+
+    @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
+            " WHERE  `status` =1  AND open_id= #{openId} AND id = #{id}")
+    @ResultMap("wxDeposit")
+    WxDeposit findDepositById(@Param(value = "openId") String openId, @Param(value = "id") long id);
+
+    @SelectProvider(type = WxDepositSqlProvider.class, method = "getInfoList")
+    @Results(id = "infnVo", value = {
+            @Result(id = true, column = "id", property = "id", javaType = Long.class)
+            , @Result(column = "gid", property = "gid", javaType = Integer.class)
+            , @Result(column = "open_id", property = "openId", javaType = String.class)
+            , @Result(column = "trade_no", property = "tradeNo", javaType = String.class)
+            , @Result(column = "deposit", property = "deposit", javaType = Integer.class)
+            , @Result(column = "status", property = "status", javaType = Integer.class)
+            , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
+            , @Result(column = "updTime", property = "updTime", javaType = Date.class)
+            , @Result(column = "phone", property = "phone", javaType = String.class)
+            , @Result(column = "nick_name", property = "nickName", javaType = String.class)
+            , @Result(column = "gender", property = "gender", javaType = Integer.class)
+            , @Result(column = "language", property = "language", javaType = String.class)
+            , @Result(column = "country", property = "country", javaType = String.class)
+            , @Result(column = "province", property = "province", javaType = String.class)
+            , @Result(column = "city", property = "city", javaType = String.class)
+            , @Result(column = "session_key", property = "sessionKey", javaType = String.class)
+    })
+    List<InfoListVo> getInfoList();
 }
