@@ -1,6 +1,8 @@
 package com.mujugroup.wx.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -11,10 +13,12 @@ import javax.persistence.*;
  * 创建人:leolaurel
  * 创建时间:20181127
  */
+
 @Data
 @SuppressWarnings("serial")
 @Table(name = "t_wx_deposit")
-public class WxDeposit implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class WxDeposit extends WxBase {
 
     /**
      * 主键

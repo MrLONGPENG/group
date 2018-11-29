@@ -28,13 +28,10 @@ public class PayApiServiceImpl implements PayApiService {
     private final WXPayConfig wxPayConfig = new MyConfig();
     private final WXPay wxPay = new WXPay(wxPayConfig);
     private final UsingApiService usingApiService;
-    private final WxUsingService wxUsingService;
-    private final WxOrderService wxOrderService;
     private final WxGoodsService wxGoodsService;
     private final ModuleLockService moduleLockService;
     private final WxRecordMainService wxRecordMainService;
     private final WxRecordAssistService wxRecordAssistService;
-    private final WxDepositService wxDepositService;
     private final static int UNIFIED_ORDER = 1;//统一下单
     private final static int FINISH_PAY = 2;//支付完成
     private final static int PAY_ERROR = 3;//支付异常
@@ -50,18 +47,14 @@ public class PayApiServiceImpl implements PayApiService {
     private ILocalCache<String, Long> endTimeCache;
 
     @Autowired
-    public PayApiServiceImpl(UsingApiService usingApiService, WxUsingService wxUsingService
-            , WxGoodsService wxGoodsService, WxOrderService wxOrderService
+    public PayApiServiceImpl(UsingApiService usingApiService, WxGoodsService wxGoodsService
             , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService
-            , WxRecordAssistService wxRecordAssistService, WxDepositService wxDepositService) {
+            , WxRecordAssistService wxRecordAssistService) {
         this.usingApiService = usingApiService;
-        this.wxUsingService = wxUsingService;
         this.wxGoodsService = wxGoodsService;
-        this.wxOrderService = wxOrderService;
         this.moduleLockService = moduleLockService;
         this.wxRecordMainService = wxRecordMainService;
         this.wxRecordAssistService = wxRecordAssistService;
-        this.wxDepositService = wxDepositService;
     }
 
 
@@ -178,24 +171,20 @@ public class PayApiServiceImpl implements PayApiService {
                 wxRecordMain.setTransactionId(transactionId);
                 wxRecordMain.setPayStatus(FINISH_PAY);
                 List<WxRecordAssist> list = wxRecordMain.getAssistList();
+                List<WxBase> wxBaseList = new ArrayList<>();
                 if (list != null) {
                     for (WxRecordAssist assist : list) {
                         if (assist.getType() == 1) { // 押金
-                            WxDeposit wxDeposit = bindWxDeposit(assist.getGid(), openId, FINISH_PAY, assist.getPrice(), orderNo);
-                            wxDepositService.insert(wxDeposit);
+                            wxBaseList.add(bindWxDeposit(assist.getGid(), openId, assist.getPrice(), orderNo));
                         } else if (assist.getType() == 2 || assist.getType() == 3) { //兼容旧版本
                             long payTime = System.currentTimeMillis() / 1000;
                             long endTime = endTimeCache.get(wxRecordMain.getKey(assist.getGid()));
                             //将普通商品套餐记录到订单表中
-                            //wxOrderService
-                            WxOrder wxOrder = bindWxOrder(wxRecordMain.getDid(), openId, wxRecordMain.getAid(), wxRecordMain.getHid()
-                                    , wxRecordMain.getOid(), orderNo, FINISH_PAY, assist.getType(), payTime, endTime
-                                    , assist.getGid(), assist.getPrice(), transactionId);
-                            wxOrderService.insert(wxOrder);
-                            WxUsing wxUsing = bindWxUsing(openId, wxOrder.getDid(), wxOrder.getPayPrice(), payTime, endTime
-                                    , "2".equals(moduleLockService.getStatus(String.valueOf(wxOrder.getDid()))));
-                            wxUsingService.insert(wxUsing);
-                            usingApiService.thirdUnlock(String.valueOf(wxOrder.getDid()));
+                            wxBaseList.add(bindWxOrder(wxRecordMain.getDid(), openId, wxRecordMain.getAid()
+                                    , wxRecordMain.getHid(), wxRecordMain.getOid(), orderNo, assist.getType()
+                                    , payTime, endTime, assist.getGid(), assist.getPrice(), transactionId));
+                            wxBaseList.add(bindWxUsing(openId, wxRecordMain.getDid(),assist.getPrice(), payTime, endTime
+                                    , "2".equals(moduleLockService.getStatus(String.valueOf(wxRecordMain.getDid())))));
                         } else {
                             logger.warn("不支持类型:{}, 待处理", assist.getType());
                         }
@@ -204,9 +193,9 @@ public class PayApiServiceImpl implements PayApiService {
                     logger.warn("支付完成辅表无记录,要进行处理!!!");
                     wxRecordMain.setPayStatus(PAY_ERROR);
                 }
-                wxRecordMainService.update(wxRecordMain);
+                wxBaseList.add(wxRecordMain);
+                usingApiService.paymentCompleted(wxBaseList); // 统一执行事务
             }
-
         } else {
             logger.warn("验证微信数据错误 result_code:{} return_code:{} out_trade_no:{}"
                     , map.get("result_code"), map.get("return_code"), map.get("out_trade_no"));
@@ -269,15 +258,14 @@ public class PayApiServiceImpl implements PayApiService {
     }
 
     private WxOrder bindWxOrder(Long did, String openId, Integer aid, Integer hid, Integer oid, String orderNo
-            , Integer payStatus, Integer orderType, long payTime, long endTime, Integer gid, Integer price
-            , String transactionId) {
+            , Integer orderType, long payTime, long endTime, Integer gid, Integer price, String transactionId) {
         WxOrder wxOrder = new WxOrder();
         wxOrder.setDid(did);
         wxOrder.setAid(aid);
         wxOrder.setHid(hid);
         wxOrder.setOid(oid);
         wxOrder.setOpenId(openId);
-        wxOrder.setPayStatus(payStatus);
+        wxOrder.setPayStatus(PayApiServiceImpl.FINISH_PAY);
         wxOrder.setPayTime(payTime);
         wxOrder.setEndTime(endTime);
         wxOrder.setGid(gid);
@@ -300,11 +288,11 @@ public class PayApiServiceImpl implements PayApiService {
         return wxUsing;
     }
 
-    private WxDeposit bindWxDeposit(Integer gid, String openId, Integer status, Integer deposit, String tradeNo) {
+    private WxDeposit bindWxDeposit(Integer gid, String openId, Integer deposit, String tradeNo) {
         WxDeposit wxDeposit = new WxDeposit();
         wxDeposit.setGid(gid);
         wxDeposit.setOpenId(openId);
-        wxDeposit.setStatus(status);
+        wxDeposit.setStatus(PayApiServiceImpl.FINISH_PAY);
         wxDeposit.setDeposit(deposit);
         wxDeposit.setTradeNo(tradeNo);
         wxDeposit.setCrtTime(new Date());

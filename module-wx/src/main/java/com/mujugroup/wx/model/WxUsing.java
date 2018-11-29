@@ -1,6 +1,9 @@
 package com.mujugroup.wx.model;
 
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.Date;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -11,9 +14,12 @@ import javax.persistence.*;
  * 创建人:LEOLAUREL
  * 创建时间:20180710
  */
+
+@Data
 @SuppressWarnings("serial")
 @Table(name = "t_wx_using")
-public class WxUsing implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class WxUsing extends WxBase {
 
     /**
      * 主键
@@ -82,77 +88,5 @@ public class WxUsing implements Serializable {
     @Column(name = "deleted")
     private Boolean deleted;
 
-
-    public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-    public Long getDid() {
-		return did;
-	}
-
-	public void setDid(Long did) {
-		this.did = did;
-	}
-
-	public String getOpenId() {
-		return openId;
-	}
-
-	public void setOpenId(String openId) {
-		this.openId = openId;
-	}
-
-    public Integer getPayCost() {
-		return payCost;
-	}
-
-	public void setPayCost(Integer payCost) {
-		this.payCost = payCost;
-	}
-
-    public Long getPayTime() {
-		return payTime;
-	}
-
-	public void setPayTime(Long payTime) {
-		this.payTime = payTime;
-	}
-
-    public Long getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Long endTime) {
-		this.endTime = endTime;
-	}
-
-    public Date getUnlockTime() {
-		return unlockTime;
-	}
-
-	public void setUnlockTime(Date unlockTime) {
-		this.unlockTime = unlockTime;
-	}
-
-    public Boolean getUsing() {
-		return using;
-	}
-
-	public void setUsing(Boolean using) {
-		this.using = using;
-	}
-
-    public Boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
 
 }

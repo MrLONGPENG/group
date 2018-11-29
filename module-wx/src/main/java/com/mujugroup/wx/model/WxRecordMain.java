@@ -2,6 +2,7 @@ package com.mujugroup.wx.model;
 
 import com.lveqia.cloud.common.config.Constant;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -14,10 +15,12 @@ import javax.persistence.*;
  * 创建人:leolaurel
  * 创建时间:20181127
  */
+
 @Data
 @SuppressWarnings("serial")
 @Table(name = "t_wx_record_main")
-public class WxRecordMain implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class WxRecordMain extends WxBase {
 
     /**
      * 主键

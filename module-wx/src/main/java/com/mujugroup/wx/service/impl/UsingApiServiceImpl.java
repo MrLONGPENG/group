@@ -12,10 +12,7 @@ import com.mujugroup.wx.bean.QueryBean;
 import com.mujugroup.wx.bean.UnlockBean;
 import com.mujugroup.wx.bean.UptimeBean;
 import com.mujugroup.wx.bean.UsingBean;
-import com.mujugroup.wx.model.WxGoods;
-import com.mujugroup.wx.model.WxRelation;
-import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.model.WxUsing;
+import com.mujugroup.wx.model.*;
 import com.mujugroup.wx.service.*;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import com.mujugroup.wx.service.feign.ModuleLockService;
@@ -26,6 +23,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -49,17 +47,24 @@ public class UsingApiServiceImpl implements UsingApiService {
     @Resource(name = "uptimeCache")
     private ILocalCache<String, WxUptime> uptimeCache;
 
+    private final WxRecordMainService wxRecordMainService;
+    private final WxDepositService wxDepositService;
+    private final WxOrderService wxOrderService;
+
     @Autowired
     public UsingApiServiceImpl(SessionService sessionService, WxUsingService wxUsingService
             , WxGoodsService wxGoodsService, RedisTemplate redisTemplate, ModuleCoreService moduleCoreService
-            , ModuleLockService moduleLockService) {
+            , ModuleLockService moduleLockService, WxRecordMainService wxRecordMainService
+            , WxDepositService wxDepositService, WxOrderService wxOrderService) {
         this.redisTemplate = redisTemplate;
         this.wxUsingService = wxUsingService;
         this.sessionService = sessionService;
         this.wxGoodsService = wxGoodsService;
         this.moduleCoreService = moduleCoreService;
         this.moduleLockService = moduleLockService;
-
+        this.wxRecordMainService = wxRecordMainService;
+        this.wxDepositService = wxDepositService;
+        this.wxOrderService = wxOrderService;
     }
 
     /**
@@ -269,6 +274,25 @@ public class UsingApiServiceImpl implements UsingApiService {
             }
         }
         return queryBean;
+    }
+
+    @Override
+    @Transactional
+    public void paymentCompleted(List<WxBase> wxBaseList) {
+        for (WxBase wxBase: wxBaseList) {
+            if(wxBase instanceof  WxRecordMain) {
+                wxRecordMainService.update((WxRecordMain) wxBase);
+            }else if(wxBase instanceof WxDeposit){
+                wxDepositService.insert((WxDeposit) wxBase);
+            }else if(wxBase instanceof WxOrder){
+                wxOrderService.insert((WxOrder) wxBase);
+            }else if(wxBase instanceof WxUsing){
+                WxUsing wxUsing = (WxUsing) wxBase;
+                wxUsingService.insert(wxUsing);
+                // 此处需要判断是否需要开锁
+                thirdUnlock(String.valueOf(wxUsing.getDid()));
+            }
+        }
     }
 
     /**

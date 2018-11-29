@@ -2,6 +2,8 @@ package com.mujugroup.wx.model;
 
 
 import com.lveqia.cloud.common.config.Constant;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -13,9 +15,12 @@ import javax.persistence.*;
  * 创建人:leolaurel
  * 创建时间:20180713
  */
+
+@Data
 @SuppressWarnings("serial")
 @Table(name = "t_wx_order")
-public class WxOrder implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class WxOrder extends WxBase {
 
 	public static final Integer TYPE_PAY_WAITING = 1;
     public static final Integer TYPE_PAY_SUCCESS = 2;
@@ -134,127 +139,6 @@ public class WxOrder implements Serializable {
     @Column(name = "crtTime")
     private Date crtTime;
 
-
-
-    public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-    public Long getDid() {
-		return did;
-	}
-
-	public void setDid(Long did) {
-		this.did = did;
-	}
-
-    public Integer getAid() {
-		return aid;
-	}
-
-	public void setAid(Integer aid) {
-		this.aid = aid;
-	}
-
-    public Integer getHid() {
-		return hid;
-	}
-
-	public void setHid(Integer hid) {
-		this.hid = hid;
-	}
-
-    public Integer getOid() {
-		return oid;
-	}
-
-	public void setOid(Integer oid) {
-		this.oid = oid;
-	}
-
-    public Integer getGid() {
-		return gid;
-	}
-
-	public void setGid(Integer gid) {
-		this.gid = gid;
-	}
-
-    public String getOpenId() {
-		return openId;
-	}
-
-	public void setOpenId(String openId) {
-		this.openId = openId;
-	}
-
-    public String getTradeNo() {
-		return tradeNo;
-	}
-
-	public void setTradeNo(String tradeNo) {
-		this.tradeNo = tradeNo;
-	}
-
-    public String getTransactionId() {
-		return transactionId;
-	}
-
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	public Integer getOrderType() {
-		return orderType;
-	}
-
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
-	}
-
-	public Integer getPayPrice() {
-		return payPrice;
-	}
-
-	public void setPayPrice(Integer payPrice) {
-		this.payPrice = payPrice;
-	}
-
-    public Integer getPayStatus() {
-		return payStatus;
-	}
-
-	public void setPayStatus(Integer payStatus) {
-		this.payStatus = payStatus;
-	}
-
-    public Long getPayTime() {
-		return payTime;
-	}
-
-	public void setPayTime(Long payTime) {
-		this.payTime = payTime;
-	}
-
-    public Long getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Long endTime) {
-		this.endTime = endTime;
-	}
-
-    public Date getCrtTime() {
-		return crtTime;
-	}
-
-	public void setCrtTime(Date crtTime) {
-		this.crtTime = crtTime;
-	}
 
 	/**
 	 * 组装订单各个ID  格式：AID&HID&OID&GID
