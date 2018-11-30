@@ -12,6 +12,8 @@ import com.mujugroup.wx.model.WxRefundRecord;
 import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.objeck.vo.deposit.PutVo;
 import com.mujugroup.wx.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,7 @@ public class WxDepositServiceImpl implements WxDepositService {
     private final WxOrderService wxOrderService;
     private final PayApiService payApiService;
     private final WxRefundRecordService wxRefundRecordService;
-
+    private final Logger logger = LoggerFactory.getLogger(WxDepositServiceImpl.class);
     @Autowired
     public WxDepositServiceImpl(WxDepositMapper wxDepositMapper, WxRecordMainService wxRecordMainService
             , SessionService sessionService, WxOrderService wxOrderService, PayApiService payApiService
@@ -63,7 +65,7 @@ public class WxDepositServiceImpl implements WxDepositService {
      */
     @Override
     @Transactional
-    public boolean modifyRecordStatus(PutVo infoVo) throws BaseException {
+    public Map<String, String> modifyRecordStatus(PutVo infoVo) throws BaseException {
         WxDeposit wxDeposit = wxDepositMapper.getRefundingWxDepositById(infoVo.getId());
         if (wxDeposit == null) throw new ParamException("该记录不存在,请重新选择!");
         if (wxDeposit.getDeposit() == 0) throw new ParamException("您的押金为0元,请先缴纳押金!");
@@ -89,19 +91,20 @@ public class WxDepositServiceImpl implements WxDepositService {
         if (map != null && MyConfig.SUCCESS.equals(map.get("return_code")) && MyConfig.SUCCESS.equals(map.get("result_code"))) {
             wxDeposit.setStatus(WxDeposit.PASS_AUDIT);//设置当前押金表的状态为审核通过
             wxDeposit.setUpdTime(new Date());
-            boolean isTrue = wxRecordMainService.update(wxRecordMain);
-            isTrue &= wxDepositMapper.update(wxDeposit);
             WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS, infoVo.getRefundDesc());
-            isTrue &= wxRefundRecordService.insert(wxRefundRecord);
-            return isTrue;
+            wxDepositMapper.update(wxDeposit);
+            wxRecordMainService.update(wxRecordMain);
+            wxRefundRecordService.insert(wxRefundRecord);
         } else {
+            if(map != null) logger.debug("退款失败:{}", map.get("err_code_des"));
             WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, infoVo.getRefundDesc());
-            return wxRefundRecordService.insert(wxRefundRecord);
+            wxRefundRecordService.insert(wxRefundRecord);
         }
+        return map;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.mujugroup.wx.model.WxDeposit;
 import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.objeck.vo.deposit.PutVo;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leolaurel
@@ -24,5 +25,5 @@ public interface WxDepositService {
 
     WxDeposit getRefundingWxDepositById(Long id);
 
-    boolean modifyRecordStatus(PutVo infoVo) throws BaseException;
+    Map<String, String> modifyRecordStatus(PutVo infoVo) throws BaseException;
 }
