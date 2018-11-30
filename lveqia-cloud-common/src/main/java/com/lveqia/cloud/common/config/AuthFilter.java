@@ -18,26 +18,29 @@ import java.util.Set;
 
 public class AuthFilter implements Filter {
 
-    private boolean isSystem;
-    private Set<String> ALLOWED_PATHS;
+    public final static boolean MODE_REFUSE = true;    // 拒绝模式
+    private final static boolean MODE_PERMIT = false;   // 许可模式
+
+    private boolean currMode;
+    private Set<String> allPaths;
     private PathMatcher matcher = new AntPathMatcher();
     private static Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 
     public AuthFilter(){
-        this(false);
+        this(MODE_PERMIT);
     }
 
     public AuthFilter(Set<String> set){
-        this(set, false);
+        this(set, MODE_PERMIT);
     }
 
-    public AuthFilter(boolean isSystem){
-        this(new HashSet<>(), isSystem);
+    public AuthFilter(boolean currMode){
+        this(new HashSet<>(), currMode);
     }
 
-    private AuthFilter(Set<String> set, boolean isSystem){
-        this.ALLOWED_PATHS = set;
-        this.isSystem = isSystem;
+    public AuthFilter(Set<String> allPaths, boolean currMode){
+        this.allPaths = allPaths;
+        this.currMode = currMode;
     }
 
     @Override
@@ -51,38 +54,46 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String uri = httpServletRequest.getRequestURI();
-
-        if(ALLOWED_PATHS.stream().anyMatch(pattern-> matcher.match(pattern,uri))
-                || uri.startsWith("/feign") || uri.startsWith("/merge")  // 内部调用放行
-                || (isSystem && !uri.startsWith("/sys"))){               // 权限模块非自己接口放行
+        if(((HttpServletResponse) response).getStatus() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            logger.error("AuthFilter->has 500 error {}", uri);
+            returnResult(httpServletResponse, ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR));
+            return;
+        }
+        if((!currMode && allPaths.stream().anyMatch(pattern-> matcher.match(pattern,uri)))  // 许可模式
+                || (currMode && allPaths.stream().noneMatch(pattern-> matcher.match(pattern, uri))) // 拒绝模式
+                || uri.startsWith("/feign") || uri.startsWith("/merge")){   // 内部调用放行
             logger.debug("AuthFilter->allowed {}", uri);
-            if(((HttpServletResponse) response).getStatus() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR){
-                logger.error("AuthFilter->has 500 error {}", uri);
-                httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-                httpServletResponse.setContentType("application/json;charset=utf-8");
-                PrintWriter out = httpServletResponse.getWriter();
-                out.write(ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR));
-                out.flush();
-                out.close();
-                return;
-            }
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        logger.debug("AuthFilter->doFilter {}", uri);
         UserInfo userInfo = AuthUtil.getUserInfo(httpServletRequest);
         if(userInfo == null) {
-            httpServletResponse.setContentType("application/json;charset=utf-8");
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = httpServletResponse.getWriter();
-            out.write(ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID));
-            out.flush();
-            out.close();
+            logger.debug("AuthFilter->user info is null, url: {}", uri);
+            returnResult(httpServletResponse, ResultUtil.error(ResultUtil.CODE_TOKEN_INVALID));
         } else {
             //利用原始的request对象创建自己扩展的request对象并添加自定义参数
+            logger.debug("AuthFilter->add uid to request, url: {}", uri);
             RequestParameterWrapper parameterWrapper = new RequestParameterWrapper(httpServletRequest);
             parameterWrapper.addUserInfo(userInfo);
             chain.doFilter(parameterWrapper, httpServletResponse);
+        }
+    }
+
+    /**
+     * 返回结果
+     * @param response 返回对象
+     * @param massage 返回信息
+     */
+    private void returnResult(HttpServletResponse response, String massage) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=utf-8");
+        try {
+            PrintWriter out = response.getWriter();
+            out.write(massage);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
