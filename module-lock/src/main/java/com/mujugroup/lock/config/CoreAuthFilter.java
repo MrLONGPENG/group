@@ -10,7 +10,6 @@ import java.util.HashSet;
 @Component
 public class CoreAuthFilter extends AuthFilter {
     public CoreAuthFilter() { // 指定放行Url
-        super(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/v2/api-docs","/receive/data"
-                ,"/device/**","/did/**"))));
+        super(new HashSet<>(Arrays.asList("/v2/api-docs","/receive/data","/did/getDeviceId")));
     }
 }
