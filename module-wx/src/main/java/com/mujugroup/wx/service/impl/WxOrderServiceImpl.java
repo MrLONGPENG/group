@@ -9,7 +9,6 @@ import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.mapper.WxOrderMapper;
-import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.SessionService;
 import com.mujugroup.wx.service.WxOrderService;
@@ -38,35 +37,6 @@ public class WxOrderServiceImpl implements WxOrderService {
         this.wxOrderMapper = wxOrderMapper;
         this.sessionService = sessionService;
         this.moduleCoreService = moduleCoreService;
-    }
-
-    @Override
-    public WxOrder addOrder(String did, String openId, String aid, String hid, String oid, String orderNo, WxGoods wxGoods) {
-        WxOrder wxOrder = new WxOrder();
-        wxOrder.setDid(Long.parseLong(did));
-        wxOrder.setOpenId(openId);
-        wxOrder.setTradeNo(orderNo);
-        wxOrder.setAid(Integer.parseInt(aid));
-        wxOrder.setHid(Integer.parseInt(hid));
-        wxOrder.setOid(Integer.parseInt(oid));
-        wxOrder.setGid(wxGoods.getId());
-        wxOrder.setPayPrice(wxGoods.getPrice());
-        wxOrder.setPayStatus(WxOrder.TYPE_PAY_WAITING);
-        wxOrder.setOrderType(getOrderType(wxGoods.getType()));
-        return wxOrderMapper.insert(wxOrder) ? wxOrder : null;
-    }
-
-    /**
-     * 根据商品类型，转换成订单类型
-     */
-    private Integer getOrderType(Integer type) {
-        switch (type) {
-            case WxGoods.TYPE_MIDDAY:
-                return WxOrder.ORDER_TYPE_MIDDAY;
-            case WxGoods.TYPE_NIGHT:
-                return WxOrder.ORDER_TYPE_NIGHT;
-        }
-        return 0;
     }
 
     @Override

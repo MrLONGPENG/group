@@ -243,7 +243,7 @@ public class PayApiServiceImpl implements PayApiService {
     }
 
     private WxOrder bindWxOrder(Long did, String openId, Integer aid, Integer hid, Integer oid, String orderNo
-            , Integer orderType, long payTime, long endTime, Integer gid, Integer price, String transactionId) {
+            , Integer goodsType, long payTime, long endTime, Integer gid, Integer price, String transactionId) {
         WxOrder wxOrder = new WxOrder();
         wxOrder.setDid(did);
         wxOrder.setAid(aid);
@@ -254,7 +254,8 @@ public class PayApiServiceImpl implements PayApiService {
         wxOrder.setPayTime(payTime);
         wxOrder.setEndTime(endTime);
         wxOrder.setGid(gid);
-        wxOrder.setOrderType(orderType);
+        wxOrder.setOrderType(goodsType == WxGoods.TYPE_MIDDAY ? WxOrder.ORDER_TYPE_MIDDAY
+                : goodsType == WxGoods.TYPE_NIGHT ? WxOrder.ORDER_TYPE_NIGHT : 0);
         wxOrder.setPayPrice(price);
         wxOrder.setTradeNo(orderNo);
         wxOrder.setTransactionId(transactionId);

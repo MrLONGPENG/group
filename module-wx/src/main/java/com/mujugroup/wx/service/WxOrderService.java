@@ -4,14 +4,11 @@ import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.mujugroup.wx.bean.OrderBean;
-import com.mujugroup.wx.model.WxGoods;
 import com.mujugroup.wx.model.WxOrder;
 
 import java.util.List;
 
 public interface WxOrderService {
-
-    WxOrder addOrder(String did, String openId, String aid, String hid, String oid, String orderNo, WxGoods wxGoods);
 
     WxOrder findLastOrderByDid(String did);
 
