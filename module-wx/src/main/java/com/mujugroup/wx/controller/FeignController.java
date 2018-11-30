@@ -20,6 +20,15 @@ public class FeignController {
         this.feignService = feignService;
     }
 
+
+    /**
+     * 锁状态通知更新使用状态
+     */
+    @RequestMapping(value = "/usingNotify")
+    public String usingNotify(@RequestParam(name = "did")String did, @RequestParam(name = "lockStatus")int lockStatus){
+        return feignService.usingNotify(did, lockStatus);
+    }
+
     @ResponseBody
     @RequestMapping(value = "/getOrderList", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

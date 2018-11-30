@@ -59,10 +59,11 @@ public class ReceiveTask {
 
             switch (json.get("msgType").getAsInt()) {
                 case 200:
-                    switchLock(lockInfo, true);
+                    switchLock(lockInfo);
                     if(lockDid == null)  return;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
+                    moduleWxService.usingNotify(lockInfo.getLockId(), lockInfo.getLockStatus());
                     break;//开关锁
                 case 201:
                     break;//定位信息上报
@@ -73,7 +74,7 @@ public class ReceiveTask {
                 case 401:
                     break;//其他信息上报
                 case 1000:
-                    switchLock(lockInfo, false);
+                    switchLock(lockInfo);
                     if(lockDid == null)  return;
                     insertLockRecord(lockDid.getDid(), lockInfo);
                     break;//普通上报消息（普通锁）
@@ -172,15 +173,12 @@ public class ReceiveTask {
     }
 
 
-    private void switchLock(LockInfo info, boolean isNotify) {
+    private void switchLock(LockInfo info) {
         LockInfo lockInfo = lockInfoService.getLockInfoByBid(String.valueOf(info.getLockId()));
         if (lockInfo == null) {
-            lockInfoService.insert(formatLockInfo(info, lockInfo = new LockInfo()));
+            lockInfoService.insert(formatLockInfo(info, new LockInfo()));
         } else {
             lockInfoService.update(formatLockInfo(info, lockInfo));
-        }
-        if (isNotify) {
-            moduleWxService.usingNotify(String.valueOf(lockInfo.getLockId()), String.valueOf(lockInfo.getLockStatus()));
         }
     }
 

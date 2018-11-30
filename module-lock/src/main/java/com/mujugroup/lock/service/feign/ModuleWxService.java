@@ -17,8 +17,8 @@ import java.util.Map;
 @FeignClient(value = "module-wx", fallback = ModuleWxServiceError.class)
 public interface ModuleWxService {
 
-    @RequestMapping(value = "/using/notify", method = RequestMethod.POST)
-    String usingNotify(@RequestParam(value = "bid") String bid, @RequestParam(value = "lockStatus") String lockStatus);
+    @RequestMapping(value = "/feign/usingNotify", method = RequestMethod.POST)
+    String usingNotify(@RequestParam(value = "did")long did, @RequestParam(value = "lockStatus")int lockStatus);
 
     @RequestMapping(value = "/merge/getOrderEndTimeByDid", method = RequestMethod.POST)
     Map<String, String> getOrderEndTimeByDid(@RequestParam(value = "param") String param);

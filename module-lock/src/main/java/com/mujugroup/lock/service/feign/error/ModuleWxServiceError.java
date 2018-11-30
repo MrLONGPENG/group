@@ -6,7 +6,6 @@ import com.mujugroup.lock.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public String usingNotify(String bid, String lockStatus) {
+    public String usingNotify(long did, int lockStatus) {
         logger.warn("Remote call module-wx failure");
         return null;
     }

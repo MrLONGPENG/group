@@ -64,11 +64,4 @@ public class UsingApiController {
         return  ResultUtil.success(wxUsingService.deleteByDid(did
                 , System.currentTimeMillis()/1000)?"删除成功":"无数据删");
     }
-
-    @RequestMapping(value = "/notify")
-    public String notify(String bid, Integer lockStatus){
-        logger.info("wx-using-notify bid:{} lockStatus:{}", bid, lockStatus);
-        usingApiService.notify(bid, lockStatus);
-        return ResultUtil.success();
-    }
 }

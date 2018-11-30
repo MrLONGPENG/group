@@ -82,17 +82,6 @@ public class WxUsingServiceImpl implements WxUsingService {
     }
 
 
-
-    /**
-     * 通过BID查询使用情况信息
-     * @param time 指定时间需要小于订单结束时间
-     */
-    @Override
-    public WxUsing findUsingByBid(String bid, long time) {
-        return findUsingByDid(moduleLockService.bidToDid(bid), time, false);
-    }
-
-
     @Override
     public boolean deleteByDid(String did, long time) {
         return wxUsingMapper.deleteByDid(did, time);

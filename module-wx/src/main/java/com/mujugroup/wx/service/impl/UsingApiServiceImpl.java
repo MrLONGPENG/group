@@ -259,15 +259,6 @@ public class UsingApiServiceImpl implements UsingApiService {
         throw new TokenException(TokenException.WX_CODE_VALIDATION_FAIL);
     }
 
-    @Override
-    public void notify(String bid, Integer lockStatus) {
-        WxUsing wxUsing = wxUsingService.findUsingByBid(bid, System.currentTimeMillis()/1000);
-        if(wxUsing!=null){
-            wxUsingService.updateUsingStatus(wxUsing, String.valueOf(lockStatus));
-        }else{
-            logger.info("notify 此设备未使用");
-        }
-    }
 
     @Override
     public QueryBean query(String sessionThirdKey, String did, String code, boolean isSync) throws TokenException {

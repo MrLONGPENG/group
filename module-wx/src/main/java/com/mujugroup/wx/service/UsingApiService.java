@@ -23,8 +23,6 @@ public interface UsingApiService {
 
     boolean thirdUnlock(String did);
 
-    void notify(String did, Integer lockStatus);
-
     QueryBean query(String sessionThirdKey, String did, String code, boolean isSync) throws TokenException;
 
     void paymentCompleted(List<WxBase> wxBaseList);

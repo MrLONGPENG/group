@@ -12,4 +12,6 @@ public interface FeignService {
     PayInfoTo getPayInfoByDid(String did, int orderType);
 
     UptimeTo getUptimeTo(int aid, int hid, int oid);
+
+    String usingNotify(String did, int lockStatus);
 }

@@ -1,15 +1,14 @@
 package com.mujugroup.wx.service.impl;
 
+import com.github.pagehelper.Constant;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.objeck.to.*;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.model.WxRelation;
 import com.mujugroup.wx.model.WxUptime;
-import com.mujugroup.wx.service.FeignService;
-import com.mujugroup.wx.service.WxOrderService;
-import com.mujugroup.wx.service.WxUptimeService;
-import com.mujugroup.wx.service.WxUsingService;
+import com.mujugroup.wx.model.WxUsing;
+import com.mujugroup.wx.service.*;
 import ma.glasnost.orika.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +23,18 @@ public class FeignServiceImpl implements FeignService {
     private final WxOrderService wxOrderService;
     private final WxUsingService wxUsingService;
     private final WxUptimeService wxUptimeService;
+    private final UsingApiService usingApiService;
 
     private final Logger logger = LoggerFactory.getLogger(FeignServiceImpl.class);
 
 
-    public FeignServiceImpl(MapperFactory mapperFactory, WxOrderService wxOrderService, WxUsingService wxUsingService, WxUptimeService wxUptimeService) {
+    public FeignServiceImpl(MapperFactory mapperFactory, WxOrderService wxOrderService
+            , WxUsingService wxUsingService, WxUptimeService wxUptimeService, UsingApiService usingApiService) {
         this.mapperFactory = mapperFactory;
         this.wxOrderService = wxOrderService;
         this.wxUsingService = wxUsingService;
         this.wxUptimeService = wxUptimeService;
+        this.usingApiService = usingApiService;
     }
 
     @Override
@@ -59,6 +61,16 @@ public class FeignServiceImpl implements FeignService {
         uptimeTo.setStartTime(uptime.getStartTime());
         uptimeTo.setStopTime(uptime.getStopTime());
         return uptimeTo;
+    }
+
+    @Override
+    public String usingNotify(String did, int lockStatus) {
+        WxUsing wxUsing = wxUsingService.findUsingByDid(did, System.currentTimeMillis()/1000 , false);
+        if(wxUsing!=null){
+            wxUsingService.updateUsingStatus(wxUsing, String.valueOf(lockStatus));
+        }
+        logger.info("usingNotify did:{} lockStatus:{} wxUsing:{}", did, lockStatus, wxUsing);
+        return null;
     }
 
     @Override

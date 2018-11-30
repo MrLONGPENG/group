@@ -14,8 +14,6 @@ public interface WxUsingService {
 
     WxUsing findUsingByDid(String did, long time, boolean isSync);
 
-    WxUsing findUsingByBid(String bid, long time);
-
     boolean deleteByDid(String did, long time);
 
     int getCountByUsingDid(String did, long time);
