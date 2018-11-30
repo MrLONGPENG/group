@@ -77,7 +77,7 @@ public class WxDepositServiceImpl implements WxDepositService {
 
         WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxDeposit.getTradeNo(), wxDeposit.getOpenId());
         if (wxRecordMain == null) throw new ParamException("该记录不存在!");
-        if (wxRecordMain.getRefundCount() > 9) throw new ParamException("当前退款次数已超过10次,无法进行退款操作");
+        if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
 
         //调用微信退款接口
         if(StringUtil.isEmpty(infoVo.getRefundDesc())) infoVo.setRefundDesc("微信退款");
