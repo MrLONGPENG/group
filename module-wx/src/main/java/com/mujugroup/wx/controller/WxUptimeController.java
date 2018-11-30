@@ -28,12 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class WxUptimeController {
     private final Logger logger = LoggerFactory.getLogger(WxUptimeController.class);
     private WxUptimeService wxUptimeService;
-    private ModuleCoreService moduleCoreService;
 
     @Autowired
-    public WxUptimeController(WxUptimeService wxUptimeService, ModuleCoreService moduleCoreService) {
+    public WxUptimeController(WxUptimeService wxUptimeService) {
         this.wxUptimeService = wxUptimeService;
-        this.moduleCoreService = moduleCoreService;
     }
 
 
