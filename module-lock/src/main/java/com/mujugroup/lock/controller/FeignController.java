@@ -26,6 +26,11 @@ public class FeignController {
         return feignService.unlock(did);
     }
 
+    @RequestMapping(value = "/beep", method = RequestMethod.POST)
+    public String beep(@RequestParam(value = "did") String did) {
+        return feignService.beep(did);
+    }
+
     @ResponseBody
     @RequestMapping(value = "/getLockInfo", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

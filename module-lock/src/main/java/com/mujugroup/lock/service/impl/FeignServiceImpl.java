@@ -30,6 +30,11 @@ public class FeignServiceImpl implements FeignService {
     }
 
     @Override
+    public String beep(String did) {
+        return deviceService.remoteCall(2, did);
+    }
+
+    @Override
     public LockTo getLockInfo(String did) {
         LockTo lockTo = lockInfoMapper.getInfoByDid(did);
         if(lockTo != null){

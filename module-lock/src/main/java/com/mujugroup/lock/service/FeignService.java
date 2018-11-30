@@ -8,11 +8,14 @@ public interface FeignService {
 
     String unlock(String did);
 
+    String beep(String did);
+
     LockTo getLockInfo(String did);
 
     String getLockStatus(String did);
 
     List<String> getFailNameByDid(String did);
+
 
 
 }

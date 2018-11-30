@@ -1,15 +1,11 @@
 package com.mujugroup.core.service.feign.error;
 
-import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.core.model.Device;
+import com.lveqia.cloud.common.objeck.to.UptimeTo;
 import com.mujugroup.core.service.feign.ModuleWxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -31,8 +27,9 @@ public class ModuleWxServiceError implements ModuleWxService {
     }
 
     @Override
-    public String queryUptime(int type, int key, int kid) {
-        return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
+    public UptimeTo getUptimeTo(int aid, int hid, int oid) {
+        logger.debug("Remote call module-wx-getUptimeTo aid:{} hid:{} oid:{}", aid, hid, oid);
+        return null;
     }
 
     @Override

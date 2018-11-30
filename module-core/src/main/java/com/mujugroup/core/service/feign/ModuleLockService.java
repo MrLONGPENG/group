@@ -14,10 +14,12 @@ import java.util.Map;
 @FeignClient(value = "module-lock" ,fallback = ModuleLockServiceError.class)
 public interface ModuleLockService {
 
+    @RequestMapping(value = "/feign/beep", method = RequestMethod.POST)
+    String beep(@RequestParam(value = "did") String did);
+
     @RequestMapping(value = "/merge/getHardwareInfo", method = RequestMethod.POST)
     Map<String, String> getHardwareInfo(@RequestParam(value = "param") String param);
 
-    @RequestMapping(value = "/device/beep", method = RequestMethod.POST)
-    String deviceBeep(@RequestParam(value = "did") String did);
+
 
 }

@@ -15,6 +15,6 @@ public class UptimeTo {
     }
 
     public boolean isUsingTime(long seconds) {
-        return seconds > startTime || seconds < stopTime;
+        return seconds >= startTime || seconds <= stopTime;
     }
 }
