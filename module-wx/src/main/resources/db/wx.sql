@@ -67,21 +67,6 @@ INDEX `index_union` (`aid`,`hid`,`oid`) COMMENT '订单索引',
 INDEX `index_order` (`trade_no`) COMMENT '订单索引',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单信息表';
-
-
-
-DROP TABLE IF EXISTS `t_wx_refund`;
-CREATE TABLE `t_wx_refund` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `trade_no` varchar(32) DEFAULT NULL COMMENT '内部订单号，如20180626123456',
-  `refund_no` varchar(32) DEFAULT NULL COMMENT '退款订单号，如20180626123456',
-  `total_fee` int(11) DEFAULT NULL COMMENT '实际总金额',
-  `refund_fee` int(11) DEFAULT NULL COMMENT '退款金额',
-  `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  INDEX `index_refund` (`refund_no`) COMMENT '退款订单索引',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='退款订单表';
-
 -- ----------------------------
 -- Table structure for t_wx_repair
 -- ----------------------------
@@ -241,3 +226,24 @@ CREATE TABLE `t_wx_record_assist` (
   KEY `fk_recordMain` (`mid`),
   CONSTRAINT `fk_recordMain` FOREIGN KEY (`mid`) REFERENCES `t_wx_record_main` (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='支付记录辅表'
+
+
+-- ----------------------------
+-- Table structure for t_wx_refund_record(退款记录表)
+-- ----------------------------
+DROP TABLE IF EXISTS `t_wx_refund_record`;
+CREATE TABLE `t_wx_refund_record` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `open_id` VARCHAR(128) DEFAULT NULL COMMENT '微信对外唯一ID',
+  `trade_no` VARCHAR(32) DEFAULT NULL COMMENT '内部订单号，如20180626123456',
+  `refund_no`  VARCHAR(32) DEFAULT NULL COMMENT '退款订单号，如201806261234561',
+  `refund_count` INT(11) DEFAULT NULL COMMENT '退款次数',
+  `refundDesc` VARCHAR(200) DEFAULT NULL COMMENT '退款原因',
+  `refund_price` INT(11) DEFAULT NULL COMMENT '退款金额',
+  `total_price` INT(11) DEFAULT NULL COMMENT '总金额',
+  `refund_status` TINYINT(4) DEFAULT NULL COMMENT '退款状态 1.退款失败 2.退款成功',
+  `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户申请退款时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退款记录表';
+
+
