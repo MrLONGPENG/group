@@ -8,6 +8,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
@@ -62,6 +63,14 @@ public abstract class ErrorHandler {
         return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, exception.getMessage());
     }
 
+
+    /**
+     *  请求参数格式不对
+     */
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    public String formatErrorHandler(MethodArgumentTypeMismatchException exception) {
+        return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, exception.getMessage());
+    }
 
 
 }

@@ -14,7 +14,7 @@ public class WxErrorHandler extends ErrorHandler {
 
     @Override
     protected String otherErrorHandler(Exception exception) {
-        logger.error("CoreErrorHandler find error {}", exception);
+        logger.error("WxErrorHandler find error {}", exception);
         return ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }
 
