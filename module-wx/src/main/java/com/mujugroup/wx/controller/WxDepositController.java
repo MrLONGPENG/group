@@ -37,19 +37,17 @@ public class WxDepositController {
     @ApiOperation(value = "获取当前用户已支付状态的押金信息", notes = "获取当前用户已支付状态的押金信息")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     public String getDepositInfo(@ApiParam(value = "sessionThirdKey", required = true)
-            @RequestParam(value = "sessionThirdKey") String sessionThirdKey , @ApiParam(value = "code"
-            , required = true) @RequestParam(value = "code") String code) throws BaseException {
-        WxDeposit wxDeposit = wxDepositService.getDepositInfo(sessionThirdKey, code);
+                                 @RequestParam(value = "sessionThirdKey") String sessionThirdKey) {
+        WxDeposit wxDeposit = wxDepositService.getDepositInfo(sessionThirdKey);
         return ResultUtil.success(wxDeposit);
     }
 
     @ApiOperation(value = "修改押金状态", notes = "申请退款时,修改当前用户的押金状态")
     @RequestMapping(value = "/refund", method = RequestMethod.PUT)
     public String modifyDepositStatus(@ApiParam(value = "sessionThirdKey", required = true)
-            @RequestParam(value = "sessionThirdKey") String sessionThirdKey , @ApiParam(value = "code"
-            , required = true) @RequestParam(value = "code") String code, @ApiParam(value = "当前选中的押金信息ID")
-            @RequestParam(value = "id") long id) throws BaseException {
-        boolean result = wxDepositService.modifyStatus(sessionThirdKey, code, id);
+                                      @RequestParam(value = "sessionThirdKey") String sessionThirdKey, @ApiParam(value = "当前选中的押金信息ID")
+                                      @RequestParam(value = "id") long id) throws BaseException {
+        boolean result = wxDepositService.modifyStatus(sessionThirdKey, id);
         return ResultUtil.success(result);
     }
 
@@ -58,6 +56,13 @@ public class WxDepositController {
     public String getRefundingList() {
         List<InfoListVo> list = wxDepositService.getInfoList();
         return ResultUtil.success(list);
+    }
+
+    @ApiOperation(value = "修改押金状态为审核通过以及其他记录表状态", notes = "修改押金状态为审核通过以及其他记录表状态")
+    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
+    public String modifyStatus(@ModelAttribute PutVo infoVo) throws BaseException {
+        boolean result = wxDepositService.modifyRecordStatus(infoVo);
+        return ResultUtil.success(result);
     }
 
 }

@@ -74,4 +74,9 @@ public interface WxRecordMainMapper {
             , @Result(column = "type", property = "type", javaType = Integer.class)
     })
     List<ListVo> getPayRecordList(@Param(value = "orderNo") String orderNo);
+
+    @Select("SELECT * FROM t_wx_record_main WHERE `pay_status`=2 AND  trade_no= #{orderNo} AND  open_id= #{openId}")
+    @ResultMap("wxRecordMain")
+    WxRecordMain getFinishPayRecordByNo(@Param(value = "orderNo") String orderNo, @Param(value = "openId") String openId);
+
 }

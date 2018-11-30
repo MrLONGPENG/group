@@ -16,4 +16,6 @@ public interface WxRecordMainService {
     boolean update(WxRecordMain wxRecordMain);
 
     void insertRecord(WxRecordMain wxRecordMain, List<WxRecordAssist> wxRecordAssists);
+
+    WxRecordMain getFinishPayRecordByNo(String orderNo, String openId);
 }

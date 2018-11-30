@@ -19,10 +19,10 @@ import javax.persistence.*;
 @Table(name = "t_wx_deposit")
 @EqualsAndHashCode(callSuper = true)
 public class WxDeposit extends WxBase {
-
     public final static int PAY_FINISH = 1;//已支付
     public final static int REFUNDING_MONEY = 2;//退款中
     public final static int PASS_AUDIT = 4;//审核通过
+    public final static int NO_MONEY = 0;//当前押金金额为0
     /**
      * 主键
      * <p>

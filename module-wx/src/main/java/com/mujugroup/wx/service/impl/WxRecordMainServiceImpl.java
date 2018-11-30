@@ -20,6 +20,7 @@ public class WxRecordMainServiceImpl implements WxRecordMainService {
 
     private final WxRecordMainMapper wxRecordMainMapper;
     private final WxRecordAssistService wxRecordAssistService;
+
     @Autowired
     public WxRecordMainServiceImpl(WxRecordMainMapper wxRecordMainMapper, WxRecordAssistService wxRecordAssistService) {
         this.wxRecordMainMapper = wxRecordMainMapper;
@@ -53,5 +54,10 @@ public class WxRecordMainServiceImpl implements WxRecordMainService {
                 wxRecordAssistService.insert(assist);
             }
         }
+    }
+
+    @Override
+    public WxRecordMain getFinishPayRecordByNo(String orderNo, String openId) {
+        return wxRecordMainMapper.getFinishPayRecordByNo(orderNo, openId);
     }
 }
