@@ -71,6 +71,9 @@ public interface LockInfoMapper {
             " WHERE info.lock_id = t.lock_id AND t.did= #{did} ")
     LockTo getInfoByDid(@Param(value = "did") String did);
 
+    @Select("SELECT i.lock_status FROM `t_lock_info` i, `t_lock_did` t WHERE i.lock_id = t.lock_id AND t.did= #{did} ")
+    String getLockStatus(@Param(value = "did") String did);
+
     @SelectProvider(type = LockInfoSqlProvider.class, method = "getInfoList")
     @Results(id = "listVo", value = {
             @Result(id = true, column = "id", property = "id", javaType = Integer.class),
@@ -94,4 +97,6 @@ public interface LockInfoMapper {
             , @Param(value = "csqEnd") String csqEnd
             , @Param(value = "lockStatus") int lockStatus, int elecStatus
             , int lineStatus);
+
+
 }

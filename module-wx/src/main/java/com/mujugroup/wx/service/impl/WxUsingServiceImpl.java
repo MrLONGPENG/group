@@ -77,7 +77,7 @@ public class WxUsingServiceImpl implements WxUsingService {
         if(list == null || list.size()==0 ) return null;
         if(list.size()>1) logger.error("错误:通过Did找到的使用情况数量大于1");
         WxUsing wxUsing = list.get(0);
-        if(wxUsing!=null && isSync) updateUsingStatus(wxUsing, moduleLockService.getStatus(did));
+        if(wxUsing!=null && isSync) updateUsingStatus(wxUsing, moduleLockService.getLockStatus(did));
         return wxUsing;
     }
 

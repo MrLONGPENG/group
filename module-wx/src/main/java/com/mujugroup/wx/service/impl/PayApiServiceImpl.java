@@ -167,8 +167,9 @@ public class PayApiServiceImpl implements PayApiService {
                             wxBaseList.add(bindWxOrder(wxRecordMain.getDid(), openId, wxRecordMain.getAid()
                                     , wxRecordMain.getHid(), wxRecordMain.getOid(), orderNo, assist.getType()
                                     , payTime, endTime, assist.getGid(), assist.getPrice(), transactionId));
-                            wxBaseList.add(bindWxUsing(openId, wxRecordMain.getDid(),assist.getPrice(), payTime, endTime
-                                    , "2".equals(moduleLockService.getStatus(String.valueOf(wxRecordMain.getDid())))));
+                            wxBaseList.add(bindWxUsing(openId, wxRecordMain.getDid(),assist.getPrice(), payTime
+                                    , endTime, Constant.LOCK_OPEN.equals(moduleLockService.getLockStatus(String
+                                            .valueOf(wxRecordMain.getDid())))));
                         } else {
                             logger.warn("不支持类型:{}, 待处理", assist.getType());
                         }

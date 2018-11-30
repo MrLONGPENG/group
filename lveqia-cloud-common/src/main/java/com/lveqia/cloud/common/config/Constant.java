@@ -63,4 +63,10 @@ public class Constant {
 
     /** 开发模式（dev）*/
     public static final String MODEL_DEV = "dev";
+
+    /** 锁状态 -- 关 */
+    public static final String LOCK_CLOSE = "1";
+
+    /** 锁状态 -- 开 */
+    public static final String LOCK_OPEN = "2";
 }

@@ -63,7 +63,7 @@ public class ReceiveTask {
                     if(lockDid == null)  return;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
-                    moduleWxService.usingNotify(lockInfo.getLockId(), lockInfo.getLockStatus());
+                    moduleWxService.usingNotify(lockDid.getDid(), lockInfo.getLockStatus());
                     break;//开关锁
                 case 201:
                     break;//定位信息上报

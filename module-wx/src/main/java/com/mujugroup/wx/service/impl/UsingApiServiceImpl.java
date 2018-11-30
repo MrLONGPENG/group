@@ -2,6 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.lveqia.cloud.common.util.AESUtil;
 import com.lveqia.cloud.common.util.DateUtil;
@@ -214,7 +215,7 @@ public class UsingApiServiceImpl implements UsingApiService {
      */
     public boolean thirdUnlock(String did) {
         logger.info("调用开锁-->{}", did);
-        String result = moduleLockService.deviceUnlock(did);
+        String result = moduleLockService.unlock(did);
         if(result!=null){
             JsonObject json = new JsonParser().parse(result).getAsJsonObject();
             return json.has("code") && json.get("code").getAsInt() == 200;
@@ -270,7 +271,7 @@ public class UsingApiServiceImpl implements UsingApiService {
             queryBean.setWxUsing(wxUsing);
         }else{
             queryBean.setDid(did);
-            queryBean.setUsing("2".equals(moduleLockService.getStatus(did)));
+            queryBean.setUsing(Constant.LOCK_OPEN.equals(moduleLockService.getLockStatus(did)));
             int currTime =  DateUtil.getTimesNoDate();
             WxUptime midday = uptimeCache.get(StringUtil.toLink(WxRelation.TYPE_MIDDAY, arr[2], arr[3], arr[4]));
             if(midday != null && currTime > midday.getStartTime() && currTime < midday.getStopTime()){

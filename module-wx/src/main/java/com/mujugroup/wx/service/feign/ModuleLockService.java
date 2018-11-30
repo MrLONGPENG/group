@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "module-lock" ,fallback = ModuleLockServiceError.class)
 public interface ModuleLockService {
 
-    @RequestMapping(value = "/did/bid",method = RequestMethod.POST)
-    String bidToDid(@RequestParam(value = "bid") String bid);
+
+    @RequestMapping(value = "/feign/unlock",method = RequestMethod.POST)
+    String unlock(@RequestParam(value = "did") String did);
 
 
-    @RequestMapping(value = "/did/status",method = RequestMethod.POST)
-    String getStatus(@RequestParam(value = "did") String did);
+    @RequestMapping(value = "/feign/getLockStatus",method = RequestMethod.POST)
+    String getLockStatus(@RequestParam(value = "did") String did);
 
 
 
-    @RequestMapping(value = "/device/unlock",method = RequestMethod.POST)
-    String deviceUnlock(@RequestParam(value = "did") String did);
+
 }

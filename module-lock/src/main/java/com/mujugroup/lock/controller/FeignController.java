@@ -21,11 +21,22 @@ public class FeignController {
         this.feignService = feignService;
     }
 
+    @RequestMapping(value = "/unlock", method = RequestMethod.POST)
+    public String unlock(@RequestParam(value = "did") String did) {
+        return feignService.unlock(did);
+    }
+
     @ResponseBody
     @RequestMapping(value = "/getLockInfo", method = RequestMethod.POST
             , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public LockTo getLockInfo(@RequestParam(value = "did") String did) {
         return feignService.getLockInfo(did);
+    }
+
+
+    @RequestMapping(value = "/getLockStatus", method = RequestMethod.POST)
+    public String getLockStatus(@RequestParam(value = "did") String did) {
+        return feignService.getLockStatus(did);
     }
 
     @RequestMapping(value = "/getFailNameByDid", method = RequestMethod.POST)

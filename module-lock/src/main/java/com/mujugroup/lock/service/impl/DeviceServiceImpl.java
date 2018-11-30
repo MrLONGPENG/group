@@ -3,12 +3,15 @@ package com.mujugroup.lock.service.impl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.model.LockDid;
 import com.mujugroup.lock.service.AuthService;
 import com.mujugroup.lock.service.DeviceService;
 import com.mujugroup.lock.service.LockDidService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,7 +24,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
-
+    @Value("${spring.profiles.active}")
+    private String model;
 
     @Value("${base_url}")
     String baseUrl;
@@ -45,6 +49,8 @@ public class DeviceServiceImpl implements DeviceService {
     private final AuthService authService;
     private final LockDidService lockDidService;
 
+    private final Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
+
     @Autowired
     public DeviceServiceImpl(RestTemplate restTemplate, AuthService authService, LockDidService lockDidService) {
         this.restTemplate = restTemplate;
@@ -52,26 +58,48 @@ public class DeviceServiceImpl implements DeviceService {
         this.lockDidService = lockDidService;
     }
 
-    @Override
-    public JsonObject unlock(String did) {
+    private JsonObject unlock(String did) {
         return httpMethod(methodUnlock, HttpMethod.POST, didToBid(did)); // 若不是锁ID 转换
     }
 
-    @Override
-    public JsonObject query(String did) {
+    private JsonObject query(String did) {
         return httpMethod(methodQuery, HttpMethod.GET, didToBid(did)); // 若不是锁ID 转换
     }
 
-    @Override
-    public JsonObject beep(String did) {
+    private JsonObject beep(String did) {
         return httpMethod(methodBeep, HttpMethod.POST, didToBid(did)); // 若不是锁ID 转换
     }
 
-    @Override
-    public JsonObject ble(String did) {
+    private JsonObject ble(String did) {
         return httpMethod(methodBle, HttpMethod.GET, didToBid(did)); // 若不是锁ID 转换
     }
 
+    /**
+     * 远程调用连旅接口
+     * @param type 0：开锁 1：查询 2：寻车铃 3：蓝牙信息
+     * @param did  业务ID(DID) 或 锁设备ID(BID)
+     */
+    @Override
+    public String remoteCall(int type, String did) {
+        logger.debug("remoteCall:"+did);
+        if(did == null) return ResultUtil.error(ResultUtil.CODE_PARAMETER_MISS);
+        if(!StringUtil.isNumeric(did)) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        if(did.length()>9 && did.length()!=19) return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT);
+        if(Constant.MODEL_DEV.equals(model)) {
+            logger.info("远程调用锁接口，Did: {}, type: {}", did, type);
+            return ResultUtil.success("{\"code\":200}");
+        }
+        JsonObject object = null;
+        switch (type){
+            case 0: object = unlock(did);break;
+            case 1: object = query(did);break;
+            case 2: object = beep(did);break;
+            case 3: object = ble(did);break;
+        }
+        if(object==null ) return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+        if(object.has("code")) return ResultUtil.code(object.get("code").getAsInt());
+        return ResultUtil.success(object);
+    }
     /**
      * 远程调用连旅接口，获取信息, 根据结果返回数据
      * @param method  接口名

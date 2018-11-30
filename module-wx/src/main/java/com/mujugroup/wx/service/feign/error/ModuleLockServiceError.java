@@ -12,20 +12,15 @@ public class ModuleLockServiceError implements ModuleLockService {
     private final Logger logger = LoggerFactory.getLogger(ModuleLockServiceError.class);
 
     @Override
-    public String bidToDid(String bid) {
-        logger.warn("Remote call module-lock-bidToDid failure");
-        return null;
-    }
-
-    @Override
-    public String getStatus(String did) {
-        logger.warn("Remote call module-lock-getStatus failure");
-        return null;
-    }
-
-    @Override
-    public String deviceUnlock(String did) {
+    public String unlock(String did) {
         logger.warn("Remote call module-lock-deviceUnlock failure");
         return null;
     }
+
+    @Override
+    public String getLockStatus(String did) {
+        logger.warn("Remote call module-lock-getLockStatus failure");
+        return null;
+    }
+
 }
