@@ -74,31 +74,35 @@ public class WxDepositServiceImpl implements WxDepositService {
         if (wxRecordMain == null) throw new ParamException("该记录不存在!");
         if (wxRecordMain.getRefundCount() > 9) throw new ParamException("当前退款次数已超过10次,无法进行退款操作");
         if (wxDeposit.getDeposit() == 0) throw new ParamException("您的押金为0元,请先缴纳押金!");
+        if (infoVo.getPrice()>wxDeposit.getDeposit()) throw new ParamException("您的押金金额不足,无法进行退款!");
         logger.debug("开始调用微信退款接口");
         //调用微信退款接口
         Map<String, String> map = payApiService.refund(wxRecordMain.getRefundCount() + 1, wxDeposit.getTradeNo()
                 , wxRecordMain.getTotalPrice().longValue(), wxDeposit.getDeposit().longValue()
-                , infoVo.getRefundDesc(), MyConfig.REFUND_SOURCE_UNSETTLED_FUNDS);
+                , StringUtil.isEmpty(infoVo.getRefundDesc()) == true ? "微信退款" : infoVo.getRefundDesc(), MyConfig.REFUND_SOURCE_UNSETTLED_FUNDS);
         logger.debug("微信输出{}", map);
+        String wxRefundNo = wxDeposit.getTradeNo() + wxRecordMain.getRefundCount();
         if (map != null && MyConfig.SUCCESS.equals(map.get("return_code")) && MyConfig.SUCCESS.equals(map.get("result_code"))) {
-            wxRecordMain.setRefundPrice(wxDeposit.getDeposit());//设置支付记录主表的退款金额
-            wxRecordMain.setTotalPrice(wxRecordMain.getTotalPrice() - wxRecordMain.getRefundPrice());//设置总金额
+            wxRecordMain.setRefundPrice(wxRecordMain.getRefundPrice()+wxDeposit.getDeposit());//设置支付记录主表的退款金额
             wxRecordMain.setRefundCount(wxRecordMain.getRefundCount() + 1);//设置当前退款次数
             wxDeposit.setStatus(WxDeposit.PASS_AUDIT);//设置当前押金表的状态为审核通过
             wxDeposit.setUpdTime(new Date());
-            wxDeposit.setDeposit(WxDeposit.NO_MONEY);//设置当前押金金额为0
             boolean isTrue = wxRecordMainService.update(wxRecordMain);
             isTrue &= wxDepositMapper.update(wxDeposit);
-            String wxRefundNo = wxDeposit.getTradeNo() + wxRecordMain.getRefundCount();
             WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS
                     , StringUtil.isEmpty(infoVo.getRefundDesc()) == true ? "微信退款" : infoVo.getRefundDesc());
             isTrue &= wxRefundRecordService.insert(wxRefundRecord);
             return isTrue;
-
+        } else {
+            WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
+                    , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
+                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL
+                    , StringUtil.isEmpty(infoVo.getRefundDesc()) == true ? "微信退款" : infoVo.getRefundDesc());
+            return wxRefundRecordService.insert(wxRefundRecord);
         }
-        return false;
+
     }
 
     @Override

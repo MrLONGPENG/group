@@ -14,6 +14,8 @@ import java.util.Date;
 public class PutVo implements Serializable {
     @NotNull(message = "id不能为空")
     private Long id;
+    //用户输入的退款金额
+    private int price;
     //退款描述
     private String refundDesc;
 }
