@@ -8,6 +8,6 @@ import java.util.HashSet;
 @Component
 public class ZuulAuthFilter extends AuthFilter {
     public ZuulAuthFilter() { // 指定放行Url
-        super(Collections.unmodifiableSet(new HashSet<>(Collections.singletonList("/sys/*"))), AuthFilter.MODE_REFUSE);
+        super(new HashSet<>(Collections.singletonList("/sys/**")), AuthFilter.MODE_REFUSE);
     }
 }

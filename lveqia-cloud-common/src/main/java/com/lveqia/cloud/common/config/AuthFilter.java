@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class AuthFilter implements Filter {
     }
 
     public AuthFilter(Set<String> allPaths, boolean currMode){
-        this.allPaths = allPaths;
+        this.allPaths = Collections.unmodifiableSet(allPaths);
         this.currMode = currMode;
     }
 
