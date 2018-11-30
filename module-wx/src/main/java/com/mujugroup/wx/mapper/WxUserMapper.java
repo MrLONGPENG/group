@@ -56,7 +56,8 @@ public interface WxUserMapper {
     WxUser findByOpenId(String openid);
 
 
-    @Select("SELECT phone,gender,language,country,province,city FROM t_wx_user WHERE open_id = #{openid} LIMIT 1")
+    @Select("SELECT nick_name as nickName,phone,gender,language,country,province,city, avatar_url as avatarUrl" +
+            " FROM t_wx_user WHERE open_id = #{openid} LIMIT 1")
     UserVo findUserVoByOpenId(String openid);
 
 
