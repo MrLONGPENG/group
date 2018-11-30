@@ -1,5 +1,6 @@
 package com.mujugroup.wx.objeck.vo.deposit;
 
+import com.mujugroup.wx.model.WxOrder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -42,4 +43,6 @@ public class InfoListVo implements Serializable {
     private String city;
     //微信临时凭证
     private String sessionKey;
+    //订单数据
+    private WxOrder wxOrder;
 }

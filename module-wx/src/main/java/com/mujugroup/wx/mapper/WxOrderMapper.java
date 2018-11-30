@@ -98,6 +98,7 @@ public interface WxOrderMapper {
             , @Param("start") long start, @Param("end") long end, @Param("tradeNo") String tradeNo
             , @Param("orderType") int orderType
             , @Param("did") String did);
+
     @ResultType(String.class)
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getTotalProfit")
     String getTotalProfit(@Param("aid") String aid, @Param("hid") String hid, @Param("oid") String oid
@@ -110,4 +111,11 @@ public interface WxOrderMapper {
 
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getPayInfoByDid")
     PayInfoTo getPayInfoByDid(@Param(value = "did") String did, @Param(value = "type") int orderType);
+
+    @Select("SELECT * FROM t_wx_order WHERE open_id= #{openId} and pay_status= #{status} and trade_no= #{orderNo} order by id desc")
+    @ResultMap("wxOrder")
+    WxOrder getOrderByOpenidAndTradeNo(@Param("openId") String openId, @Param("status") Integer status, @Param("orderNo") String orderNo);
+
+    @Select("SELECT * FROM t_wx_order WHERE open_id= #{open_id} ORDER BY id DESC LIMIT 1")
+    WxOrder getLastOrderByOpenId(@Param(value = "open_id") String openId);
 }

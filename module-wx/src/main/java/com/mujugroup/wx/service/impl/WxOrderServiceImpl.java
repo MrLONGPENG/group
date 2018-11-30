@@ -231,6 +231,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     @Override
+    public WxOrder getOrderByOpenidAndTradeNo(String openId, Integer status, String orderNo) {
+        return wxOrderMapper.getOrderByOpenidAndTradeNo(openId, status, orderNo);
+    }
+
+    @Override
     public PayInfoTo getPayInfoByDid(String did, int orderType) {
         return wxOrderMapper.getPayInfoByDid(did, orderType);
     }

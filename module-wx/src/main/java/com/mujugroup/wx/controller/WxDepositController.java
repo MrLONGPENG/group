@@ -1,6 +1,4 @@
 package com.mujugroup.wx.controller;
-
-
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.model.WxDeposit;
@@ -14,7 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import java.awt.*;
 import java.util.List;
 
 
@@ -45,8 +43,8 @@ public class WxDepositController {
     @ApiOperation(value = "修改押金状态", notes = "申请退款时,修改当前用户的押金状态")
     @RequestMapping(value = "/refund", method = RequestMethod.PUT)
     public String modifyDepositStatus(@ApiParam(value = "sessionThirdKey", required = true)
-                                      @RequestParam(value = "sessionThirdKey") String sessionThirdKey, @ApiParam(value = "当前选中的押金信息ID")
-                                      @RequestParam(value = "id") long id) throws BaseException {
+                                      @RequestParam(value = "sessionThirdKey") String sessionThirdKey
+            , @ApiParam(value = "当前选中的押金信息ID") @RequestParam(value = "id") long id ) throws BaseException {
         boolean result = wxDepositService.modifyStatus(sessionThirdKey, id);
         return ResultUtil.success(result);
     }

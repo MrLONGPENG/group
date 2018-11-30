@@ -53,4 +53,5 @@ public interface WxOrderService {
 
     PayInfoTo getPayInfoByDid(String did, int orderType);
 
+    WxOrder getOrderByOpenidAndTradeNo(String openId, Integer status, String orderNo);
 }

@@ -4,7 +4,6 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.mujugroup.wx.model.WxDeposit;
 import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.objeck.vo.deposit.PutVo;
-
 import java.util.List;
 
 /**

@@ -4,17 +4,16 @@ import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.mujugroup.wx.mapper.WxDepositMapper;
 import com.mujugroup.wx.model.WxDeposit;
+import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.model.WxRecordMain;
 import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.objeck.vo.deposit.PutVo;
-import com.mujugroup.wx.service.SessionService;
-import com.mujugroup.wx.service.UsingApiService;
-import com.mujugroup.wx.service.WxDepositService;
-import com.mujugroup.wx.service.WxRecordMainService;
+import com.mujugroup.wx.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -28,12 +27,14 @@ public class WxDepositServiceImpl implements WxDepositService {
     private final WxDepositMapper wxDepositMapper;
     private final WxRecordMainService wxRecordMainService;
     private final SessionService sessionService;
+    private final WxOrderService wxOrderService;
 
     @Autowired
-    public WxDepositServiceImpl(WxDepositMapper wxDepositMapper, WxRecordMainService wxRecordMainService, SessionService sessionService) {
+    public WxDepositServiceImpl(WxDepositMapper wxDepositMapper, WxRecordMainService wxRecordMainService, SessionService sessionService, WxOrderService wxOrderService) {
         this.wxDepositMapper = wxDepositMapper;
         this.wxRecordMainService = wxRecordMainService;
         this.sessionService = sessionService;
+        this.wxOrderService = wxOrderService;
     }
 
     @Override
@@ -56,6 +57,9 @@ public class WxDepositServiceImpl implements WxDepositService {
     //TODO 此处暂时进行全部一次性退款,后期再进行版本迭代以支持多次退款
     public boolean modifyRecordStatus(PutVo infoVo) throws BaseException {
         WxDeposit wxDeposit = wxDepositMapper.getRefundingWxDepositById(infoVo.getId());
+        WxOrder order = wxOrderService.getOrderByOpenidAndTradeNo(wxDeposit.getOpenId(), WxOrder.TYPE_PAY_SUCCESS, wxDeposit.getTradeNo());
+        if (order == null) throw new ParamException("无此订单记录!");
+        if (order.getEndTime() > System.currentTimeMillis() / 1000) throw new ParamException("当前订单仍在有效期内，暂无法退款");
         if (wxDeposit == null) throw new ParamException("该记录不存在,请重新选择!");
         WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxDeposit.getTradeNo(), wxDeposit.getOpenId());
         if (wxRecordMain == null) throw new ParamException("该记录不存在!");

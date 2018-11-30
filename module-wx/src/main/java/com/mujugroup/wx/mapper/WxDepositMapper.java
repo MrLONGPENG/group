@@ -4,6 +4,7 @@ import com.mujugroup.wx.model.WxDeposit;
 import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.sql.WxDepositSqlProvider;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -74,12 +75,15 @@ public interface WxDepositMapper {
             , @Result(column = "province", property = "province", javaType = String.class)
             , @Result(column = "city", property = "city", javaType = String.class)
             , @Result(column = "session_key", property = "sessionKey", javaType = String.class)
-    })
-    List<InfoListVo> getInfoList();
+            , @Result(column = "open_id", property = "wxOrder"
+            , one = @One(select = "com.mujugroup.wx.mapper.WxOrderMapper.getLastOrderByOpenId"
+            , fetchType = FetchType.EAGER))
+            })
+            List < InfoListVo > getInfoList();
 
-    //获取押金表中状态为退款中的数据
-    @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
-            " WHERE `status` =2  AND id= #{id} ")
-    @ResultMap("wxDeposit")
-    WxDeposit getRefundingWxDepositById(@Param(value = "id") Long id);
+            //获取押金表中状态为退款中的数据
+            @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
+                    " WHERE `status` =2  AND id= #{id} ")
+            @ResultMap("wxDeposit")
+            WxDeposit getRefundingWxDepositById(@Param(value = "id") Long id);
 }
