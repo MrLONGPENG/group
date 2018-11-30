@@ -58,7 +58,7 @@ public class WxDepositController {
     @ApiOperation(value = "修改押金状态为审核通过以及其他记录表状态,插入退款记录表"
             , notes = "修改押金状态为审核通过以及其他记录表状态,插入退款记录表")
     @RequestMapping(value = "/audit/deposit", method = RequestMethod.PUT)
-    public String modifyStatus(@ModelAttribute PutVo infoVo) throws BaseException {
+    public String modifyStatus(@Validated @ModelAttribute PutVo infoVo) throws BaseException {
         boolean result = wxDepositService.modifyRecordStatus(infoVo);
         return ResultUtil.success(result);
     }
