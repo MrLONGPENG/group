@@ -49,6 +49,8 @@ public class WxRecordMainServiceImpl implements WxRecordMainService {
         boolean isInsert = wxRecordMainMapper.insert(wxRecordMain);
         if (isInsert) {
             for (WxRecordAssist assist : wxRecordAssists) {
+                //判断是否为押金类型且金额为0
+                if (assist.getType() == 1 && assist.getPrice() == 0) continue;
                 assist.setMid(wxRecordMain.getId());
                 assist.setCrtTime(wxRecordMain.getCrtTime());
                 wxRecordAssistService.insert(assist);
