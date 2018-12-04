@@ -6,8 +6,10 @@ import com.lveqia.cloud.common.config.CoreConfig;
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.to.DataTo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.lock.mapper.LockFailMapper;
+import com.mujugroup.lock.mapper.LockSwitchMapper;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.model.LockRecord;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,12 +38,14 @@ public class LockFailServiceImpl implements LockFailService {
     private final LockFailMapper lockFailMapper;
     private final ModuleCoreService moduleCoreService;
     private final MapperFactory mapperFactory;
+    private final LockSwitchMapper lockSwitchMapper;
 
     @Autowired
-    public LockFailServiceImpl(LockFailMapper lockFailMapper, ModuleCoreService moduleCoreService, MapperFactory mapperFactory) {
+    public LockFailServiceImpl(LockFailMapper lockFailMapper, ModuleCoreService moduleCoreService, MapperFactory mapperFactory, LockSwitchMapper lockSwitchMapper) {
         this.lockFailMapper = lockFailMapper;
         this.moduleCoreService = moduleCoreService;
         this.mapperFactory = mapperFactory;
+        this.lockSwitchMapper = lockSwitchMapper;
     }
 
     @Override
@@ -128,6 +133,16 @@ public class LockFailServiceImpl implements LockFailService {
         lockFail.setOid(Integer.parseInt(oid));
         lockFail.setLastRefresh(date);
         lockFailMapper.update(lockFail);
+    }
+
+    @Override
+    public List<String> getFailNameByDid(String did) {
+        return lockFailMapper.getFailNameByDid(did);
+    }
+
+    @Override
+    public List<DataTo> getFailRecordList() {
+        return lockFailMapper.getFailRecordList();
     }
 
     @Override

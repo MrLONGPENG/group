@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service;
 
+import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.objeck.DBMap;
@@ -51,4 +52,6 @@ public interface WxOrderService {
     PayInfoTo getPayInfoByDid(String did, int orderType);
 
     WxOrder getOrderByOpenidAndTradeNo(String openId, Integer status, String orderNo);
+
+    OrderTo getOrderByCondition(long did);
 }

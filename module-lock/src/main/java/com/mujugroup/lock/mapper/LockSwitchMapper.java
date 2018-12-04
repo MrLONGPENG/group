@@ -1,5 +1,6 @@
 package com.mujugroup.lock.mapper;
 
+import com.lveqia.cloud.common.objeck.to.DataTo;
 import com.mujugroup.lock.model.LockSwitch;
 import com.mujugroup.lock.sql.LockSwitchSqlProvider;
 import org.apache.ibatis.annotations.*;
@@ -44,12 +45,16 @@ public interface LockSwitchMapper {
     List<LockSwitch> findListAll();
 
 
-    @SelectProvider(type = LockSwitchSqlProvider.class,method = "getLockStatusList")
+    @SelectProvider(type = LockSwitchSqlProvider.class, method = "getLockStatusList")
     @ResultMap("lockSwitch")
     List<LockSwitch> getLockStatusList(@Param(value = "did") String did, @Param(value = "bid") String bid
-            ,@Param(value = "startTime") String startTime,@Param(value = "endTime")String endTime);
+            , @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime);
 
     @ResultMap("lockSwitch")
     @Select("SELECT * FROM `t_lock_switch` WHERE `did` = #{did} AND `lockStatus` = 2 order by id desc limit 1")
     LockSwitch getLastOpenRecord(@Param(value = "did") long did);
+
+    @Select("SELECT `receiveTime` AS `date`,`lockStatus` AS `status` FROM `t_lock_switch`" +
+            " WHERE `did` = #{did}   AND  receiveTime> #{last_refresh}  limit 1 ")
+    DataTo getRecordByDidAndLastRefresh(@Param(value = "did") long did, @Param(value = "last_refresh") Date lastRefresh);
 }

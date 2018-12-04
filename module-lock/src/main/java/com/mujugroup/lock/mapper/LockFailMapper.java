@@ -1,6 +1,7 @@
 package com.mujugroup.lock.mapper;
 
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.to.DataTo;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.objeck.bo.fail.FailBo;
 import com.mujugroup.lock.sql.LockFailSqlProvider;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 锁故障表,数据库操作接口类
@@ -77,8 +79,8 @@ public interface LockFailMapper {
     })
     List<FailBo> getFailInfoList(@Param(value = "aid") String aid, @Param(value = "hid") String hid
             , @Param(value = "oid") String oid, @Param(value = "flag") int flag
-            , @Param(value = "status") int status,@Param(value = "did")String did,@Param(value = "bid") String bid
-            ,@Param(value = "lastRefreshStart") String lastRefreshStart, @Param(value = "lastRefreshEnd") String lastRefreshEnd);
+            , @Param(value = "status") int status, @Param(value = "did") String did, @Param(value = "bid") String bid
+            , @Param(value = "lastRefreshStart") String lastRefreshStart, @Param(value = "lastRefreshEnd") String lastRefreshEnd);
 
     @Select(" SELECT d.dict_name FROM t_lock_fail f,t_lock_dict d WHERE f.error_code=d.dict_code AND `status` & 11 AND f.did= #{did}")
     @ResultType(String.class)
@@ -90,4 +92,9 @@ public interface LockFailMapper {
     LockFail getFailInfoByDid(@Param(value = "did") String did, @Param(value = "failFlag") int failFlag
             , @Param(value = "errorCode") String errorCode);
 
+    @Select("SELECT `did`  ,`last_refresh`  FROM t_lock_fail f" +
+            " WHERE fail_flag = 4 AND fail_code = 'F_Switch' AND error_code = 'FE_SW_Timeout' AND `status` &11")
+    @Results(id = "dataTo", value = {@Result(column = "did", property = "did", javaType = long.class)
+            , @Result(column = "last_refresh", property = "date", javaType = Date.class)})
+    List<DataTo> getFailRecordList();
 }

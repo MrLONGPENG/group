@@ -1,9 +1,7 @@
 package com.mujugroup.wx.service.impl;
 
-import com.lveqia.cloud.common.objeck.to.InfoTo;
-import com.lveqia.cloud.common.objeck.to.PayInfoTo;
+import com.lveqia.cloud.common.objeck.to.*;
 import com.lveqia.cloud.common.util.DateUtil;
-import com.lveqia.cloud.common.objeck.to.RequestTo;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +195,11 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType, String did) {
         return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType, did);
+    }
+
+    @Override
+    public OrderTo getOrderByCondition(long did) {
+        return wxOrderMapper.getOrderByCondition(did);
     }
 
     @Override

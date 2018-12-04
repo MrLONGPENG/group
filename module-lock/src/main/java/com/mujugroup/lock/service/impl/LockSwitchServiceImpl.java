@@ -1,6 +1,7 @@
 package com.mujugroup.lock.service.impl;
 
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.to.DataTo;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.lock.mapper.LockSwitchMapper;
 import com.mujugroup.lock.model.LockSwitch;
@@ -11,6 +12,7 @@ import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,4 +59,8 @@ public class LockSwitchServiceImpl implements LockSwitchService {
         return lockSwitchMapper.getLastOpenRecord(did);
     }
 
+    @Override
+    public DataTo getRecordByDidAndLastRefresh(long did, long lastRefresh) {
+        return lockSwitchMapper.getRecordByDidAndLastRefresh(did, new Date(lastRefresh));
+    }
 }

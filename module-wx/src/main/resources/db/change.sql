@@ -69,4 +69,23 @@ CREATE TABLE `t_wx_refund_record` (
   `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户申请退款时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退款记录表';
+-- ----------------------------
+-- Table structure for t_wx_deduction_record(扣费记录表)
+-- ----------------------------
+DROP TABLE IF EXISTS `t_wx_deduction_record`;
+CREATE TABLE `t_wx_deduction_record`(
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+   `open_id` VARCHAR(32) DEFAULT NULL COMMENT '微信对外唯一ID',
+   `trade_no`VARCHAR(32) DEFAULT NULL COMMENT '内部订单号，如20180626123456',
+   `did` BIGINT(20) DEFAULT NULL COMMENT '业务ID',
+   `explain`VARCHAR(50) DEFAULT NULL COMMENT '扣费原因',
+   `day` DATE DEFAULT NULL COMMENT '扣费记录产生日期',
+   `forfeit` INT(11) DEFAULT NULL COMMENT '扣费金额',
+   `timeout` INT(11) DEFAULT NULL COMMENT '超时时长',
+   `type`TINYINT(4) DEFAULT NULL COMMENT '扣费类型 1:超时扣费 2:其他',
+   `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+   UNIQUE KEY `index_key` (`open_id`,`did`,`day`) COMMENT '唯一索引',
+   PRIMARY KEY (`id`)
+   ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='扣费记录表';
+
 

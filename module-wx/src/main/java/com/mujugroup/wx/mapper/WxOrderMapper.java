@@ -2,6 +2,7 @@ package com.mujugroup.wx.mapper;
 
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.objeck.DBObj;
+import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.sql.WxOrderSqlProvider;
@@ -118,4 +119,22 @@ public interface WxOrderMapper {
 
     @Select("SELECT * FROM t_wx_order WHERE open_id= #{open_id} ORDER BY id DESC LIMIT 1")
     WxOrder getLastOrderByOpenId(@Param(value = "open_id") String openId);
+
+    @Select("SELECT * FROM t_wx_order " +
+            " WHERE pay_status = 2 AND did= #{did}   ORDER BY id DESC LIMIT 1")
+    @Results(id = "OrderTo", value = {
+            @Result(column = "did", property = "did", javaType = String.class)
+            , @Result(column = "aid", property = "aid", javaType = String.class)
+            , @Result(column = "hid", property = "hid", javaType = String.class)
+            , @Result(column = "oid", property = "oid", javaType = String.class)
+            , @Result(column = "gid", property = "gid", javaType = String.class)
+            , @Result(column = "open_id", property = "openId", javaType = String.class)
+            , @Result(column = "trade_no", property = "tradeNo", javaType = String.class)
+            , @Result(column = "order_type", property = "orderType", javaType = Integer.class)
+            , @Result(column = "pay_price", property = "payPrice", javaType = Integer.class)
+            , @Result(column = "pay_status", property = "payStatus", javaType = Integer.class)
+            , @Result(column = "pay_time", property = "payTime", javaType = Long.class)
+            , @Result(column = "end_time", property = "endTime", javaType = Long.class)
+    })
+    OrderTo getOrderByCondition(@Param(value = "did") long did);
 }

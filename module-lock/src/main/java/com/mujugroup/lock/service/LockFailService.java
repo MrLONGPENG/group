@@ -2,6 +2,8 @@ package com.mujugroup.lock.service;
 
 import com.lveqia.cloud.common.exception.DataException;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.objeck.to.DataTo;
 import com.lveqia.cloud.common.objeck.to.InfoTo;
 import com.mujugroup.lock.model.LockFail;
 import com.mujugroup.lock.model.LockRecord;
@@ -36,4 +38,9 @@ public interface LockFailService {
     void modifyModel(LockFail lockFail, String aid, String hid, String oid, Date date);
 
     boolean modify(int uid, PutVo putVo) throws ParamException;
+
+    List<DataTo> getFailRecordList();
+
+    List<String> getFailNameByDid(String did);
+
 }

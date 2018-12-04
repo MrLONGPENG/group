@@ -1,8 +1,10 @@
 package com.lveqia.cloud.common.objeck.to;
 
 
+import java.util.Date;
+
 /**
- *  Service Transfer Object
+ * Service Transfer Object
  * 订单-数据传输对象
  */
 public class OrderTo {
@@ -14,10 +16,20 @@ public class OrderTo {
     private String oid;
     private String gid;
     private String tradeNo;
+    private String openId;
     private Integer payPrice;
     private Integer payStatus;
     private Integer orderType;
     private Long payTime;
+    private Long endTime;
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
 
     public String getId() {
         return id;
@@ -106,4 +118,14 @@ public class OrderTo {
     public void setPayTime(Long payTime) {
         this.payTime = payTime;
     }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+
 }
