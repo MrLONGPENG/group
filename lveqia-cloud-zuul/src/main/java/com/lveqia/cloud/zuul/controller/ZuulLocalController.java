@@ -19,7 +19,7 @@ import java.util.Map;
 public class ZuulLocalController implements ErrorController {
 
     private static final String ERROR_PATH = "/error";
-    private static final String info = "Requested path %s with result %s";
+    //private static final String info = "Requested path %s with result %s";
     private final Logger logger = LoggerFactory.getLogger(ZuulLocalController.class);
     private final ErrorAttributes errorAttributes;
 
@@ -41,9 +41,10 @@ public class ZuulLocalController implements ErrorController {
         Map<String, Object> map =errorAttributes.getErrorAttributes(webRequest, true);
         String trace = (String) map.get("trace");
         if(!StringUtil.isEmpty(trace)) {
-            logger.error("status:{} trace:{}",map.get("status") ,trace);
+            logger.error("status:{} error:{} message:{}", map.get("status") ,map.get("error"), map.get("message"));
         }
-        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_PATH, String.format(info, map.get("path"), map.get("message")));
+        int code = map.containsKey("status") ? (int) map.get("status") : 500;
+        return ResultUtil.error(code == 404 ? ResultUtil.CODE_NOT_FIND_PATH : ResultUtil.CODE_UNKNOWN_ERROR, map);
     }
 
     @ResponseBody

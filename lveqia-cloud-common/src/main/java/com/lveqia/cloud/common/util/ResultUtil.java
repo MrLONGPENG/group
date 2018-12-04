@@ -126,13 +126,18 @@ public class ResultUtil {
     /**
      * 返回错误的结果，带错误提示
      */
-    public static String error(int code, String info) {
+    public static String error(int code, Object info) {
         if(info == null) return error(code);
-        Result<String> result = new Result<>();
+        Result<Object> result = new Result<>();
         result.setCode(code);
-        result.setInfo(info);
+        if(info instanceof String){
+            result.setInfo((String) info);
+        }else{
+            result.setData(info);
+        }
         return gson.toJson(result);
     }
+
 
     private static class Result<T>{
         private int code;
