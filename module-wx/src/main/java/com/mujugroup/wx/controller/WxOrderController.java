@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.bean.OrderBean;
+import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.model.WxOrder;
 import com.mujugroup.wx.service.WxOrderService;
 import io.swagger.annotations.Api;
@@ -76,8 +77,10 @@ public class WxOrderController {
         Map<String, String> map = wxOrderService.orderRefund(tradeNo, price);
         if (map == null) {
             return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
+        }else if(map.containsKey("err_code_des")){
+            return ResultUtil.error(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
         } else {
-            return ResultUtil.success(map);
+            return ResultUtil.success();
         }
     }
 

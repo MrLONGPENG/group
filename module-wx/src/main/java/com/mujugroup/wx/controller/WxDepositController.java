@@ -1,4 +1,5 @@
 package com.mujugroup.wx.controller;
+
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.model.WxDeposit;
@@ -12,8 +13,10 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,8 +44,8 @@ public class WxDepositController {
     @ApiOperation(value = "修改押金状态", notes = "申请退款时,修改当前用户的押金状态")
     @RequestMapping(value = "/deposit/refund", method = RequestMethod.PUT)
     public String modifyDepositStatus(@ApiParam(value = "sessionThirdKey", required = true)
-             @RequestParam(value = "sessionThirdKey") String sessionThirdKey
-            , @ApiParam(value = "当前选中的押金信息ID") @RequestParam(value = "id") long id ) throws BaseException {
+                                      @RequestParam(value = "sessionThirdKey") String sessionThirdKey
+            , @ApiParam(value = "当前选中的押金信息ID") @RequestParam(value = "id") long id) throws BaseException {
         return ResultUtil.success(wxDepositService.modifyStatus(sessionThirdKey, id));
     }
 
@@ -56,7 +59,14 @@ public class WxDepositController {
             , notes = "修改押金状态为审核通过以及其他记录表状态,插入退款记录表")
     @RequestMapping(value = "/audit/deposit", method = RequestMethod.PUT)
     public String modifyStatus(@Validated @ModelAttribute PutVo infoVo) throws BaseException {
-        return ResultUtil.success(wxDepositService.modifyRecordStatus(infoVo));
+        Map<String, String> map = wxDepositService.modifyRecordStatus(infoVo);
+        if (map == null) {
+            return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
+        } else if (map.containsKey("err_code_des")) {
+            return ResultUtil.error(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
+        } else {
+            return ResultUtil.success();
+        }
     }
 
 }
