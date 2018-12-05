@@ -59,7 +59,7 @@ CREATE TABLE `t_wx_order` (
 `transaction_id` varchar(32) DEFAULT NULL COMMENT '微信订单号，如20180626123456',
 `order_type` tinyint(4) DEFAULT NULL COMMENT '支付类型 1:晚休 2:午休',
 `pay_price` int(11) DEFAULT NULL COMMENT '实际支付价格',
-`pay_status`  tinyint(4) DEFAULT NULL COMMENT '实际支付状态 1.统一下单 2.支付完成',
+`pay_status`  tinyint(4) DEFAULT NULL COMMENT '实际支付状态 1.统一下单 2.支付完成 4.已退款',
 `pay_time` bigint(20) DEFAULT NULL COMMENT '支付时10位时间戳',
 `end_time` bigint(20) DEFAULT NULL COMMENT '结束时10位时间戳',
 `crtTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -241,6 +241,7 @@ CREATE TABLE `t_wx_refund_record` (
   `refundDesc` VARCHAR(200) DEFAULT NULL COMMENT '退款原因',
   `refund_price` INT(11) DEFAULT NULL COMMENT '退款金额',
   `total_price` INT(11) DEFAULT NULL COMMENT '总金额',
+  `refund_type` TINYINT(4) DEFAULT NULL COMMENT '退款类型 1.押金退款 2.订单退款',
   `refund_status` TINYINT(4) DEFAULT NULL COMMENT '退款状态 1.退款失败 2.退款成功',
   `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户申请退款时间',
   PRIMARY KEY (`id`)

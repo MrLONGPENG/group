@@ -1,21 +1,25 @@
 package com.mujugroup.wx.service.impl;
 
+import com.lveqia.cloud.common.exception.BaseException;
+import com.lveqia.cloud.common.exception.ParamException;
 import com.lveqia.cloud.common.objeck.to.*;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.bean.OrderBean;
+import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.mapper.WxOrderMapper;
-import com.mujugroup.wx.model.WxOrder;
-import com.mujugroup.wx.service.SessionService;
-import com.mujugroup.wx.service.WxOrderService;
+import com.mujugroup.wx.model.*;
+import com.mujugroup.wx.service.*;
 import com.mujugroup.wx.service.feign.ModuleCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +30,23 @@ public class WxOrderServiceImpl implements WxOrderService {
     private final WxOrderMapper wxOrderMapper;
     private final SessionService sessionService;
     private final ModuleCoreService moduleCoreService;
+    private final WxRecordMainService wxRecordMainService;
+    private final PayApiService payApiService;
+    private final WxRefundRecordService wxRefundRecordService;
+    private final WxUsingService wxUsingService;
     private final Logger logger = LoggerFactory.getLogger(WxOrderServiceImpl.class);
+
 
     @Autowired
     public WxOrderServiceImpl(WxOrderMapper wxOrderMapper, SessionService sessionService
-            , ModuleCoreService moduleCoreService) {
+            , ModuleCoreService moduleCoreService, WxRecordMainService wxRecordMainService, PayApiService payApiService, WxRefundRecordService wxRefundRecordService, WxUsingService wxUsingService) {
         this.wxOrderMapper = wxOrderMapper;
         this.sessionService = sessionService;
         this.moduleCoreService = moduleCoreService;
+        this.wxRecordMainService = wxRecordMainService;
+        this.payApiService = payApiService;
+        this.wxRefundRecordService = wxRefundRecordService;
+        this.wxUsingService = wxUsingService;
     }
 
     @Override
@@ -89,6 +102,45 @@ public class WxOrderServiceImpl implements WxOrderService {
         return wxOrderMapper.findListAll();
     }
 
+    @Transactional
+    @Override
+    public Map<String, String> orderRefund(String tradeNo, Integer price) throws BaseException {
+        if (StringUtil.isEmpty(tradeNo)) throw new ParamException("订单编号不能为空!");
+        WxOrder wxOrder = getFinishOrderByTradeNo(tradeNo);
+        if (wxOrder == null) throw new ParamException("当前订单不存在,请重新选择");
+        if (price > wxOrder.getPayPrice()) throw new ParamException("退款金额不能大于实际支付金额!");
+        WxUsing wxUsing = wxUsingService.getWxUsingByDidAndPayTime(wxOrder.getOpenId(), wxOrder.getDid().toString(), wxOrder.getPayTime());
+        if (wxUsing == null) throw new ParamException("当前设备不存在!");
+        WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxOrder.getTradeNo(), wxOrder.getOpenId());
+        if (wxRecordMain == null) throw new ParamException("统一支付主表无当前记录,请重新选择");
+        if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
+        wxRecordMain.setRefundPrice(wxRecordMain.getRefundPrice() + price);//设置支付记录主表的退款金额
+        wxRecordMain.setRefundCount(wxRecordMain.getRefundCount() + 1);//设置当前退款次数
+        //调用微信退款接口,进行退款操作
+        Map<String, String> map = payApiService.refund(wxRecordMain.getRefundCount(), wxOrder.getTradeNo()
+                , wxRecordMain.getTotalPrice().longValue(), price.longValue()
+                , "订单退款", MyConfig.REFUND_SOURCE_UNSETTLED_FUNDS);
+        String wxRefundNo = wxOrder.getTradeNo() + wxRecordMain.getRefundCount();
+        if (map != null && MyConfig.SUCCESS.equals(map.get("return_code")) && MyConfig.SUCCESS.equals(map.get("result_code"))) {
+            wxOrder.setPayStatus(WxOrder.REFUNDING_MONEY);//设置当前订单的状态为已退款
+            wxOrder.setEndTime(System.currentTimeMillis() / 1000);
+            wxUsing.setDeleted(true);//设置使用状态为删除状态
+            WxRefundRecord wxRefundRecord = wxRefundRecordService.bindWxRefundRecord(wxOrder.getOpenId(), wxOrder.getTradeNo()
+                    , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
+                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS, WxRefundRecord.TYPE_ORDER_REFUND, "订单退款");
+            wxOrderMapper.update(wxOrder);
+            wxUsingService.update(wxUsing);
+            wxRecordMainService.update(wxRecordMain);
+            wxRefundRecordService.insert(wxRefundRecord);
+        } else {
+            if (map != null) logger.debug("退款失败:{}", map.get("err_code_des"));
+            WxRefundRecord wxRefundRecord = wxRefundRecordService.bindWxRefundRecord(wxOrder.getOpenId(), wxOrder.getTradeNo()
+                    , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
+                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, WxRefundRecord.TYPE_ORDER_REFUND, "订单退款");
+            wxRefundRecordService.insert(wxRefundRecord);
+        }
+        return map;
+    }
 
     @Override
     public List<DBMap> getPayCountByAid(String aid) {
@@ -195,6 +247,16 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public List<WxOrder> findList(String aid, String hid, String oid, long start, long end, String tradeNo, int orderType, String did) {
         return wxOrderMapper.findList(aid, hid, oid, start, end, tradeNo, orderType, did);
+    }
+
+    @Override
+    public WxOrder getFinishOrderByTradeNo(String tradeNo) {
+        return wxOrderMapper.getFinishOrderByTradeNo(tradeNo);
+    }
+
+    @Override
+    public WxOrder getFinishOrderById(long id) {
+        return wxOrderMapper.getFinishOrderById(id);
     }
 
     @Override

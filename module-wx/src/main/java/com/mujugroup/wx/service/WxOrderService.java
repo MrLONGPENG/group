@@ -1,5 +1,6 @@
 package com.mujugroup.wx.service;
 
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.objeck.to.OrderTo;
 import com.lveqia.cloud.common.objeck.to.PayInfoTo;
 import com.lveqia.cloud.common.objeck.to.RequestTo;
@@ -8,6 +9,7 @@ import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxOrder;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WxOrderService {
 
@@ -54,4 +56,10 @@ public interface WxOrderService {
     WxOrder getOrderByOpenidAndTradeNo(String openId, Integer status, String orderNo);
 
     OrderTo getOrderByCondition(long did);
+
+    WxOrder getFinishOrderById(long id);
+
+    WxOrder getFinishOrderByTradeNo(String tradeNo);
+
+    Map<String, String> orderRefund(String tradeNo,Integer price) throws BaseException;
 }

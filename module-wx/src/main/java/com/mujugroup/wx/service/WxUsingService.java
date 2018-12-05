@@ -17,4 +17,6 @@ public interface WxUsingService {
     boolean deleteByDid(String did, long time);
 
     int getCountByUsingDid(String did, long time);
+
+    WxUsing getWxUsingByDidAndPayTime(String openId, String did, long payTime);
 }

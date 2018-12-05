@@ -15,7 +15,7 @@ import java.util.List;
  * 创建时间:20180703
  */
 @Mapper
-@Component(value ="wxUsingMapper")
+@Component(value = "wxUsingMapper")
 public interface WxUsingMapper {
 
     @InsertProvider(type = WxUsingSqlProvider.class, method = "insert")
@@ -29,15 +29,15 @@ public interface WxUsingMapper {
 
     @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 AND id = #{id}")
     @Results(id = "wxUsing", value = {
-            @Result(id=true, column="id",property="id",javaType=Integer.class)
-            ,@Result(column="did",property="did",javaType=Long.class)
-            ,@Result(column="open_id",property="openId",javaType=String.class)
-            ,@Result(column="pay_cost",property="payCost",javaType=Integer.class)
-            ,@Result(column="pay_time",property="payTime",javaType=Long.class)
-            ,@Result(column="end_time",property="endTime",javaType=Long.class)
-            ,@Result(column="unlock_time",property="unlockTime",javaType=Date.class)
-            ,@Result(column="using",property="using",javaType=Boolean.class)
-            ,@Result(column="deleted",property="deleted",javaType=Boolean.class)
+            @Result(id = true, column = "id", property = "id", javaType = Integer.class)
+            , @Result(column = "did", property = "did", javaType = Long.class)
+            , @Result(column = "open_id", property = "openId", javaType = String.class)
+            , @Result(column = "pay_cost", property = "payCost", javaType = Integer.class)
+            , @Result(column = "pay_time", property = "payTime", javaType = Long.class)
+            , @Result(column = "end_time", property = "endTime", javaType = Long.class)
+            , @Result(column = "unlock_time", property = "unlockTime", javaType = Date.class)
+            , @Result(column = "using", property = "using", javaType = Boolean.class)
+            , @Result(column = "deleted", property = "deleted", javaType = Boolean.class)
     })
     WxUsing findById(Integer id);
 
@@ -63,4 +63,7 @@ public interface WxUsingMapper {
     @ResultType(int.class)
     int getCountByUsingDid(@Param("did") String did, @Param("time") long time);
 
+    @Select("SELECT * FROM t_wx_using WHERE `deleted`=0 AND open_id= #{openId} AND did = #{did} AND pay_time = #{payTime} LIMIT 1 ")
+    @ResultMap("wxUsing")
+    WxUsing getWxUsingByDidAndPayTime(@Param(value = "openId") String openId, @Param(value = "did") String did, @Param(value = "payTime") long payTime);
 }

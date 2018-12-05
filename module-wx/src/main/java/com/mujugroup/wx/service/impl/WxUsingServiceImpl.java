@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.List;
 
@@ -39,45 +40,49 @@ public class WxUsingServiceImpl implements WxUsingService {
      * 当WxUsing中状态与指定不同时候，更新状态
      */
     @Override
-    public  WxUsing updateUsingStatus(WxUsing wxUsing, String status) {
+    public WxUsing updateUsingStatus(WxUsing wxUsing, String status) {
         logger.info("设备{}同步锁状态中, status:{}, using:{}", wxUsing.getDid(), status, wxUsing.getUsing());
-        if(!wxUsing.getUsing() && "2".equals(status)){
+        if (!wxUsing.getUsing() && "2".equals(status)) {
             logger.info("updateUsingStatus 开锁");
             wxUsing.setUsing(true);
             wxUsing.setUnlockTime(new Date());
             wxUsingMapper.update(wxUsing);
-        }else if(wxUsing.getUsing() && "1".equals(status)){
+        } else if (wxUsing.getUsing() && "1".equals(status)) {
             logger.info("updateUsingStatus 关锁");
             wxUsing.setUsing(false);
             wxUsingMapper.update(wxUsing);
-        }else{
+        } else {
             logger.info("updateUsingStatus 无状态变化");
         }
         return wxUsing;
     }
+
     /**
      * 通过OpenID查询使用情况信息
+     *
      * @param time 指定时间需要小于订单结束时间
      */
     @Override
     public WxUsing findUsingByOpenId(String openId, long time) {
         List<WxUsing> list = wxUsingMapper.findUsingByOpenId(openId, time);
-        if(list == null || list.size()==0 ) return null;
-        if(list.size()>1) logger.error("错误:通过OpenId找到的使用情况数量大于1");
+        if (list == null || list.size() == 0) return null;
+        if (list.size() > 1) logger.error("错误:通过OpenId找到的使用情况数量大于1");
         return list.get(0);
     }
+
     /**
      * 通过DID查询使用情况信息
-     * @param time 指定时间需要小于订单结束时间
+     *
+     * @param time   指定时间需要小于订单结束时间
      * @param isSync 是否远程调用同步锁状态
      */
     @Override
     public WxUsing findUsingByDid(String did, long time, boolean isSync) {
         List<WxUsing> list = wxUsingMapper.findUsingByDid(did, time);
-        if(list == null || list.size()==0 ) return null;
-        if(list.size()>1) logger.error("错误:通过Did找到的使用情况数量大于1");
+        if (list == null || list.size() == 0) return null;
+        if (list.size() > 1) logger.error("错误:通过Did找到的使用情况数量大于1");
         WxUsing wxUsing = list.get(0);
-        if(wxUsing!=null && isSync) updateUsingStatus(wxUsing, moduleLockService.getLockStatus(did));
+        if (wxUsing != null && isSync) updateUsingStatus(wxUsing, moduleLockService.getLockStatus(did));
         return wxUsing;
     }
 
@@ -88,8 +93,13 @@ public class WxUsingServiceImpl implements WxUsingService {
     }
 
     @Override
+    public WxUsing getWxUsingByDidAndPayTime(String openId, String did, long payTime) {
+        return wxUsingMapper.getWxUsingByDidAndPayTime(openId, did, payTime);
+    }
+
+    @Override
     public int getCountByUsingDid(String did, long time) {
-        return wxUsingMapper.getCountByUsingDid(did,time);
+        return wxUsingMapper.getCountByUsingDid(did, time);
     }
 
 

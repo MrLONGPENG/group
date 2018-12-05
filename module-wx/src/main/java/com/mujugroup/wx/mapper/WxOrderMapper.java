@@ -137,4 +137,12 @@ public interface WxOrderMapper {
             , @Result(column = "end_time", property = "endTime", javaType = Long.class)
     })
     OrderTo getOrderByCondition(@Param(value = "did") long did);
+
+    @Select("SELECT * FROM t_wx_order WHERE pay_status = 2 AND id= #{id}")
+    @ResultMap("wxOrder")
+    WxOrder getFinishOrderById(@Param(value = "id") long id);
+
+    @Select("SELECT * FROM t_wx_order WHERE pay_status = 2 AND trade_no= #{tradeNo} order by id desc LIMIT 1")
+    @ResultMap("wxOrder")
+    WxOrder getFinishOrderByTradeNo(@Param(value = "tradeNo") String tradeNo);
 }

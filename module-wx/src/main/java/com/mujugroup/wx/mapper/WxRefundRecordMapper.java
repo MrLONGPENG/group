@@ -11,11 +11,12 @@ import java.util.List;
 /**
  * 退款记录表,数据库操作接口类
  * 类名:WxRefundRecordMapper
+ *
  * @author leolaurel
  * 创建时间:20181130
  */
 @Mapper
-@Component(value ="wxRefundRecordMapper")
+@Component(value = "wxRefundRecordMapper")
 public interface WxRefundRecordMapper {
 
     @InsertProvider(type = WxRefundRecordSqlProvider.class, method = "insert")
@@ -29,16 +30,17 @@ public interface WxRefundRecordMapper {
 
     @Select("SELECT * FROM t_wx_refund_record WHERE id = #{id}")
     @Results(id = "wxRefundRecord", value = {
-         @Result(id=true, column="id",property="id",javaType=Long.class)
-             ,@Result(column="open_id",property="openId",javaType=String.class)
-             ,@Result(column="trade_no",property="tradeNo",javaType=String.class)
-             ,@Result(column="refund_no",property="refundNo",javaType=String.class)
-             ,@Result(column="refund_count",property="refundCount",javaType=Integer.class)
-             ,@Result(column="refundDesc",property="refundDesc",javaType=String.class)
-             ,@Result(column="refund_price",property="refundPrice",javaType=Integer.class)
-             ,@Result(column="total_price",property="totalPrice",javaType=Integer.class)
-             ,@Result(column="refund_status",property="refundStatus",javaType=Integer.class)
-             ,@Result(column="crtTime",property="crtTime",javaType=Date.class)
+            @Result(id = true, column = "id", property = "id", javaType = Long.class)
+            , @Result(column = "open_id", property = "openId", javaType = String.class)
+            , @Result(column = "trade_no", property = "tradeNo", javaType = String.class)
+            , @Result(column = "refund_no", property = "refundNo", javaType = String.class)
+            , @Result(column = "refund_count", property = "refundCount", javaType = Integer.class)
+            , @Result(column = "refundDesc", property = "refundDesc", javaType = String.class)
+            , @Result(column = "refund_price", property = "refundPrice", javaType = Integer.class)
+            , @Result(column = "total_price", property = "totalPrice", javaType = Integer.class)
+            , @Result(column = "refund_status", property = "refundStatus", javaType = Integer.class)
+            , @Result(column = "refund_type", property = "refundType", javaType = Integer.class)
+            , @Result(column = "crtTime", property = "crtTime", javaType = Date.class)
     })
     WxRefundRecord findById(Integer id);
 

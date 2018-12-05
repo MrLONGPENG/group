@@ -35,6 +35,7 @@ public class WxDepositServiceImpl implements WxDepositService {
     private final PayApiService payApiService;
     private final WxRefundRecordService wxRefundRecordService;
     private final Logger logger = LoggerFactory.getLogger(WxDepositServiceImpl.class);
+
     @Autowired
     public WxDepositServiceImpl(WxDepositMapper wxDepositMapper, WxRecordMainService wxRecordMainService
             , SessionService sessionService, WxOrderService wxOrderService, PayApiService payApiService
@@ -61,7 +62,7 @@ public class WxDepositServiceImpl implements WxDepositService {
 
     /**
      * 修改押金表,支付主表中的相关状态
-     *  //TODO 此处暂时进行全部一次性退款,后期再进行版本迭代以支持多次退款
+     * //TODO 此处暂时进行全部一次性退款,后期再进行版本迭代以支持多次退款
      */
     @Override
     @Transactional
@@ -80,8 +81,8 @@ public class WxDepositServiceImpl implements WxDepositService {
         if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
 
         //调用微信退款接口
-        if(StringUtil.isEmpty(infoVo.getRefundDesc())) infoVo.setRefundDesc("微信退款");
-        wxRecordMain.setRefundPrice(wxRecordMain.getRefundPrice()+ infoVo.getPrice());//设置支付记录主表的退款金额
+        if (StringUtil.isEmpty(infoVo.getRefundDesc())) infoVo.setRefundDesc("微信退款");
+        wxRecordMain.setRefundPrice(wxRecordMain.getRefundPrice() + infoVo.getPrice());//设置支付记录主表的退款金额
         wxRecordMain.setRefundCount(wxRecordMain.getRefundCount() + 1);//设置当前退款次数
 
         Map<String, String> map = payApiService.refund(wxRecordMain.getRefundCount(), wxDeposit.getTradeNo()
@@ -91,17 +92,17 @@ public class WxDepositServiceImpl implements WxDepositService {
         if (map != null && MyConfig.SUCCESS.equals(map.get("return_code")) && MyConfig.SUCCESS.equals(map.get("result_code"))) {
             wxDeposit.setStatus(WxDeposit.PASS_AUDIT);//设置当前押金表的状态为审核通过
             wxDeposit.setUpdTime(new Date());
-            WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
+            WxRefundRecord wxRefundRecord = wxRefundRecordService.bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
-                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS, infoVo.getRefundDesc());
+                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS, WxRefundRecord.TYPE_DEPOSIT_REFUND, infoVo.getRefundDesc());
             wxDepositMapper.update(wxDeposit);
             wxRecordMainService.update(wxRecordMain);
             wxRefundRecordService.insert(wxRefundRecord);
         } else {
-            if(map != null) logger.debug("退款失败:{}", map.get("err_code_des"));
-            WxRefundRecord wxRefundRecord = bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
+            if (map != null) logger.debug("退款失败:{}", map.get("err_code_des"));
+            WxRefundRecord wxRefundRecord = wxRefundRecordService.bindWxRefundRecord(wxDeposit.getOpenId(), wxDeposit.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
-                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, infoVo.getRefundDesc());
+                    , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, WxRefundRecord.TYPE_DEPOSIT_REFUND, infoVo.getRefundDesc());
             wxRefundRecordService.insert(wxRefundRecord);
         }
         return map;
@@ -138,22 +139,5 @@ public class WxDepositServiceImpl implements WxDepositService {
     @Override
     public boolean update(WxDeposit wxDeposit) {
         return wxDepositMapper.update(wxDeposit);
-    }
-
-    /**
-     * 绑定退款实体模型
-     */
-    private WxRefundRecord bindWxRefundRecord(String openId, String tradeNo, String refundNo, int refundCount
-            , int refundPrice, int totalPrice, int refundStatus, String desc) {
-        WxRefundRecord wxRefundRecord = new WxRefundRecord();
-        wxRefundRecord.setOpenId(openId);
-        wxRefundRecord.setTradeNo(tradeNo);
-        wxRefundRecord.setRefundNo(refundNo);
-        wxRefundRecord.setRefundCount(refundCount);
-        wxRefundRecord.setRefundPrice(refundPrice);
-        wxRefundRecord.setTotalPrice(totalPrice);
-        wxRefundRecord.setRefundStatus(refundStatus);
-        wxRefundRecord.setRefundDesc(desc);
-        return wxRefundRecord;
     }
 }

@@ -3,6 +3,7 @@ package com.mujugroup.wx.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.model.WxOrder;
@@ -20,11 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/order")
-@Api(description="微信订单信息接口")
+@Api(description = "微信订单信息接口")
 public class WxOrderController {
 
     private final Logger logger = LoggerFactory.getLogger(WxOrderController.class);
@@ -36,18 +38,18 @@ public class WxOrderController {
     }
 
 
-    @ApiOperation(value="获取微信支付订单信息", notes="根据Token获取信息")
-    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST })
-    public String list(@ApiParam(value="访问Token") @RequestParam(name="sessionThirdKey")String sessionThirdKey
-            , @ApiParam(value="当前页")@RequestParam(name="pageNum", required=false, defaultValue="1")int pageNum
-            , @ApiParam(value="每页显示")@RequestParam(name="pageSize", required=false, defaultValue="10")int pageSize){
+    @ApiOperation(value = "获取微信支付订单信息", notes = "根据Token获取信息")
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
+    public String list(@ApiParam(value = "访问Token") @RequestParam(name = "sessionThirdKey") String sessionThirdKey
+            , @ApiParam(value = "当前页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum
+            , @ApiParam(value = "每页显示") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
         logger.debug("order-list:{}", sessionThirdKey);
         PageHelper.startPage(pageNum, pageSize);
         List<WxOrder> list = wxOrderService.listSelfOrder(sessionThirdKey);
-        if(list!=null){
-            PageInfo pageInfo =  PageInfo.of(list);
+        if (list != null) {
+            PageInfo pageInfo = PageInfo.of(list);
             List<OrderBean> orders = new ArrayList<>();
-            for (WxOrder wxOrder:list){
+            for (WxOrder wxOrder : list) {
                 orders.add(new OrderBean(wxOrder));
             }
             return ResultUtil.success(orders, pageInfo);
@@ -55,15 +57,24 @@ public class WxOrderController {
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
     }
 
-    @ApiOperation(value="获取订单信息详细信息", notes="根据Token与订单号获取详细信息")
-    @RequestMapping(value = "/details", method = {RequestMethod.GET, RequestMethod.POST })
-    public String details(String sessionThirdKey, String tradeNo){
+    @ApiOperation(value = "获取订单信息详细信息", notes = "根据Token与订单号获取详细信息")
+    @RequestMapping(value = "/details", method = {RequestMethod.GET, RequestMethod.POST})
+    public String details(String sessionThirdKey, String tradeNo) {
         logger.debug("order-details:{}", tradeNo);
         OrderBean details = wxOrderService.details(sessionThirdKey, tradeNo);
-        if(details!=null){
+        if (details != null) {
             return ResultUtil.success(details);
         }
         return ResultUtil.error(ResultUtil.CODE_NOT_FIND_DATA);
+    }
+
+    @ApiOperation(value = "订单退款", notes = "订单退款")
+    @RequestMapping(value = "/refund", method = RequestMethod.POST)
+    public String orderRefund(@ApiParam(value = "订单编号") @RequestParam(value = "tradeNo") String tradeNo
+            , @ApiParam(value = "退款金额") @RequestParam(value = "price", required = false, defaultValue = "0") Integer price
+    ) throws BaseException {
+        Map<String, String> map = wxOrderService.orderRefund(tradeNo, price);
+        return ResultUtil.success(map);
     }
 
 }

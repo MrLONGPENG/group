@@ -19,6 +19,8 @@ public class WxRefundRecord implements Serializable {
 
     public final static int PAY_FAIL = 1;//退款失败
     public final static int PAY_SUCCESS = 2;//退款成功
+    public final static int TYPE_DEPOSIT_REFUND = 1;//押金类型退款
+    public final static int TYPE_ORDER_REFUND = 2;//订单类型退款
     /**
      * 主键
      * <p>
@@ -84,6 +86,12 @@ public class WxRefundRecord implements Serializable {
      */
     @Column(name = "refund_status")
     private Integer refundStatus;
+    /**
+     * 退款类型 1.押金退款 2.订单退款
+     * 表字段 : t_wx_refund_record.refund_type
+     */
+    @Column(name = "refund_type")
+    private Integer refundType;
 
     /**
      * 用户申请退款时间

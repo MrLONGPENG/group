@@ -22,16 +22,17 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 public class WxOrder extends WxBase {
 
-	public static final Integer TYPE_PAY_WAITING = 1;
-    public static final Integer TYPE_PAY_SUCCESS = 2;
-	/*** 支付类型-晚休-晚上套餐 */
-	public static final Integer ORDER_TYPE_NIGHT  = 1;
-	/*** 支付类型-午休-中午套餐 */
-	public static final Integer ORDER_TYPE_MIDDAY = 2;
+    public static final Integer TYPE_PAY_WAITING = 1;//统一下单
+    public static final Integer TYPE_PAY_SUCCESS = 2;//支付完成
+    public static final int REFUNDING_MONEY = 4;//已退款
+    /*** 支付类型-晚休-晚上套餐 */
+    public static final Integer ORDER_TYPE_NIGHT = 1;
+    /*** 支付类型-午休-中午套餐 */
+    public static final Integer ORDER_TYPE_MIDDAY = 2;
 
-	/**
+    /**
      * 主键
-     * 
+     * <p>
      * 表字段 : t_wx_order.id
      */
     @Id
@@ -96,12 +97,12 @@ public class WxOrder extends WxBase {
     private String transactionId;
 
 
-	/**
-	 * 支付类型 1:晚休 2:午休
-	 * 表字段 : t_wx_order.order_type
-	 */
-	@Column(name = "order_type")
-	private Integer orderType;
+    /**
+     * 支付类型 1:晚休 2:午休
+     * 表字段 : t_wx_order.order_type
+     */
+    @Column(name = "order_type")
+    private Integer orderType;
 
 
     /**
@@ -140,13 +141,13 @@ public class WxOrder extends WxBase {
     private Date crtTime;
 
 
-	/**
-	 * 组装订单各个ID  格式：AID&HID&OID&GID
-	 */
+    /**
+     * 组装订单各个ID  格式：AID&HID&OID&GID
+     */
     public String getKey() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getAid()).append(Constant.SIGN_AND).append(getHid()).append(Constant.SIGN_AND);
-		sb.append(getOid()).append(Constant.SIGN_AND).append(getGid());
-		return new String(sb);
+        StringBuilder sb = new StringBuilder();
+        sb.append(getAid()).append(Constant.SIGN_AND).append(getHid()).append(Constant.SIGN_AND);
+        sb.append(getOid()).append(Constant.SIGN_AND).append(getGid());
+        return new String(sb);
     }
 }

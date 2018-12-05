@@ -1,5 +1,9 @@
 # 更新商品表的type类型注释
 ALTER TABLE t_wx_goods MODIFY COLUMN `type` TINYINT(4) COMMENT '商品类型(1:押金 2:套餐 3:午休 4:被子)';
+# 更新订单表的支付状态类型注释
+ALTER TABLE t_wx_order MODIFY COLUMN `pay_status` TINYINT(4) COMMENT '实际支付状态 1.统一下单 2.支付完成 4.已退款';
+# 退款记录表中增加退款类型字段
+ALTER TABLE t_wx_refund_record add refund_type TINYINT(4) DEFAULT NULL COMMENT '退款类型 1.押金退款 2.订单退款';
 -- ----------------------------
 -- Table structure for t_wx_deposit(押金表)
 -- ----------------------------
@@ -65,6 +69,7 @@ CREATE TABLE `t_wx_refund_record` (
   `refundDesc` VARCHAR(200) DEFAULT NULL COMMENT '退款原因',
   `refund_price` INT(11) DEFAULT NULL COMMENT '退款金额',
   `total_price` INT(11) DEFAULT NULL COMMENT '总金额',
+  `refund_type` TINYINT(4) DEFAULT NULL COMMENT '退款类型 1.押金退款 2.订单退款',
   `refund_status` TINYINT(4) DEFAULT NULL COMMENT '退款状态 1.退款失败 2.退款成功',
   `crtTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户申请退款时间',
   PRIMARY KEY (`id`)
