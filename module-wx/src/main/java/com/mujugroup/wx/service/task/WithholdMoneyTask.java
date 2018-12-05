@@ -30,7 +30,7 @@ public class WithholdMoneyTask {
     private final int GTHALFHOUR_LTTHREEHOUR_MONEY = 20;//大于半小时不超过三小时扣费金额
     private final int GTTHREEHOUR_LTONEDAY_MONEY = 40;//大于三小时不超过一天扣费金额
     private final Logger logger = LoggerFactory.getLogger(WithholdMoneyTask.class);
-    private final int TIME_SPAN = 70 * 60 * 1000;//运行时间间隔为十分钟
+    private final int TIME_SPAN = 10 * 60 * 1000;//运行时间间隔为十分钟
 
     @Autowired
 
@@ -41,7 +41,7 @@ public class WithholdMoneyTask {
         this.wxDeductionRecordService = wxDeductionRecordService;
     }
 
-    @Scheduled(cron = "0 0/1 * * * *")//每十分钟执行一次
+    @Scheduled(cron = "0 0/10 * * * *")//每十分钟执行一次
     public void onCron() {
         getList(1, 5);
     }
