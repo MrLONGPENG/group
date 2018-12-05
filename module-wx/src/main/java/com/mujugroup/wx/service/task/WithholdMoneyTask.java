@@ -23,15 +23,14 @@ public class WithholdMoneyTask {
     private final ModuleLockService moduleLockService;
     private final WxOrderService wxOrderService;
     private final WxDeductionRecordService wxDeductionRecordService;
-    private final int TIME_OUT_HALFHOUR = 1800;//超时半小时
-    private final int TIME_OUT_THREEHOUR = 60 * 60 * 3;//超时三小时
-    private final int TIME_OUT_ONEDAY = 12 * 60 * 60;//超时十二小时
-    private final int HALFHOUR_MONEY = 10;//不超过半小时扣费金额
-    private final int GTHALFHOUR_LTTHREEHOUR_MONEY = 20;//大于半小时不超过三小时扣费金额
-    private final int GTTHREEHOUR_LTONEDAY_MONEY = 40;//大于三小时不超过一天扣费金额
+    private final static int TIME_OUT_HALF_HOUR = 1800;//超时半小时
+    private final static int TIME_OUT_THREE_HOUR = 60 * 60 * 3;//超时三小时
+    private final static int TIME_OUT_HALF_DAY = 12 * 60 * 60;//超时十二小时
+    private final static int GT_HALF_HOUR_MONEY = 1000;//超过半小时扣费金额
+    private final static int GT_THREE_HOUR_MONEY = 2000;//大于半小时不超过三小时扣费金额
+    private final static int GT_HALF_DAY_MONEY = 3000;//大于三小时不超过一天扣费金额
+    private final static int TIME_SPAN = 30 * 60 * 1000;//运行时间间隔为三十分钟
     private final Logger logger = LoggerFactory.getLogger(WithholdMoneyTask.class);
-    private final int TIME_SPAN = 10 * 60 * 1000;//运行时间间隔为十分钟
-
     @Autowired
 
     public WithholdMoneyTask(ModuleLockService moduleLockService, WxOrderService wxOrderService
@@ -41,7 +40,7 @@ public class WithholdMoneyTask {
         this.wxDeductionRecordService = wxDeductionRecordService;
     }
 
-    @Scheduled(cron = "0 0/10 * * * *")//每十分钟执行一次
+    @Scheduled(cron = "0 0/30 * * * *")//每十分钟执行一次
     public void onCron() {
         getList(1, 5);
     }
@@ -62,15 +61,15 @@ public class WithholdMoneyTask {
                 return;
             }
             OrderTo orderTo = wxOrderService.getOrderByCondition(dataTo.getDid());
-            if (orderTo != null ) {
+            if (orderTo != null) {
                 int endTime = DateUtil.getTimesNoDate(new Date(orderTo.getEndTime() * 1000));
                 if (model != null && model.getStatus() == 1) {//关锁状态
                     int closeTime = DateUtil.getTimesNoDate(model.getDate());
-                    if (endTime < closeTime && (System.currentTimeMillis()-model.getDate().getTime()) < TIME_SPAN) {
-                        updateOrInsert(dataTo.getDid(), orderTo.getOpenId(), orderTo.getTradeNo(), closeTime-endTime);
+                    if (endTime < closeTime && (System.currentTimeMillis() - model.getDate().getTime()) < TIME_SPAN) {
+                        updateOrInsert(dataTo.getDid(), orderTo.getOpenId(), orderTo.getTradeNo(), closeTime - endTime);
                     }
                 } else { // 无开关锁记录
-                    updateOrInsert(dataTo.getDid(), orderTo.getOpenId(), orderTo.getTradeNo(), DateUtil.getTimesNoDate()- endTime);
+                    updateOrInsert(dataTo.getDid(), orderTo.getOpenId(), orderTo.getTradeNo(), DateUtil.getTimesNoDate() - endTime);
                 }
 
             } else {
@@ -84,7 +83,8 @@ public class WithholdMoneyTask {
     }
 
     private void updateOrInsert(long did, String openId, String tradeNo, int timeout) {
-        String date = DateUtil.dateToString(new Date(),DateUtil.TYPE_DATE_10);
+        if(timeout < TIME_OUT_HALF_HOUR ) return;
+        String date = DateUtil.dateToString(new Date(), DateUtil.TYPE_DATE_10);
         WxDeductionRecord wxDeductionRecord = wxDeductionRecordService.isExist(date, openId, did);
         if (wxDeductionRecord == null) {
             wxDeductionRecord = new WxDeductionRecord();
@@ -110,12 +110,13 @@ public class WithholdMoneyTask {
     }
 
     private int getDeductionPrice(int timeout) {
-        if (timeout < TIME_OUT_HALFHOUR) {
-            return HALFHOUR_MONEY;
-        } else if (timeout < TIME_OUT_THREEHOUR) {
-            return GTHALFHOUR_LTTHREEHOUR_MONEY;
-        } else {
-            return GTTHREEHOUR_LTONEDAY_MONEY;
+        if (timeout >= TIME_OUT_HALF_HOUR && timeout < TIME_OUT_THREE_HOUR) {
+            return GT_HALF_HOUR_MONEY;
+        } else if (timeout >= TIME_OUT_THREE_HOUR && timeout < TIME_OUT_HALF_DAY) {
+            return GT_THREE_HOUR_MONEY;
+        } else if(timeout > TIME_OUT_HALF_DAY) {
+            return GT_HALF_DAY_MONEY;
         }
+        return 0;
     }
 }
