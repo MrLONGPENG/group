@@ -109,8 +109,6 @@ public class WxOrderServiceImpl implements WxOrderService {
         WxOrder wxOrder = getFinishOrderByTradeNo(tradeNo);
         if (wxOrder == null) throw new ParamException("当前订单不存在,请重新选择");
         if (price > wxOrder.getPayPrice()) throw new ParamException("退款金额不能大于实际支付金额!");
-        WxUsing wxUsing = wxUsingService.getWxUsingByDidAndPayTime(wxOrder.getOpenId(), wxOrder.getDid().toString(), wxOrder.getPayTime());
-        if (wxUsing == null) throw new ParamException("当前设备不存在!");
         WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxOrder.getTradeNo(), wxOrder.getOpenId());
         if (wxRecordMain == null) throw new ParamException("统一支付主表无当前记录,请重新选择");
         if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
@@ -124,12 +122,15 @@ public class WxOrderServiceImpl implements WxOrderService {
         if (map != null && MyConfig.SUCCESS.equals(map.get("return_code")) && MyConfig.SUCCESS.equals(map.get("result_code"))) {
             wxOrder.setPayStatus(WxOrder.REFUNDING_MONEY);//设置当前订单的状态为已退款
             wxOrder.setEndTime(System.currentTimeMillis() / 1000);
-            wxUsing.setDeleted(true);//设置使用状态为删除状态
+            WxUsing wxUsing = wxUsingService.getWxUsingByDidAndPayTime(wxOrder.getOpenId(), wxOrder.getDid().toString(), wxOrder.getPayTime());
+            if (wxUsing != null) {
+                wxUsing.setDeleted(true);//设置使用状态为删除状态
+                wxUsingService.update(wxUsing);
+            }
             WxRefundRecord wxRefundRecord = wxRefundRecordService.bindWxRefundRecord(wxOrder.getOpenId(), wxOrder.getTradeNo()
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_SUCCESS, WxRefundRecord.TYPE_ORDER_REFUND, "订单退款");
             wxOrderMapper.update(wxOrder);
-            wxUsingService.update(wxUsing);
             wxRecordMainService.update(wxRecordMain);
             wxRefundRecordService.insert(wxRefundRecord);
         } else {

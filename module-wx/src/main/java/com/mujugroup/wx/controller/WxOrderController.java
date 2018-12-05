@@ -74,7 +74,11 @@ public class WxOrderController {
             , @ApiParam(value = "退款金额") @RequestParam(value = "price", required = false, defaultValue = "0") Integer price
     ) throws BaseException {
         Map<String, String> map = wxOrderService.orderRefund(tradeNo, price);
-        return ResultUtil.success(map);
+        if (map == null) {
+            return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
+        } else {
+            return ResultUtil.success(map);
+        }
     }
 
 }
