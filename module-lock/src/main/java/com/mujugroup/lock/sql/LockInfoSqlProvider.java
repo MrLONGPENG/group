@@ -43,7 +43,6 @@ public class LockInfoSqlProvider {
     public String update(LockInfo lockInfo) {
         return new SQL() {{
             UPDATE("t_lock_info");
-            if (lockInfo.getId() != null) SET("id = #{id}");
             if (lockInfo.getLockId() != null) SET("lock_id = #{lockId}");
             if (lockInfo.getBrand() != null) SET("brand = #{brand}");
             if (lockInfo.getMac() != null) SET("mac = #{mac}");

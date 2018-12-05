@@ -10,6 +10,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -23,7 +24,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 import java.util.Date;
 
 @EnableAsync
@@ -179,5 +179,12 @@ public class ModuleLockApplication {
         // 使用预定义的异常处理类 - 如果添加到线程池失败，那么主线程会自己去执行该任务，不会等待线程池中的线程去执行
         // poolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         return poolTaskExecutor;
+    }
+
+    @Bean
+    public AsyncUncaughtExceptionHandler asyncUncaughtExceptionHandler() {
+        return (ex, method, params) -> {
+            logger.error("AsyncUncaughtExceptionHandler {}", params);
+        };
     }
 }

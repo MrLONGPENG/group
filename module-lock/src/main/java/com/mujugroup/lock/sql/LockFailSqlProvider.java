@@ -40,7 +40,6 @@ public class LockFailSqlProvider {
     public String update(LockFail lockFail) {
         return new SQL() {{
             UPDATE("t_lock_fail");
-            if (lockFail.getId() != null) SET("`id` = #{id}");
             if (lockFail.getDid() != null) SET("`did` = #{did}");
             if (lockFail.getLockId() != null) SET("`lock_id` = #{lockId}");
             if (lockFail.getAid() != null) SET("`aid` = #{aid}");

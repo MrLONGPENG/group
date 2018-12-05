@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/receive")
 public class ReceiveController {
-    private ReceiveService receiveService;
+    private final ReceiveService receiveService;
 
     @Autowired
     public ReceiveController(ReceiveService receiveService) {

@@ -9,8 +9,8 @@ import com.mujugroup.lock.model.*;
 import com.mujugroup.lock.service.*;
 import com.mujugroup.lock.service.feign.ModuleCoreService;
 import com.mujugroup.lock.service.feign.ModuleWxService;
+import ma.glasnost.orika.BoundMapperFacade;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.metadata.ClassMapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,45 +21,46 @@ import java.util.Date;
 
 @Component
 public class ReceiveTask {
-
-    private final LockInfoService lockInfoService;
-    private final ModuleWxService moduleWxService;
-    private final LockSwitchService lockSwitchService;
     private final LockDidService lockDidService;
-    private final LockRecordService lockRecordService;
-    private final MapperFactory mapperFactory;
+    private final LockInfoService lockInfoService;
     private final LockFailService lockFailService;
+    private final LockSwitchService lockSwitchService;
+    private final LockRecordService lockRecordService;
+
+    private final ModuleWxService moduleWxService;
     private final ModuleCoreService moduleCoreService;
 
+    private BoundMapperFacade<LockInfo, LockRecord> mapperFacade;
     private final Logger logger = LoggerFactory.getLogger(ReceiveTask.class);
     @Autowired
-    public ReceiveTask(LockInfoService lockInfoService, ModuleWxService moduleWxService
-            , LockSwitchService lockSwitchService, LockDidService lockDidService
-            , LockRecordService lockRecordService, MapperFactory mapperFactory, LockFailService lockFailService, ModuleCoreService moduleCoreService) {
-        this.lockInfoService = lockInfoService;
-        this.moduleWxService = moduleWxService;
-        this.lockSwitchService = lockSwitchService;
+    public ReceiveTask(MapperFactory mapperFactory, LockDidService lockDidService, LockInfoService lockInfoService
+            , LockFailService lockFailService, LockSwitchService lockSwitchService, LockRecordService lockRecordService
+            , ModuleWxService moduleWxService, ModuleCoreService moduleCoreService) {
         this.lockDidService = lockDidService;
-        this.lockRecordService = lockRecordService;
-        this.mapperFactory = mapperFactory;
+        this.lockInfoService = lockInfoService;
         this.lockFailService = lockFailService;
+        this.lockSwitchService = lockSwitchService;
+        this.lockRecordService = lockRecordService;
+        this.moduleWxService = moduleWxService;
         this.moduleCoreService = moduleCoreService;
+        mapperFactory.classMap(LockInfo.class, LockRecord.class).exclude("id").byDefault().register();
+        this.mapperFacade =  mapperFactory.getMapperFacade(LockInfo.class, LockRecord.class);
     }
 
-    @Async
+
+    @Async(value = "taskExecutor")
     public void doReceiveData(String info) {
+        long t1 = 0,t2 = 0,t3;
         try {
+            t1 = System.currentTimeMillis();
             JsonObject json = new JsonParser().parse(info).getAsJsonObject();
-            if(!json.has("result")) {
-                logger.debug("{} : {}", Thread.currentThread().getName(), json);
-                return;
-            }
+            if(!json.has("result")) return;
             LockInfo lockInfo = getLockInfo(json.getAsJsonObject("result"));
             LockDid lockDid = lockDidService.getLockDidByBid(String.valueOf(lockInfo.getLockId()));
-
+            t2 = System.currentTimeMillis();
             switch (json.get("msgType").getAsInt()) {
                 case 200:
-                    switchLock(lockInfo);
+                    updateLockInfo(lockInfo);
                     if(lockDid == null)  return;
                     insertLockSwitch(lockDid.getDid(), lockInfo);
                     insertLockOffLineFail(lockDid.getDid(), lockInfo);//记录离线数据
@@ -74,17 +75,18 @@ public class ReceiveTask {
                 case 401:
                     break;//其他信息上报
                 case 1000:
-                    switchLock(lockInfo);
+                    updateLockInfo(lockInfo);
                     if(lockDid == null)  return;
                     insertLockRecord(lockDid.getDid(), lockInfo);
                     break;//普通上报消息（普通锁）
                 case 2000:
                     break;//普通上报消息（助力锁）
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            t3 = System.currentTimeMillis();
+            logger.debug("时间段1:{}  时间段2:{} 总时间：{}", t2 - t1, t3 - t2, t3 - t1);
         }
     }
 
@@ -164,21 +166,15 @@ public class ReceiveTask {
         return lockInfo;
     }
 
-    private LockInfo formatLockInfo(LockInfo info, LockInfo lockInfo) {
-        ClassMapBuilder<?, LockInfo> temp = mapperFactory.classMap(LockInfo.class, LockInfo.class);
-        temp.mapNulls(false); // NULL值不映射
-        temp.byDefault().register();
-        mapperFactory.getMapperFacade().map(info, lockInfo);
-        return lockInfo;
-    }
 
 
-    private void switchLock(LockInfo info) {
+    private void updateLockInfo(LockInfo info) {
         LockInfo lockInfo = lockInfoService.getLockInfoByBid(String.valueOf(info.getLockId()));
         if (lockInfo == null) {
-            lockInfoService.insert(formatLockInfo(info, new LockInfo()));
+            lockInfoService.insert(info);
         } else {
-            lockInfoService.update(formatLockInfo(info, lockInfo));
+            info.setId(lockInfo.getId());
+            lockInfoService.update(info);
         }
     }
 
@@ -194,8 +190,7 @@ public class ReceiveTask {
 
 
     private void insertLockRecord(long did, LockInfo lockInfo) {
-        mapperFactory.classMap(LockInfo.class, LockRecord.class).byDefault().register();
-        LockRecord lockRecord = mapperFactory.getMapperFacade().map(lockInfo, LockRecord.class);
+        LockRecord lockRecord = mapperFacade.map(lockInfo);
         lockRecord.setDid(did);
         lockRecord.setCrtTime(new Date());         //设置创建时间
         lockRecordService.add(lockRecord);

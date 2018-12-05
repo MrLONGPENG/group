@@ -34,7 +34,6 @@ public class LockSwitchSqlProvider {
     public String update(LockSwitch lockSwitch) {
         return new SQL() {{
             UPDATE("t_lock_switch");
-            if (lockSwitch.getId() != null) SET("`id` = #{id}");
             if (lockSwitch.getDid() != null) SET("`did` = #{did}");
             if (lockSwitch.getLockId() != null) SET("`lock_id` = #{lockId}");
             if (lockSwitch.getReceiveTime() != null) SET("`receiveTime` = #{receiveTime}");

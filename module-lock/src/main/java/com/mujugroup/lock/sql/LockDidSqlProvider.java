@@ -28,7 +28,6 @@ public class LockDidSqlProvider {
     public String update(LockDid lockDid){
         return new SQL(){{
             UPDATE("t_lock_did");
-            if(lockDid.getId()!= null) SET("id = #{id}");
             if(lockDid.getDid()!= null) SET("did = #{did}");
             if(lockDid.getBrand()!= null) SET("brand = #{brand}");
             if(lockDid.getLockId()!= null) SET("lock_id = #{lockId}");

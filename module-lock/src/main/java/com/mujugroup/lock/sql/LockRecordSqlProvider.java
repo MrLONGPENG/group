@@ -37,7 +37,6 @@ public class LockRecordSqlProvider {
     public String update(LockRecord lockRecord) {
         return new SQL() {{
             UPDATE("t_lock_record");
-            if (lockRecord.getId() != null) SET("`id` = #{id}");
             if (lockRecord.getDid() != null) SET("`did` = #{did}");
             if (lockRecord.getLockId() != null) SET("`lock_id` = #{lockId}");
             if (lockRecord.getCsq() != null) SET("`csq` = #{csq}");
