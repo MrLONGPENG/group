@@ -1,8 +1,11 @@
 package com.lveqia.cloud.zuul.service.impl;
 
+import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.zuul.mapper.SysMenuMapper;
 import com.lveqia.cloud.zuul.model.SysMenu;
+import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.objeck.vo.MenuVo;
+import com.lveqia.cloud.zuul.objeck.vo.MetaVo;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,8 +65,26 @@ public class SysMenuServiceImpl implements SysMenuService {
         tree.setIconCls(sysMenu.getIconCls());
         tree.setParentId(sysMenu.getParentId());
         tree.setComponent(sysMenu.getComponent());
-        tree.setMeta(sysMenu.getKeepAlive(), sysMenu.getRequireAuth());
+        tree.setMeta(toMetaVo(sysMenu));
         return tree;
+    }
+
+    private MetaVo toMetaVo(SysMenu menu) {
+        MetaVo metaVo = new MetaVo();
+        metaVo.setKeepAlive(menu.getKeepAlive()!=null?menu.getKeepAlive():false);
+        metaVo.setRequireAuth(menu.getRequireAuth()!=null?menu.getRequireAuth():false);
+        metaVo.setRoles(toRoles(menu.getRoles()));
+        return metaVo;
+    }
+
+    private List<String> toRoles(List<SysRole> roles) {
+        List<String> list = new ArrayList<>();
+        list.add(Constant.ROLE_ADMIN.substring(5));
+        if(roles == null) return list;
+        for (SysRole sysRole:roles) {
+            list.add(sysRole.getName().substring(5));
+        }
+        return list;
     }
 
     private List<MenuVo> getMenusByAdmin() {

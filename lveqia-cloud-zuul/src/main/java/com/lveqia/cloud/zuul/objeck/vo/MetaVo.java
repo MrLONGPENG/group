@@ -1,23 +1,15 @@
 package com.lveqia.cloud.zuul.objeck.vo;
 
+import lombok.Data;
+
+import java.util.List;
+
+@Data
 public class MetaVo {
 
     private boolean keepAlive;
     private boolean requireAuth;
+    private List<String> roles;
 
-    public boolean isKeepAlive() {
-        return keepAlive;
-    }
 
-    public void setKeepAlive(boolean keepAlive) {
-        this.keepAlive = keepAlive;
-    }
-
-    public boolean isRequireAuth() {
-        return requireAuth;
-    }
-
-    public void setRequireAuth(boolean requireAuth) {
-        this.requireAuth = requireAuth;
-    }
 }
