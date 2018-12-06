@@ -46,7 +46,8 @@ public class SysMenuController {
 
     @ApiOperation(value = "添加菜单", notes = "添加菜单")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addMenu(@Validated @ModelAttribute AddMenuVo addMenuVo, @ApiParam(hidden = true) long uid) throws BaseException {
+    public String addMenu(@Validated @ModelAttribute AddMenuVo addMenuVo
+            , @ApiParam(hidden = true) long uid) throws BaseException {
         return ResultUtil.success(sysMenuService.addMenu(uid, addMenuVo));
     }
 

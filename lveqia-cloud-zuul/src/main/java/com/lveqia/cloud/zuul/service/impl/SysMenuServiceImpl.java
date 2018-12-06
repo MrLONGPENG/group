@@ -100,11 +100,14 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (menuVo.getParentId() == null) {
             set.put(menuVo.getId(), menuVo);
         } else {
-            MenuVo parent = toMenuVo(sysMenuMapper.findById(menuVo.getParentId()));
-            if (map.containsKey(menuVo.getParentId())) {
-                map.get(menuVo.getParentId()).add(menuVo);
-            } else {
-                map.put(menuVo.getParentId(), new ArrayList<>(Collections.singletonList(menuVo)));
+            MenuVo parent  = toMenuVo(sysMenuMapper.findById(menuVo.getParentId()));
+            if(map.containsKey(parent.getId())){
+                List<MenuVo> list = map.get(parent.getId());
+                if(list.stream().noneMatch(vo-> vo.getId().equals(menuVo.getId()))){
+                    map.get(parent.getId()).add(menuVo);
+                }
+            }else {
+                map.put(parent.getId(), new ArrayList<>(Collections.singletonList(menuVo)));
             }
             parent.setChildren(map.get(parent.getId()));
             addLinkMap(set, map, parent);
