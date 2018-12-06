@@ -14,6 +14,7 @@ public class MenuVo {
     private String name;
     private String iconCls;
     private Integer parentId;
+    private Integer sort;
     private List<MenuVo> children;
     private MetaVo meta;
 }
