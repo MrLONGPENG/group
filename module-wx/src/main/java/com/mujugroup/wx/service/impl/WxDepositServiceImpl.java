@@ -59,7 +59,6 @@ public class WxDepositServiceImpl implements WxDepositService {
         String openId = sessionService.getOpenId(sessionThirdKey);
         return wxDepositMapper.getFinishDeposit(openId);
     }
-
     /**
      * 修改押金表,支付主表中的相关状态
      * //TODO 此处暂时进行全部一次性退款,后期再进行版本迭代以支持多次退款
@@ -71,15 +70,14 @@ public class WxDepositServiceImpl implements WxDepositService {
         if (wxDeposit == null) throw new ParamException("该记录不存在,请重新选择!");
         if (wxDeposit.getDeposit() == 0) throw new ParamException("您的押金为0元,请先缴纳押金!");
         if (infoVo.getPrice() > wxDeposit.getDeposit()) throw new ParamException("您的押金金额不足,无法进行退款!");
-        WxOrder order = wxOrderService.getOrderByOpenidAndTradeNo(wxDeposit.getOpenId()
-                , WxOrder.TYPE_PAY_SUCCESS, wxDeposit.getTradeNo());
-        if (order == null) throw new ParamException("无此订单记录!");
-        if (order.getEndTime() > System.currentTimeMillis() / 1000) throw new ParamException("当前订单仍在有效期内，暂无法退款");
 
+        WxOrder order=wxOrderService.getOrderByOpenIdAndTime(wxDeposit.getOpenId(),System.currentTimeMillis()/1000);
+        if (order!=null){
+            throw new ParamException("当前订单仍在有效期内，暂无法退款");
+        }
         WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxDeposit.getTradeNo(), wxDeposit.getOpenId());
         if (wxRecordMain == null) throw new ParamException("该记录不存在!");
         if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
-
         //调用微信退款接口
         if (StringUtil.isEmpty(infoVo.getRefundDesc())) infoVo.setRefundDesc("微信退款");
         wxRecordMain.setRefundPrice(wxRecordMain.getRefundPrice() + infoVo.getPrice());//设置支付记录主表的退款金额

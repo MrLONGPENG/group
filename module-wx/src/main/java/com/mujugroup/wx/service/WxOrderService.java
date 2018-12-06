@@ -61,5 +61,7 @@ public interface WxOrderService {
 
     WxOrder getFinishOrderByTradeNo(String tradeNo);
 
-    Map<String, String> orderRefund(String tradeNo,Integer price) throws BaseException;
+    Map<String, String> orderRefund(String tradeNo, Integer price) throws BaseException;
+
+    WxOrder getOrderByOpenIdAndTime(String openId, long time);
 }

@@ -102,6 +102,11 @@ public class WxOrderServiceImpl implements WxOrderService {
         return wxOrderMapper.findListAll();
     }
 
+    @Override
+    public WxOrder getOrderByOpenIdAndTime(String openId, long time) {
+        return wxOrderMapper.getOrderByOpenIdAndTime(openId, time);
+    }
+
     @Transactional
     @Override
     public Map<String, String> orderRefund(String tradeNo, Integer price) throws BaseException {

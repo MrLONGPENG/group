@@ -145,4 +145,8 @@ public interface WxOrderMapper {
     @Select("SELECT * FROM t_wx_order WHERE pay_status = 2 AND trade_no= #{tradeNo} order by id desc LIMIT 1")
     @ResultMap("wxOrder")
     WxOrder getFinishOrderByTradeNo(@Param(value = "tradeNo") String tradeNo);
+
+    @Select("SELECT * FROM t_wx_order WHERE open_id= #{openId} AND end_time= #{endTime} AND pay_status = 2  LIMIT 1")
+    @ResultMap("wxOrder")
+    WxOrder getOrderByOpenIdAndTime(@Param(value = "openId")String openId,@Param(value = "endTime") long time);
 }
