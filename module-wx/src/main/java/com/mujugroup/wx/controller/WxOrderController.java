@@ -72,16 +72,9 @@ public class WxOrderController {
     @ApiOperation(value = "订单退款", notes = "订单退款")
     @RequestMapping(value = "/refund", method = RequestMethod.POST)
     public String orderRefund(@ApiParam(value = "订单编号") @RequestParam(value = "tradeNo") String tradeNo
-            , @ApiParam(value = "退款金额") @RequestParam(value = "price", required = false, defaultValue = "0") Integer price
-    ) throws BaseException {
-        Map<String, String> map = wxOrderService.orderRefund(tradeNo, price);
-        if (map == null) {
-            return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
-        }else if(map.containsKey("err_code_des")){
-            return ResultUtil.error(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
-        } else {
-            return ResultUtil.success();
-        }
+            , @ApiParam(value = "退款金额") @RequestParam(value = "price", required = false
+            , defaultValue = "0") Integer price) throws BaseException {
+        return ResultUtil.success(wxOrderService.orderRefund(tradeNo, price));
     }
 
 }

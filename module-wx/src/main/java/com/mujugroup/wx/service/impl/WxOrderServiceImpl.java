@@ -6,6 +6,7 @@ import com.lveqia.cloud.common.objeck.to.*;
 import com.lveqia.cloud.common.util.DateUtil;
 import com.lveqia.cloud.common.config.Constant;
 import com.lveqia.cloud.common.objeck.DBMap;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.bean.OrderBean;
 import com.mujugroup.wx.config.MyConfig;
@@ -144,6 +145,8 @@ public class WxOrderServiceImpl implements WxOrderService {
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, WxRefundRecord.TYPE_ORDER_REFUND, "订单退款");
             wxRefundRecordService.insert(wxRefundRecord);
+            if(map == null) throw new BaseException(ResultUtil.CODE_REMOTE_CALL_FAIL);
+            throw new BaseException(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
         }
         return map;
     }
@@ -260,10 +263,6 @@ public class WxOrderServiceImpl implements WxOrderService {
         return wxOrderMapper.getFinishOrderByTradeNo(tradeNo);
     }
 
-    @Override
-    public WxOrder getFinishOrderById(long id) {
-        return wxOrderMapper.getFinishOrderById(id);
-    }
 
     @Override
     public OrderTo getOrderByCondition(long did) {

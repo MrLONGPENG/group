@@ -2,6 +2,7 @@ package com.mujugroup.wx.service.impl;
 
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.exception.ParamException;
+import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.config.MyConfig;
 import com.mujugroup.wx.mapper.WxDepositMapper;
@@ -67,14 +68,11 @@ public class WxDepositServiceImpl implements WxDepositService {
     @Transactional
     public Map<String, String> modifyRecordStatus(PutVo infoVo) throws BaseException {
         WxDeposit wxDeposit = wxDepositMapper.getRefundingWxDepositById(infoVo.getId());
-        if (wxDeposit == null) throw new ParamException("该记录不存在,请重新选择!");
+        if (wxDeposit == null) throw new ParamException("该记录不存在，请确认是否已经退款!");
         if (wxDeposit.getDeposit() == 0) throw new ParamException("您的押金为0元,请先缴纳押金!");
         if (infoVo.getPrice() > wxDeposit.getDeposit()) throw new ParamException("您的押金金额不足,无法进行退款!");
-
-        WxOrder order=wxOrderService.getOrderByOpenIdAndTime(wxDeposit.getOpenId(),System.currentTimeMillis()/1000);
-        if (order!=null){
-            throw new ParamException("当前订单仍在有效期内，暂无法退款");
-        }
+        WxOrder order = wxOrderService.getOrderByOpenIdAndTime(wxDeposit.getOpenId(),System.currentTimeMillis()/1000);
+        if (order != null) throw new ParamException("当前订单仍在有效期内，暂无法退款");
         WxRecordMain wxRecordMain = wxRecordMainService.getFinishPayRecordByNo(wxDeposit.getTradeNo(), wxDeposit.getOpenId());
         if (wxRecordMain == null) throw new ParamException("该记录不存在!");
         if (wxRecordMain.getRefundCount() > 8) throw new ParamException("当前退款次数已超过9次,无法进行退款操作");
@@ -102,13 +100,10 @@ public class WxDepositServiceImpl implements WxDepositService {
                     , wxRefundNo, wxRecordMain.getRefundCount(), wxRecordMain.getRefundPrice()
                     , wxRecordMain.getTotalPrice(), WxRefundRecord.PAY_FAIL, WxRefundRecord.TYPE_DEPOSIT_REFUND, infoVo.getRefundDesc());
             wxRefundRecordService.insert(wxRefundRecord);
+            if(map == null) throw new BaseException(ResultUtil.CODE_REMOTE_CALL_FAIL);
+            throw new BaseException(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
         }
         return map;
-    }
-
-    @Override
-    public WxDeposit getRefundingWxDepositById(Long id) {
-        return wxDepositMapper.getRefundingWxDepositById(id);
     }
 
     @Override

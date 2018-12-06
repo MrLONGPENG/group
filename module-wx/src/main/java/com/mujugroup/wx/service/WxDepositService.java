@@ -23,7 +23,5 @@ public interface WxDepositService {
 
     List<InfoListVo> getInfoList();
 
-    WxDeposit getRefundingWxDepositById(Long id);
-
     Map<String, String> modifyRecordStatus(PutVo infoVo) throws BaseException;
 }

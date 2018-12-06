@@ -57,8 +57,6 @@ public interface WxOrderService {
 
     OrderTo getOrderByCondition(long did);
 
-    WxOrder getFinishOrderById(long id);
-
     WxOrder getFinishOrderByTradeNo(String tradeNo);
 
     Map<String, String> orderRefund(String tradeNo, Integer price) throws BaseException;

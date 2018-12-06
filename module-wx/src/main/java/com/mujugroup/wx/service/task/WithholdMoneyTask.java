@@ -49,12 +49,12 @@ public class WithholdMoneyTask {
      * 获取超时记录
      */
     private void getList(int pageNum, int pageSize) {
-        //获取超时记录的did,lastrefresh
+        //获取超时记录的did,lastRefresh
         List<DataTo> list = moduleLockService.getFailTimeoutRecordList(pageNum, pageSize);
         if (list == null) return;
         PageInfo pageInfo = PageInfo.of(list);
         for (DataTo dataTo : list) {
-            //根据did,lastrefresh获取第一条开关锁记录
+            //根据did,lastRefresh获取第一条开关锁记录
             DataTo model = moduleLockService.getRecordByDidAndLastRefresh(dataTo.getDid(), dataTo.getDate().getTime());
             if (model != null && model.getStatus() == 2) {
                 logger.warn("当前数据有误,查询的did为{},lastRefresh为{}", dataTo.getDid(), dataTo.getDate());

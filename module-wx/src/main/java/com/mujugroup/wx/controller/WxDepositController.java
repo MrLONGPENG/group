@@ -59,14 +59,7 @@ public class WxDepositController {
             , notes = "修改押金状态为审核通过以及其他记录表状态,插入退款记录表")
     @RequestMapping(value = "/audit/deposit", method = RequestMethod.PUT)
     public String modifyStatus(@Validated @ModelAttribute PutVo infoVo) throws BaseException {
-        Map<String, String> map = wxDepositService.modifyRecordStatus(infoVo);
-        if (map == null) {
-            return ResultUtil.error(ResultUtil.CODE_REMOTE_CALL_FAIL);
-        } else if (map.containsKey("err_code_des")) {
-            return ResultUtil.error(ResultUtil.CODE_THIRD_DATA_ERROR, map.get("err_code_des"));
-        } else {
-            return ResultUtil.success();
-        }
+        return ResultUtil.success(wxDepositService.modifyRecordStatus(infoVo));
     }
 
 }
