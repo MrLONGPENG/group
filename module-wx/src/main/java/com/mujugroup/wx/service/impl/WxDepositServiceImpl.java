@@ -116,9 +116,8 @@ public class WxDepositServiceImpl implements WxDepositService {
         String openId = sessionService.getOpenId(sessionThirdKey);
         WxDeposit wxDeposit = wxDepositMapper.findDepositById(openId, id);
         if (wxDeposit == null) throw new ParamException("该用户暂未缴纳押金");
-        WxOrder order = wxOrderService.getOrderByOpenidAndTradeNo(wxDeposit.getOpenId(), WxOrder.TYPE_PAY_SUCCESS, wxDeposit.getTradeNo());
-        if (order == null) throw new ParamException("无此订单记录!");
-        if (order.getEndTime() > System.currentTimeMillis() / 1000) throw new ParamException("当前订单仍在有效期内，暂无法退款");
+        WxOrder order = wxOrderService.getOrderByOpenIdAndTime(wxDeposit.getOpenId(),System.currentTimeMillis()/1000);
+        if (order != null) throw new ParamException("当前订单仍在有效期内，暂无法退款");
         wxDeposit.setStatus(WxDeposit.REFUNDING_MONEY);//设置当前押金状态为退款中
         wxDeposit.setUpdTime(new Date());
         return wxDepositMapper.update(wxDeposit);

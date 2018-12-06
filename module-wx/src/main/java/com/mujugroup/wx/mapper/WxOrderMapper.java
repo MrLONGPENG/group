@@ -113,12 +113,6 @@ public interface WxOrderMapper {
     @SelectProvider(type = WxOrderSqlProvider.class, method = "getPayInfoByDid")
     PayInfoTo getPayInfoByDid(@Param(value = "did") String did, @Param(value = "type") int orderType);
 
-    @Select("SELECT * FROM t_wx_order WHERE open_id= #{openId} and pay_status= #{status} and trade_no= #{orderNo} order by id desc")
-    @ResultMap("wxOrder")
-    WxOrder getOrderByOpenidAndTradeNo(@Param("openId") String openId, @Param("status") Integer status, @Param("orderNo") String orderNo);
-
-    @Select("SELECT * FROM t_wx_order WHERE open_id= #{open_id} ORDER BY id DESC LIMIT 1")
-    WxOrder getLastOrderByOpenId(@Param(value = "open_id") String openId);
 
     @Select("SELECT * FROM t_wx_order " +
             " WHERE pay_status = 2 AND did= #{did}   ORDER BY id DESC LIMIT 1")
