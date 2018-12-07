@@ -32,7 +32,7 @@ public class ResultUtil {
     
     public final static int CODE_UNKNOWN_ERROR = 500;
 
-    private static Gson gson = new GsonBuilder().setExclusionStrategies().create();
+    private static Gson gson = new GsonBuilder().disableHtmlEscaping().setExclusionStrategies().create();
 
     public static void register(Type type, Object typeAdapter){
         gson = new GsonBuilder().registerTypeAdapter(type,typeAdapter).setExclusionStrategies().create();

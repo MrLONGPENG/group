@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -22,14 +23,15 @@ public abstract class ErrorHandler {
      * 未处理异常捕获
      */
     protected abstract String otherErrorHandler(Exception exception);
+
     /**
      * 全局错误异常捕获
      */
-    @ExceptionHandler(value=Exception.class)
-    public String globalErrorHandler(Exception exception){
+    @ExceptionHandler(value = Exception.class)
+    public String globalErrorHandler(Exception exception) {
         String other = otherErrorHandler(exception);
-        if(other == null) logger.error("未处理异常 {}", exception);
-        return other!= null ? other : ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
+        if (other == null) logger.error("未处理异常 {}", exception);
+        return other != null ? other : ResultUtil.error(ResultUtil.CODE_UNKNOWN_ERROR);
     }
 
     /**
@@ -45,9 +47,9 @@ public abstract class ErrorHandler {
      */
     @ExceptionHandler(value = BindException.class)
     public String bindErrorHandler(BindException exception) {
-        List<FieldError> fieldErrors= exception.getBindingResult().getFieldErrors();
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         StringBuilder sb = new StringBuilder();
-        for (FieldError error : fieldErrors){
+        for (FieldError error : fieldErrors) {
             sb.append(error.getField()).append(Constant.SIGN_MAO_HAO);
             sb.append(error.getDefaultMessage()).append(Constant.SIGN_FEN_HAO);
         }
@@ -56,7 +58,7 @@ public abstract class ErrorHandler {
     }
 
     /**
-     *  请求丢失必要参数
+     * 请求丢失必要参数
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public String missErrorHandler(MissingServletRequestParameterException exception) {
@@ -65,12 +67,18 @@ public abstract class ErrorHandler {
 
 
     /**
-     *  请求参数格式不对
+     * 请求参数格式不对
      */
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public String formatErrorHandler(MethodArgumentTypeMismatchException exception) {
         return ResultUtil.error(ResultUtil.CODE_REQUEST_FORMAT, exception.getMessage());
     }
 
-
+    /**
+     * 请求方式错误
+     */
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public String formatErrorHandler(HttpRequestMethodNotSupportedException exception) {
+        return ResultUtil.error(ResultUtil.CODE_NOT_FIND_PATH, exception.getMessage());
+    }
 }
