@@ -65,6 +65,7 @@ public class WxOrderSqlProvider {
         return new SQL() {{
             SELECT("COUNT(DISTINCT `did`) as `count1`, COUNT(`did`) as `count2`");
             FROM("t_wx_order");
+            WHERE("pay_status = 2");
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
                 // TODO 此处采用${aid}无效
                 AND().WHERE("`aid` in (" + aid + ")");
@@ -124,7 +125,7 @@ public class WxOrderSqlProvider {
         return new SQL() {{
             SELECT("COALESCE(SUM(`pay_price`),0)");
             FROM("t_wx_order");
-            WHERE("pay_status > 1");
+            WHERE("pay_status = 2");
             if (!StringUtil.isEmpty(aid) && aid.contains(Constant.SIGN_DOU_HAO)) {
                 AND().WHERE("`aid` in (" + aid + ")");
             } else if (!Constant.DIGIT_ZERO.equals(aid)) {
