@@ -35,10 +35,8 @@ public class WxDeductionRecordController {
             , notes = "获取扣款记录")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String getDeductionRecord(@ApiParam(value = "sessionThirdKey", required = true)
-                                     @RequestParam(value = "sessionThirdKey") String sessionThirdKey
-            , @ApiParam(value = "订单号") @RequestParam(value = "tradeNo", required = false, defaultValue = "") String tradeNo
-    ) {
-        List<WxDeductionRecord> wxDeductionRecordList = wxDeductionRecordService.getDeductionRecordList(sessionThirdKey, tradeNo);
+                                     @RequestParam(value = "sessionThirdKey") String sessionThirdKey ){
+        List<WxDeductionRecord> wxDeductionRecordList = wxDeductionRecordService.getDeductionRecordList(sessionThirdKey);
         return ResultUtil.success(wxDeductionRecordList);
     }
 }

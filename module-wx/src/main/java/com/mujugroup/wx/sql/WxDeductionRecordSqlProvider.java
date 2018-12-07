@@ -47,17 +47,15 @@ public class WxDeductionRecordSqlProvider {
         }}.toString();
     }
 
-    public String getDeductionRecordList(@Param(value = "openId") String openId, @Param(value = "tradeNo") String tradeNo) {
+    public String getDeductionRecordList(@Param(value = "openId") String openId) {
         return new SQL() {{
-            SELECT("*");
-            FROM("t_wx_deduction_record");
-            WHERE("1=1");
+            SELECT("r.*");
+            FROM("t_wx_deposit t,t_wx_deduction_record r");
+            WHERE("t.open_id=r.open_id AND t.status&3 AND t.crtTime<r.crtTime");
             if (!StringUtil.isEmpty(openId)) {
-                AND().WHERE("open_id= #{openId}");
+                AND().WHERE("t.open_id= #{openId}");
             }
-            if (!StringUtil.isEmpty(tradeNo)) {
-                AND().WHERE("trade_no= #{tradeNo}");
-            }
+
         }}.toString();
     }
 }

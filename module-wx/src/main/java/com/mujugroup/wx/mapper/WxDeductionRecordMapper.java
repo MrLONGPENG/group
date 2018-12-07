@@ -55,5 +55,5 @@ public interface WxDeductionRecordMapper {
 
     @SelectProvider(type = WxDeductionRecordSqlProvider.class, method = "getDeductionRecordList")
     @ResultMap("wxDeductionRecord")
-    List<WxDeductionRecord> getDeductionRecordList(@Param(value = "openId") String openId, @Param(value = "tradeNo") String tradeNo);
+    List<WxDeductionRecord> getDeductionRecordList(@Param(value = "openId") String openId);
 }

@@ -78,12 +78,12 @@ public interface WxDepositMapper {
             , @Result(column = "open_id", property = "wxOrder"
             , one = @One(select = "com.mujugroup.wx.mapper.WxOrderMapper.getLastOrderByOpenId"
             , fetchType = FetchType.EAGER))
-            })
-            List < InfoListVo > getInfoList();
+    })
+    List<InfoListVo> getInfoList(@Param(value = "tradeNo") String tradeNo);
 
-            //获取押金表中状态为退款中的数据
-            @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
-                    " WHERE `status` =2  AND id= #{id} ")
-            @ResultMap("wxDeposit")
-            WxDeposit getRefundingWxDepositById(@Param(value = "id") Long id);
+    //获取押金表中状态为退款中的数据
+    @Select("SELECT `id`,`gid`,`open_id`,`trade_no`,`deposit`,`status`,`crtTime`,`updTime` FROM t_wx_deposit " +
+            " WHERE `status` =2  AND id= #{id} ")
+    @ResultMap("wxDeposit")
+    WxDeposit getRefundingWxDepositById(@Param(value = "id") Long id);
 }

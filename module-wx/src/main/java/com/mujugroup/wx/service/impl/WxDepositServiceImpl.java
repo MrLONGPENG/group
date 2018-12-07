@@ -107,8 +107,8 @@ public class WxDepositServiceImpl implements WxDepositService {
     }
 
     @Override
-    public List<InfoListVo> getInfoList() {
-        return wxDepositMapper.getInfoList();
+    public List<InfoListVo> getInfoList(String tradeNo) {
+        return wxDepositMapper.getInfoList(tradeNo);
     }
 
     @Override

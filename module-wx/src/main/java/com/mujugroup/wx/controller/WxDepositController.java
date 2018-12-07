@@ -51,8 +51,8 @@ public class WxDepositController {
 
     @ApiOperation(value = "押金列表", notes = "获取所有状态押金列表，优先显示退款中的状态")
     @RequestMapping(value = "/audit/list", method = RequestMethod.POST)
-    public String getRefundingList() {
-        return ResultUtil.success(wxDepositService.getInfoList());
+    public String getRefundingList(@ApiParam(value = "订单号") @RequestParam(value = "tradeNo", required = false, defaultValue = "") String tradeNo) {
+        return ResultUtil.success(wxDepositService.getInfoList(tradeNo));
     }
 
     @ApiOperation(value = "修改押金状态为审核通过以及其他记录表状态,插入退款记录表"

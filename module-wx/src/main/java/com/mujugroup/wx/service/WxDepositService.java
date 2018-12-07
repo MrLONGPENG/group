@@ -21,7 +21,7 @@ public interface WxDepositService {
 
     boolean modifyStatus(String sessionThirdKey, long id) throws BaseException;
 
-    List<InfoListVo> getInfoList();
+    List<InfoListVo> getInfoList(String tradeNo);
 
     Map<String, String> modifyRecordStatus(PutVo infoVo) throws BaseException;
 }

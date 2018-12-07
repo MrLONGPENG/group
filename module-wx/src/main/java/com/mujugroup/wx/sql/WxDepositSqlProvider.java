@@ -1,6 +1,8 @@
 package com.mujugroup.wx.sql;
 
+import com.lveqia.cloud.common.util.StringUtil;
 import com.mujugroup.wx.model.WxDeposit;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -42,11 +44,14 @@ public class WxDepositSqlProvider {
         }}.toString();
     }
 
-    public String getInfoList() {
+    public String getInfoList(@Param(value = "tradeNo") String tradeNo) {
         return new SQL() {{
             SELECT("d.*,u.phone,u.nick_name,u.gender,u.language,u.country,u.province,u.city,u.session_key");
             FROM("t_wx_deposit d");
             INNER_JOIN("t_wx_user u ON d.open_id=u.open_id");
+            if (!StringUtil.isEmpty(tradeNo)) {
+                WHERE("d.trade_no= #{tradeNo}");
+            }
             ORDER_BY("d.status=2 DESC");
         }}.toString();
     }
