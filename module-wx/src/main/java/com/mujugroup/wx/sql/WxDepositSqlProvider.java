@@ -52,7 +52,7 @@ public class WxDepositSqlProvider {
             if (!StringUtil.isEmpty(tradeNo)) {
                 WHERE("d.trade_no= #{tradeNo}");
             }
-            ORDER_BY("d.status=2 DESC");
+            ORDER_BY("d.status=2 DESC, d.id DESC");
         }}.toString();
     }
 }
