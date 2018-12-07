@@ -66,7 +66,7 @@ INSERT INTO `t_sys_menu` VALUES ('10', '/data/overview/*', '/data/usage', 'DataU
 INSERT INTO `t_sys_menu` VALUES ('11', '/data/overview*', '/data/profit', 'DataProfit', '收益数据', 'fa fa-line-chart fa-fw', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('12', '/data/statistics/table', '/data/export', 'DataExport', '数据下载', 'fa fa-download fa-fw', null, '1', '1', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('13', '/data/order/list', '/order/list', 'OrderList', '订单统计', 'fa fa-moon-o fa-fw', null, '1', '2', '1', '0');
-INSERT INTO `t_sys_menu` VALUES ('14', '/data/order/list', '/order/midday', 'OrderMidday', '午休统计', 'fa fa-sun-o fa-fw', null, '1', '2', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('14', '/data/order/list', '/order/list/mid', 'OrderList', '订单统计-午休', 'fa fa-sun-o fa-fw', null, '1', '13', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('15', '/sys/*', '/sys/user', 'SysUser', '系统账号', 'fa fa-user-circle-o fa-fw', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('16', '/sys/*', '/sys/role', 'SysRole', '系统角色', 'fa fa-users fa-fw', null, '1', '3', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('17', '/sys/*', '/sys/menu', 'SysMenu', '系统菜单', 'fa fa-tasks fa-fw', null, '1', '3', '1', '0');
@@ -80,8 +80,8 @@ INSERT INTO `t_sys_menu` VALUES ('24', '/device/*', '/device/lock', 'DeviceLock'
 INSERT INTO `t_sys_menu` VALUES ('25', '/device/*', '/device/state', 'DeviceState', '柜状态记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('26', '/device/*', '/device/fault', 'DeviceFault', '柜故障记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
 INSERT INTO `t_sys_menu` VALUES ('27', '/device/*', '/device/switch', 'DeviceSwitch', '开关锁记录', 'fa fa-cubes fa-fw', null, '1', '5', '1', '0');
-
-
+INSERT INTO `t_sys_menu` VALUES ('28', '/wx/order/refund', '/order/list/refund', 'OrderList', '订单统计-退款', 'fa fa-cubes fa-fw', null, '1', '13', '1', '0');
+INSERT INTO `t_sys_menu` VALUES ('29', '/wx/audit/list', '/order/deposit', 'OrderDeposit', '押金管理', 'fa fa-money fa-fw', null, '1', '2', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_sys_role
