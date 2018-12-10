@@ -97,7 +97,7 @@ public interface SysMenuMapper {
     @ResultMap("sysMenu")
     SysMenu getSysMenuById(@Param(value = "id") Integer id);
 
-    @Select("select count(*) from t_sys_menu where path= #{path}")
+    @Select("select count(*) from t_sys_menu where `enabled`=true AND path= #{path}")
     @ResultType(Integer.class)
     Integer isExistPath(@Param(value = "path") String path);
 }

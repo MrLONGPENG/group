@@ -10,6 +10,7 @@ import com.lveqia.cloud.zuul.model.SysRole;
 import com.lveqia.cloud.zuul.objeck.vo.AddMenuVo;
 import com.lveqia.cloud.zuul.objeck.vo.MenuVo;
 import com.lveqia.cloud.zuul.objeck.vo.MetaVo;
+import com.lveqia.cloud.zuul.objeck.vo.ModifyMenuVo;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,29 +37,63 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
+    public boolean modifyStatus(int id, long uid) throws BaseException {
+        if (uid != 1) throw new ParamException("只有Admin才能进行菜单删除");
+        SysMenu sysMenu = sysMenuMapper.getSysMenuById(id);
+        if (sysMenu == null) throw new ParamException("当前菜单不存在,请重新选择!");
+        sysMenu.setEnabled(false);
+        return sysMenuMapper.update(sysMenu);
+    }
+
+    @Override
+    public boolean modifyMenu(long uid, ModifyMenuVo menuVo) throws BaseException {
+        if (uid != 1) throw new ParamException("只有Admin才能进行菜单编辑");
+        SysMenu sysMenu = sysMenuMapper.findById(menuVo.getId());
+        if (sysMenu == null) throw new ParamException("该菜单不存在,请重新选择");
+        boolean isTrue = checkRules(sysMenu.getParentId(), menuVo.getPath(), menuVo.getComponent());
+        if (isTrue) {
+            sysMenu.setName(menuVo.getName());
+            sysMenu.setPath(menuVo.getPath());
+            sysMenu.setUrl(menuVo.getUrl());
+            sysMenu.setComponent(menuVo.getComponent());
+            sysMenu.setIconCls(menuVo.getIconCls());
+            return sysMenuMapper.update(sysMenu);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean addMenu(long uid, AddMenuVo addVo) throws BaseException {
         if (uid != 1) throw new ParamException("必须为Admin才能添加按钮");
         return sysMenuMapper.insert(checkAddVo(addVo));
     }
 
     private SysMenu checkAddVo(AddMenuVo addVo) throws ParamException {
-        if (null == addVo.getParentId()) {//当前菜单为一级菜单
-            if (!"/home".equals(addVo.getPath()) || !"/".equals(addVo.getUrl())
-                    || !"Home".equals(addVo.getComponent()))
+        checkRules(addVo.getParentId(), addVo.getPath(), addVo.getComponent());
+        return bindSysMenu(addVo);
+    }
+
+    private boolean checkRules(Integer pid, String path, String component) throws ParamException {
+        if (null == pid) {//当前菜单为一级菜单
+            if (!"/home".equals(path) || !"/".equals(path)
+                    || !"Home".equals(component))
                 throw new ParamException("主菜单格式为{url:/ path:/home component:Home}");
         } else {
-            if (sysMenuMapper.isExistPath(addVo.getPath()) > 0) throw new ParamException("当前路径已存在,请重新输入");
-            SysMenu model = sysMenuMapper.getSysMenuById(addVo.getParentId());
+            if (sysMenuMapper.isExistPath(path) > 0)
+                throw new ParamException("当前路径已存在,请重新输入");
+            SysMenu model = sysMenuMapper.getSysMenuById(pid);
             if (model == null) throw new ParamException("该菜单不存在,请重新选择");
             if (null == model.getParentId()) {//二级菜单
-                if (getCount(addVo.getPath()) != 2) throw new ParamException("次菜单路径输入错误!");
+                if (getCount(path) != 2) throw new ParamException("次菜单路径输入错误!");
             } else {//三级菜单
-                if (getCount(addVo.getPath()) != 3 && addVo.getPath().startsWith(model.getPath()))
+                if (getCount(path) != 3 && path.startsWith(model.getPath()))
                     throw new ParamException("按钮路径输入错误!");
             }
         }
-        return bindSysMenu(addVo);
+        return true;
     }
+
 
     /**
      * 统计path中"/"出现的次数
@@ -100,13 +135,13 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (menuVo.getParentId() == null) {
             set.put(menuVo.getId(), menuVo);
         } else {
-            MenuVo parent  = toMenuVo(sysMenuMapper.findById(menuVo.getParentId()));
-            if(map.containsKey(parent.getId())){
+            MenuVo parent = toMenuVo(sysMenuMapper.findById(menuVo.getParentId()));
+            if (map.containsKey(parent.getId())) {
                 List<MenuVo> list = map.get(parent.getId());
-                if(list.stream().noneMatch(vo-> vo.getId().equals(menuVo.getId()))){
+                if (list.stream().noneMatch(vo -> vo.getId().equals(menuVo.getId()))) {
                     map.get(parent.getId()).add(menuVo);
                 }
-            }else {
+            } else {
                 map.put(parent.getId(), new ArrayList<>(Collections.singletonList(menuVo)));
             }
             parent.setChildren(map.get(parent.getId()));

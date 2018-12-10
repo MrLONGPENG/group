@@ -4,6 +4,7 @@ package com.lveqia.cloud.zuul.controller;
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
 import com.lveqia.cloud.zuul.objeck.vo.AddMenuVo;
+import com.lveqia.cloud.zuul.objeck.vo.ModifyMenuVo;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -49,6 +47,21 @@ public class SysMenuController {
     public String addMenu(@Validated @ModelAttribute AddMenuVo addMenuVo
             , @ApiParam(hidden = true) long uid) throws BaseException {
         return ResultUtil.success(sysMenuService.addMenu(uid, addMenuVo));
+    }
+
+    @ApiOperation(value = "编辑菜单", notes = "编辑菜单")
+    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
+    public String modifyMenu(@Validated @ModelAttribute ModifyMenuVo menuVo
+            , @ApiParam(hidden = true) long uid) throws BaseException {
+        return ResultUtil.success(sysMenuService.modifyMenu(uid, menuVo));
+
+    }
+
+    @ApiOperation(value = "删除菜单", notes = "删除菜单")
+    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    public String removeMenu(@ApiParam("选中的菜单ID") @PathVariable(value = "id") int id
+            , @ApiParam(hidden = true) long uid) throws BaseException {
+        return ResultUtil.success(sysMenuService.modifyStatus(id, uid));
     }
 
 }
