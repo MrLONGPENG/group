@@ -16,4 +16,6 @@ public interface WxDeductionRecordService {
     boolean update(WxDeductionRecord wxDeductionRecord);
 
     List<WxDeductionRecord> getDeductionRecordList(String sessionThirdKey);
+
+    List<WxDeductionRecord> getList(String tradeNo);
 }

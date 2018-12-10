@@ -32,6 +32,11 @@ public class WxDeductionRecordServiceImpl implements WxDeductionRecordService {
     }
 
     @Override
+    public List<WxDeductionRecord> getList(String tradeNo) {
+        return  wxDeductionRecordMapper.getListByTradeNo(tradeNo);
+    }
+
+    @Override
     public List<WxDeductionRecord> getDeductionRecordList(String sessionThirdKey) {
         String openId = sessionService.getOpenId(sessionThirdKey);
         return wxDeductionRecordMapper.getDeductionRecordList(openId);

@@ -2,21 +2,15 @@ package com.mujugroup.wx.controller;
 
 import com.lveqia.cloud.common.exception.BaseException;
 import com.lveqia.cloud.common.util.ResultUtil;
-import com.mujugroup.wx.model.WxDeposit;
-import com.mujugroup.wx.objeck.vo.deposit.InfoListVo;
 import com.mujugroup.wx.objeck.vo.deposit.PutVo;
+import com.mujugroup.wx.service.WxDeductionRecordService;
 import com.mujugroup.wx.service.WxDepositService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.*;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -27,11 +21,13 @@ import java.util.Map;
 @Api(description = "押金接口")
 public class WxDepositController {
 
-    private WxDepositService wxDepositService;
+    private final WxDepositService wxDepositService;
+    private final WxDeductionRecordService wxDeductionRecordService;
 
     @Autowired
-    public WxDepositController(WxDepositService wxDepositService) {
+    public WxDepositController(WxDepositService wxDepositService, WxDeductionRecordService wxDeductionRecordService) {
         this.wxDepositService = wxDepositService;
+        this.wxDeductionRecordService = wxDeductionRecordService;
     }
 
     @ApiOperation(value = "获取当前用户已支付状态的押金信息", notes = "获取当前用户已支付状态的押金信息")
@@ -60,6 +56,12 @@ public class WxDepositController {
     @RequestMapping(value = "/audit/deposit", method = RequestMethod.PUT)
     public String modifyStatus(@Validated @ModelAttribute PutVo infoVo) throws BaseException {
         return ResultUtil.success(wxDepositService.modifyRecordStatus(infoVo));
+    }
+
+    @ApiOperation(value = "扣款记录列表", notes = "扣款记录列表")
+    @RequestMapping(value = "/audit/deductionList", method = RequestMethod.POST)
+    public String getDeductionList(@ApiParam(value = "订单号") @RequestParam(value = "tradeNo") String tradeNo) {
+        return ResultUtil.success(wxDeductionRecordService.getList(tradeNo));
     }
 
 }
