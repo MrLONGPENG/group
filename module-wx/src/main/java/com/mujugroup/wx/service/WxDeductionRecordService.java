@@ -17,5 +17,5 @@ public interface WxDeductionRecordService {
 
     List<WxDeductionRecord> getDeductionRecordList(String sessionThirdKey);
 
-    List<WxDeductionRecord> getList(String tradeNo);
+    List<WxDeductionRecord> getList(String openId);
 }

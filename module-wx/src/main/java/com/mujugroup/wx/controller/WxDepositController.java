@@ -60,8 +60,8 @@ public class WxDepositController {
 
     @ApiOperation(value = "扣款记录列表", notes = "扣款记录列表")
     @RequestMapping(value = "/audit/deductionList", method = RequestMethod.POST)
-    public String getDeductionList(@ApiParam(value = "订单号") @RequestParam(value = "tradeNo") String tradeNo) {
-        return ResultUtil.success(wxDeductionRecordService.getList(tradeNo));
+    public String getDeductionList(@ApiParam(value = "微信唯一对外用户号") @RequestParam(value = "openId") String openId) {
+        return ResultUtil.success(wxDeductionRecordService.getList(openId));
     }
 
 }
