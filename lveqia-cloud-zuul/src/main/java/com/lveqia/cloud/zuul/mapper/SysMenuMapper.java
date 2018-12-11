@@ -80,7 +80,8 @@ public interface SysMenuMapper {
      * 权限验证根据url长度安排下效验
      */
     @ResultMap("sysMenu")
-    @Select("SELECT * FROM t_sys_menu WHERE `enabled`=true AND `parentId` IS NOT NULL ORDER BY LENGTH(url) DESC")
+    @Select("SELECT * FROM t_sys_menu WHERE `enabled` = true AND `requireAuth` = true AND `parentId` IS NOT NULL" +
+            " ORDER BY LENGTH(url) DESC")
     List<SysMenu> getAllMenuByLength();
 
 

@@ -14,6 +14,7 @@ import com.lveqia.cloud.zuul.objeck.vo.ModifyMenuVo;
 import com.lveqia.cloud.zuul.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -50,39 +51,47 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (uid != 1) throw new ParamException("只有Admin才能进行菜单编辑");
         SysMenu sysMenu = sysMenuMapper.findById(menuVo.getId());
         if (sysMenu == null) throw new ParamException("该菜单不存在,请重新选择");
-        boolean isTrue = checkRules(sysMenu.getParentId(), menuVo.getPath(), menuVo.getComponent());
-        if (isTrue) {
-            sysMenu.setName(menuVo.getName());
-            sysMenu.setPath(menuVo.getPath());
-            sysMenu.setUrl(menuVo.getUrl());
-            sysMenu.setComponent(menuVo.getComponent());
-            sysMenu.setIconCls(menuVo.getIconCls());
-            return sysMenuMapper.update(sysMenu);
-        } else {
-            return false;
-        }
+        checkRules(sysMenu.getParentId(), menuVo.getUrl(), menuVo.getPath(), menuVo.getComponent());
+        return sysMenuMapper.update(bindSysMenu(sysMenu.getId(), menuVo));
+    }
+
+    private SysMenu bindSysMenu(Integer id, ModifyMenuVo menuVo) {
+        SysMenu sysMenu = new SysMenu();
+        sysMenu.setId(id);
+        if(StringUtil.isEmpty(menuVo.getUrl()))sysMenu.setUrl(menuVo.getUrl());
+        if(StringUtil.isEmpty(menuVo.getName()))sysMenu.setName(menuVo.getName());
+        if(StringUtil.isEmpty(menuVo.getPath()))sysMenu.setPath(menuVo.getPath());
+        if(StringUtil.isEmpty(menuVo.getComponent())) sysMenu.setComponent(menuVo.getComponent());
+        if(StringUtil.isEmpty(menuVo.getIconCls()))sysMenu.setIconCls(menuVo.getIconCls());
+        return sysMenu;
     }
 
     @Override
+    @Transactional
     public boolean addMenu(long uid, AddMenuVo addVo) throws BaseException {
         if (uid != 1) throw new ParamException("必须为Admin才能添加按钮");
-        return sysMenuMapper.insert(checkAddVo(addVo));
+        SysMenu parent = checkRules(addVo.getParentId(), addVo.getUrl(), addVo.getPath(), addVo.getComponent());
+        if(parent!=null && parent.getParentId()!=null){ // 添加三级菜单同时更新二级权限需求
+            parent.setRequireAuth(false);
+            sysMenuMapper.update(parent);
+        }
+        return sysMenuMapper.insert(bindSysMenu(addVo));
     }
 
-    private SysMenu checkAddVo(AddMenuVo addVo) throws ParamException {
-        checkRules(addVo.getParentId(), addVo.getPath(), addVo.getComponent());
-        return bindSysMenu(addVo);
-    }
 
-    private boolean checkRules(Integer pid, String path, String component) throws ParamException {
+    /**
+     * 检查菜单格式
+     * @return 返回父级菜单
+     */
+    private SysMenu checkRules(Integer pid, String url, String path, String component) throws ParamException {
+        SysMenu model = null;
         if (null == pid) {//当前菜单为一级菜单
-            if (!"/home".equals(path) || !"/".equals(path)
-                    || !"Home".equals(component))
+            if (!"/".equals(url)||!"/home".equals(path) ||  !"Home".equals(component))
                 throw new ParamException("主菜单格式为{url:/ path:/home component:Home}");
         } else {
             if (sysMenuMapper.isExistPath(path) > 0)
                 throw new ParamException("当前路径已存在,请重新输入");
-            SysMenu model = sysMenuMapper.getSysMenuById(pid);
+            model = sysMenuMapper.getSysMenuById(pid);
             if (model == null) throw new ParamException("该菜单不存在,请重新选择");
             if (null == model.getParentId()) {//二级菜单
                 if (getCount(path) != 2) throw new ParamException("次菜单路径输入错误!");
@@ -91,7 +100,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                     throw new ParamException("按钮路径输入错误!");
             }
         }
-        return true;
+        return model;
     }
 
 
