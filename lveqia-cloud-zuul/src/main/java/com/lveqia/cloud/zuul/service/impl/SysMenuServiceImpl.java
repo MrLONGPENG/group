@@ -75,7 +75,7 @@ public class SysMenuServiceImpl implements SysMenuService {
             parent.setRequireAuth(false);
             sysMenuMapper.update(parent);
         }
-        return sysMenuMapper.insert(bindSysMenu(addVo));
+        return sysMenuMapper.insert(bindSysMenu(addVo, addVo.getParentId() != null));
     }
 
 
@@ -118,14 +118,14 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
 
-    private SysMenu bindSysMenu(AddMenuVo addVo) {
+    private SysMenu bindSysMenu(AddMenuVo addVo, boolean requireAuth) {
         SysMenu sysMenu = new SysMenu();
         sysMenu.setComponent(addVo.getComponent());
         sysMenu.setIconCls(addVo.getIconCls());
         sysMenu.setUrl(addVo.getUrl());
         sysMenu.setPath(addVo.getPath());
         sysMenu.setName(addVo.getName());
-        sysMenu.setRequireAuth(true);
+        sysMenu.setRequireAuth(requireAuth); // 一级菜单不需要权限
         return sysMenu;
     }
 
