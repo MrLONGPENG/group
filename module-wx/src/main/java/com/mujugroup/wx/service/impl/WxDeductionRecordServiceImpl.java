@@ -33,7 +33,7 @@ public class WxDeductionRecordServiceImpl implements WxDeductionRecordService {
 
     @Override
     public List<WxDeductionRecord> getList(String openId) {
-        return  wxDeductionRecordMapper.getListByOpenId(openId);
+        return  wxDeductionRecordMapper.getDeductionRecordList(openId);
     }
 
     @Override
